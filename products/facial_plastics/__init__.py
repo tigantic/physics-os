@@ -5,7 +5,7 @@ HyperTensor Facial Plastics Platform
 Physics-grounded, data-driven surgical simulation and planning system
 for facial plastic and reconstructive surgery.
 
-Built on the HyperTensor-VM multi-physics engine.
+Built on the physics-os multi-physics engine.
 
 Sub-packages
 ------------

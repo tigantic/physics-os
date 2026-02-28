@@ -762,7 +762,7 @@ def run_all() -> bool:
 
     # Save attestation JSON
     attestation = {
-        "project": "HyperTensor-VM",
+        "project": "physics-os",
         "protocol": "trustless_physics_gauntlet_phase3",
         "phase": 3,
         "description": (

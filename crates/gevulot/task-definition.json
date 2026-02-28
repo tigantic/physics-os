@@ -7,7 +7,7 @@
   "metadata": {
     "author": "TiganticLabz",
     "license": "MIT",
-    "repository": "https://github.com/TiganticLabz/HyperTensor-VM",
+    "repository": "https://github.com/tigantic/physics-os",
     "homepage": "https://fluidelite.ai",
     "tags": ["zkml", "llm", "tensor-network", "mps", "halo2", "verifiable-ai"]
   },

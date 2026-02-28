@@ -1,5 +1,5 @@
 {
-  "project": "HyperTensor-VM",
+  "project": "physics-os",
   "protocol": "trustless_physics_gauntlet_phase6",
   "phase": 6,
   "description": "Tier 2A Wire-Up: 25 domains across Fluid Dynamics (8), Electromagnetism (7), StatMech (3), Plasma Physics (7) \u2014 trace adapters, Lean conservation proofs, TPC generation",

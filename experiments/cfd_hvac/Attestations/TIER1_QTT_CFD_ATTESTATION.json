@@ -5,7 +5,7 @@
     "title": "QTT-Native CFD Solver - Tier 1 Validation",
     "status": "PARTIAL",
     "timestamp": "2026-01-06T12:00:00Z",
-    "validator": "HyperTensor-VM Automated Test Suite",
+    "validator": "physics-os Automated Test Suite",
     "summary": "Infrastructure PASSED, Physics FAILED"
   },
 

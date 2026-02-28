@@ -1,7 +1,7 @@
 # PWA Engine — Standalone Distribution
 
 Partial Wave Analysis Compute Engine V3.0.0 extracted from
-[HyperTensor-VM](https://github.com/tigantic/HyperTensor-VM).
+[physics-os](https://github.com/tigantic/physics-os).
 
 Implements **Eq. 5.48** from Badui (2020) with Gram-matrix-accelerated
 extended likelihood evaluation for meson photoproduction amplitude analysis.
@@ -39,4 +39,4 @@ assert result["all_pass"]
 ## Reference
 
 Badui, Bannon, et al. (2020), PhD Dissertation, Indiana University.
-Adams (2026), HyperTensor-VM Platform V3.0.0.
+Adams (2026), physics-os Platform V3.0.0.

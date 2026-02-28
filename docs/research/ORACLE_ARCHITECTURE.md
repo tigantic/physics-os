@@ -1735,7 +1735,7 @@ ORACLE is considered successful if it can:
 ### File Structure
 
 ```
-HyperTensor-VM-main/
+physics-os-main/
 ├── ontic/
 │   ├── cfd/           # Existing CFD tools
 │   ├── numerics/      # interval.py lives here

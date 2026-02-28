@@ -6,7 +6,7 @@
 
 ## Context
 
-The HyperTensor-VM codebase contains three independent `Field` classes,
+The physics-os codebase contains three independent `Field` classes,
 two `Operator` hierarchies, and zero common `Solver` interface.  Over 40
 domain-specific solvers exist — each with different constructor signatures,
 different step/advance method names, and different state representations.

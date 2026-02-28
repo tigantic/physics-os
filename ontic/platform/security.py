@@ -134,7 +134,7 @@ def generate_sbom(
             "timestamp": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
             "tools": [{"vendor": "HyperTensor", "name": "ontic-sbom", "version": "1.0.0"}],
             "component": {
-                "name": "HyperTensor-VM",
+                "name": "physics-os",
                 "version": "2.0.0",
                 "type": "application",
             },

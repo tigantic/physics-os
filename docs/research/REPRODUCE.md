@@ -42,8 +42,8 @@ pip install torch numpy scipy pandas matplotlib pyarrow
 ## Repository Setup
 
 ```bash
-git clone https://github.com/<org>/HyperTensor-VM.git
-cd HyperTensor-VM
+git clone https://github.com/<org>/physics-os.git
+cd physics-os
 git checkout 799102423d88619a0c649cf4ab5c9a34b204269c
 ```
 
@@ -164,4 +164,4 @@ for the complete mapping from claims to artifacts and acceptance criteria.
 
 ## Contact
 
-Open an issue on the HyperTensor-VM repository for reproduction difficulties.
+Open an issue on the physics-os repository for reproduction difficulties.

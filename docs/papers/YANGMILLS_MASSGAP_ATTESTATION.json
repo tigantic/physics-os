@@ -131,9 +131,9 @@
       "expected_output": "Signature verification: VALID"
     },
     "reproduction": {
-      "repository": "https://github.com/HyperTensor-VM/yangmills-qtt",
+      "repository": "https://github.com/physics-os/yangmills-qtt",
       "commands": [
-        "git clone https://github.com/HyperTensor-VM/yangmills-qtt.git",
+        "git clone https://github.com/physics-os/yangmills-qtt.git",
         "cd yangmills-qtt",
         "pip install -r requirements.txt",
         "python yangmills/qtt_dmrg_large_lattice.py",
@@ -144,7 +144,7 @@
 
   "legal_attestation": {
     "statement": "The undersigned computational system attests that the Yang-Mills mass gap has been proven to exist with M = 1.500000 × Λ_QCD using rigorous numerical methods. All results are reproducible and cryptographically verified.",
-    "signer": "HyperTensor-VM Sovereign Compute Infrastructure",
+    "signer": "physics-os Sovereign Compute Infrastructure",
     "timestamp": "2026-01-16T00:44:00Z",
     "jurisdiction": "Universal (Decentralized Attestation)"
   },

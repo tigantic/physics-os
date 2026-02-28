@@ -84,7 +84,7 @@ def main() -> None:
         run_full_suite()
     except ImportError:
         print(
-            "ERROR: Full experiment suite requires the HyperTensor-VM repo.\n"
+            "ERROR: Full experiment suite requires the physics-os repo.\n"
             "  Use --convention-only for standalone validation, or run from\n"
             "  the repo root: python3 experiments/run_pwa_engine.py",
             file=sys.stderr,

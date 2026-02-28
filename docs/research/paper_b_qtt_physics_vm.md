@@ -8,7 +8,7 @@
 **Version:** 1.0.0  
 **Derived From:** χ-Regularity Hypothesis v2.5.0  
 **Systems Status:** Universal VM Demonstrated (7 domains, 1 runtime) · Bounded Rank Across All Domains · Polylogarithmic Resolution Scaling  
-**Repository:** HyperTensor-VM  
+**Repository:** physics-os  
 **Commit:** (see git log, branch `main`)  
 **Hardware:** CPU/RAM only (NumPy backend; no GPU required for VM execution)  
 **Software:** Python 3.12.3, NumPy 2.2.3  

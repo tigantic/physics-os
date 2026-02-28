@@ -127,11 +127,11 @@ all = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/tigantic/HyperTensor-VM"
-Documentation = "https://tigantic.github.io/HyperTensor-VM"
-Repository = "https://github.com/tigantic/HyperTensor-VM.git"
-Issues = "https://github.com/tigantic/HyperTensor-VM/issues"
-Changelog = "https://github.com/tigantic/HyperTensor-VM/blob/main/CHANGELOG.md"
+Homepage = "https://github.com/tigantic/physics-os"
+Documentation = "https://tigantic.github.io/physics-os"
+Repository = "https://github.com/tigantic/physics-os.git"
+Issues = "https://github.com/tigantic/physics-os/issues"
+Changelog = "https://github.com/tigantic/physics-os/blob/main/CHANGELOG.md"
 
 [project.scripts]
 ontic = "ontic.platform.cli:main"

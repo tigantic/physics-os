@@ -8,7 +8,7 @@
 
 ## Context
 
-HyperTensor-VM's pricing model (`PRICING_MODEL.md`) defines compute-unit metering based on mesh size, solver iterations, QTT rank, and GPU time. Before enforcing billing in production, the metering infrastructure must be validated against real workloads to ensure:
+physics-os's pricing model (`PRICING_MODEL.md`) defines compute-unit metering based on mesh size, solver iterations, QTT rank, and GPU time. Before enforcing billing in production, the metering infrastructure must be validated against real workloads to ensure:
 
 1. Meters are accurate (no drift, no double-counting).
 2. Pricing tiers are competitive against ANSYS/COMSOL/OpenFOAM cloud.

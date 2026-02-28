@@ -17,7 +17,7 @@ Single command that runs every deliverable:
 Usage:
     python3 experiments/run_pwa_engine.py
 
-Authority: Adams (2026), HyperTensor-VM Platform V3.0.0
+Authority: Adams (2026), physics-os Platform V3.0.0
 Hardware:  NVIDIA GeForce RTX 5070 Laptop GPU
 """
 

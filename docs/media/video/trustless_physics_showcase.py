@@ -125,7 +125,7 @@ class S01_ColdOpen(Scene):
         self.play(FadeIn(subtitle, shift=UP * 0.2), run_time=0.8)
 
         # Project badge
-        badge = Text("HyperTensor-VM", font_size=22, color=ACCENT_CYAN).next_to(subtitle, DOWN, buff=0.6)
+        badge = Text("physics-os", font_size=22, color=ACCENT_CYAN).next_to(subtitle, DOWN, buff=0.6)
         self.play(FadeIn(badge, shift=UP * 0.1), run_time=0.5)
 
         self.wait(1.5)

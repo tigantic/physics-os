@@ -127,11 +127,11 @@ git push origin main
 
 ## Next Steps After Push
 
-### 1. Create HyperTensor-VM Repository (Optional)
+### 1. Create physics-os Repository (Optional)
 
 **On GitHub**:
 - Go to: https://github.com/new
-- Repository name: `HyperTensor-VM`
+- Repository name: `physics-os`
 - Description: "The Physics OS deployment artifacts and releases"
 - Public or Private (your choice)
 - Don't initialize with README (we have code to push)
@@ -142,7 +142,7 @@ git push origin main
 cd '/home/brad/TiganticLabz/Main_Projects/Project The Physics OS'
 
 # Add new remote
-git remote add hypertensor-vm https://github.com/tigantic/HyperTensor-VM.git
+git remote add hypertensor-vm https://github.com/tigantic/physics-os.git
 
 # Push to new remote
 git push hypertensor-vm main

@@ -22,7 +22,7 @@ QTT proof:
     4. Frobenius-norm reconstruction error
 
 Hardware:  NVIDIA GeForce RTX 5070 Laptop GPU (CUDA)
-Authority: Adams (2026), HyperTensor-VM Platform V2.0.0
+Authority: Adams (2026), physics-os Platform V2.0.0
 """
 
 from __future__ import annotations

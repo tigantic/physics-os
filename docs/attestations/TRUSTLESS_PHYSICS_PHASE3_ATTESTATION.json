@@ -1,5 +1,5 @@
 {
-  "project": "HyperTensor-VM",
+  "project": "physics-os",
   "protocol": "trustless_physics_gauntlet_phase3",
   "phase": 3,
   "description": "Scaling & Decentralization: Prover Pool (batch, incremental, compression), Gevulot Integration, Certificate Dashboard, Multi-Tenant Operations, Lean ProverOptimization",

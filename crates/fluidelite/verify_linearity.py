@@ -103,7 +103,7 @@ def verify_linearity_via_contraction():
         from fluidelite.core.fast_ops import vectorized_mps_add, pad_mps_to_uniform
     except ImportError as e:
         print(f"❌ Import error: {e}")
-        print("Make sure you're in the HyperTensor-VM-main directory")
+        print("Make sure you're in the physics-os-main directory")
         return False
     
     # 1. Initialize the ZK Model

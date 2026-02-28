@@ -15,8 +15,8 @@ pip install tensornet[all]
 ## Development Setup
 
 ```bash
-git clone https://github.com/tigantic/HyperTensor-VM.git
-cd HyperTensor-VM
+git clone https://github.com/tigantic/physics-os.git
+cd physics-os
 
 # Install with dev dependencies
 pip install -e ".[dev,docs]"

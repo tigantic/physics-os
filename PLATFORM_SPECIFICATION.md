@@ -1681,7 +1681,7 @@ The full physics inventory — 50 domains, 826+ equations, ~227,000 LOC — is m
 ## §22 Project Structure
 
 ```
-HyperTensor-VM-main/
+physics-os-main/
 ├── .gitattributes                  # Git LFS tracking rules (binary assets)
 ├── .github/
 │   ├── dependabot.yml              # Automated dependency updates (pip, cargo, actions)

@@ -498,7 +498,7 @@ def build_open_standard() -> OpenStandard:
         rfc_number="draft-htvm-rcs-01",
         sections=sections,
         authors=[
-            "HyperTensor-VM Project",
+            "physics-os Project",
             "Physics Verification Working Group",
         ],
         status="Internet-Draft",

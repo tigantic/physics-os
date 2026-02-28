@@ -203,7 +203,7 @@ FEZK v2.0 Test Results: 6/6 PASSED | 0/6 FAILED
   title={FEZK: FLUIDELITE Enhanced ZK Analyzer},
   version={2.0.0},
   year={2025},
-  url={https://github.com/HyperTensor-VM/fezk}
+  url={https://github.com/physics-os/fezk}
 }
 ```
 

@@ -3,7 +3,7 @@
 **Petabyte-Scale Compression + Zero-Knowledge Provable Inference**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Version](https://img.shields.io/badge/version-2.1.0-blue.svg)](https://github.com/tigantic/HyperTensor-VM)
+[![Version](https://img.shields.io/badge/version-2.1.0-blue.svg)](https://github.com/tigantic/physics-os)
 [![Verified](https://img.shields.io/badge/18TB-VERIFIED-brightgreen.svg)](../FLUIDELITE_18TB_ATTESTATION.json)
 
 ---
@@ -94,8 +94,8 @@ FluidElite ZK implements ZK-provable inference for the FluidElite tensor network
 
 ```bash
 # Clone repository
-git clone https://github.com/TiganticLabz/HyperTensor-VM
-cd HyperTensor-VM/fluidelite-zk
+git clone https://github.com/tigantic/physics-os
+cd physics-os/fluidelite-zk
 
 # Build (core library - no Halo2)
 cargo build --release

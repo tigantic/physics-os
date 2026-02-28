@@ -383,7 +383,7 @@ Holy Grail Query:
 |-------|-------|
 | Created | 2026-01-04 |
 | Author | Physics OS AI System |
-| Repository | HyperTensor-VM |
+| Repository | physics-os |
 | License | See repository LICENSE |
 
 ---

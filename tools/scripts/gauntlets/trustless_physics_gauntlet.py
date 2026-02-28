@@ -679,7 +679,7 @@ def test_generator_from_attestation():
 
     # Create a mock attestation
     attestation = {
-        "project": "HyperTensor-VM",
+        "project": "physics-os",
         "protocol": "gauntlet",
         "timestamp": "2024-01-01T00:00:00Z",
         "total_time_seconds": 42.0,
@@ -894,7 +894,7 @@ def main():
 
     # Save attestation
     attestation = {
-        "project": "HyperTensor-VM",
+        "project": "physics-os",
         "protocol": "trustless_physics_gauntlet_phase0",
         "timestamp": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
         "total_time_seconds": round(elapsed, 4),

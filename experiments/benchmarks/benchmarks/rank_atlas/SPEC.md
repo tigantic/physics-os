@@ -3,7 +3,7 @@
 **Status:** Released  
 **Date:** 2026-02-24  
 **Maintainer:** Brad Tigantic (Physics OS Project)  
-**Repository:** HyperTensor-VM  
+**Repository:** physics-os  
 **Companion Papers:**
 - Paper A: *χ-Regularity and Rank Atlas* (`docs/research/paper_a_chi_regularity_atlas.md`)
 - Paper B: *QTT Physics VM* (`docs/research/paper_b_qtt_physics_vm.md`)

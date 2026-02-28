@@ -396,7 +396,7 @@ def generate_attestation(results: Dict[str, Any]) -> Dict[str, Any]:
         },
         'summary': results['summary'],
         'certification': {
-            'framework': 'HyperTensor-VM FRONTIER',
+            'framework': 'physics-os FRONTIER',
             'release': 'v0.6.0-genomics',
             'compliance': [
                 'Tensor network foundation',

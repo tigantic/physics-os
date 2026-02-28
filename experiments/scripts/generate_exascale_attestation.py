@@ -169,7 +169,7 @@ def build_attestation() -> dict:
     now = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
     attestation = {
-        "project": "HyperTensor-VM",
+        "project": "physics-os",
         "protocol": "TRUSTLESS_PHYSICS_EXASCALE_ATTESTATION",
         "version": "2.0.0",
         "title": "QTT GPU-Native Exascale Physics — World Record Attestation",
@@ -183,7 +183,7 @@ def build_attestation() -> dict:
         "timestamp": now,
         "git_commit": "cd1ec5952fc40b4082fa63d5fb67b6cba7327d50",
         "branch": "release/v4.0.x",
-        "repository": "https://github.com/tigantic/HyperTensor-VM.git",
+        "repository": "https://github.com/tigantic/physics-os.git",
         "world_record": {
             "claim": f"Largest QTT-compressed GPU physics simulation: {table[-1]['grid']}",
             "our_grid": f"{our_max_n:,}³",

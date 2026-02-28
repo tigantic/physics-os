@@ -1282,7 +1282,7 @@ the original compute environment.</p>
 <h2>A.3 Reproducibility</h2>
 
 <pre><code># Full gauntlet (128³ + 256³ + 512³, ~21 minutes)
-cd HyperTensor-VM-main
+cd physics-os-main
 PYTHONPATH="$PWD:$PYTHONPATH" python3 tools/tools/scripts/gauntlet_vs_nvidia.py \\
     --resolutions 128,256,512 --max-rank 48 --cfl 0.08
 

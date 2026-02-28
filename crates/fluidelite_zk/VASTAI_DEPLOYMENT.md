@@ -17,10 +17,10 @@ docker run --gpus all -it fluidelite-zk-bench:latest
 
 ```bash
 # SSH into your vast.ai instance, then:
-curl -sSL https://raw.githubusercontent.com/TiganticLabz/HyperTensor-VM/main/crates/fluidelite_zk/scripts/vast_setup.sh | bash
+curl -sSL https://raw.githubusercontent.com/tigantic/physics-os/main/crates/fluidelite_zk/scripts/vast_setup.sh | bash
 
 # After setup completes:
-cd ~/HyperTensor-VM/fluidelite-zk
+cd ~/physics-os/fluidelite-zk
 ./scripts/run_vastai_benchmarks.sh --standard
 ```
 
@@ -76,7 +76,7 @@ vastai ssh-url <instance_id>
 
 ```bash
 # Download and run the setup script
-wget https://raw.githubusercontent.com/TiganticLabz/HyperTensor-VM/main/crates/fluidelite_zk/scripts/vast_setup.sh
+wget https://raw.githubusercontent.com/tigantic/physics-os/main/crates/fluidelite_zk/scripts/vast_setup.sh
 chmod +x vast_setup.sh
 ./vast_setup.sh
 ```
@@ -85,13 +85,13 @@ This script will:
 - Verify GPU availability and CUDA installation
 - Install Rust (nightly) and build dependencies
 - Download ICICLE v4.0.0 CUDA backend
-- Clone the HyperTensor-VM repository
+- Clone the physics-os repository
 - Build all benchmark binaries with GPU support
 
 ### Step 4: Run Benchmarks
 
 ```bash
-cd ~/HyperTensor-VM/fluidelite-zk
+cd ~/physics-os/fluidelite-zk
 
 # Quick sanity check (2-3 minutes)
 ./scripts/run_vastai_benchmarks.sh --quick
@@ -251,7 +251,7 @@ nvidia-smi
 
 ```bash
 # Clean and rebuild
-cd ~/HyperTensor-VM/fluidelite-zk
+cd ~/physics-os/fluidelite-zk
 cargo clean
 cargo build --release --features gpu
 

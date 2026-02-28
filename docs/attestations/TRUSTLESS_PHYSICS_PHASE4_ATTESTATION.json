@@ -1,5 +1,5 @@
 {
-  "project": "HyperTensor-VM",
+  "project": "physics-os",
   "protocol": "trustless_physics_gauntlet_phase4",
   "phase": 4,
   "description": "Thermal Diffusion ZK Circuit, CG Memory Fix, Zero-Axiom Lean Proof, Warning Cleanup",

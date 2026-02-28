@@ -1,6 +1,6 @@
 """PWA Engine — Partial Wave Analysis Compute Engine V3.0.0.
 
-Standalone distribution of the PWA Compute Engine from HyperTensor-VM.
+Standalone distribution of the PWA Compute Engine from physics-os.
 Implements Eq. 5.48 from Badui (2020) with Gram-matrix-accelerated
 extended likelihood evaluation.
 
@@ -20,7 +20,7 @@ Install::
 
 Reference:
     Badui, Bannon, et al. (2020), PhD Dissertation, Indiana University.
-    Adams (2026), HyperTensor-VM Platform V3.0.0.
+    Adams (2026), physics-os Platform V3.0.0.
 """
 
 from __future__ import annotations
@@ -104,7 +104,7 @@ except ImportError:
 if not _core:
     raise ImportError(
         "PWA Engine core module not found. Either install the full "
-        "HyperTensor-VM repo or copy experiments/pwa_engine/core.py "
+        "physics-os repo or copy experiments/pwa_engine/core.py "
         "into pwa_engine/core.py for standalone use."
     )
 

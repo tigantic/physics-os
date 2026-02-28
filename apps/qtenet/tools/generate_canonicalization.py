@@ -2,7 +2,7 @@
 """Generate canonicalization maps and enterprise specs for QTenet.
 
 Inputs
-- inventory/qtt_repo_index.json (generated from HyperTensor-VM-main)
+- inventory/qtt_repo_index.json (generated from physics-os-main)
 
 Outputs
 - docs/09_CANONICALIZATION_MAP.md

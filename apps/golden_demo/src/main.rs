@@ -224,13 +224,13 @@ fn stage_certificate(
 
     // Metadata
     let metadata = json!({
-        "project": "HyperTensor-VM",
+        "project": "physics-os",
         "protocol": "TRUSTLESS_PHYSICS_GOLDEN_DEMO",
         "version": "1.0.0",
         "domain": "computational_fluid_dynamics",
         "solver": "fluidelite-circuits::thermal",
         "timestamp": Utc::now().to_rfc3339(),
-        "repository": "https://github.com/tigantic/HyperTensor-VM.git",
+        "repository": "https://github.com/tigantic/physics-os.git",
         "branch": "workspace-reorg",
     });
 
@@ -615,7 +615,7 @@ cd lean_proof && lean ThermalConservation.lean
 - **Generated**: {timestamp}
 - **Proof hash**: `{proof_hash}`
 - **Certificate hash**: `{cert_hash}`
-- **Repository**: https://github.com/tigantic/HyperTensor-VM.git
+- **Repository**: https://github.com/tigantic/physics-os.git
 - **Branch**: workspace-reorg
 
 ## Architecture

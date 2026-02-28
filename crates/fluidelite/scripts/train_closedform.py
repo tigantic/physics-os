@@ -34,7 +34,7 @@ import os
 import sys
 from pathlib import Path
 
-# Add HyperTensor-VM-main to path so 'fluidelite' package is importable
+# Add physics-os-main to path so 'fluidelite' package is importable
 hypervm_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 if hypervm_dir not in sys.path:
     sys.path.insert(0, hypervm_dir)

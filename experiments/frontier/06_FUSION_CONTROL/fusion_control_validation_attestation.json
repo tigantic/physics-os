@@ -4,7 +4,7 @@
   "timestamp_utc": "2026-02-01T07:18:03.718650+00:00",
   "timestamp_unix": 1769930283,
   "system": {
-    "project": "HyperTensor-VM / QTeneT",
+    "project": "physics-os / QTeneT",
     "module": "FRONTIER/06_FUSION_CONTROL",
     "copyright": "(c) 2026 Tigantic Holdings LLC. All Rights Reserved."
   },

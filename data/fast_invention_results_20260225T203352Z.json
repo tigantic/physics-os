@@ -3,7 +3,7 @@
     "protocol": "FAST_ANTENNA_INVENTION_SWEEP",
     "version": "1.0.0",
     "timestamp": "2026-02-25T20:37:44.455784+00:00",
-    "project": "HyperTensor-VM"
+    "project": "physics-os"
   },
   "config": {
     "n_bits": 12,

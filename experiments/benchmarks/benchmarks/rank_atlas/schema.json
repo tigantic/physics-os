@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://github.com/tigantic/HyperTensor-VM/benchmarks/rank_atlas/schema.json",
+  "$id": "https://github.com/tigantic/physics-os/benchmarks/rank_atlas/schema.json",
   "title": "Rank Atlas Measurement",
   "description": "Schema for a single QTT bond-dimension measurement in the Rank Atlas Benchmark v1.0.",
   "type": "object",

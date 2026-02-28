@@ -1,6 +1,6 @@
 # Civilization Challenges — Execution Status & Technical Report
 
-> **HyperTensor-VM** · Mutationes Civilizatoriae  
+> **physics-os** · Mutationes Civilizatoriae  
 > **Author:** Bradly Biron Baker Adams / Tigantic Holdings LLC  
 > **Date:** 2025-06-11 (updated 2025-06-13)  
 > **Git HEAD:** `dc275754`  

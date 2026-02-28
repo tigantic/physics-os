@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Generate the full HyperTensor-VM Capability Ledger.
+Generate the full physics-os Capability Ledger.
 
 Produces:
   ledger/nodes/PHY-{PACK}.{NODE}.yaml   (140 files)
@@ -58,7 +58,7 @@ def _yaml_test_dict(tests: dict[str, list[str]]) -> str:
 def node_to_yaml(n: Node) -> str:
     lines = [
         "# =============================================================================",
-        f"# HyperTensor-VM Capability Ledger — {n.id}",
+        f"# physics-os Capability Ledger — {n.id}",
         "# Generated: 2026-02-08 | Schema: 1.0",
         "# =============================================================================",
         "",
@@ -900,7 +900,7 @@ def generate_index(nodes: list[Node]) -> str:
     # Build YAML
     lines = [
         "# =============================================================================",
-        "# HyperTensor-VM Capability Ledger — Aggregated Index",
+        "# physics-os Capability Ledger — Aggregated Index",
         "# Generated: 2026-02-08 | Schema: 1.0",
         "# =============================================================================",
         "",

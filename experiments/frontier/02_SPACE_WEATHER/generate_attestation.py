@@ -51,7 +51,7 @@ def generate_attestation(output_path: Path = None) -> dict:
         "timestamp_unix": int(time.time()),
         
         "system": {
-            "project": "HyperTensor-VM / QTeneT",
+            "project": "physics-os / QTeneT",
             "module": "FRONTIER/02_SPACE_WEATHER",
             "copyright": "(c) 2026 Tigantic Holdings LLC. All Rights Reserved.",
         },

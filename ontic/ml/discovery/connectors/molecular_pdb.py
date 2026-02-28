@@ -134,7 +134,7 @@ class PDBClient:
         self._session = requests.Session()
         self._session.headers.update({
             "Accept": "application/json",
-            "User-Agent": "HyperTensor-VM/1.9.0 (research)"
+            "User-Agent": "physics-os/1.9.0 (research)"
         })
     
     def _wait_for_rate_limit(self) -> None:

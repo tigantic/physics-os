@@ -16,9 +16,9 @@ keywords:
 maintainers:
   - name: Tigantic Holdings LLC
     url: https://tigantic.com
-home: https://github.com/TiganticLabz/HyperTensor-VM
+home: https://github.com/tigantic/physics-os
 sources:
-  - https://github.com/TiganticLabz/HyperTensor-VM
+  - https://github.com/tigantic/physics-os
 dependencies:
   - name: prometheus
     version: "25.x"

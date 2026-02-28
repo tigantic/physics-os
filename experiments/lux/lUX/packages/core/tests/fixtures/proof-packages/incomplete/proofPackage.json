@@ -5,7 +5,7 @@
     "project_id": "proj-001",
     "domain_id": "com.physics.vlasov",
     "solver": {
-      "name": "HyperTensor-VM",
+      "name": "physics-os",
       "version": "1.2.3",
       "commit_hash": "deadbeef"
     },

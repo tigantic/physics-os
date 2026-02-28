@@ -211,7 +211,7 @@ fn test_full_pipeline_trace_to_verified_certificate() {
     });
 
     let metadata = json!({
-        "project": "HyperTensor-VM",
+        "project": "physics-os",
         "pipeline": "integration_test_2_11",
         "version": "1.0.0",
         "trace_entries": trace.entries.len(),

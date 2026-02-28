@@ -1,6 +1,6 @@
 # Computational Physics Coverage Assessment
 
-**Repository**: HyperTensor-VM (`workspace-reorg` branch)
+**Repository**: physics-os (`workspace-reorg` branch)
 **Date**: February 7, 2026
 **Path audit**: February 23, 2026 — all source file paths verified against repository tree
 **Assessed against**: `computational_physics_taxonomy (1).md` (140 sub-domains)

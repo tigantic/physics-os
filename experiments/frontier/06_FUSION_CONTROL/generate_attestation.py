@@ -39,7 +39,7 @@ def generate_attestation() -> dict:
         "timestamp_utc": datetime.now(timezone.utc).isoformat(),
         "timestamp_unix": int(datetime.now(timezone.utc).timestamp()),
         "system": {
-            "project": "HyperTensor-VM / QTeneT",
+            "project": "physics-os / QTeneT",
             "module": "FRONTIER/06_FUSION_CONTROL",
             "copyright": "(c) 2026 Tigantic Holdings LLC. All Rights Reserved."
         },

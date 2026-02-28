@@ -217,4 +217,4 @@ CFD_HVAC/
 
 ---
 
-*HyperTensor-VM CFD-HVAC Module | Validated 2026-01-06*
+*physics-os CFD-HVAC Module | Validated 2026-01-06*

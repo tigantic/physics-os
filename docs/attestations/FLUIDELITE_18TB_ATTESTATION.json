@@ -65,7 +65,7 @@
     "dependencies": ["aws-sdk-s3", "aws-config", "tokio"]
   },
   "commit": "d21cf6f",
-  "repository": "https://github.com/tigantic/HyperTensor-VM",
+  "repository": "https://github.com/tigantic/physics-os",
   "license": "MIT",
   "attestor": "HyperTensor Autonomous Build System",
   "integrity_hash": "sha3-256:e7f4a2c1d8b9e6f3a0c5d2e1f4a7b8c9d0e3f6a9b2c5d8e1f4a7b0c3d6e9f2a5"

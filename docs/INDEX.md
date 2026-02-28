@@ -45,7 +45,7 @@
 ## Directory Structure
 
 ```
-HyperTensor-VM-main/
+physics-os-main/
 ├── apps/               # Standalone applications (Rust binaries, Python apps)
 ├── archive/            # Archived prototypes and deprecated code
 ├── artifacts/          # Build outputs, attestations, certificates, logs

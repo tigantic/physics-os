@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://github.com/tigantic/HyperTensor-VM/benchmarks/golden/schema.json",
+  "$id": "https://github.com/tigantic/physics-os/benchmarks/golden/schema.json",
   "title": "Golden Physics Benchmark Measurement",
   "description": "Schema for a single golden benchmark measurement across the 7 QTT physics domains.",
   "type": "object",

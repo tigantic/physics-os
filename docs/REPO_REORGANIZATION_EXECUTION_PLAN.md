@@ -1,4 +1,4 @@
-# HyperTensor-VM Repository Reorganization — Execution Plan
+# physics-os Repository Reorganization — Execution Plan
 
 **Document**: `REPO_REORGANIZATION_EXECUTION_PLAN.md`  
 **Author**: Automated Engineering Agent  
@@ -30,7 +30,7 @@
 ## Target Root Structure (Post Phase 4)
 
 ```
-HyperTensor-VM-main/
+physics-os-main/
 ├── .github/                    # CI/CD, templates, copilot instructions
 ├── apps/                       # Standalone applications
 ├── contracts/                  # Product contracts

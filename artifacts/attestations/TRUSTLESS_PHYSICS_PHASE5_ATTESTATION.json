@@ -1,5 +1,5 @@
 {
-  "project": "HyperTensor-VM",
+  "project": "physics-os",
   "protocol": "trustless_physics_gauntlet_phase5",
   "phase": 5,
   "description": "Tier 1 Wire-Up: Euler 3D, NS-IMEX 2D, Heat Equation, Vlasov-Poisson \u2014 trace adapters, Lean conservation proofs, TPC certificate generation, cross-domain validation",

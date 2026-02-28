@@ -8,7 +8,7 @@
 **Version:** 2.5.0  
 **Scientific Status:** Empirically Supported (20-pack, 5-resolution protocol) · Dual-Measurement Validated (20/20 conservative) · Falsification Protocol Specified  
 **Status:** Operationally Validated (751+ measurements, 0 failures) · Protocol-Compliant (20/20 packs at n_bits 6–10)  
-**Repository:** HyperTensor-VM  
+**Repository:** physics-os  
 **Commit:** (see git log, branch `main`)  
 **Hardware:** NVIDIA GeForce RTX 5070 Laptop GPU, 7.96 GB VRAM, CC 12.0 (Rank Atlas) · CPU/RAM only (QTT Physics VM)  
 **Software:** Python 3.12.3, PyTorch 2.9.1+cu128, CUDA 12.8 (Rank Atlas) · NumPy 2.2.3 (QTT Physics VM)  

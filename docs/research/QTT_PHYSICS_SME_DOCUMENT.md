@@ -1,7 +1,7 @@
 # The Physics OS — QTT & Physics: Subject Matter Expert Documentation
 
 **Created:** January 14, 2026  
-**Purpose:** Comprehensive technical reference for QTT (Quantized Tensor Train) implementations and physics integrations in the HyperTensor-VM repository.  
+**Purpose:** Comprehensive technical reference for QTT (Quantized Tensor Train) implementations and physics integrations in the physics-os repository.  
 **Status:** Living Document — Version 2.0 (MAXED OUT EDITION)
 
 ---

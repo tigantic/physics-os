@@ -4,7 +4,7 @@
     "version": "2.0.0",
     "codename": "TensorNet Integration",
     "release_date": "2025-01-19",
-    "framework": "HyperTensor-VM"
+    "framework": "physics-os"
   },
   "capabilities": {
     "qtt_compression": {

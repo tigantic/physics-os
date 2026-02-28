@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "project": "HyperTensor-VM",
+  "project": "physics-os",
   "protocol": "trustless_physics_140",
   "total_domains": 140,
   "certified": 140,

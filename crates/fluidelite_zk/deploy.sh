@@ -158,8 +158,8 @@ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
 source ~/.cargo/env
 
 # Clone and build
-git clone https://github.com/TiganticLabz/HyperTensor-VM.git
-cd HyperTensor-VM/fluidelite-zk
+git clone https://github.com/tigantic/physics-os.git
+cd physics-os/fluidelite-zk
 cargo build --release --features production
 
 # Run
@@ -172,8 +172,8 @@ EOF
 curl -fsSL https://get.docker.com | sh
 
 # Clone and run
-git clone https://github.com/TiganticLabz/HyperTensor-VM.git
-cd HyperTensor-VM/fluidelite-zk
+git clone https://github.com/tigantic/physics-os.git
+cd physics-os/fluidelite-zk
 docker-compose up -d
 EOF
 }

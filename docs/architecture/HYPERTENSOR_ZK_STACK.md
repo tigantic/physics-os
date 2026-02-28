@@ -418,7 +418,7 @@ assert prover.verify(proof, public_inputs)
 ## Repository Structure
 
 ```
-HyperTensor-VM-main/
+physics-os-main/
 ├── ontic/
 │   ├── cuda/
 │   │   ├── tensor_field.py      # Layer 1

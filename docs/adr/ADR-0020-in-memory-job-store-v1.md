@@ -8,7 +8,7 @@
 
 ## Context
 
-The HyperTensor-VM job lifecycle (submit → validate → execute → certify → return) requires persisting job metadata: ID, parameters, status, timing, result reference, and TPC certificate hash. Storage options evaluated:
+The physics-os job lifecycle (submit → validate → execute → certify → return) requires persisting job metadata: ID, parameters, status, timing, result reference, and TPC certificate hash. Storage options evaluated:
 
 1. **PostgreSQL**: Full ACID, rich queries, operational overhead, 5–10 ms write latency.
 2. **SQLite**: Embedded, zero-config, single-writer limitation, ~1 ms writes.

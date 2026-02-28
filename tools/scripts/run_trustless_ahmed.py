@@ -17,7 +17,7 @@ The output certificate can be verified offline without
 re-running the simulation or having access to GPU hardware.
 
 Usage:
-    cd HyperTensor-VM-main
+    cd physics-os-main
     PYTHONPATH="$PWD:$PYTHONPATH" python3 tools/tools/scripts/run_trustless_ahmed.py \\
         --n-bits 7 --max-rank 48 --steps 200 --cfl 0.08
 

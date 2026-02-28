@@ -1,4 +1,4 @@
-# HyperTensor-VM Coverage Dashboard
+# physics-os Coverage Dashboard
 
 **Generated:** Phase 6 — Coupled Physics, Inverse, UQ & Optimization
 **Total Nodes:** 167

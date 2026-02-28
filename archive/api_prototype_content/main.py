@@ -90,11 +90,11 @@ def create_app() -> FastAPI:
         openapi_url="/openapi.json",
         license_info={
             "name": "Proprietary",
-            "url": "https://github.com/tigantic/HyperTensor-VM",
+            "url": "https://github.com/tigantic/physics-os",
         },
         contact={
             "name": "HyperTensor",
-            "url": "https://github.com/tigantic/HyperTensor-VM",
+            "url": "https://github.com/tigantic/physics-os",
         },
     )
 

@@ -8,7 +8,7 @@
 
 ## Context
 
-The HyperTensor-VM API accepts user-defined simulation parameters including mesh dimensions, material properties, boundary conditions, and solver tolerances. Several parameters map directly to memory allocation sizes, iteration counts, or file paths. A permissive input model creates attack surface for:
+The physics-os API accepts user-defined simulation parameters including mesh dimensions, material properties, boundary conditions, and solver tolerances. Several parameters map directly to memory allocation sizes, iteration counts, or file paths. A permissive input model creates attack surface for:
 
 1. **Resource exhaustion**: Mesh dimensions of 2^64 causing OOM.
 2. **Path traversal**: Material database paths escaping the data directory.

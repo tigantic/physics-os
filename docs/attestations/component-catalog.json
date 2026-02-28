@@ -3,7 +3,7 @@
   "version": "26.0",
   "schema_version": "1.0",
   "repository": {
-    "name": "HyperTensor-VM",
+    "name": "physics-os",
     "description": "Physics-First Tensor Network Engine",
     "owner": "Tigantic Holdings LLC",
     "license": "Proprietary"

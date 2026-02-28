@@ -17,15 +17,15 @@
 
 <br/>
 
-[![CI](https://github.com/tigantic/HyperTensor-VM/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/tigantic/HyperTensor-VM/actions/workflows/ci.yml)
-[![Audit Gates](https://github.com/tigantic/HyperTensor-VM/actions/workflows/audit-gates.yml/badge.svg?branch=main)](https://github.com/tigantic/HyperTensor-VM/actions/workflows/audit-gates.yml)
-[![Hardening](https://github.com/tigantic/HyperTensor-VM/actions/workflows/hardening.yml/badge.svg?branch=main)](https://github.com/tigantic/HyperTensor-VM/actions/workflows/hardening.yml)
-[![Docs](https://github.com/tigantic/HyperTensor-VM/actions/workflows/docs.yml/badge.svg)](https://github.com/tigantic/HyperTensor-VM/actions/workflows/docs.yml)
-[![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/tigantic/HyperTensor-VM/badge)](https://scorecard.dev/viewer/?uri=github.com/tigantic/HyperTensor-VM)
+[![CI](https://github.com/tigantic/physics-os/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/tigantic/physics-os/actions/workflows/ci.yml)
+[![Audit Gates](https://github.com/tigantic/physics-os/actions/workflows/audit-gates.yml/badge.svg?branch=main)](https://github.com/tigantic/physics-os/actions/workflows/audit-gates.yml)
+[![Hardening](https://github.com/tigantic/physics-os/actions/workflows/hardening.yml/badge.svg?branch=main)](https://github.com/tigantic/physics-os/actions/workflows/hardening.yml)
+[![Docs](https://github.com/tigantic/physics-os/actions/workflows/docs.yml/badge.svg)](https://github.com/tigantic/physics-os/actions/workflows/docs.yml)
+[![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/tigantic/physics-os/badge)](https://scorecard.dev/viewer/?uri=github.com/tigantic/physics-os)
 
-[![Release](https://img.shields.io/github/v/release/tigantic/HyperTensor-VM?style=for-the-badge&color=blue)](https://github.com/tigantic/HyperTensor-VM/releases/latest)
+[![Release](https://img.shields.io/github/v/release/tigantic/physics-os?style=for-the-badge&color=blue)](https://github.com/tigantic/physics-os/releases/latest)
 [![LOC](https://img.shields.io/badge/LOC-1.99M-blue?style=for-the-badge)](PLATFORM_SPECIFICATION.md)
-[![Tests](https://img.shields.io/badge/Tests-370%2B_Passing-brightgreen?style=for-the-badge)](https://github.com/tigantic/HyperTensor-VM/actions/workflows/ci.yml)
+[![Tests](https://img.shields.io/badge/Tests-370%2B_Passing-brightgreen?style=for-the-badge)](https://github.com/tigantic/physics-os/actions/workflows/ci.yml)
 [![V&V](https://img.shields.io/badge/V%26V-ASME_10--2019-gold?style=for-the-badge)](PLATFORM_SPECIFICATION.md)
 [![License](https://img.shields.io/badge/License-Proprietary-red?style=for-the-badge)](LICENSE)
 
@@ -33,11 +33,11 @@
 [![Rust](https://img.shields.io/badge/Rust-132K_LOC-000000?style=flat-square&logo=rust&logoColor=white)]()
 [![Lean 4](https://img.shields.io/badge/Lean_4-57%2B_Theorems-purple?style=flat-square)]()
 [![CUDA](https://img.shields.io/badge/CUDA-GPU_Accelerated-76B900?style=flat-square&logo=nvidia&logoColor=white)]()
-[![OpenSSF Best Practices](https://img.shields.io/badge/OpenSSF-Best_Practices-green?style=flat-square&logo=opensourceinitiative&logoColor=white)](https://github.com/tigantic/HyperTensor-VM/blob/main/SECURITY.md)
+[![OpenSSF Best Practices](https://img.shields.io/badge/OpenSSF-Best_Practices-green?style=flat-square&logo=opensourceinitiative&logoColor=white)](https://github.com/tigantic/physics-os/blob/main/SECURITY.md)
 
 </div>
 
-> **[Documentation](https://tigantic.github.io/HyperTensor-VM)** · **[Architecture](ARCHITECTURE.md)** · **[Roadmap](ROADMAP.md)** · **[Specification](PLATFORM_SPECIFICATION.md)** · **[Challenges](challenges/)**
+> **[Documentation](https://tigantic.github.io/physics-os)** · **[Architecture](ARCHITECTURE.md)** · **[Roadmap](ROADMAP.md)** · **[Specification](PLATFORM_SPECIFICATION.md)** · **[Challenges](challenges/)**
 
 ---
 
@@ -451,8 +451,8 @@ A dedicated verification and validation framework implementing the full ASME V&V
 
 ```bash
 # Clone
-git clone https://github.com/tigantic/HyperTensor-VM.git
-cd HyperTensor-VM
+git clone https://github.com/tigantic/physics-os.git
+cd physics-os
 
 # Install (pick your scope)
 pip install -e ".[all]"             # Everything
@@ -578,7 +578,7 @@ All versions in sync.       # 7/7 OK
 
 ## Documentation
 
-> **[Documentation Site](https://tigantic.github.io/HyperTensor-VM)** — Full API reference, guides, and ADRs powered by MkDocs Material.
+> **[Documentation Site](https://tigantic.github.io/physics-os)** — Full API reference, guides, and ADRs powered by MkDocs Material.
 
 | Document | Description |
 |----------|-------------|
@@ -605,7 +605,7 @@ All versions in sync.       # 7/7 OK
 | Standard / Framework | Status | Implementation |
 |----------------------|:------:|----------------|
 | **ASME V&V 10-2019** | ✅ Aligned | 3,755 LOC dedicated V&V framework — 8 modules, all CI-gated |
-| **OpenSSF Scorecard** | ✅ Active | Automated security health metrics — [live badge](https://scorecard.dev/viewer/?uri=github.com/tigantic/HyperTensor-VM) |
+| **OpenSSF Scorecard** | ✅ Active | Automated security health metrics — [live badge](https://scorecard.dev/viewer/?uri=github.com/tigantic/physics-os) |
 | **OpenSSF Best Practices** | ✅ Implemented | Security policy, vulnerability disclosure, code review, CI/CD |
 | **Supply Chain (SLSA-adjacent)** | ✅ Enforced | Dependabot (3 ecosystems), CODEOWNERS (278 rules), pre-commit, pinned Actions |
 | **NIST SP 800-218 (SSDF)** | ✅ Partial | Secure development lifecycle, automated testing, change management |
@@ -659,7 +659,7 @@ This software and all associated intellectual property are the exclusive propert
   author    = {Adams, Bradly Biron Baker},
   year      = {2026},
   version   = {4.0.1},
-  url       = {https://github.com/tigantic/HyperTensor-VM},
+  url       = {https://github.com/tigantic/physics-os},
   note      = {~1.99M LOC. 20 industries. 168 physics nodes. Trustless certificates.
                Three-layer verification: Lean 4 + Halo2 ZK + Ed25519.
                Tigantic Holdings LLC, DBA HolonomiX.}

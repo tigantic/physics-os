@@ -199,7 +199,7 @@ struct TensorBridgeHeader {
    - Lessons learned and known limitations
 3. ⏳ Update `CONSTITUTION.md` compliance matrix
 4. ⏳ Git commit with tag `v0.3.0`
-5. ⏳ Push to `vm` remote (HyperTensor-VM)
+5. ⏳ Push to `vm` remote (physics-os)
 
 **Exit Criteria**:
 - [ ] 100k frames @ 60 FPS validated

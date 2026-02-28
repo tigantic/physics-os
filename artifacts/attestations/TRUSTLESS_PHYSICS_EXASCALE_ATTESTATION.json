@@ -1,5 +1,5 @@
 {
-  "project": "HyperTensor-VM",
+  "project": "physics-os",
   "protocol": "TRUSTLESS_PHYSICS_EXASCALE_ATTESTATION",
   "version": "2.0.0",
   "title": "QTT GPU-Native Exascale Physics \u2014 World Record Attestation",
@@ -7,7 +7,7 @@
   "timestamp": "2026-02-24T23:50:14Z",
   "git_commit": "cd1ec5952fc40b4082fa63d5fb67b6cba7327d50",
   "branch": "release/v4.0.x",
-  "repository": "https://github.com/tigantic/HyperTensor-VM.git",
+  "repository": "https://github.com/tigantic/physics-os.git",
   "world_record": {
     "claim": "Largest QTT-compressed GPU physics simulation: 1048576\u00b3",
     "our_grid": "1,048,576\u00b3",

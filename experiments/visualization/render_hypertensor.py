@@ -1784,7 +1784,7 @@ def build_scene_title(
             )
 
         create_text_object(
-            scene, text="github.com/tigantic/HyperTensor-VM",
+            scene, text="github.com/tigantic/physics-os",
             location=(0, 0, -0.8),
             size=0.05,
             color=(0.4, 0.5, 0.7),

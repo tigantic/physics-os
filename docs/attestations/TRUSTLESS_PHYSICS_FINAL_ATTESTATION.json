@@ -1,12 +1,12 @@
 {
-  "project": "HyperTensor-VM",
+  "project": "physics-os",
   "protocol": "TRUSTLESS_PHYSICS_FINAL_ATTESTATION",
   "version": "1.0.0",
   "summary": "Complete Trustless Physics ZK Pipeline \u2014 Phases 0 through 4",
   "timestamp": "2026-02-07T06:14:57Z",
   "git_commit": "2afe1331882b505e87ad4c8686f2d390910a2956",
   "branch": "workspace-reorg",
-  "repository": "https://github.com/tigantic/HyperTensor-VM.git",
+  "repository": "https://github.com/tigantic/physics-os.git",
   "aggregate": {
     "total_phases": 5,
     "total_gauntlet_tests": 180,

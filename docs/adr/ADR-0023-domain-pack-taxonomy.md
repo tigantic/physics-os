@@ -8,7 +8,7 @@
 
 ## Context
 
-HyperTensor-VM provides physics simulation across a wide range of engineering disciplines: fluid dynamics, structural mechanics, electromagnetics, quantum chemistry, drug discovery, weather prediction, and more. Without an organizing taxonomy, capabilities are discovered ad hoc, coverage gaps are invisible, and customers cannot quickly determine whether the platform supports their use case.
+physics-os provides physics simulation across a wide range of engineering disciplines: fluid dynamics, structural mechanics, electromagnetics, quantum chemistry, drug discovery, weather prediction, and more. Without an organizing taxonomy, capabilities are discovered ad hoc, coverage gaps are invisible, and customers cannot quickly determine whether the platform supports their use case.
 
 Enterprise physics platforms (ANSYS, COMSOL, Dassault) organize capabilities into product lines and modules. The Physics OS needs an equivalent organizational structure that is:
 

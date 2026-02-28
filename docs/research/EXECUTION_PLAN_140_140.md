@@ -1,6 +1,6 @@
 # The Physics OS — 140/140 Capability Domain Execution Plan
 
-**Repository**: HyperTensor-VM (`workspace-reorg` branch)
+**Repository**: physics-os (`workspace-reorg` branch)
 **Date**: February 7, 2026
 **Baseline**: 78/140 covered (32 full + 46 partial), 62 uncovered
 **Target**: 140/140 full coverage — every sub-domain with production solver, equations, validation

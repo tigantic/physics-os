@@ -3,7 +3,7 @@
 ## Repository Structure
 
 **Primary Repository**: `tigantic/HyperTensor` (origin)  
-**Proposed Secondary**: `tigantic/HyperTensor-VM` (for deployment artifacts)
+**Proposed Secondary**: `tigantic/physics-os` (for deployment artifacts)
 
 ## Current Status
 
@@ -39,11 +39,11 @@ git push origin main
 
 **Authentication**: Use GitHub personal access token or SSH key.
 
-### 2. Set Up HyperTensor-VM Remote (Optional)
+### 2. Set Up physics-os Remote (Optional)
 
 ```bash
 # Add new remote
-git remote add hypertensor-vm https://github.com/tigantic/HyperTensor-VM.git
+git remote add hypertensor-vm https://github.com/tigantic/physics-os.git
 
 # Verify remotes
 git remote -v
@@ -52,7 +52,7 @@ git remote -v
 git push hypertensor-vm main
 ```
 
-**Note**: Create `tigantic/HyperTensor-VM` repository on GitHub first if needed.
+**Note**: Create `tigantic/physics-os` repository on GitHub first if needed.
 
 ## Commit Schedule & Workflow
 
@@ -176,7 +176,7 @@ git push origin hotfix/critical-bug
 **Visibility**: Public (as specified in LICENSE)  
 **Pushes**: All commits from solo developer
 
-### `hypertensor-vm` (tigantic/HyperTensor-VM) - Proposed
+### `hypertensor-vm` (tigantic/physics-os) - Proposed
 **Purpose**: Deployment artifacts and releases  
 **Contents**:
 - Compiled binaries (glass-cockpit executable)

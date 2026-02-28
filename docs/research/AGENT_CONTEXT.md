@@ -229,7 +229,7 @@ chore: Update dependencies
 ### Git Remotes
 ```bash
 origin     → https://github.com/tigantic/The Physics OS.git      # Primary
-vm         → https://github.com/tigantic/HyperTensor-VM.git   # Mirror
+vm         → https://github.com/tigantic/physics-os.git   # Mirror
 ```
 
 Push to both:

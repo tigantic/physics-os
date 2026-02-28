@@ -3,7 +3,7 @@
 **A universal PDE runtime with polylogarithmic memory scaling**
 
 **Author:** Brad Tigantic — Tigantic Holdings LLC  
-**Repository:** [github.com/tigantic/HyperTensor-VM](https://github.com/tigantic/HyperTensor-VM) (tag `v2.4.0`)  
+**Repository:** [github.com/tigantic/physics-os](https://github.com/tigantic/physics-os) (tag `v2.4.0`)  
 **Date:** 2026-02-25
 
 ---
@@ -211,7 +211,7 @@ All evidence is reproducible from the repository. No proprietary data.
 
 **Brad Tigantic**  
 Tigantic Holdings LLC  
-GitHub: [github.com/tigantic/HyperTensor-VM](https://github.com/tigantic/HyperTensor-VM)  
+GitHub: [github.com/tigantic/physics-os](https://github.com/tigantic/physics-os)  
 Repository tag: `v2.4.0`
 
 *All claims in this document are backed by inspectable code and data

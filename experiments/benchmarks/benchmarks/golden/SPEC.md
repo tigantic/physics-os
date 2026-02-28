@@ -3,7 +3,7 @@
 **Status:** Released  
 **Date:** 2026-02-24  
 **Maintainer:** Brad Tigantic (Physics OS Project)  
-**Repository:** HyperTensor-VM  
+**Repository:** physics-os  
 **Companion:** `benchmarks/rank_atlas/SPEC.md` (Rank Atlas Benchmark)
 
 ---

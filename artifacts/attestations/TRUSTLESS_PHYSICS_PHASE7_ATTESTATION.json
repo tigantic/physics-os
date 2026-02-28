@@ -1,5 +1,5 @@
 {
-  "project": "HyperTensor-VM",
+  "project": "physics-os",
   "protocol": "trustless_physics_gauntlet_phase7",
   "phase": 7,
   "description": "Tier 2B Wire-Up: 40 domains across Classical Mechanics (6), Optics (4), Astrophysics (6), Geophysics (6), Materials Science (7), Coupled Physics (7), Chemical Physics (4) \u2014 trace adapters, Lean conservation proofs, TPC generation",

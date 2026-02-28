@@ -76,7 +76,7 @@ def generate_attestation(
         "timestamp_unix": int(time.time()),
         
         "system": {
-            "project": "HyperTensor-VM / QTeneT",
+            "project": "physics-os / QTeneT",
             "module": "FRONTIER/01_FUSION",
             "copyright": "(c) 2026 Tigantic Holdings LLC. All Rights Reserved.",
         },

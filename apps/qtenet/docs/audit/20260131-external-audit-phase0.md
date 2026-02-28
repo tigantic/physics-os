@@ -120,7 +120,7 @@ The separation of QTeneT (library) from The_Compressor (service) ensures dual mo
 
 ## 6. Recommended Action Plan
 
-Timeline assumes implementations exist in the HyperTensor-VM-main monorepo and require integration, not development from scratch.
+Timeline assumes implementations exist in the physics-os-main monorepo and require integration, not development from scratch.
 
 ### Phase 1 | Critical Path (Sprint 1)
 1. Wire core symbols (QTTTensor, tt_svd, round, point_eval) from monorepo into QTeneT core.

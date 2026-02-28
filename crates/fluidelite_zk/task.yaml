@@ -32,7 +32,7 @@ metadata:
 spec:
   # 1. Your hosted VM image (GitHub Release, S3, etc.)
   # IMPORTANT: This URL must stay alive as long as tasks run!
-  image: 'https://github.com/tigantic/HyperTensor-VM/releases/download/v1.0.0-zk/fluidelite.img'
+  image: 'https://github.com/tigantic/physics-os/releases/download/v1.0.0-zk/fluidelite.img'
   
   # 2. Command to run inside the VM
   command: ['/program']

@@ -339,4 +339,4 @@ The jump from 5D plasma (36,870× compression) to 3D turbulence is **conceptuall
 ---
 
 *Generated: 2025*
-*Project: HyperTensor-VM Turbulence DNS Initiative*
+*Project: physics-os Turbulence DNS Initiative*

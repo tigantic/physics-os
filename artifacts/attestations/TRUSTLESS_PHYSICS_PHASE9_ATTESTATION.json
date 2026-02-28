@@ -1,5 +1,5 @@
 {
-  "project": "HyperTensor-VM",
+  "project": "physics-os",
   "protocol": "trustless_physics_gauntlet_phase9",
   "phase": 9,
   "description": "Tier 4 Wire-Up: 26 domains across StatMech Stochastic (2), Biophysics (6), Computational Methods (6), Quantum Information Extended (2), Special / Applied Physics (10) \u2014 trace adapters, Lean conservation proofs, TPC generation",

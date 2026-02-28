@@ -28,7 +28,7 @@ print(result.summary())
 ## Installation
 
 ```bash
-# From HyperTensor-VM root
+# From physics-os root
 pip install -e apps/qtenet/
 ```
 
@@ -121,10 +121,10 @@ python -m pytest apps/qtenet/src/qtenet/tests/ -v
 
 ## Background
 
-**QTeneT** is the **enterprise-grade library packaging** of the PyTenNet QTT stack, extracted from **HyperTensor-VM-main**.
+**QTeneT** is the **enterprise-grade library packaging** of the PyTenNet QTT stack, extracted from **physics-os-main**.
 
 - **Python package/CLI:** `qtenet`
-- **Source of truth:** `HyperTensor-VM-main` (this workspace)
+- **Source of truth:** `physics-os-main` (this workspace)
 
 ## License
 

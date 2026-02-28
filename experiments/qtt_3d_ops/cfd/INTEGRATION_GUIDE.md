@@ -14,7 +14,7 @@
 Extract into your `ontic/cfd/` directory alongside existing files:
 
 ```bash
-cd HyperTensor-VM-main
+cd physics-os-main
 tar xzf qtt_batched_ops.tar.gz
 # Creates: ontic/cfd/triton_qtt3d.py, qtt_batched_ops.py, etc.
 ```
@@ -139,7 +139,7 @@ The dramatic 43x improvement for rank 48 is from fixing the adaptive_rank routin
 ## Running the Benchmark
 
 ```bash
-cd HyperTensor-VM-main
+cd physics-os-main
 PYTHONPATH="$PWD:$PYTHONPATH" python3 ontic/cfd/benchmark_batched.py
 ```
 

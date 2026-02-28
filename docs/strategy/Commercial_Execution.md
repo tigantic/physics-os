@@ -1,11 +1,11 @@
-# HyperTensor-VM: Commercial Execution Plan
+# physics-os: Commercial Execution Plan
 
 | Field | Value |
 |-------|-------|
 | **Document** | Commercial Execution Plan |
 | **Version** | 1.5 |
 | **Date** | 2026-02-09 |
-| **Owner** | TiganticLabz — HyperTensor-VM Core Team |
+| **Owner** | TiganticLabz — physics-os Core Team |
 | **Status** | **COMPLETE** — All 7 phases delivered + PWA Engine V3.0.0, platform V3.0.0 |
 
 ---

@@ -235,7 +235,7 @@ def main() -> None:
             "protocol": "EXASCALE_ANTENNA_INVENTION_SWEEP",
             "version": "1.0.0",
             "timestamp": datetime.now(timezone.utc).isoformat(),
-            "project": "HyperTensor-VM",
+            "project": "physics-os",
         },
         "config": {
             "n_bits": N_BITS,

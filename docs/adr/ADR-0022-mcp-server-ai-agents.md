@@ -18,7 +18,7 @@ The Model Context Protocol (MCP) by Anthropic provides a standardized JSON-RPC i
 
 ## Decision
 
-**HyperTensor-VM exposes an MCP server that wraps the physics execution API.** Specifically:
+**physics-os exposes an MCP server that wraps the physics execution API.** Specifically:
 
 1. The MCP server runs as a sidecar process (`physics_os.mcp.server`) alongside the main VM.
 2. Tools exposed: `simulate`, `get_result`, `list_domain_packs`, `validate_mesh`, `get_certificate`.

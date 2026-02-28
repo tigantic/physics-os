@@ -12,8 +12,8 @@
 
 ```bash
 # Clone
-git clone https://github.com/tigantic/HyperTensor-VM.git
-cd HyperTensor-VM/lUX/lUX
+git clone https://github.com/tigantic/physics-os.git
+cd physics-os/lUX/lUX
 
 # Install dependencies
 pnpm install

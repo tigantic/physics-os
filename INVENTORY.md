@@ -3,7 +3,7 @@
 > **Generated**: 2026-02-27 | **Tracked files**: ~10,364 | **Languages**: 20+ | **First-party LOC**: ~1.84M
 >
 > Comprehensive index of every application, library, experiment, proof, product,
-> tool, and infrastructure component in the HyperTensor-VM monorepo.
+> tool, and infrastructure component in the physics-os monorepo.
 
 ---
 

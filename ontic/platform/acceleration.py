@@ -1,7 +1,7 @@
 """
 QTT Acceleration Policy, Metrics, and Fallback Logic.
 
-Every QTT-accelerated solver in the HyperTensor-VM platform must satisfy
+Every QTT-accelerated solver in the physics-os platform must satisfy
 the QTT Enablement Policy (Commercial_Execution.md §Phase 5):
 
 1. A rank-growth report

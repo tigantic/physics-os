@@ -8,7 +8,7 @@
 
 ## Context
 
-HyperTensor-VM spans 140 taxonomy nodes across 20 domain packs. Multiple documents track different aspects of the project:
+physics-os spans 140 taxonomy nodes across 20 domain packs. Multiple documents track different aspects of the project:
 
 - `PLATFORM_SPECIFICATION.md` tracks LOC inventory and code existence (822K LOC, 140/140 coverage).
 - `Commercial_Execution.md` defines the V-state maturity model and execution plan.

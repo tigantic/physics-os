@@ -8,7 +8,7 @@
 
 ## Context
 
-The HyperTensor-VM execution model processes physics simulation jobs submitted via REST API or MCP protocol. Two architectures were evaluated:
+The physics-os execution model processes physics simulation jobs submitted via REST API or MCP protocol. Two architectures were evaluated:
 
 1. **Async queue** (Celery/RabbitMQ/Redis): Jobs enqueued, workers poll, results retrieved via callback or polling. Provides horizontal scaling and fault tolerance.
 2. **Synchronous pipeline**: Jobs execute in-process, results returned in the HTTP response. Simpler, lower latency, deterministic ordering.

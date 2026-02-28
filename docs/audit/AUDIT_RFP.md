@@ -3,7 +3,7 @@
 ## 1. Overview
 
 **Company:** Tigantic Labs  
-**Project:** FluidElite / HyperTensor-VM Trustless Physics Platform  
+**Project:** FluidElite / physics-os Trustless Physics Platform  
 **Date:** January 2025  
 **Contact:** brad@tigantic.com  
 

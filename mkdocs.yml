@@ -1,15 +1,15 @@
-# HyperTensor Documentation — MkDocs Material
+# The Physics OS Documentation — MkDocs Material
 # https://squidfunk.github.io/mkdocs-material/
 #
 # Build:  mkdocs build --strict
 # Serve:  mkdocs serve
 # Deploy: mkdocs gh-deploy (or via .github/workflows/docs.yml)
 
-site_name: HyperTensor
-site_description: "The Physics-First Tensor Network Engine — Quantum-inspired computation at exascale"
-site_url: https://tigantic.github.io/HyperTensor-VM
-repo_url: https://github.com/tigantic/HyperTensor-VM
-repo_name: tigantic/HyperTensor-VM
+site_name: The Physics OS
+site_description: "The Physics OS — Powered by The Ontic Engine · Quantum-inspired computation at exascale"
+site_url: https://tigantic.github.io/physics-os
+repo_url: https://github.com/tigantic/physics-os
+repo_name: tigantic/physics-os
 edit_uri: edit/main/docs/
 
 copyright: "&copy; 2024-2026 Tigantic Holdings LLC. All rights reserved."
@@ -120,7 +120,7 @@ extra_javascript:
 extra:
   social:
     - icon: fontawesome/brands/github
-      link: https://github.com/tigantic/HyperTensor-VM
+      link: https://github.com/tigantic/physics-os
   version:
     provider: mike
 

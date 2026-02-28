@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Full forensic LOC audit of HyperTensor-VM repository."""
+"""Full forensic LOC audit of physics-os repository."""
 import os
 import json
 from pathlib import Path

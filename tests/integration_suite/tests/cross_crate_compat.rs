@@ -237,7 +237,7 @@ fn test_writer_verifier_api_contract() {
             vec![("benchmark".to_string(), b"bench_data".to_vec())],
         )
         .with_metadata(json!({
-            "project": "HyperTensor-VM",
+            "project": "physics-os",
             "version": "1.0.0",
             "domain": "cfd",
         }))

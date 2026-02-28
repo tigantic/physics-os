@@ -10,7 +10,7 @@ readme = "README.md"
 license = {text = "Proprietary - Tigantic Holdings LLC"}
 requires-python = ">=3.11"
 authors = [
-    {name = "TiganticLabz / HyperTensor-VM Core Team", email = "dev@tigantic.com"},
+    {name = "TiganticLabz / physics-os Core Team", email = "dev@tigantic.com"},
 ]
 keywords = [
     "partial-wave-analysis",
@@ -48,9 +48,9 @@ dev = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/tigantic/HyperTensor-VM"
-Documentation = "https://github.com/tigantic/HyperTensor-VM/blob/main/paper/PWA_REPLICATION_NOTE.md"
-Repository = "https://github.com/tigantic/HyperTensor-VM.git"
+Homepage = "https://github.com/tigantic/physics-os"
+Documentation = "https://github.com/tigantic/physics-os/blob/main/paper/PWA_REPLICATION_NOTE.md"
+Repository = "https://github.com/tigantic/physics-os.git"
 
 [project.scripts]
 pwa-engine = "pwa_engine.cli:main"

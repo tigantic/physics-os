@@ -351,7 +351,7 @@ INVENTION PACKET — [Candidate ID]
    Material stack hash:    [SHA-256]
 
 4. SIMULATION CONFIGURATION (ATTESTED)
-   Solver version:         [e.g., HyperTensor-VM v4.0.x]
+   Solver version:         [e.g., physics-os v4.0.x]
    Grid resolution:        [e.g., n_bits=14, 16384³]
    Time steps:             [e.g., 2000]
    dt / CFL number:        [e.g., 2.7e-3 / 0.3]
@@ -448,4 +448,4 @@ INVENTION PACKET — [Candidate ID]
 
 ---
 
-*Generated: 2026-02-24 | Updated: 2026-02-24 | HyperTensor-VM v4.0.0-exascale | k=1 rank-bounded QTT*
+*Generated: 2026-02-24 | Updated: 2026-02-24 | physics-os v4.0.0-exascale | k=1 rank-bounded QTT*

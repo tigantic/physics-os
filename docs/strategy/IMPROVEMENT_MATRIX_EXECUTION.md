@@ -351,4 +351,4 @@ The single xfail is `TestHadamard::test_hadamard_modes[dmrg]` — a pre-existing
 
 ---
 
-*Generated from the HyperTensor-VM improvement matrix execution sprint.*
+*Generated from the physics-os improvement matrix execution sprint.*

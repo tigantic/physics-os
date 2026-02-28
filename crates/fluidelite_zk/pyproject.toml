@@ -38,9 +38,9 @@ dev = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/TiganticLabz/HyperTensor-VM"
-Documentation = "https://github.com/TiganticLabz/HyperTensor-VM#readme"
-Repository = "https://github.com/TiganticLabz/HyperTensor-VM"
+Homepage = "https://github.com/tigantic/physics-os"
+Documentation = "https://github.com/tigantic/physics-os#readme"
+Repository = "https://github.com/tigantic/physics-os"
 
 [tool.maturin]
 features = ["python"]

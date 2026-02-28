@@ -138,7 +138,7 @@ def generate_attestation(results: dict, all_pass: bool):
         "timestamp_utc": timestamp.isoformat(),
         "timestamp_unix": int(timestamp.timestamp()),
         "system": {
-            "project": "HyperTensor-VM / QTeneT",
+            "project": "physics-os / QTeneT",
             "module": "FRONTIER/03_SEMICONDUCTOR_PLASMA",
             "copyright": "(c) 2026 Tigantic Holdings LLC. All Rights Reserved."
         },

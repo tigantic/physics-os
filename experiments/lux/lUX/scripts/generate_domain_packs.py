@@ -19,7 +19,7 @@ from typing import Any
 
 SCRIPT_DIR = Path(__file__).resolve().parent
 MONOREPO_ROOT = SCRIPT_DIR.parent  # lUX/lUX
-REPO_ROOT = MONOREPO_ROOT.parents[1]  # HyperTensor-VM-main
+REPO_ROOT = MONOREPO_ROOT.parents[1]  # physics-os-main
 INDEX_PATH = REPO_ROOT / "certificates" / "index.json"
 OUTPUT_DIR = MONOREPO_ROOT / "packages" / "core" / "tests" / "fixtures" / "domain-packs"
 

@@ -11,7 +11,7 @@
 
 ### Transformation Technical Plan
 
-*From HyperTensor-VM to The Physics OS — Powered by The Ontic Engine*
+*From physics-os to The Physics OS — Powered by The Ontic Engine*
 
 **Tigantic Holdings LLC** · **DBA: HolonomiX** · **February 2026**
 
@@ -80,7 +80,7 @@ The complete naming hierarchy from legal entity to code symbol:
 ### 2.1 Current State (Pre-Transformation)
 
 ```
-HyperTensor-VM (monorepo)
+physics-os (monorepo)
 ├── physics_os/          Python product layer  (API, SDK, CLI, MCP, core)
 │   ├── api/              REST API (FastAPI)
 │   ├── sdk/              Python SDK
@@ -293,7 +293,7 @@ Physics Problem
 | **0** | Identity Layer | Brand assets, README, docs, LICENSE, headers | None | 1 session |
 | **1** | Python Package Rename | `ontic/` → `ontic/`, `physics_os/` → `physics_os/` | **YES** | 2-3 sessions |
 | **2** | Rust Crate Rename | `ontic_core` → `ontic_core`, `ontic_bridge` → `ontic_bridge` | **YES** | 1 session |
-| **3** | Repository Rename | `HyperTensor-VM` → `physics-os` on GitHub | **YES** | 1 session |
+| **3** | Repository Rename | `physics-os` → `physics-os` on GitHub | **YES** | 1 session |
 | **4** | Documentation Overhaul | Full rebrand of all 30+ docs | None (content) | 1-2 sessions |
 | **5** | CI/CD & Deployment | Workflow names, badge URLs, container tags | Operational | 1 session |
 
@@ -393,7 +393,7 @@ Update `Cargo.toml` workspace members, all `use` statements, and the PyO3 module
 
 ### 4.3 Phase 3 — Repository Rename
 
-1. Rename on GitHub: `tigantic/HyperTensor-VM` → `tigantic/physics-os`
+1. Rename on GitHub: `tigantic/physics-os` → `tigantic/physics-os`
 2. GitHub auto-redirects old URLs
 3. Update all badge URLs, CI workflow references, documentation links
 4. Update `pyproject.toml` URLs section

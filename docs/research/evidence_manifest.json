@@ -15,7 +15,7 @@
     "assumed_not_verified": "Claim is assumed based on architectural reasoning but lacks direct measurement; verification protocol specified"
   },
   "repo": {
-    "name": "HyperTensor-VM",
+    "name": "physics-os",
     "branch": "main",
     "commit": "799102423d88619a0c649cf4ab5c9a34b204269c",
     "commit_short": "79910242"

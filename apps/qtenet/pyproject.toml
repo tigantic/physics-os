@@ -5,7 +5,7 @@ build-backend = "hatchling.build"
 [project]
 name = "qtenet"
 version = "0.1.0"
-description = "QTenet: Proprietary QTT (Quantized Tensor Train) consortium library blueprint extracted from HyperTensor-VM-main."
+description = "QTenet: Proprietary QTT (Quantized Tensor Train) consortium library blueprint extracted from physics-os-main."
 readme = "README.md"
 requires-python = ">=3.10"
 license = { text = "PROPRIETARY" }

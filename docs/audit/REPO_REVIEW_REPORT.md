@@ -1,4 +1,4 @@
-# HyperTensor-VM Repository Review Report
+# physics-os Repository Review Report
 
 **Date:** 2026-02-13  
 **Reviewers:** Staff+ Engineering, Security, SRE/DevOps, Performance, QA, Technical Writing  

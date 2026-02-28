@@ -1,7 +1,7 @@
 # FluidElite Zenith Network Deployment Guide
 
 **Status:** ✅ **VM BUILT & TESTED LOCALLY**  
-**VM Image:** [v1.0.0-zk Release](https://github.com/tigantic/HyperTensor-VM/releases/tag/v1.0.0-zk)  
+**VM Image:** [v1.0.0-zk Release](https://github.com/tigantic/physics-os/releases/tag/v1.0.0-zk)  
 **Image Size:** 101 MB  
 **SHA256:** `7663e2a5722c7f6f2ade0188d983df28b7dd5314fe41faacca664b211a79c9d4`
 
@@ -317,7 +317,7 @@ Your `fluidelite.img` URL is your product. Anyone can submit tasks using it.
 ```yaml
 # Customer's task.yaml
 spec:
-  image: 'https://github.com/tigantic/HyperTensor-VM/releases/download/v1.0.0/fluidelite.img'
+  image: 'https://github.com/tigantic/physics-os/releases/download/v1.0.0/fluidelite.img'
 ```
 
 ### The Income

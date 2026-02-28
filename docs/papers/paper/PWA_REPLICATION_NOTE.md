@@ -1,6 +1,6 @@
 # PWA Compute Engine — Replication Note
 
-**Adams (2026), HyperTensor-VM Platform V3.0.0**
+**Adams (2026), physics-os Platform V3.0.0**
 **Date: 2026-02-09**
 
 ---
@@ -388,4 +388,4 @@ python3 experiments/run_pwa_engine.py
 
 ---
 
-*Adams (2026). HyperTensor-VM: QTT-Accelerated Partial Wave Analysis Engine.*
+*Adams (2026). physics-os: QTT-Accelerated Partial Wave Analysis Engine.*

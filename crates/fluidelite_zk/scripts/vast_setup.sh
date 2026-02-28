@@ -6,10 +6,10 @@
 # for running FluidElite ZK benchmarks.
 #
 # Usage:
-#   curl -sSL https://raw.githubusercontent.com/TiganticLabz/HyperTensor-VM/main/fluidelite-zk/scripts/vast_setup.sh | bash
+#   curl -sSL https://raw.githubusercontent.com/tigantic/physics-os/main/fluidelite-zk/scripts/vast_setup.sh | bash
 #   
 # Or download and run:
-#   wget https://raw.githubusercontent.com/TiganticLabz/HyperTensor-VM/main/fluidelite-zk/scripts/vast_setup.sh
+#   wget https://raw.githubusercontent.com/tigantic/physics-os/main/fluidelite-zk/scripts/vast_setup.sh
 #   chmod +x vast_setup.sh
 #   ./vast_setup.sh
 # =============================================================================
@@ -103,10 +103,10 @@ if ! grep -q "ICICLE_BACKEND_INSTALL_DIR" ~/.bashrc; then
 fi
 
 # Clone the repository if not present
-REPO_DIR="$HOME/HyperTensor-VM"
+REPO_DIR="$HOME/physics-os"
 if [ ! -d "$REPO_DIR" ]; then
-    echo "📥 Cloning HyperTensor-VM repository..."
-    git clone --depth 1 https://github.com/TiganticLabz/HyperTensor-VM.git "$REPO_DIR"
+    echo "📥 Cloning physics-os repository..."
+    git clone --depth 1 https://github.com/tigantic/physics-os.git "$REPO_DIR"
 else
     echo "📁 Repository already exists at $REPO_DIR"
     echo "   Pulling latest changes..."
@@ -143,7 +143,7 @@ echo "║                        Setup Complete!                                
 echo "╠══════════════════════════════════════════════════════════════════════════╣"
 echo "║                                                                          ║"
 echo "║  To run benchmarks:                                                      ║"
-echo "║    cd ~/HyperTensor-VM/fluidelite-zk                                     ║"
+echo "║    cd ~/physics-os/fluidelite-zk                                     ║"
 echo "║    ./scripts/run_vastai_benchmarks.sh                                    ║"
 echo "║                                                                          ║"
 echo "║  Individual benchmarks:                                                  ║"

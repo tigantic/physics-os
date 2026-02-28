@@ -752,7 +752,7 @@ def run_all():
 
     # Save attestation JSON
     attestation = {
-        "project": "HyperTensor-VM",
+        "project": "physics-os",
         "protocol": "trustless_physics_gauntlet_phase1",
         "phase": 1,
         "description": "Single-Domain MVP: Euler 3D CFD Trustless Certificate",

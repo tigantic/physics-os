@@ -7,7 +7,7 @@ internals.
 ## Repository Structure
 
 ```
-HyperTensor-VM/
+physics-os/
 ├── ontic/          # Tier 1: Physics engine (Python)
 ├── physics_os/        # Tier 2: Execution fabric (Python)
 ├── crates/             # Tier 3: Rust performance substrate

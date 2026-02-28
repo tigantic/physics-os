@@ -31,7 +31,7 @@ export ZENITH_RPC="${ZENITH_RPC:-https://rpc.zenith.network}"
 export ZENITH_GATEWAY="${ZENITH_GATEWAY:-https://gateway.zenith.network}"
 
 # Image configuration
-IMAGE_URL="https://github.com/tigantic/HyperTensor-VM/releases/download/v1.0.0-zk/fluidelite.img"
+IMAGE_URL="https://github.com/tigantic/physics-os/releases/download/v1.0.0-zk/fluidelite.img"
 IMAGE_SHA256="7663e2a5722c7f6f2ade0188d983df28b7dd5314fe41faacca664b211a79c9d4"
 
 # Program metadata

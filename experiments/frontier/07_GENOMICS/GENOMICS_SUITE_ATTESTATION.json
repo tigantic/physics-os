@@ -53,7 +53,7 @@
     "total_time_seconds": 1.1547955050045857
   },
   "certification": {
-    "framework": "HyperTensor-VM FRONTIER",
+    "framework": "physics-os FRONTIER",
     "release": "v0.6.0-genomics",
     "compliance": [
       "Tensor network foundation",

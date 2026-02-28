@@ -1,4 +1,4 @@
-# HyperTensor-VM Phase 7 Hardening Pipeline
+# physics-os Phase 7 Hardening Pipeline
 # ============================================
 # Runs the productization quality gates:
 #   - Platform + Pack + Phase 5/6/7 test suites

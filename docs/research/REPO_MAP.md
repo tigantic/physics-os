@@ -8,7 +8,7 @@
 ## 📂 Root Structure
 
 ```
-HyperTensor-VM-main/
+physics-os-main/
 ├── 📁 ontic/           # Core library (329 modules)
 ├── 📁 demos/               # Demo scripts & evidence
 ├── 📁 apps/                # Applications (glass_cockpit, global_eye)

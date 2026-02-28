@@ -8,7 +8,7 @@
 
 ## Context
 
-HyperTensor-VM is a polyglot system: high-level orchestration, domain-pack logic, and API serving are natural fits for Python; performance-critical inner loops (QTT arithmetic, IPC bridge, ZK proving), for Rust. Two architectural patterns were considered:
+physics-os is a polyglot system: high-level orchestration, domain-pack logic, and API serving are natural fits for Python; performance-critical inner loops (QTT arithmetic, IPC bridge, ZK proving), for Rust. Two architectural patterns were considered:
 
 1. **Microservices**: Separate Python and Rust services communicating via gRPC/REST. Independent deployment, scaling, and versioning.
 2. **Monolith + FFI**: Single Python process calling Rust via PyO3/shared-memory bridge. Single deployment unit, zero network overhead for hot paths.
@@ -17,7 +17,7 @@ The platform's correctness model depends on deterministic, bit-exact execution a
 
 ## Decision
 
-**HyperTensor-VM is a Python monolith with Rust acceleration via PyO3 and shared-memory IPC.** Specifically:
+**physics-os is a Python monolith with Rust acceleration via PyO3 and shared-memory IPC.** Specifically:
 
 1. `ontic/` and `physics_os/` are the Python package roots (108 and ~30 modules respectively).
 2. `crates/` contains 15 Rust workspace members providing core compute, bridge, and ZK capabilities.

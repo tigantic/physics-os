@@ -9,7 +9,7 @@ Run this on your machine to verify:
 3. Integration: full solver step time with batched ops
 
 Usage:
-    cd HyperTensor-VM-main
+    cd physics-os-main
     PYTHONPATH="$PWD:$PYTHONPATH" python3 tensornet/cfd/benchmark_batched.py
 """
 

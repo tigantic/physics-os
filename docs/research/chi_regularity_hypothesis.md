@@ -24,7 +24,7 @@
 This monolithic document is retained as the canonical history and reference.
 For review and evaluation, use Paper A and Paper B instead.
 
-**Repository:** HyperTensor-VM  
+**Repository:** physics-os  
 **Commit:** (see git log, branch `main`)  
 **Hardware:** NVIDIA GeForce RTX 5070 Laptop GPU, 7.96 GB VRAM, CC 12.0 (Rank Atlas) · CPU/RAM only (QTT Physics VM)  
 **Software:** Python 3.12.3, PyTorch 2.9.1+cu128, CUDA 12.8 (Rank Atlas) · NumPy 2.2.3 (QTT Physics VM)  
