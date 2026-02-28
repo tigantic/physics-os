@@ -1,0 +1,56 @@
+{
+  "challenge": "Challenge IV \u2014 Fusion Energy",
+  "exit_criteria": {
+    "Q_gt_10": true,
+    "all_pass": true,
+    "configs_ge_10k": true,
+    "feasible_filter_applied": true,
+    "qtt_ge_2x": true,
+    "stability_mapped": true
+  },
+  "hashes": {
+    "blake2b": "a7a82b53f85f3018aa0ae143c4418f7da99952c900a0b9761149593df615bae483b337a5c025ab727a5b5b32b09ce09a1c9ac6fb72ec3eea2da9f86af0e9363c",
+    "sha256": "acc0068c878481ca7af8f252ee4035c27ed56e09a04d9c299ad39227e9308197",
+    "sha3_256": "49f3469a79a81ad44d472a413e0e5778f5a2f084d0cadf0e918e5e5653ed9b15"
+  },
+  "phase": "Phase 3: Reactor Design Optimization",
+  "results": {
+    "best_B_T": 12.06,
+    "best_P_fusion_MW": 1311.2,
+    "best_Q": 26.22,
+    "best_R": 3.431,
+    "best_a": 1.144,
+    "best_cost_index": 0.938,
+    "n_Q_gt_10": 405,
+    "n_feasible": 3936,
+    "n_stable": 3875,
+    "qtt_compression_ratio": 204.8,
+    "wall_time_s": 0.1
+  },
+  "solver_params": {
+    "B_range": [
+      10.0,
+      25.0
+    ],
+    "P_aux_MW": 50.0,
+    "R_range": [
+      1.5,
+      3.5
+    ],
+    "T_i_keV": 15.0,
+    "a_range": [
+      0.4,
+      1.2
+    ],
+    "delta_range": [
+      0.2,
+      0.6
+    ],
+    "kappa_range": [
+      1.5,
+      2.2
+    ],
+    "n_configs": 10000
+  },
+  "timestamp_utc": "2026-02-28T08:05:04Z"
+}

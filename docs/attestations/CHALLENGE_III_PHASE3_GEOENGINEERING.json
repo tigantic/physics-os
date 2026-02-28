@@ -1,0 +1,32 @@
+{
+  "challenge": "Challenge III \u2014 Climate Tipping Points",
+  "exit_criteria": {
+    "all_pass": true,
+    "configs_ge_100": true,
+    "qtt_ge_2x": true,
+    "regions_ge_6": true
+  },
+  "hashes": {
+    "blake2b": "50a2bfa83f77dc1141ec1c4e4265b861cb906cbc9b7923adfaaf589961248a6c75f3930424098de561c7c97c3001033d86a530002d8b5d503be2b66532a063a9",
+    "sha256": "715a25c02c2395c44c743f23cbeb97c19a9a11ff886308afcfc238a873eef385",
+    "sha3_256": "ba1bf5acebb7d0ee72db2945fc56073415c65aafe1f1d5acdc2e668e5b11504d"
+  },
+  "phase": "Phase 3: Geoengineering Intervention Modeling",
+  "results": {
+    "best_config_id": 5,
+    "best_cooling_K": -4.6243,
+    "qtt_compression_ratio": 24.08,
+    "qtt_memory_bytes": 87104,
+    "wall_time_s": 0.1
+  },
+  "solver_params": {
+    "n_configs": 120,
+    "n_ensemble": 50,
+    "n_injection_rates": 6,
+    "n_particle_types": 4,
+    "n_regions": 8,
+    "n_sites": 5,
+    "sim_months": 36
+  },
+  "timestamp_utc": "2026-02-28T08:02:40Z"
+}

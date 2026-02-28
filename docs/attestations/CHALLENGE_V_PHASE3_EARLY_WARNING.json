@@ -1,0 +1,85 @@
+{
+  "challenge": "Challenge V \u2014 Supply Chain Resilience",
+  "detection": {
+    "fn": 0,
+    "fp": 267,
+    "fpr": 0.023852,
+    "lead_time_hours": 3.6,
+    "precision": 0.181,
+    "recall": 1.0,
+    "tn": 10927,
+    "tp": 59
+  },
+  "exit_criteria": {
+    "all_pass": true,
+    "fpr_lt_5pct": true,
+    "qtt_ge_2x": true,
+    "reroutes_produced": true,
+    "scenarios_ge_3": true,
+    "vessels_ge_500": true
+  },
+  "hashes": {
+    "blake2b": "557a31f7536b83cfade5209e4e10688cbf96bea578a4f0af9c0d33b3734ded6553ac989180a568c321969b458bb445148fcfd00c23c401a5d8de1f81f5e871ba",
+    "sha256": "fac6a8ba9ffaa2ce5391315ab2ca598d5f338eb76137ed92be8d8675dff3b5c2",
+    "sha3_256": "47f3eb0349aa43636073248f55cc43e6ad39c7eeb091cc20128f96b3eda53cb6"
+  },
+  "phase": "Phase 3: Real-Time Early Warning",
+  "propagation": [
+    {
+      "cascade_depth": 0,
+      "economic_impact_usd": 25621396,
+      "max_queue_teu": 9603,
+      "ports_affected": 4,
+      "prediction_accuracy": 0.996,
+      "scenario": "Suez Canal Blockage"
+    },
+    {
+      "cascade_depth": 5,
+      "economic_impact_usd": 156608931,
+      "max_queue_teu": 21814,
+      "ports_affected": 10,
+      "prediction_accuracy": 0.838,
+      "scenario": "Shanghai Lockdown"
+    },
+    {
+      "cascade_depth": 0,
+      "economic_impact_usd": 5319130,
+      "max_queue_teu": 1940,
+      "ports_affected": 3,
+      "prediction_accuracy": 0.92,
+      "scenario": "US West Coast Labor"
+    }
+  ],
+  "reroutes": [
+    {
+      "added_cost_pct": 42.3,
+      "added_time_days": 34.9,
+      "affected_vessels": 75,
+      "scenario": "Suez Canal Blockage",
+      "teu_preserved": 591005
+    },
+    {
+      "added_cost_pct": 37.4,
+      "added_time_days": 63.2,
+      "affected_vessels": 98,
+      "scenario": "Shanghai Lockdown",
+      "teu_preserved": 823981
+    },
+    {
+      "added_cost_pct": 2.9,
+      "added_time_days": 4.1,
+      "affected_vessels": 71,
+      "scenario": "US West Coast Labor",
+      "teu_preserved": 574895
+    }
+  ],
+  "solver_params": {
+    "dt_hours": 6,
+    "n_ports": 50,
+    "n_routes": 80,
+    "n_scenarios": 3,
+    "n_vessels": 500,
+    "sim_days": 60
+  },
+  "timestamp_utc": "2026-02-28T08:06:52Z"
+}

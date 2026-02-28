@@ -1,0 +1,43 @@
+{
+  "api_endpoints": [
+    "/api/v1/verify/frame",
+    "/api/v1/verify/stream",
+    "/api/v1/verify/status/{job_id}",
+    "/api/v1/verify/report/{job_id}",
+    "/api/v1/verify/batch"
+  ],
+  "challenge": "Challenge VI \u2014 Proof of Physical Reality",
+  "exit_criteria": {
+    "all_pass": true,
+    "auc_gt_0_90": true,
+    "fps_ge_30": true,
+    "qtt_ge_2x": true,
+    "tests_ge_5": true
+  },
+  "hashes": {
+    "blake2b": "504cdb89c525f0aa40c35cec0de69aed0b26ef23bbce478bc02694fa00e131c4b98469e57f120a7483a4b627cd2c287bd382b32b888e35b917619c7c1ab2a3cd",
+    "sha256": "0f5290f8f6b8643524bfd2081ee7cdb6de930f9156cf37f7fed60c104f22de72",
+    "sha3_256": "6c0138ad00fe7086d4b93017a1ada42b88fbf0c21687b0c949ae6117f0118ad7"
+  },
+  "phase": "Phase 3: Real-Time Verification Pipeline",
+  "results": {
+    "auc": 0.98,
+    "mean_fps": 926.4,
+    "min_fps": 873.2,
+    "n_frames_total": 6000,
+    "qtt_compression_ratio": 3.63,
+    "qtt_memory_bytes": 72208,
+    "wall_time_s": 8.1
+  },
+  "solver_params": {
+    "fps_target": 30,
+    "img_size": [
+      64,
+      64
+    ],
+    "n_frames_per_stream": 300,
+    "n_physics_tests": 5,
+    "n_streams": 20
+  },
+  "timestamp_utc": "2026-02-28T08:07:08Z"
+}
