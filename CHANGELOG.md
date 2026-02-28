@@ -8,6 +8,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **Civilization Challenges — 30/30 phases COMPLETE** (`dc275754`→`7c89bcd0`)
+  - Challenge III (Climate Tipping Points): 5 phases, 5 pipelines, treaty-grade ZK proofs
+  - Challenge IV (Fusion Energy): 5 phases, 5 pipelines, on-chain Grad-Shafranov equilibrium
+  - Challenge V (Supply Chain): 5 phases, 5 pipelines, grid-operator certification
+  - Challenge VI (Proof of Reality): 5 phases, 5 pipelines, W3C/IETF Reality Certificate Standard
+  - 29 pipeline files, 31,733 authored LOC, 58 attestation artifacts
 - **ARCHITECTURE.md** — system architecture with 3 Mermaid diagrams (dependency graph, job lifecycle, verification flow), ADR index, IP boundary documentation
 - **ROADMAP.md** — 4-milestone product roadmap (Private Alpha → GA), research frontiers, honest status assessment
 - **NOTICE** — third-party software attributions (Python, Rust, Lean 4, dev tools)
@@ -20,7 +26,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **GitHub Release v4.0.1** — formal release with comprehensive release notes
 
 ### Changed
-- **README.md** rewritten (596 → 670 lines) — planetary OS positioning, live CI badges, expanded project tree, V&V prestige table, security compliance matrix
+- **README.md** metrics refreshed — LOC 1.51M→1.99M, Python 471K→803K, Rust 151K→132K, tensornet/ 471K→500K, badge/diagram/citation/footer sync
+- **PLATFORM_SPECIFICATION.md** header badges — Python 851K→994K, Solidity 34K→92K, Physics 140/140→168/168
+- **Commercial_Execution.md** — LOC 1,157K→1,989K, tests 295→370+, files 2,808→5,882, physics 140/140→168/168
+- **LAUNCH_READINESS.md** — updated baseline to v4.0.1, added re-assessment note for gates G6/G7/G8
 - **CITATION.cff** — updated all metrics (1.51M LOC, 19 languages, 168 nodes, 20 verticals, 370+ tests, v4.0.1)
 - **CODE_OF_CONDUCT.md** — upgraded from 28-line stub to complete Contributor Covenant 2.1 (133 lines)
 - **SECURITY.md** — added Ed25519 and Halo2 to cryptographic considerations, updated policy version

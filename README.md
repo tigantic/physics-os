@@ -11,7 +11,7 @@
 
 ### **The Planetary Operating System for Physics Computation**
 
-*One codebase. 1.5 million lines of code. 20 industries. Cryptographic proof that the physics is real.*
+*One codebase. ~2 million lines of code. 20 industries. Cryptographic proof that the physics is real.*
 
 <br/>
 
@@ -22,13 +22,13 @@
 [![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/tigantic/HyperTensor-VM/badge)](https://scorecard.dev/viewer/?uri=github.com/tigantic/HyperTensor-VM)
 
 [![Release](https://img.shields.io/github/v/release/tigantic/HyperTensor-VM?style=for-the-badge&color=blue)](https://github.com/tigantic/HyperTensor-VM/releases/latest)
-[![LOC](https://img.shields.io/badge/LOC-1.51M-blue?style=for-the-badge)](PLATFORM_SPECIFICATION.md)
+[![LOC](https://img.shields.io/badge/LOC-1.99M-blue?style=for-the-badge)](PLATFORM_SPECIFICATION.md)
 [![Tests](https://img.shields.io/badge/Tests-370%2B_Passing-brightgreen?style=for-the-badge)](https://github.com/tigantic/HyperTensor-VM/actions/workflows/ci.yml)
 [![V&V](https://img.shields.io/badge/V%26V-ASME_10--2019-gold?style=for-the-badge)](PLATFORM_SPECIFICATION.md)
 [![License](https://img.shields.io/badge/License-Proprietary-red?style=for-the-badge)](LICENSE)
 
-[![Python](https://img.shields.io/badge/Python-471K_LOC-3776AB?style=flat-square&logo=python&logoColor=white)]()
-[![Rust](https://img.shields.io/badge/Rust-151K_LOC-000000?style=flat-square&logo=rust&logoColor=white)]()
+[![Python](https://img.shields.io/badge/Python-803K_LOC-3776AB?style=flat-square&logo=python&logoColor=white)]()
+[![Rust](https://img.shields.io/badge/Rust-132K_LOC-000000?style=flat-square&logo=rust&logoColor=white)]()
 [![Lean 4](https://img.shields.io/badge/Lean_4-57%2B_Theorems-purple?style=flat-square)]()
 [![CUDA](https://img.shields.io/badge/CUDA-GPU_Accelerated-76B900?style=flat-square&logo=nvidia&logoColor=white)]()
 [![OpenSSF Best Practices](https://img.shields.io/badge/OpenSSF-Best_Practices-green?style=flat-square&logo=opensourceinitiative&logoColor=white)](https://github.com/tigantic/HyperTensor-VM/blob/main/SECURITY.md)
@@ -151,9 +151,9 @@ hypertensor serve --port 8000
 
 ---
 
-## The Engine: 471K Lines of Physics
+## The Engine: 500K Lines of Physics
 
-The core physics engine (`tensornet/`, 1,082 files, 471,534 LOC) implements a register-based bytecode VM for QTT computation. Domain specifications compile to an intermediate representation (IR) of QTT operations — no dense arrays are ever materialized.
+The core physics engine (`tensornet/`, 1,218 files, 500,216 LOC) implements a register-based bytecode VM for QTT computation. Domain specifications compile to an intermediate representation (IR) of QTT operations — no dense arrays are ever materialized.
 
 ### Seven Physics Domains
 
@@ -280,11 +280,11 @@ Six execution documents mapping demonstrated capabilities to civilization-scale 
 
 | Metric | Value |
 |--------|------:|
-| **Total Authored Lines** | 1,513,108 |
-| **Source Files** | 3,679 |
+| **Total Authored Lines** | 1,988,811 |
+| **Source Files** | 5,882 |
 | **Languages** | 19 |
 | **Tests Passing** | 370+ |
-| **Validation Gauntlets** | 33 |
+| **Validation Gauntlets** | 38 |
 | **Attestation JSONs** | 125+ |
 | **Physics Taxonomy Nodes** | 168 |
 | **Domain Packs** | 20 |
@@ -294,7 +294,7 @@ Six execution documents mapping demonstrated capabilities to civilization-scale 
 | # | Platform | Size | Purpose |
 |:-:|----------|-----:|---------|
 | 1 | **HyperTensor Runtime** | 3,965 LOC | Commercial API + SDK + CLI + MCP |
-| 2 | **Physics VM** (`tensornet/`) | 471K LOC | QTT compute engine — 105 modules, 1,082 files |
+| 2 | **Physics VM** (`tensornet/`) | 500K LOC | QTT compute engine — 105 modules, 1,218 files |
 | 3 | **FluidElite** (`crates/fluidelite*/`) | 57K LOC | Production tensor engine + ZK prover |
 | 4 | **QTeneT** (`apps/qtenet/`) | 10K LOC | Enterprise QTT SDK |
 | 5 | **Platform Substrate** | 13.7K LOC | Unified simulation API V2.0.0 |
@@ -422,7 +422,7 @@ A dedicated verification and validation framework implementing the full ASME V&V
 │   └──────────────────────────────────┬────────────────────────────────────────┘  │
 │                                      │                                            │
 │   ┌──────────────────────────────────▼────────────────────────────────────────┐  │
-│   │           tensornet/ Physics Engine (1,082 files, 471K LOC)               │  │
+│   │           tensornet/ Physics Engine (1,218 files, 500K LOC)               │  │
 │   │   ┌────────┐ ┌────────┐ ┌────────┐ ┌────────┐ ┌────────┐ ┌────────┐    │  │
 │   │   │  CFD   │ │Genesis │ │Exploit │ │ Packs  │ │Discover│ │Platform│    │  │
 │   │   │  77K   │ │  42K   │ │  28K   │ │  26K   │ │  25K   │ │  15K   │    │  │
@@ -430,7 +430,7 @@ A dedicated verification and validation framework implementing the full ASME V&V
 │   │   + 99 more domain-specific modules                                      │  │
 │   └──────────────────────────────────────────────────────────────────────────┘  │
 │                                                                                  │
-│   Rust Substrate (19 workspace members, 151K LOC)                                │
+│   Rust Substrate (19 workspace members, 132K LOC)                                │
 │   ┌──────────────┐ ┌──────────────┐ ┌──────────────┐ ┌──────────────┐          │
 │   │FluidElite-ZK │ │Glass Cockpit │ │ Hyper Bridge │ │CEM / FEA /   │          │
 │   │  31K LOC     │ │  31K LOC     │ │   6K LOC     │ │OPT  5K LOC   │          │
@@ -503,7 +503,7 @@ HyperTensor-VM/
 │   ├── sdk/                        #   Typed sync + async client
 │   ├── cli/                        #   CLI (run, validate, attest, verify, serve)
 │   └── mcp/                        #   MCP server — 11 AI-agent tools
-├── tensornet/                      # Physics Engine (1,082 files, 471K LOC)
+├── tensornet/                      # Physics Engine (1,218 files, 500K LOC)
 │   ├── vm/                         #   Register-based QTT VM (IR, compilers, rank governor)
 │   ├── cfd/                        #   Computational Fluid Dynamics (77K LOC)
 │   ├── genesis/                    #   QTT Meta-Primitives — 8 layers (42K LOC)
@@ -514,7 +514,7 @@ HyperTensor-VM/
 │   │   └── vv/                     #     V&V framework (MMS, conservation, convergence)
 │   ├── sdk/                        #   WorkflowBuilder + recipes
 │   └── ... (93 more modules)       #   Quantum, plasma, fusion, materials, ...
-├── crates/                         # Rust workspace — 19 members (151K LOC)
+├── crates/                         # Rust workspace — 19 members (132K LOC)
 │   ├── fluidelite_zk/              #   ZK prover (Halo2, Gevulot, multi-tenant)
 │   ├── hyper_bridge/               #   Python↔Rust IPC (mmap + protobuf)
 │   ├── qtt_cem/                    #   Maxwell FDTD solver (Q16.16)
@@ -545,7 +545,7 @@ HyperTensor-VM/
 ├── CODEOWNERS                      # 278 domain-expert review mappings
 ├── Makefile                        # 30+ orchestration targets (uv auto-detect)
 ├── VERSION                         # Single source of truth for all versions
-├── PLATFORM_SPECIFICATION.md       # 2,052-line master specification
+├── PLATFORM_SPECIFICATION.md       # 2,106-line master specification
 └── Cargo.toml                      # Rust workspace manifest
 ```
 
@@ -655,7 +655,7 @@ This software and all associated intellectual property are the exclusive propert
   year      = {2026},
   version   = {4.0.1},
   url       = {https://github.com/tigantic/HyperTensor-VM},
-  note      = {1.51M LOC. 20 industries. 168 physics nodes. Trustless certificates.
+  note      = {~1.99M LOC. 20 industries. 168 physics nodes. Trustless certificates.
                Three-layer verification: Lean 4 + Halo2 ZK + Ed25519.}
 }
 ```
@@ -669,11 +669,11 @@ This software and all associated intellectual property are the exclusive propert
 ║                                                                                          ║
 ║      O N E   C O D E B A S E   ·   O N E   P H Y S I C S   E N G I N E                  ║
 ║                                                                                          ║
-║      1 , 5 1 3 , 1 0 8   L I N E S   O F   C O D E                                      ║
+║      1 , 9 8 8 , 8 1 1   L I N E S   O F   C O D E                                      ║
 ║                                                                                          ║
 ║      2 0   I N D U S T R I E S   ·   1 6 8   T A X O N O M Y   N O D E S                ║
 ║                                                                                          ║
-║      6   P L A T F O R M S   ·   1 9   R U S T   C R A T E S   ·   3 3   G A U N T L E T S ║
+║      6   P L A T F O R M S   ·   1 9   R U S T   C R A T E S   ·   3 8   G A U N T L E T S ║
 ║                                                                                          ║
 ║      1 1   C I   W O R K F L O W S   ·   3 0 +   M A K E   T A R G E T S               ║
 ║                                                                                          ║

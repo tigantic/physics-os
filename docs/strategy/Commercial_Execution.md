@@ -23,7 +23,7 @@
 
 ### 1.2 Cross-Reference: PLATFORM_SPECIFICATION.md
 
-> **Maturity reconciliation.** `PLATFORM_SPECIFICATION.md` (v40.2) reports 140/140 physics coverage and ~1,157K LOC. That metric counts *code existence*. This document's version-state model counts *verified, validated, benchmarked maturity*. The two are complementary but not interchangeable. A taxonomy node with running code but no regression tests, no benchmark match, and no documented acceptance threshold is **V0.1 Scaffolded** at best — not "covered" in the commercial sense. The capability ledger (§4, Phase 0) is the single source of truth for maturity state; `PLATFORM_SPECIFICATION.md` is the single source of truth for inventory and LOC metrics.
+> **Maturity reconciliation.** `PLATFORM_SPECIFICATION.md` (v40.2) reports 168/168 physics coverage and ~1,989K LOC. That metric counts *code existence*. This document's version-state model counts *verified, validated, benchmarked maturity*. The two are complementary but not interchangeable. A taxonomy node with running code but no regression tests, no benchmark match, and no documented acceptance threshold is **V0.1 Scaffolded** at best — not "covered" in the commercial sense. The capability ledger (§4, Phase 0) is the single source of truth for maturity state; `PLATFORM_SPECIFICATION.md` is the single source of truth for inventory and LOC metrics.
 >
 > **Post-Phase 4 update (2026-02-09):** The actual taxonomy implementation contains **168 nodes** across 20 packs (some high-level taxonomy categories were decomposed into finer-grained nodes during implementation; PHY-X.9 added for PWA Engine). All 168 nodes now have real V0.2+ solvers with physics-correct implementations and regression tests. The ledger at `apps/ledger/nodes/` has been synchronized to 168 entries.
 
@@ -44,7 +44,7 @@
 | **Phase 7** | **COMPLETE** | `2725db6e` | SDK + WorkflowBuilder, recipes (8 built-in), export (VTU/XDMF/CSV/JSON), mesh import (GMSH v2/v4/raw), post-processing (7 ops), visualization, deprecation policy (SemVer), security (SBOM/audit/license), CI hardening, 55 new tests |
 | **PWA Engine** | **COMPLETE** | `aea21fa0` | PWA Compute Engine V3.0.0 — Eq. 5.48 (Badui 2020), 10/10 experiments, 11 publication figures, Gram 14× speedup, coupled-channel, mass-dependent BW, 3,772 LOC |
 
-**Final state:** 168 taxonomy nodes across 20 packs. 4 at V0.6 (QTT-accelerated anchors), 6 at V0.4 Validated (including PHY-X.9 PWA), 158 at V0.2 Correctness. Platform V3.0.0. 295 tests passing (1 skipped) + 37 PWA tests + 16 regression gates. 1,157K first-party LOC across 2,808 source files. ADR-0011 documents Phase 7 decisions. PWA Engine commits: `aea21fa0` (implementation), `cdc1e93b` (polish), `e0e0a6e3` (docs), `bf61c206` (LOC metrics).
+**Final state:** 168 taxonomy nodes across 20 packs. 4 at V0.6 (QTT-accelerated anchors), 6 at V0.4 Validated (including PHY-X.9 PWA), 158 at V0.2 Correctness. Platform V3.0.0. 370+ tests passing + 37 PWA tests + 16 regression gates. ~1,989K first-party LOC across 5,882 source files. ADR-0011 documents Phase 7 decisions. PWA Engine commits: `aea21fa0` (implementation), `cdc1e93b` (polish), `e0e0a6e3` (docs), `bf61c206` (LOC metrics).
 
 ---
 

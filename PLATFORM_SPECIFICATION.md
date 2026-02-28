@@ -15,13 +15,13 @@
 
 [![Release](https://img.shields.io/badge/Release-v4.0.1-blue?style=for-the-badge)]()
 [![LOC](https://img.shields.io/badge/LOC-1%2C989K-blue?style=for-the-badge)]()
-[![Python](https://img.shields.io/badge/Python-851K-3776AB?style=for-the-badge&logo=python&logoColor=white)]()
+[![Python](https://img.shields.io/badge/Python-994K-3776AB?style=for-the-badge&logo=python&logoColor=white)]()
 [![Rust](https://img.shields.io/badge/Rust-132K-000000?style=for-the-badge&logo=rust&logoColor=white)]()
-[![Solidity](https://img.shields.io/badge/Solidity-34K-363636?style=for-the-badge&logo=solidity&logoColor=white)]()
+[![Solidity](https://img.shields.io/badge/Solidity-92K-363636?style=for-the-badge&logo=solidity&logoColor=white)]()
 [![Lean4](https://img.shields.io/badge/Lean_4-Verified-purple?style=for-the-badge)]()
 
 [![Platform](https://img.shields.io/badge/Platform-V3.0.0-success?style=flat-square)]()
-[![Physics](https://img.shields.io/badge/Physics-140%2F140-brightgreen?style=flat-square)]()
+[![Physics](https://img.shields.io/badge/Physics-168%2F168-brightgreen?style=flat-square)]()
 [![Tests](https://img.shields.io/badge/Tests-370%2B_passing-brightgreen?style=flat-square)]()
 [![Domains](https://img.shields.io/badge/Taxonomy-168_nodes-blue?style=flat-square)]()
 [![Industries](https://img.shields.io/badge/Industries-20-orange?style=flat-square)]()

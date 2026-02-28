@@ -1,10 +1,12 @@
 # Launch Readiness — HyperTensor Runtime
 
 **Document owner**: Brad / Tigantic Labs
-**Baseline**: `v4.0.0` (`569ff1da`)
-**Branch**: `release/v4.0.x`
-**Last updated**: 2025-07-24
+**Baseline**: `v4.0.1` (`7c89bcd0`)
+**Branch**: `main`
+**Last updated**: 2026-02-27
 **Target**: Paid private alpha (3–5 design partners)
+
+> **Re-assessment needed.** This document was last fully audited on 2025-07-24 against `v4.0.0` (`569ff1da`). Since then the codebase has grown from ~1,157K to ~1,989K LOC, tests from 295 to 370+, gauntlet runners from 33 to 38, and attestation JSONs from ~60 to 125+. Gates G6 (Certificate Integrity), G7 (Observability), and G8 (Golden Benchmark Suite) have had significant implementation work. A full gate re-audit against the current baseline is pending.
 
 ---
 

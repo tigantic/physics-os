@@ -12,7 +12,7 @@ url: https://tigantic.github.io/HyperTensor-VM
 abstract: >-
   Unified computational physics platform using Quantized Tensor Train (QTT)
   compression to operate on 4.4×10¹² grid points without dense materialization.
-  1.51M lines of code across 19 languages. 168 physics taxonomy nodes spanning
+  1.99M lines of code across 19 languages. 168 physics taxonomy nodes spanning
   20 domain packs. Full-stack verification: Lean 4 formal proofs (57+ theorems),
   Halo2 ZK circuits, Ed25519 trustless certificates. 6 integrated platforms,
   20 industry verticals, 370+ tests passing. O(log N) memory scaling enables

@@ -5,6 +5,8 @@
 **Commit:** `48ffae23` (HEAD → main)  
 **Confidence Baseline:** Review conducted via static analysis, code reading, and configuration inspection. Build/test execution was not performed as part of this review.
 
+> **Historical snapshot.** This report reflects the codebase as of commit `48ffae23` (2026-02-13). Since then the repository has grown substantially (~1,157K → ~1,989K LOC, 2,808 → 5,882 files, 295 → 370+ tests, 33 → 38 gauntlet runners, 168 taxonomy nodes fully covered). Metrics cited in this document are accurate for the reviewed commit but are no longer current. See `PLATFORM_SPECIFICATION.md` §3 for the authoritative live metrics.
+
 ---
 
 ## 1. Executive Summary
