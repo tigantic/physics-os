@@ -4,7 +4,7 @@
 
 **Codename:** TT-KMD (Tensor-Train Koopman Mode Decomposition)  
 **Date:** 2026-01-05  
-**Framework:** HyperTensor TensorNet  
+**Framework:** Physics OS TensorNet  
 **Problem Class:** Navier-Stokes Singularity (Millennium Prize Problem)
 
 ---

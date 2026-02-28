@@ -8,7 +8,7 @@
 
 ## 1. Product Positioning
 
-HyperTensor is **verifiable structured compute infrastructure**.
+The Physics OS is **verifiable structured compute infrastructure**.
 Physics simulation is the proof case.  Pricing reflects compute
 consumption, not physics expertise.
 

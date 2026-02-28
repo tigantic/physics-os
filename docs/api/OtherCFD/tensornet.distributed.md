@@ -1,6 +1,6 @@
 # Module `tensornet.distributed`
 
-Distributed Computing Module for HyperTensor.
+Distributed Computing Module for The Physics OS.
 
 This module provides multi-GPU and multi-node support for
 large-scale tensor network CFD simulations.

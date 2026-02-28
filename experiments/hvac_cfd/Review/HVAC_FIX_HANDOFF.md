@@ -24,7 +24,7 @@ The jet can't survive 535× more diffusion than physics dictates.
 
 ---
 
-## Why HyperTensor's Other Solvers Work
+## Why The Physics OS's Other Solvers Work
 
 The working `ns_2d.py` and `tt_poisson.py` solvers use **spectral (FFT) derivatives**:
 

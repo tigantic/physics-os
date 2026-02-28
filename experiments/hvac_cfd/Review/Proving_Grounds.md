@@ -36,9 +36,9 @@
 **Traditional Timeline**: 4–6 weeks  
 **Traditional Deliverable**: PDF report with contours
 
-**HyperTensor Budget**: $2,000 – $4,000  
-**HyperTensor Timeline**: 48 hours  
-**HyperTensor Deliverable**: Same report + interactive visualization
+**Physics OS Budget**: $2,000 – $4,000  
+**Physics OS Timeline**: 48 hours  
+**Physics OS Deliverable**: Same report + interactive visualization
 
 ---
 
@@ -603,4 +603,4 @@ Each tier requires:
 
 ---
 
-*Proving Grounds — HVAC CFD — Project HyperTensor*
+*Proving Grounds — HVAC CFD — Project The Physics OS*

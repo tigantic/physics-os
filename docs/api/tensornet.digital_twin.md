@@ -1,6 +1,6 @@
 # Module `tensornet.digital_twin`
 
-Digital Twin Framework for HyperTensor.
+Digital Twin Framework for The Physics OS.
 
 This module provides real-time digital twin capabilities for hypersonic
 vehicles, enabling live state synchronization, predictive analytics,

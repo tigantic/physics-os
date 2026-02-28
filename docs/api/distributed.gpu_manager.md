@@ -5,7 +5,7 @@ Multi-GPU resource management for distributed CFD.
 This module provides GPU device management, memory pooling,
 and workload distribution for multi-GPU simulations.
 
-Author: HyperTensor Team
+Author: Tigantic Holdings LLC
 
 **Contents:**
 
@@ -77,7 +77,7 @@ distribution across multiple GPUs.
 def __init__(self, config: gpu_manager.GPUConfig)
 ```
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\distributed\gpu_manager.py:150](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\distributed\gpu_manager.py#L150)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\distributed\gpu_manager.py:150](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\distributed\gpu_manager.py#L150)*
 
 ##### `cleanup`
 
@@ -87,7 +87,7 @@ def cleanup(self)
 
 Cleanup resources.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\distributed\gpu_manager.py:279](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\distributed\gpu_manager.py#L279)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\distributed\gpu_manager.py:279](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\distributed\gpu_manager.py#L279)*
 
 ##### `device_context`
 
@@ -109,7 +109,7 @@ def get_device(self, device_id: Optional[int] = None) -> torch.device
 
 Get torch device.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\distributed\gpu_manager.py:208](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\distributed\gpu_manager.py#L208)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\distributed\gpu_manager.py:208](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\distributed\gpu_manager.py#L208)*
 
 ##### `get_memory_summary`
 
@@ -119,7 +119,7 @@ def get_memory_summary(self) -> Dict[int, Dict[str, float]]
 
 Get memory summary for all devices.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\distributed\gpu_manager.py:254](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\distributed\gpu_manager.py#L254)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\distributed\gpu_manager.py:254](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\distributed\gpu_manager.py#L254)*
 
 ##### `get_pool`
 
@@ -129,7 +129,7 @@ def get_pool(self, device_id: Optional[int] = None) -> Optional[gpu_manager.Memo
 
 Get memory pool for device.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\distributed\gpu_manager.py:236](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\distributed\gpu_manager.py#L236)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\distributed\gpu_manager.py:236](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\distributed\gpu_manager.py#L236)*
 
 ##### `initialize`
 
@@ -139,7 +139,7 @@ def initialize(self)
 
 Initialize GPU management.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\distributed\gpu_manager.py:159](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\distributed\gpu_manager.py#L159)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\distributed\gpu_manager.py:159](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\distributed\gpu_manager.py#L159)*
 
 ##### `synchronize`
 
@@ -149,7 +149,7 @@ def synchronize(self, device_id: Optional[int] = None)
 
 Synchronize GPU operations.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\distributed\gpu_manager.py:269](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\distributed\gpu_manager.py#L269)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\distributed\gpu_manager.py:269](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\distributed\gpu_manager.py#L269)*
 
 ##### `update_memory_stats`
 
@@ -159,7 +159,7 @@ def update_memory_stats(self)
 
 Update memory usage statistics.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\distributed\gpu_manager.py:242](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\distributed\gpu_manager.py#L242)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\distributed\gpu_manager.py:242](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\distributed\gpu_manager.py#L242)*
 
 ### class `MemoryPool`
 
@@ -176,7 +176,7 @@ during CFD time-stepping.
 def __init__(self, device: torch.device, pool_size_mb: int = 512)
 ```
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\distributed\gpu_manager.py:67](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\distributed\gpu_manager.py#L67)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\distributed\gpu_manager.py:67](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\distributed\gpu_manager.py#L67)*
 
 ##### `allocate`
 
@@ -194,7 +194,7 @@ Allocate a named tensor from the pool.
 
 **Returns**: `<class 'torch.Tensor'>` - Allocated tensor
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\distributed\gpu_manager.py:78](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\distributed\gpu_manager.py#L78)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\distributed\gpu_manager.py:78](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\distributed\gpu_manager.py#L78)*
 
 ##### `clear`
 
@@ -204,7 +204,7 @@ def clear(self)
 
 Clear all allocations.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\distributed\gpu_manager.py:114](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\distributed\gpu_manager.py#L114)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\distributed\gpu_manager.py:114](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\distributed\gpu_manager.py#L114)*
 
 ##### `get_stats`
 
@@ -214,7 +214,7 @@ def get_stats(self) -> Dict[str, Any]
 
 Get pool statistics.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\distributed\gpu_manager.py:121](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\distributed\gpu_manager.py#L121)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\distributed\gpu_manager.py:121](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\distributed\gpu_manager.py#L121)*
 
 ##### `release`
 
@@ -224,7 +224,7 @@ def release(self, name: str)
 
 Mark a block as available for reuse.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\distributed\gpu_manager.py:108](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\distributed\gpu_manager.py#L108)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\distributed\gpu_manager.py:108](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\distributed\gpu_manager.py#L108)*
 
 ## Functions
 
@@ -244,7 +244,7 @@ Distribute workload across devices.
 
 **Returns**: `typing.Dict[int, typing.Tuple[int, int]]` - Dictionary mapping device ID to (start, end) indices
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\distributed\gpu_manager.py:350](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\distributed\gpu_manager.py#L350)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\distributed\gpu_manager.py:350](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\distributed\gpu_manager.py#L350)*
 
 ### `get_available_gpus`
 
@@ -256,7 +256,7 @@ Get list of available GPUs.
 
 **Returns**: `typing.List[gpu_manager.GPUDevice]` - List of GPU device information
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\distributed\gpu_manager.py:288](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\distributed\gpu_manager.py#L288)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\distributed\gpu_manager.py:288](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\distributed\gpu_manager.py#L288)*
 
 ### `select_optimal_device`
 
@@ -274,7 +274,7 @@ Select optimal GPU device for a workload.
 
 **Returns**: `<class 'int'>` - Selected device ID
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\distributed\gpu_manager.py:316](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\distributed\gpu_manager.py#L316)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\distributed\gpu_manager.py:316](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\distributed\gpu_manager.py#L316)*
 
 ### `test_gpu_manager`
 
@@ -284,4 +284,4 @@ def test_gpu_manager()
 
 Test GPU management.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\distributed\gpu_manager.py:410](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\distributed\gpu_manager.py#L410)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\distributed\gpu_manager.py:410](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\distributed\gpu_manager.py#L410)*

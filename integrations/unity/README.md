@@ -1,4 +1,4 @@
-# HyperTensor Unity Package
+# The Physics OS — Unity Package
 
 **Version**: 1.0.0  
 **Unity Compatibility**: Unity 2021.3 LTS+  
@@ -14,7 +14,7 @@ The HyperTensor Unity Package provides native C# integration for QTT field visua
 - **Custom Inspectors**: Full editor integration with preview
 - **VFX Graph Support**: Field-driven visual effects
 - **Shader Graph**: Custom nodes for field sampling
-- **Python Bridge**: Connect to HyperTensor Python backend
+- **Python Bridge**: Connect to The Physics OS Python backend
 
 ## Installation
 
@@ -22,7 +22,7 @@ The HyperTensor Unity Package provides native C# integration for QTT field visua
 
 1. Open Window → Package Manager
 2. Click + → Add package from git URL
-3. Enter: `https://github.com/tigantic/HyperTensor.git?path=/integrations/unity`
+3. Enter: `https://github.com/tigantic/The Physics OS.git?path=/integrations/unity`
 
 ### Option 2: Manual
 
@@ -78,13 +78,13 @@ public class FluidController : MonoBehaviour
 ├─────────────────────────────────────────────────────────────┤
 │  C# API    │  Editor Tools    │  Shader Graph Nodes         │
 ├────────────┴─────────────────┴──────────────────────────────┤
-│              HyperTensor Runtime Assembly                    │
+│              Physics OS Platform Shell Assembly                    │
 ├─────────────────────────────────────────────────────────────┤
 │  FieldBehaviour  │  FieldRenderer  │  FieldVisualizer       │
 ├──────────────────┴────────────────┴─────────────────────────┤
 │              Native Bridge (ZMQ/SharedMemory)                │
 ├─────────────────────────────────────────────────────────────┤
-│              HyperTensor Python Backend                      │
+│              Physics OS Python Backend                      │
 └─────────────────────────────────────────────────────────────┘
 ```
 
@@ -92,7 +92,7 @@ public class FluidController : MonoBehaviour
 
 - Unity 2021.3 LTS or later
 - .NET Standard 2.1
-- Optional: Python 3.9+ with HyperTensor for backend computation
+- Optional: Python 3.9+ with The Physics OS for backend computation
 
 ## License
 

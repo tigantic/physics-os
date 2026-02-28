@@ -21,8 +21,8 @@ bae436e feat(sovereign): Add Phase 1-5 implementation modules
 e365d24 docs: Phase 1-5 attestations and sovereign engine roadmap
 8b86dc5 feat(glass-cockpit): Phase 2 complete - GPU text rendering + tensor visualization
 d180b8d Clean up hypertensor_pro.py: remove unused imports/variables
-add2893 Complete HyperTensor audit - all 256 checklist items resolved
-3c86606 Integrate World Data Slicer with HyperTensor Hub
+add2893 Complete Physics OS audit - all 256 checklist items resolved
+3c86606 Integrate World Data Slicer with The Physics OS Hub
 acbffae Add World Data Slicer demo - point-and-synthesize for global datasets
 e459303 Add priority items to Future Work section
 78dbc20 Unreal integration: plugin compiles, visual demo parked for future
@@ -33,7 +33,7 @@ e459303 Add priority items to Future Work section
 ### 1. Push to Origin
 
 ```bash
-cd /home/brad/TiganticLabz/Main_Projects/'Project HyperTensor'
+cd /home/brad/TiganticLabz/Main_Projects/'Project The Physics OS'
 git push origin main
 ```
 

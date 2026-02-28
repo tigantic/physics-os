@@ -12,7 +12,7 @@ Key capabilities:
     - Reliability and risk quantification
     - Component-level and system-level analysis
 
-Author: HyperTensor Team
+Author: Tigantic Holdings LLC
 
 **Contents:**
 
@@ -123,7 +123,7 @@ component health, RUL estimates, cost, and constraints.
 def __init__(self, config: predictive.MaintenanceConfig)
 ```
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\digital_twin\predictive.py:275](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\digital_twin\predictive.py#L275)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\predictive.py:275](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\predictive.py#L275)*
 
 ##### `schedule_maintenance`
 
@@ -140,7 +140,7 @@ Generate optimal maintenance schedule.
 
 **Returns**: `typing.List[predictive.MaintenanceSchedule]` - List of scheduled maintenance actions
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\digital_twin\predictive.py:279](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\digital_twin\predictive.py#L279)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\predictive.py:279](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\predictive.py#L279)*
 
 ### class `PredictiveMaintenance`
 
@@ -157,7 +157,7 @@ maintenance scheduling for vehicle fleet management.
 def __init__(self, config: predictive.MaintenanceConfig)
 ```
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\digital_twin\predictive.py:408](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\digital_twin\predictive.py#L408)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\predictive.py:408](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\predictive.py#L408)*
 
 ##### `generate_maintenance_plan`
 
@@ -167,7 +167,7 @@ def generate_maintenance_plan(self) -> List[predictive.MaintenanceSchedule]
 
 Generate maintenance plan for all components.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\digital_twin\predictive.py:499](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\digital_twin\predictive.py#L499)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\predictive.py:499](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\predictive.py#L499)*
 
 ##### `get_fleet_health`
 
@@ -177,7 +177,7 @@ def get_fleet_health(self) -> Dict[str, Any]
 
 Get overall fleet health summary.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\digital_twin\predictive.py:477](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\digital_twin\predictive.py#L477)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\predictive.py:477](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\predictive.py#L477)*
 
 ##### `record_maintenance`
 
@@ -187,7 +187,7 @@ def record_maintenance(self, component_id: str, action: predictive.MaintenanceAc
 
 Record completed maintenance action.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\digital_twin\predictive.py:445](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\digital_twin\predictive.py#L445)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\predictive.py:445](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\predictive.py#L445)*
 
 ##### `register_component`
 
@@ -197,7 +197,7 @@ def register_component(self, component_id: str, component_type: predictive.Compo
 
 Register a new component for monitoring.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\digital_twin\predictive.py:417](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\digital_twin\predictive.py#L417)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\predictive.py:417](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\predictive.py#L417)*
 
 ##### `update_component`
 
@@ -207,7 +207,7 @@ def update_component(self, component_id: str, delta_hours: float = 0.0, delta_cy
 
 Update component state with new usage data.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\digital_twin\predictive.py:427](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\digital_twin\predictive.py#L427)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\predictive.py:427](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\predictive.py#L427)*
 
 ### class `RULEstimator`
 
@@ -224,7 +224,7 @@ approaches for accurate RUL prediction with uncertainty.
 def __init__(self, config: predictive.MaintenanceConfig)
 ```
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\digital_twin\predictive.py:127](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\digital_twin\predictive.py#L127)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\predictive.py:127](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\predictive.py#L127)*
 
 ##### `estimate_failure_probability`
 
@@ -243,7 +243,7 @@ Uses Weibull distribution based on failure modes and age.
 
 **Returns**: `<class 'float'>` - Probability of failure
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\digital_twin\predictive.py:230](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\digital_twin\predictive.py#L230)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\predictive.py:230](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\predictive.py#L230)*
 
 ##### `estimate_rul`
 
@@ -260,7 +260,7 @@ Estimate remaining useful life for a component.
 
 **Returns**: `typing.Tuple[float, float, float]` - Tuple of (mean RUL, lower bound, upper bound) in hours
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\digital_twin\predictive.py:174](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\digital_twin\predictive.py#L174)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\predictive.py:174](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\predictive.py#L174)*
 
 ## Functions
 
@@ -281,7 +281,7 @@ R(t) = exp(-lambda * t)
 
 **Returns**: `<class 'float'>` - Reliability (0-1)
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\digital_twin\predictive.py:525](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\digital_twin\predictive.py#L525)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\predictive.py:525](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\predictive.py#L525)*
 
 ### `estimate_remaining_life`
 
@@ -299,7 +299,7 @@ Simple RUL estimation from current damage and rate.
 
 **Returns**: `<class 'float'>` - Remaining life in hours
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\digital_twin\predictive.py:504](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\digital_twin\predictive.py#L504)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\predictive.py:504](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\predictive.py#L504)*
 
 ### `optimize_maintenance_schedule`
 
@@ -317,7 +317,7 @@ Optimize maintenance schedule for minimum cost or maximum availability.
 
 **Returns**: `typing.List[predictive.MaintenanceSchedule]` - Optimized maintenance schedule
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\digital_twin\predictive.py:541](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\digital_twin\predictive.py#L541)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\predictive.py:541](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\predictive.py#L541)*
 
 ### `test_predictive_maintenance`
 
@@ -327,4 +327,4 @@ def test_predictive_maintenance()
 
 Test predictive maintenance module.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\digital_twin\predictive.py:570](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\digital_twin\predictive.py#L570)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\predictive.py:570](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\predictive.py#L570)*

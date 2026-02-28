@@ -1,4 +1,4 @@
-# HyperTensor ZK Stack
+# Ontic Engine ZK Stack
 
 ## Execution Plan for Tensor-Accelerated Zero-Knowledge Proving
 
@@ -61,7 +61,7 @@ A production-ready tensor-accelerated ZK proving stack that targets **real bottl
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│                     HyperTensor ZK Stack                        │
+│                     Ontic Engine ZK Stack                        │
 ├─────────────────────────────────────────────────────────────────┤
 │  Layer 4: Proof Aggregation           [5× speedup for IVC]     │
 │           └─ QTT-compressed accumulators for Nova/HyperNova    │

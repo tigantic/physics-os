@@ -95,7 +95,7 @@ The Hilbert space grows exponentially as entanglement increases. **Exact diagona
 
 ## The Path Forward: Tensor Networks
 
-The "Tensor" in HyperTensor must now be used literally.
+The "Tensor" in The Physics OS must now be used literally.
 
 ### Current Approach (Failed for Prize)
 ```

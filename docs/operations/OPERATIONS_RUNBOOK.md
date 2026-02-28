@@ -119,7 +119,7 @@ For production JSON logging, configure via environment or logging config.
 
 | Event                        | Level   | Module              | Message Pattern                              |
 |------------------------------|---------|---------------------|----------------------------------------------|
-| Server startup               | INFO    | `hypertensor.api`   | `Starting HyperTensor API v{version}`        |
+| Server startup               | INFO    | `hypertensor.api`   | `Starting Physics OS API v{version}`        |
 | Key initialization           | INFO    | `certificates`      | `Certificate signing: {scheme} ({source})`   |
 | Ephemeral key warning        | WARNING | `certificates`      | `Certificate signing: HMAC-SHA256 (random...)`|
 | Job compilation              | INFO    | `executor`          | `Compiling: domain={d} n_bits={b} n_steps={s}` |

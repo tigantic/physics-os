@@ -1,4 +1,4 @@
-# HyperTensor Verification & Validation Framework
+# The Physics OS — Verification & Validation Framework
 
 ```
 ██╗   ██╗ ██████╗ ██╗   ██╗
@@ -21,7 +21,7 @@
 
 ### 1.1 Purpose
 
-This document establishes the Verification & Validation (V&V) framework for Project HyperTensor. The framework ensures that all computational physics modules meet the evidentiary standards required for:
+This document establishes the Verification & Validation (V&V) framework for Project The Physics OS. The framework ensures that all computational physics modules meet the evidentiary standards required for:
 
 - Patent defensibility (demonstrable, reproducible results)
 - Government contract credibility (DoD, DOE, NASA acquisition standards)

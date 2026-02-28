@@ -3,7 +3,7 @@
 **Paper B — Systems Architecture and Constructive Evidence**
 
 **Author:** Brad Tigantic  
-**Affiliation:** Independent Research — HyperTensor Project  
+**Affiliation:** Independent Research — Physics OS Project  
 **Date:** 2026-02-25 (initial VM) — Living Document  
 **Version:** 1.0.0  
 **Derived From:** χ-Regularity Hypothesis v2.5.0  

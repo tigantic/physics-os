@@ -204,7 +204,7 @@ MIT License
 ```bibtex
 @software{qtt2026,
   title = {QTT: Quantum Tensor Train Universal File System},
-  author = {HyperTensor Team},
+  author = {Tigantic Holdings LLC},
   year = {2026},
   url = {https://github.com/hypertensor/qtt}
 }

@@ -1,6 +1,6 @@
-# HyperTensor Repository Map 🗺️
+# The Physics OS — Repository Map 🗺️
 
-> Structural navigation tree for the HyperTensor-VM codebase
+> Structural navigation tree for The Physics OS-VM codebase
 > Generated: 2026-01-16 | 329 core modules | 51 gauntlets
 
 ---

@@ -8,7 +8,7 @@
 
 ## Context
 
-AI coding agents (GitHub Copilot, Claude, Cursor, Windsurf) are increasingly used to compose and execute engineering workflows. HyperTensor's physics simulation capabilities would reach a much larger audience if AI agents could invoke simulations, inspect results, and iterate on parameters — all within a chat or IDE session.
+AI coding agents (GitHub Copilot, Claude, Cursor, Windsurf) are increasingly used to compose and execute engineering workflows. The Physics OS's physics simulation capabilities would reach a much larger audience if AI agents could invoke simulations, inspect results, and iterate on parameters — all within a chat or IDE session.
 
 The Model Context Protocol (MCP) by Anthropic provides a standardized JSON-RPC interface for exposing tools to AI agents. Alternatives considered:
 

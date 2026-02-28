@@ -1,4 +1,4 @@
-# Constitutional Audit Report: HyperTensor UI
+# Constitutional Audit Report: Physics OS UI
 
 **Audit Date**: 2026-01-18 (Updated: 2026-01-18)  
 **Auditor**: GitHub Copilot (Claude Opus 4.5)  

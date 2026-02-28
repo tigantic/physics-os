@@ -19,7 +19,7 @@ The molecular search space is estimated at 10^60 drug-like molecules. Current ML
 
 ## Demonstrated Capability
 
-### What HyperTensor Has Already Proven
+### What The Physics OS Has Already Proven
 
 | Capability | Evidence | Attestation |
 |-----------|----------|-------------|
@@ -36,7 +36,7 @@ The molecular search space is estimated at 10^60 drug-like molecules. Current ML
 
 Traditional drug discovery: `ChEMBL data → learn patterns → predict for similar molecules → fail for novel targets`
 
-HyperTensor: `PDB structure → compute LJ energy field → find minima → assemble fragments → validate physics → done`
+The Physics OS: `PDB structure → compute LJ energy field → find minima → assemble fragments → validate physics → done`
 
 The EGFR validation is the proof. The pipeline downloaded PDB structure 1M17, computed the Lennard-Jones energy field for 6 probe atom types on a 25^3 grid, identified binding clusters, and assembled a molecule. It predicted **quinazoline** — the exact scaffold of the FDA-approved drug Erlotinib. From physics alone. Zero training data.
 
@@ -246,7 +246,7 @@ Toxicology: 8/8 PASS
 
 ## Genomics Integration
 
-The drug pipeline connects to HyperTensor's genomics stack for precision medicine:
+The drug pipeline connects to The Physics OS's genomics stack for precision medicine:
 
 | Component | Capability | Evidence |
 |-----------|-----------|----------|
@@ -279,7 +279,7 @@ The drug pipeline connects to HyperTensor's genomics stack for precision medicin
 | Recursion | Phenotypic screening + ML | Cannot design for novel targets |
 | Insilico Medicine | Generative chemistry | Training data dependent |
 | AlphaFold/Isomorphic | Structure prediction | Predicts structure, not drugs |
-| **HyperTensor** | **Physics-first, zero training data** | **Works for ANY target with structure** |
+| **The Physics OS** | **Physics-first, zero training data** | **Works for ANY target with structure** |
 
 ---
 

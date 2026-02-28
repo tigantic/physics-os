@@ -1,4 +1,4 @@
-# HyperTensor QTT & Physics: Subject Matter Expert Documentation
+# The Physics OS — QTT & Physics: Subject Matter Expert Documentation
 
 **Created:** January 14, 2026  
 **Purpose:** Comprehensive technical reference for QTT (Quantized Tensor Train) implementations and physics integrations in the HyperTensor-VM repository.  
@@ -31,9 +31,9 @@
 
 ## 1. Executive Summary
 
-### What is HyperTensor?
+### What is The Physics OS?
 
-HyperTensor is a computational physics library that applies **tensor network methods** (MPS, MPO, QTT) to:
+The Physics OS is a computational physics library that applies **tensor network methods** (MPS, MPO, QTT) to:
 - Computational Fluid Dynamics (CFD)
 - Plasma physics & fusion
 - Materials science

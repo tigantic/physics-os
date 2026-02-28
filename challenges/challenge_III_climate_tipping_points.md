@@ -19,7 +19,7 @@ The deeper problem is trust. China does not trust American climate models. Ameri
 
 ## Demonstrated Capability
 
-### What HyperTensor Has Already Proven
+### What The Physics OS Has Already Proven
 
 | Capability | Evidence | Attestation |
 |-----------|----------|-------------|
@@ -37,7 +37,7 @@ The deeper problem is trust. China does not trust American climate models. Ameri
 
 Current climate models (CESM, GFDL, UKESM) run on supercomputers at 50-100 km horizontal resolution. Convective processes, cloud microphysics, and turbulent mixing operate at 100m or less. The models parameterize what they cannot resolve. The parameterizations are where the disagreements live.
 
-HyperTensor can resolve what they parameterize. QTT compression at O(log N) memory means a 1 km resolution global atmosphere is not a supercomputer problem — it's a laptop problem. The rank stays bounded because atmospheric fields are smooth (except at fronts, which are low-rank discontinuities that QTT handles natively via WENO shock capturing).
+The Physics OS can resolve what they parameterize. QTT compression at O(log N) memory means a 1 km resolution global atmosphere is not a supercomputer problem — it's a laptop problem. The rank stays bounded because atmospheric fields are smooth (except at fronts, which are low-rank discontinuities that QTT handles natively via WENO shock capturing).
 
 And then the proof goes on-chain. No trust required.
 
@@ -69,8 +69,8 @@ QTT Formulation:
 |-------|----------------------|-----------------|--------------------|---------| 
 | CESM2 (current) | ~100 km | 72 | ~50 GB | Supercomputer |
 | CESM2 (high-res) | ~25 km | 72 | ~800 GB | Leadership facility |
-| HyperTensor (target) | ~1 km | 128 | ~50 MB (QTT) | Laptop/workstation |
-| HyperTensor (extreme) | ~100 m | 256 | ~100 MB (QTT) | Workstation |
+| Physics OS (target) | ~1 km | 128 | ~50 MB (QTT) | Laptop/workstation |
+| Physics OS (extreme) | ~100 m | 256 | ~100 MB (QTT) | Workstation |
 
 ### Climate Oracle Pipeline
 

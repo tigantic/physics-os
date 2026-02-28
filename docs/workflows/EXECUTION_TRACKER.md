@@ -1,4 +1,4 @@
-# Project HyperTensor: Execution Tracker
+# Project The Physics OS: Execution Tracker
 
 **Document Version**: 2.15.0  
 **Last Updated**: 2025-12-24  
@@ -23,7 +23,7 @@ Turbulent flow fields satisfy an **Area Law** analogous to quantum entanglement�
 ### Current Structure (Post-8-Layer Architecture)
 
 ```
-Project HyperTensor/
+The Physics OS/
 ├── tensornet/                    # Core library
 │   ├── __init__.py               # Package exports
 │   ├── substrate/                # Layer 0: Field Oracle API (19 tests)
@@ -277,10 +277,10 @@ Project HyperTensor/
 ├── integrations/                 # External Engine Integrations
 │   ├── unreal/                   # Unreal Engine 5 Plugin
 │   │   ├── README.md             # Plugin documentation
-│   │   ├── HyperTensor.uplugin   # Plugin manifest
+│   │   ├── The Physics OS.uplugin   # Plugin manifest
 │   │   ├── python_bridge.py      # ZMQ bridge for Python backend
 │   │   └── Source/HyperTensor/   # C++ plugin source
-│   │       ├── HyperTensor.Build.cs
+│   │       ├── The Physics OS.Build.cs
 │   │       ├── Public/           # Headers
 │   │       │   ├── HyperTensorTypes.h
 │   │       │   ├── HyperTensorFieldComponent.h
@@ -298,10 +298,10 @@ Project HyperTensor/
 │       │   ├── HyperTensorField.cs
 │       │   ├── HyperTensorFieldRenderer.cs
 │       │   ├── NativeBridge.cs
-│       │   └── Tigantic.HyperTensor.asmdef
+│       │   └── Tigantic.The Physics OS.asmdef
 │       └── Editor/               # Editor assemblies
 │           ├── HyperTensorFieldEditor.cs
-│           └── Tigantic.HyperTensor.Editor.asmdef
+│           └── Tigantic.The Physics OS.Editor.asmdef
 ├── sdk/                          # Enterprise SDK & Distribution
 │   ├── README.md                 # SDK overview
 │   ├── build.py                  # Multi-format build script
@@ -1876,4 +1876,4 @@ tensornet/
 
 ---
 
-*This document is the authoritative execution record for Project HyperTensor. Updates require Constitutional compliance.*
+*This document is the authoritative execution record for Project The Physics OS. Updates require Constitutional compliance.*

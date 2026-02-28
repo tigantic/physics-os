@@ -1,7 +1,7 @@
 # 🧰 HyperTensor ToolBox Manifest
 > **Version**: Phase 27.0 | **Date**: February 6, 2026
 
-The complete catalog of HyperTensor - a physics-first tensor network ecosystem.
+The complete catalog of The Physics OS - a physics-first tensor network ecosystem.
 
 > 📖 For detailed specifications, architecture diagrams, and changelog, see [PLATFORM_SPECIFICATION.md](PLATFORM_SPECIFICATION.md)  
 > 📊 For machine-readable data, see [component-catalog.json](component-catalog.json)
@@ -857,7 +857,7 @@ results = analyzer.analyze_file("rtl/module.sv")
 
 | Type | Definition | Example | How to Use |
 |------|------------|---------|------------|
-| **Platform** | Integrated system | HyperTensor VM | Deploy & configure |
+| **Platform** | Integrated system | Ontic Engine | Deploy & configure |
 | **Module** | Reusable library | `tensornet/cfd/` | `import` it |
 | **Application** | Standalone executable | `hellskin_gauntlet.py` | `python` run it |
 | **Tool** | Single-purpose utility | `verilog_elite_analyzer.py` | Invoke for task |

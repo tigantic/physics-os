@@ -1,6 +1,6 @@
 # Module `tensornet.validation`
 
-Validation Module for Project HyperTensor.
+Validation Module for Project The Physics OS.
 
 Phase 15: Comprehensive validation and testing framework including:
 - Physical validation tests (conservation laws, analytical solutions)

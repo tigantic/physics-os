@@ -287,7 +287,7 @@ This section documents the gap between the GRAND_VISION.md and actual implementa
 **Status**: ✅ IMPLEMENTED (2025-12-22) — Phase 21
 
 **Vision Claim** (GRAND_VISION.md §3.4):
-> "HyperTensor integrates WENO-TT schemes. The high-order reconstruction weights of the WENO scheme are themselves tensorized. This allows the solver to capture shocks with 5th-order accuracy without oscillation."
+> "The Physics OS integrates WENO-TT schemes. The high-order reconstruction weights of the WENO scheme are themselves tensorized. This allows the solver to capture shocks with 5th-order accuracy without oscillation."
 
 **Implementation** (commit 2c2cb8a):
 - `tensornet/cfd/weno.py` (600 lines): WENO5-JS, WENO5-Z, TENO5, smoothness indicators
@@ -315,7 +315,7 @@ This section documents the gap between the GRAND_VISION.md and actual implementa
 **Status**: ✅ IMPLEMENTED (2025-12-22) — Phase 21
 
 **Vision Claim** (GRAND_VISION.md §3.3):
-> "HyperTensor utilizes the Time-Dependent Variational Principle (TDVP). Instead of leaving the tensor manifold, TDVP projects the evolution equation directly onto the tangent space of the tensor manifold of fixed rank."
+> "The Physics OS utilizes the Time-Dependent Variational Principle (TDVP). Instead of leaving the tensor manifold, TDVP projects the evolution equation directly onto the tangent space of the tensor manifold of fixed rank."
 
 **Implementation** (commit 2c2cb8a):
 - `tensornet/cfd/tt_cfd.py` (1200 lines): MPSState, EulerMPO, TT_Euler1D, TT_Euler2D
@@ -421,7 +421,7 @@ TDVP: d|u⟩/dt = P_T (-L̂|u⟩)  projected onto MPS manifold
 **Status**: ✅ IMPLEMENTED (2025-12-22) — Phase 22
 
 **Vision Claim** (GRAND_VISION.md §8):
-> "HyperTensor enables the KV to simulate its own thruster plumes in real-time... The solver computes the interaction of the plume shock with the body boundary layer."
+> "The Physics OS enables the KV to simulate its own thruster plumes in real-time... The solver computes the interaction of the plume shock with the body boundary layer."
 
 **Implementation** (commit f1447cd):
 - `tensornet/cfd/jet_interaction.py` (500 lines): UnderexpandedJet, JetInteractionCorrector

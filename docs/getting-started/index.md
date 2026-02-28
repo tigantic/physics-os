@@ -1,6 +1,6 @@
 # Getting Started
 
-Welcome to HyperTensor. This section covers installation, configuration,
+Welcome to The Physics OS. This section covers installation, configuration,
 and your first tensor network computation.
 
 ## Prerequisites

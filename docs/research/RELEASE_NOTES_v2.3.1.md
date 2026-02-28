@@ -44,7 +44,7 @@ unchanged from v2.3.
    results), not the non-existent § 3.6.
 
 8. **Affiliation** changed from "Tigantic Holdings LLC" to "Independent
-   Research — HyperTensor Project."
+   Research — Physics OS Project."
 
 9. **Exact commit hash** added to provenance header.
 

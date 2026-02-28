@@ -1,4 +1,4 @@
-# HyperTensor Universal Physics Solver — Extraction Map
+# The Physics OS — Universal Physics Solver — Extraction Map
 
 ## Target: Standalone Package `hypertensor-physics`
 
@@ -162,7 +162,7 @@ def my_simulation():
 
 ## What Gets LEFT BEHIND
 
-These stay in the main HyperTensor-VM repository:
+These stay in the main The Physics OS-VM repository:
 
 | Category | Files | Why Left Behind |
 |----------|-------|-----------------|
@@ -260,7 +260,7 @@ class IdealMHD(ResistiveMHD):
 
 **Everyone else:** State grows → O(N^d) → RAM explosion → crash
 
-**HyperTensor:** State grows → tt_round(state, rank=12) → O(N·d·r²) → bounded memory
+**The Physics OS:** State grows → tt_round(state, rank=12) → O(N·d·r²) → bounded memory
 
 ```python
 # The core loop that makes this work:
@@ -274,5 +274,5 @@ This is why we can simulate 10¹⁰⁰ dimensional phase spaces on a laptop.
 
 ---
 
-*Extraction Map — HyperTensor Physics Engine*
+*Extraction Map — The Ontic Engine*
 *January 5, 2026*

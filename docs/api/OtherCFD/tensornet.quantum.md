@@ -1,6 +1,6 @@
 # Module `tensornet.quantum`
 
-Quantum Module for HyperTensor ==============================
+Quantum Module for The Physics OS ==============================
 
 Quantum-classical hybrid algorithms, error mitigation, and quantum-inspired
 optimization methods for tensor network computations.

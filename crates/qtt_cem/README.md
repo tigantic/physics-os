@@ -96,7 +96,7 @@ Stage 15: Architecture validation       ✓
 ## Integration
 
 This crate is designed to integrate with:
-- **HyperTensor**: Physics engine (upstream solver)
+- **The Physics OS**: Physics engine (upstream solver)
 - **FluideLite**: ZK proof framework (downstream verification)
 - **QTT compression**: Published O(log N) scaling (Zenodo)
 - **INVARIAN/Trust Fabric**: Post-quantum provenance signatures

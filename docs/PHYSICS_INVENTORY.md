@@ -1,11 +1,11 @@
-# Physics Inventory — HyperTensor Platform
+# Physics Inventory — The Physics OS
 
 **Extracted from**: `PLATFORM_SPECIFICATION.md` §21
 **Version**: v4.0.0 Baseline
 **Date**: February 2026
 **Coverage**: 50 domains · 826+ equations · ~227,000 LOC
 
-> This document contains the full physics domain inventory for the HyperTensor platform.
+> This document contains the full physics domain inventory for the The Physics OS.
 > It is the definitive reference for all implemented governing equations, numerical methods,
 > source locations, and validation data across all 50 physics domains.
 >
@@ -13,7 +13,7 @@
 
 ---
 
-> **Comprehensive catalog of every physics equation, model, and numerical method implemented across the HyperTensor platform.** Covers 50 physics domains (140 capability sub-domains), 826+ equations, and ~227,000 lines of physics-specific code spanning Python, Rust, Solidity, and Lean 4.
+> **Comprehensive catalog of every physics equation, model, and numerical method implemented across the The Physics OS.** Covers 50 physics domains (140 capability sub-domains), 826+ equations, and ~227,000 lines of physics-specific code spanning Python, Rust, Solidity, and Lean 4.
 
 ### Summary by Domain
 
@@ -773,7 +773,7 @@ $$\text{Morton}_{3D}(x,y,z) = \text{interleave}(x_0 y_0 z_0 x_1 y_1 z_1 \ldots)$
 
 **Source**: `apps/qtenet/` (~10,408 LOC across 35 files, 8 submodules + turbulence workflow)
 
-The QTeneT SDK packages HyperTensor's QTT physics into a self-contained enterprise toolkit with its own solvers, operators, benchmarks, and publication-grade proof pipeline.
+The QTeneT SDK packages The Physics OS's QTT physics into a self-contained enterprise toolkit with its own solvers, operators, benchmarks, and publication-grade proof pipeline.
 
 #### 21.1 Vorticity-Form Navier-Stokes 3D DNS
 

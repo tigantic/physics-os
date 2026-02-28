@@ -1,4 +1,4 @@
-# HyperTensor Roadmap Integrity Audit
+# The Physics OS — Roadmap Integrity Audit
 
 **Date**: December 26, 2025  
 **Auditor**: Automated Integrity Check  

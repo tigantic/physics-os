@@ -21,7 +21,7 @@
 | 8 | [Proofs & Certificates](#8-proofs--certificates) | Trustless Physics Certificates, ZK proofs |
 | 9 | [Rust Crates](#9-rust-crates) | 15 crates, ~204K LOC |
 | 10 | [Infrastructure & Deployment](#10-infrastructure--deployment) | Deploy, contracts, integrations |
-| 11 | [HyperTensor Platform Service](#11-hypertensor-platform-service) | API, billing, CLI, MCP, SDK |
+| 11 | [The Physics OS Service](#11-hypertensor-platform-service) | API, billing, CLI, MCP, SDK |
 | 12 | [Test Suite](#12-test-suite) | 104 test files, ~52K LOC |
 | 13 | [Documentation & Governance](#13-documentation--governance) | docs/, ADRs, governance, specs |
 | 14 | [Backward-Compatibility Shim Map](#14-backward-compatibility-shim-map) | Re-export shims under `tensornet/` |
@@ -95,7 +95,7 @@ The oncology drug candidate has the deepest validation suite (6 dedicated files,
 
 ## 2. TensorNet Core Library
 
-`tensornet/` — **1,192 files, ~492K LOC** — the physics engine of HyperTensor-VM.
+`tensornet/` — **1,192 files, ~492K LOC** — the physics engine of The Physics OS-VM.
 
 Organized into 16 major modules. Each module may contain STARK trace adapters
 for Trustless Physics Certificate generation.
@@ -815,7 +815,7 @@ ZK proof circuits, conservation proofs, and Yang-Mills research.
 
 ---
 
-## 11. HyperTensor Platform Service
+## 11. The Physics OS Service
 
 `hypertensor/` — **31 files, ~3,900 LOC** — The SaaS platform layer.
 

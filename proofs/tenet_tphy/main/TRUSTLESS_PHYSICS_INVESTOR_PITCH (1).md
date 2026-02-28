@@ -173,7 +173,7 @@ The moat is multiplicative. QTT compression alone took 18 months of hyperdevelop
 - 4-person defense AI startup with $360M pipeline
 - CEO Brendan is Brad's best friend and business partner
 - Provides defense market access, customer relationships, and domain credibility
-- Clean IP separation: Tigantic Holdings LLC owns all HyperTensor IP independently
+- Clean IP separation: Tigantic Holdings LLC owns all Physics OS IP independently
 
 ### Hiring Plan
 

@@ -30,7 +30,7 @@ Polar decomposition A = U @ P where U is unitary and P is positive semidefinite.
 **Returns**: `typing.Tuple[torch.Tensor, torch.Tensor]` - Unitary matrix (m, n)
     P: Positive semidefinite (n, n)
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\core\decompositions.py:167](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\core\decompositions.py#L167)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\core\decompositions.py:167](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\core\decompositions.py#L167)*
 
 ### `qr_positive`
 
@@ -60,7 +60,7 @@ assert torch.allclose(A, Q @ R)
 assert (torch.diag(R) >= 0).all()
 ```
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\core\decompositions.py:118](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\core\decompositions.py#L118)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\core\decompositions.py:118](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\core\decompositions.py#L118)*
 
 ### `svd_truncated`
 
@@ -95,7 +95,7 @@ U, S, Vh = svd_truncated(A, chi_max=20)
 A_approx = U @ torch.diag(S) @ Vh
 ```
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\core\decompositions.py:28](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\core\decompositions.py#L28)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\core\decompositions.py:28](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\core\decompositions.py#L28)*
 
 ### `thin_svd`
 
@@ -113,4 +113,4 @@ Thin (economy) SVD without truncation.
     S: (k,)
     Vh: (k, n)
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\core\decompositions.py:152](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\core\decompositions.py#L152)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\core\decompositions.py:152](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\core\decompositions.py#L152)*

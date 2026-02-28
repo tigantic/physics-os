@@ -1,6 +1,6 @@
 # Three-Tier Design
 
-HyperTensor uses a three-tier architecture separating the open physics
+The Physics OS uses a three-tier architecture separating the open physics
 engine from the commercial execution fabric and the performance substrate.
 
 ## Tier 1: tensornet (Python)

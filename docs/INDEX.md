@@ -1,4 +1,4 @@
-# HyperTensor Documentation Index
+# The Physics OS — Documentation Index
 
 ```
 ╔══════════════════════════════════════════════════════════════════════╗
@@ -55,7 +55,7 @@ HyperTensor-VM-main/
 ├── deploy/             # Containerfile, Docker configs, deployment manifests
 ├── docs/               # ← You are here
 ├── experiments/        # Research scripts, benchmarks, notebooks
-├── hypertensor/        # Python package: HyperTensor orchestration layer
+├── hypertensor/        # Python package: Physics OS orchestration layer
 ├── integrations/       # Game engine integrations (Unity, Unreal)
 ├── products/           # Product-specific Python packages
 ├── proofs/             # Mathematical proofs (conservation, Yang-Mills, ZK)

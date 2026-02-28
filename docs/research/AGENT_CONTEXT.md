@@ -1,4 +1,4 @@
-# Agent Context: Project HyperTensor
+# Agent Context: Project The Physics OS
 
 > **Purpose**: This document provides complete situational awareness for any agent or engineer joining the project. Read this first.
 
@@ -10,7 +10,7 @@
 
 ## 🎯 Mission Statement
 
-Project HyperTensor is a **proprietary physics simulation engine** that applies quantum-inspired tensor network mathematics (MPS, MPO, DMRG) to computational fluid dynamics. The core innovation: turbulent flow fields obey an **Area Law** (like quantum entanglement), enabling **10,000x compression** from O(N³) to O(N·D²).
+Project The Physics OS is a **proprietary physics simulation engine** that applies quantum-inspired tensor network mathematics (MPS, MPO, DMRG) to computational fluid dynamics. The core innovation: turbulent flow fields obey an **Area Law** (like quantum entanglement), enabling **10,000x compression** from O(N³) to O(N·D²).
 
 **Owner**: Tigantic Holdings LLC  
 **License**: Proprietary (see [LICENSE](LICENSE))
@@ -20,7 +20,7 @@ Project HyperTensor is a **proprietary physics simulation engine** that applies 
 ## 🏗️ Architecture At-A-Glance
 
 ```
-Project HyperTensor/
+The Physics OS/
 ├── tensornet/           # Core Python library (147,000+ LOC)
 │   ├── algorithms/      # DMRG, TEBD, Lanczos, fermionic ops
 │   ├── mps/             # Matrix Product States
@@ -228,7 +228,7 @@ chore: Update dependencies
 
 ### Git Remotes
 ```bash
-origin     → https://github.com/tigantic/HyperTensor.git      # Primary
+origin     → https://github.com/tigantic/The Physics OS.git      # Primary
 vm         → https://github.com/tigantic/HyperTensor-VM.git   # Mirror
 ```
 
@@ -460,4 +460,4 @@ A task is complete when:
 
 *"In God we trust. All others must bring data." — W. Edwards Deming*
 
-**You are now ready to execute. Welcome to Project HyperTensor.**
+**You are now ready to execute. Welcome to Project The Physics OS.**

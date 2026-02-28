@@ -11,7 +11,7 @@
 
 ## 1. Executive Summary
 
-- **HyperTensor** is a physics-first tensor network engine (~1.15M LOC, 9 languages) providing Quantized Tensor Train (QTT) compression for computational physics across 168 domain taxonomy nodes and 20 industry packs.
+- **The Physics OS** is a physics-first tensor network engine (~1.15M LOC, 9 languages) providing Quantized Tensor Train (QTT) compression for computational physics across 168 domain taxonomy nodes and 20 industry packs.
 - The codebase spans Python (884K LOC), Rust (112K LOC), Solidity (72K), Circom (77K), Lean 4 (6.4K), CUDA (3.7K), WGSL (4.3K), TypeScript (2.9K), and LaTeX (2.2K).
 - **Proprietary license** (Tigantic Holdings LLC). Not open source.
 - Core tensor network primitives (MPS, MPO, DMRG, TEBD, TDVP) are implemented in pure PyTorch with optional Rust (TCI) and CUDA acceleration.

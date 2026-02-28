@@ -5,7 +5,7 @@ MPI-style communication patterns for distributed CFD.
 This module provides communication primitives for data exchange
 between processors in distributed simulations.
 
-Author: HyperTensor Team
+Author: Tigantic Holdings LLC
 
 **Contents:**
 
@@ -38,7 +38,7 @@ environment.
 def __init__(self, n_procs: int = 1, rank: int = 0)
 ```
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\distributed\communication.py:88](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\distributed\communication.py#L88)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\distributed\communication.py:88](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\distributed\communication.py#L88)*
 
 ##### `barrier`
 
@@ -50,7 +50,7 @@ Synchronize all processes.
 
 Blocks until all processes reach this point.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\distributed\communication.py:244](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\distributed\communication.py#L244)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\distributed\communication.py:244](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\distributed\communication.py#L244)*
 
 ##### `finalize`
 
@@ -60,7 +60,7 @@ def finalize(self)
 
 Finalize communicator.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\distributed\communication.py:114](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\distributed\communication.py#L114)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\distributed\communication.py:114](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\distributed\communication.py#L114)*
 
 ##### `initialize`
 
@@ -70,7 +70,7 @@ def initialize(self)
 
 Initialize communicator.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\distributed\communication.py:109](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\distributed\communication.py#L109)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\distributed\communication.py:109](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\distributed\communication.py#L109)*
 
 ##### `irecv`
 
@@ -87,7 +87,7 @@ Non-blocking receive.
 
 **Returns**: `<class 'int'>` - Request ID
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\distributed\communication.py:189](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\distributed\communication.py#L189)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\distributed\communication.py:189](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\distributed\communication.py#L189)*
 
 ##### `isend`
 
@@ -105,7 +105,7 @@ Non-blocking send.
 
 **Returns**: `<class 'int'>` - Request ID
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\distributed\communication.py:164](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\distributed\communication.py#L164)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\distributed\communication.py:164](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\distributed\communication.py#L164)*
 
 ##### `recv`
 
@@ -123,7 +123,7 @@ Blocking receive.
 
 **Returns**: `<class 'torch.Tensor'>` - Received data
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\distributed\communication.py:137](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\distributed\communication.py#L137)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\distributed\communication.py:137](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\distributed\communication.py#L137)*
 
 ##### `send`
 
@@ -139,7 +139,7 @@ Blocking send.
 - **dest** (`<class 'int'>`): Destination rank
 - **tag** (`<class 'int'>`): Message tag
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\distributed\communication.py:119](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\distributed\communication.py#L119)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\distributed\communication.py:119](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\distributed\communication.py#L119)*
 
 ##### `test`
 
@@ -149,7 +149,7 @@ def test(self, request_id: int) -> bool
 
 Test if request is complete.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\distributed\communication.py:239](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\distributed\communication.py#L239)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\distributed\communication.py:239](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\distributed\communication.py#L239)*
 
 ##### `wait`
 
@@ -165,7 +165,7 @@ Wait for non-blocking operation to complete.
 
 **Returns**: `typing.Optional[torch.Tensor]` - Received data for irecv, None for isend
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\distributed\communication.py:213](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\distributed\communication.py#L213)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\distributed\communication.py:213](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\distributed\communication.py#L213)*
 
 ### class `DistributedTensor`
 
@@ -184,7 +184,7 @@ def global_shape(self) -> Tuple[int, ...]
 
 Get global tensor shape.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\distributed\communication.py:455](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\distributed\communication.py#L455)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\distributed\communication.py:455](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\distributed\communication.py#L455)*
 
 ##### `local_shape`
 
@@ -194,7 +194,7 @@ def local_shape(self) -> Tuple[int, ...]
 
 Get local tensor shape.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\distributed\communication.py:460](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\distributed\communication.py#L460)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\distributed\communication.py:460](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\distributed\communication.py#L460)*
 
 #### Methods
 
@@ -204,7 +204,7 @@ Get local tensor shape.
 def __init__(self, local_data: torch.Tensor, comm: communication.Communicator, distribution: str = 'block')
 ```
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\distributed\communication.py:428](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\distributed\communication.py#L428)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\distributed\communication.py:428](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\distributed\communication.py#L428)*
 
 ##### `max`
 
@@ -214,7 +214,7 @@ def max(self) -> torch.Tensor
 
 Global max reduction.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\distributed\communication.py:481](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\distributed\communication.py#L481)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\distributed\communication.py:481](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\distributed\communication.py#L481)*
 
 ##### `mean`
 
@@ -224,7 +224,7 @@ def mean(self) -> torch.Tensor
 
 Global mean reduction.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\distributed\communication.py:470](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\distributed\communication.py#L470)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\distributed\communication.py:470](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\distributed\communication.py#L470)*
 
 ##### `min`
 
@@ -234,7 +234,7 @@ def min(self) -> torch.Tensor
 
 Global min reduction.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\distributed\communication.py:486](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\distributed\communication.py#L486)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\distributed\communication.py:486](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\distributed\communication.py#L486)*
 
 ##### `norm`
 
@@ -244,7 +244,7 @@ def norm(self, p: int = 2) -> torch.Tensor
 
 Global norm computation.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\distributed\communication.py:491](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\distributed\communication.py#L491)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\distributed\communication.py:491](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\distributed\communication.py#L491)*
 
 ##### `sum`
 
@@ -254,7 +254,7 @@ def sum(self) -> torch.Tensor
 
 Global sum reduction.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\distributed\communication.py:465](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\distributed\communication.py#L465)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\distributed\communication.py:465](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\distributed\communication.py#L465)*
 
 ##### `to_global`
 
@@ -266,7 +266,7 @@ Gather to global tensor on rank 0.
 
 **Returns**: `typing.Optional[torch.Tensor]` - Full tensor on rank 0, None on other ranks
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\distributed\communication.py:497](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\distributed\communication.py#L497)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\distributed\communication.py:497](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\distributed\communication.py#L497)*
 
 ### class `Message`
 
@@ -300,7 +300,7 @@ Thread-safe message queue.
 def __init__(self)
 ```
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\distributed\communication.py:53](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\distributed\communication.py#L53)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\distributed\communication.py:53](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\distributed\communication.py#L53)*
 
 ##### `empty`
 
@@ -310,7 +310,7 @@ def empty(self) -> bool
 
 Check if queue is empty.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\distributed\communication.py:69](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\distributed\communication.py#L69)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\distributed\communication.py:69](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\distributed\communication.py#L69)*
 
 ##### `get`
 
@@ -320,7 +320,7 @@ def get(self, block: bool = True, timeout: Optional[float] = None) -> Optional[c
 
 Get message from queue.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\distributed\communication.py:61](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\distributed\communication.py#L61)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\distributed\communication.py:61](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\distributed\communication.py#L61)*
 
 ##### `put`
 
@@ -330,7 +330,7 @@ def put(self, message: communication.Message)
 
 Add message to queue.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\distributed\communication.py:57](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\distributed\communication.py#L57)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\distributed\communication.py:57](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\distributed\communication.py#L57)*
 
 ## Functions
 
@@ -350,7 +350,7 @@ All-reduce operation across all processes.
 
 **Returns**: `<class 'torch.Tensor'>` - Reduced result (same on all processes)
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\distributed\communication.py:303](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\distributed\communication.py#L303)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\distributed\communication.py:303](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\distributed\communication.py#L303)*
 
 ### `async_recv`
 
@@ -368,7 +368,7 @@ Convenience function for non-blocking receive.
 
 **Returns**: `<class 'int'>` - Request ID
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\distributed\communication.py:278](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\distributed\communication.py#L278)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\distributed\communication.py:278](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\distributed\communication.py#L278)*
 
 ### `async_send`
 
@@ -387,7 +387,7 @@ Convenience function for non-blocking send.
 
 **Returns**: `<class 'int'>` - Request ID
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\distributed\communication.py:261](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\distributed\communication.py#L261)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\distributed\communication.py:261](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\distributed\communication.py#L261)*
 
 ### `barrier`
 
@@ -401,7 +401,7 @@ Synchronization barrier.
 
 - **comm** (`<class 'communication.Communicator'>`): Communicator
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\distributed\communication.py:293](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\distributed\communication.py#L293)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\distributed\communication.py:293](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\distributed\communication.py#L293)*
 
 ### `broadcast`
 
@@ -419,7 +419,7 @@ Broadcast data from root to all processes.
 
 **Returns**: `<class 'torch.Tensor'>` - Broadcast data on all ranks
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\distributed\communication.py:341](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\distributed\communication.py#L341)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\distributed\communication.py:341](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\distributed\communication.py#L341)*
 
 ### `gather`
 
@@ -437,7 +437,7 @@ Gather data from all processes to root.
 
 **Returns**: `typing.Optional[typing.List[torch.Tensor]]` - List of all data on root, None on other ranks
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\distributed\communication.py:392](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\distributed\communication.py#L392)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\distributed\communication.py:392](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\distributed\communication.py#L392)*
 
 ### `scatter`
 
@@ -455,7 +455,7 @@ Scatter data from root to all processes.
 
 **Returns**: `<class 'torch.Tensor'>` - Local portion of scattered data
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\distributed\communication.py:365](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\distributed\communication.py#L365)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\distributed\communication.py:365](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\distributed\communication.py#L365)*
 
 ### `test_communication`
 
@@ -465,4 +465,4 @@ def test_communication()
 
 Test communication patterns.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\distributed\communication.py:511](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\distributed\communication.py#L511)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\distributed\communication.py:511](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\distributed\communication.py#L511)*

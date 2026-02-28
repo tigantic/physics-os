@@ -16,7 +16,7 @@ STAR-HEART is a compact spherical tokamak fusion reactor achieving **Q = 14.1** 
 |-----------|-----------|--------|
 | **Coils** | LaLuH₆ Room-Temp Superconductor | 20T field, no cryogenics |
 | **Wall** | (Hf,Ta,Zr,Nb)C High-Entropy Carbide | Survives 3000°C plasma contact |
-| **Control** | HyperTensor-RL Feedback | LAMINAR plasma flow |
+| **Control** | Physics OS-RL Feedback | LAMINAR plasma flow |
 
 ---
 
@@ -41,7 +41,7 @@ STAR-HEART is a compact spherical tokamak fusion reactor achieving **Q = 14.1** 
                     │   └───────────┘   └───────────┘        │
                     │         ↑                               │
                     │   ┌─────┴─────────────────────────┐    │
-                    │   │  HyperTensor-RL CONTROL       │    │
+                    │   │  Physics OS-RL CONTROL       │    │
                     │   │  1 MHz Feedback               │    │
                     │   │  TT-Rank 12 Compression       │    │
                     │   └───────────────────────────────┘    │
@@ -208,7 +208,7 @@ Fusion plasmas at 290 million °C cannot touch any material without destroying i
 
 ---
 
-## Subsystem 3: HyperTensor-RL Plasma Control
+## Subsystem 3: Physics OS-RL Plasma Control
 
 ### The Turbulence Problem
 
@@ -239,7 +239,7 @@ We use TT-compressed representation of the plasma state to enable real-time opti
                                 │
                                 ▼
     ┌─────────────────────────────────────────────────────┐
-    │  HyperTensor-RL Policy                              │
+    │  Physics OS-RL Policy                              │
     │  Trained on 10⁸ simulated disruptions               │
     │  Outputs: δI for each feedback coil                 │
     └───────────────────────────┬─────────────────────────┘
@@ -322,7 +322,7 @@ By correcting 1 million times per second, the plasma never gets a chance to deve
 | Superconductor | Nb₃Sn | REBCO | REBCO | **LaLuH₆** |
 | Cryogenics | 4 K | 20 K | 20 K | **293 K (None)** |
 | Wall | W | W | W | **(Hf,Ta,Zr,Nb)C** |
-| Control | Conventional | Conventional | Conventional | **HyperTensor-RL** |
+| Control | Conventional | Conventional | Conventional | **Physics OS-RL** |
 | First plasma | 2035? | 2025? | 2030s? | **Materials ready** |
 | Cost | $25B | $2B | ~$3B | **~$500M** |
 
@@ -340,7 +340,7 @@ By correcting 1 million times per second, the plasma never gets a chance to deve
 | Cryostat | 0 | **NOT NEEDED** | $0 |
 | Feedback Coils | 24 | LaLuH₆ saddle coils | $10M |
 | Diagnostics | - | Mirnov, SXR, ECE, etc. | $20M |
-| Control System | 1 | HyperTensor-RL hardware | $5M |
+| Control System | 1 | Physics OS-RL hardware | $5M |
 | Heating | - | ECRH, NBI for startup | $30M |
 | Tritium Plant | 1 | Breeding blanket + processing | $50M |
 | Balance of Plant | - | Heat exchangers, turbines | $100M |
@@ -418,7 +418,7 @@ By correcting 1 million times per second, the plasma never gets a chance to deve
 - R = 2.0 m, a = 0.7 m (Compact Spherical Tokamak)
 - B = 20 T (LaLuH₆ superconductor)
 - Wall = (Hf,Ta,Zr,Nb)C composite
-- Control = HyperTensor-RL @ 1 MHz
+- Control = Physics OS-RL @ 1 MHz
 
 **Performance:**
 - Q = 14.1 (steady-state)
@@ -449,7 +449,7 @@ We have now completed the **technological substrate for a post-scarcity civiliza
 
 *System Integration Architecture for PROJECT STAR-HEART*  
 *The Grand Unification — January 5, 2026*  
-*HyperTensor Physics Engine*
+*The Ontic Engine*
 
 > "We didn't just solve fusion.  
 > We solved the materials that make fusion easy."

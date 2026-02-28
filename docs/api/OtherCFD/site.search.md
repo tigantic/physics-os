@@ -3,7 +3,7 @@
 Search index generation and querying for documentation site.
 
 This module provides full-text search capabilities for the
-HyperTensor documentation site.
+Physics OS documentation site.
 
 **Contents:**
 
@@ -51,7 +51,7 @@ def __init__(self)
 
 Initialize indexer.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\site\search.py:425](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\site\search.py#L425)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\site\search.py:425](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\site\search.py#L425)*
 
 ##### `get_index`
 
@@ -61,7 +61,7 @@ def get_index(self) -> search.SearchIndex
 
 Get the search index.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\site\search.py:502](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\site\search.py#L502)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\site\search.py:502](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\site\search.py#L502)*
 
 ##### `index_document`
 
@@ -82,7 +82,7 @@ Index a document, updating if changed.
 
 **Returns**: `<class 'bool'>` - True if document was indexed/updated
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\site\search.py:430](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\site\search.py#L430)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\site\search.py:430](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\site\search.py#L430)*
 
 ##### `index_pages`
 
@@ -98,7 +98,7 @@ Index multiple pages.
 
 **Returns**: `<class 'int'>` - Number of pages indexed
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\site\search.py:478](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\site\search.py#L478)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\site\search.py:478](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\site\search.py#L478)*
 
 ##### `load`
 
@@ -108,7 +108,7 @@ def load(self, path: str)
 
 Load index from file.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\site\search.py:511](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\site\search.py#L511)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\site\search.py:511](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\site\search.py#L511)*
 
 ##### `save`
 
@@ -118,7 +118,7 @@ def save(self, path: str)
 
 Save index to file.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\site\search.py:506](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\site\search.py#L506)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\site\search.py:506](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\site\search.py#L506)*
 
 ### class `SearchIndex`
 
@@ -141,7 +141,7 @@ Initialize search index.
 
 - **tokenizer** (`typing.Optional[search.Tokenizer]`): Text tokenizer
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\site\search.py:152](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\site\search.py#L152)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\site\search.py:152](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\site\search.py#L152)*
 
 ##### `add_document`
 
@@ -160,7 +160,7 @@ Add document to index.
 - **doc_type** (`<class 'str'>`): Document type (api, guide, etc.)
 - **metadata** (`typing.Optional[typing.Dict[str, typing.Any]]`): Additional metadata
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\site\search.py:171](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\site\search.py#L171)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\site\search.py:171](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\site\search.py#L171)*
 
 ##### `from_json`
 
@@ -170,7 +170,7 @@ def from_json(json_str: str) -> 'SearchIndex'
 
 Deserialize index from JSON.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\site\search.py:400](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\site\search.py#L400)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\site\search.py:400](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\site\search.py#L400)*
 
 ##### `remove_document`
 
@@ -184,7 +184,7 @@ Remove document from index.
 
 - **doc_id** (`<class 'str'>`): Document ID to remove
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\site\search.py:223](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\site\search.py#L223)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\site\search.py:223](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\site\search.py#L223)*
 
 ##### `search`
 
@@ -202,7 +202,7 @@ Search for documents matching query.
 
 **Returns**: `typing.List[search.SearchResult]` - List of search results ranked by relevance
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\site\search.py:248](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\site\search.py#L248)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\site\search.py:248](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\site\search.py#L248)*
 
 ##### `to_json`
 
@@ -212,7 +212,7 @@ def to_json(self) -> str
 
 Serialize index to JSON.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\site\search.py:382](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\site\search.py#L382)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\site\search.py:382](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\site\search.py#L382)*
 
 ### class `SearchResult`
 
@@ -244,7 +244,7 @@ def to_dict(self) -> Dict[str, Any]
 
 Convert to dictionary.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\site\search.py:28](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\site\search.py#L28)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\site\search.py:28](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\site\search.py#L28)*
 
 ### class `Tokenizer`
 
@@ -268,7 +268,7 @@ Initialize tokenizer.
 - **remove_stop_words** (`<class 'bool'>`): Remove common stop words
 - **stem** (`<class 'bool'>`): Apply basic stemming
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\site\search.py:68](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\site\search.py#L68)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\site\search.py:68](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\site\search.py#L68)*
 
 ##### `tokenize`
 
@@ -284,7 +284,7 @@ Tokenize text into terms.
 
 **Returns**: `typing.List[str]` - List of tokens
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\site\search.py:92](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\site\search.py#L92)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\site\search.py:92](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\site\search.py#L92)*
 
 ## Functions
 
@@ -302,7 +302,7 @@ Build search index from pages.
 
 **Returns**: `<class 'search.SearchIndex'>` - SearchIndex instance
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\site\search.py:517](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\site\search.py#L517)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\site\search.py:517](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\site\search.py#L517)*
 
 ### `search`
 
@@ -320,4 +320,4 @@ Search the index.
 
 **Returns**: `typing.List[search.SearchResult]` - List of search results
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\site\search.py:532](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\site\search.py#L532)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\site\search.py:532](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\site\search.py#L532)*

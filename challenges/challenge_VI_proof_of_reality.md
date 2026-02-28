@@ -19,7 +19,7 @@ The detection arms race (deepfake detectors vs. deepfake generators) is unwinnab
 
 ## Demonstrated Capability
 
-### What HyperTensor Has Already Proven
+### What The Physics OS Has Already Proven
 
 | Capability | Evidence | Attestation |
 |-----------|----------|-------------|

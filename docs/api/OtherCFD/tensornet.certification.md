@@ -1,6 +1,6 @@
 # Module `tensornet.certification`
 
-Certification Module for HyperTensor ====================================
+Certification Module for The Physics OS ====================================
 
 Provides DO-178C compliance infrastructure and hardware deployment
 capabilities for safety-critical tensor network applications.

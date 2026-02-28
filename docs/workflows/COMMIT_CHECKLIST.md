@@ -21,7 +21,7 @@ git commit -m "type(scope): description"
 
 **Start of Day**:
 ```bash
-cd /home/brad/TiganticLabz/Main_Projects/'Project HyperTensor'
+cd /home/brad/TiganticLabz/Main_Projects/'Project The Physics OS'
 git status  # Check for uncommitted work
 git pull origin main  # Sync with remote (if collaborating)
 ```
@@ -207,7 +207,7 @@ Option 1: **Personal Access Token** (HTTPS)
 Option 2: **SSH Key** (Recommended)
 ```bash
 # Update remote to SSH
-git remote set-url origin git@github.com:tigantic/HyperTensor.git
+git remote set-url origin git@github.com:tigantic/The Physics OS.git
 
 # Push with SSH
 git push origin main

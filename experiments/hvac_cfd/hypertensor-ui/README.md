@@ -1,4 +1,4 @@
-# HyperTensor UI
+# The Physics OS — UI
 
 **GPU-Accelerated CFD Simulation Interface for HyperFOAM**
 
@@ -327,7 +327,7 @@ CMD ["node", "server.js"]
 
 ## Constitutional Compliance
 
-This codebase is governed by the [HyperTensor Constitution](../../CONSTITUTION.md).
+This codebase is governed by the [Physics OS Constitution](../../CONSTITUTION.md).
 
 **Current Status**: 65% Compliant — Conditional Approval
 

@@ -53,7 +53,7 @@ State for LES subgrid quantities.
 def shape(self) -> torch.Size
 ```
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\les.py:83](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\les.py#L83)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\les.py:83](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\les.py#L83)*
 
 #### Methods
 
@@ -71,7 +71,7 @@ def zeros(shape: Tuple[int, ...], dtype=torch.float64) -> 'LESState'
 
 Create zero-initialized LES state.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\les.py:87](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\les.py#L87)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\les.py:87](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\les.py#L87)*
 
 ## Functions
 
@@ -91,7 +91,7 @@ Unified interface for computing SGS viscosity.
 
 **Returns**: `<class 'torch.Tensor'>` - SGS eddy viscosity μ_sgs
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\les.py:766](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\les.py#L766)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\les.py:766](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\les.py#L766)*
 
 ### `dynamic_smagorinsky_coefficient`
 
@@ -114,7 +114,7 @@ with averaging (here: local with clipping)
 
 **Returns**: `<class 'torch.Tensor'>` - Dynamic coefficient C_s² (clipped to positive values)
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\les.py:311](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\les.py#L311)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\les.py:311](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\les.py#L311)*
 
 ### `dynamic_smagorinsky_viscosity`
 
@@ -126,7 +126,7 @@ Dynamic Smagorinsky SGS viscosity.
 
 μ_sgs = ρ C_s² Δ² |S|
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\les.py:401](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\les.py#L401)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\les.py:401](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\les.py#L401)*
 
 ### `filter_width`
 
@@ -147,7 +147,7 @@ Common choices:
 
 **Returns**: `<class 'torch.Tensor'>` - Filter width scalar
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\les.py:98](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\les.py#L98)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\les.py:98](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\les.py#L98)*
 
 ### `sgs_heat_flux`
 
@@ -168,7 +168,7 @@ q_sgs = -k_sgs ∇T = -(μ_sgs c_p / Pr_t) ∇T
 
 **Returns**: `typing.Tuple[torch.Tensor, ...]` - Tuple of heat flux components (q_x, q_y) or (q_x, q_y, q_z)
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\les.py:727](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\les.py#L727)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\les.py:727](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\les.py#L727)*
 
 ### `sigma_viscosity`
 
@@ -195,7 +195,7 @@ Properties:
 
 **Returns**: `<class 'torch.Tensor'>` - SGS eddy viscosity μ_sgs [Pa·s]
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\les.py:636](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\les.py#L636)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\les.py:636](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\les.py#L636)*
 
 ### `smagorinsky_viscosity`
 
@@ -216,7 +216,7 @@ Classic Smagorinsky subgrid-scale viscosity.
 
 **Returns**: `<class 'torch.Tensor'>` - SGS eddy viscosity μ_sgs [Pa·s]
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\les.py:206](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\les.py#L206)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\les.py:206](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\les.py#L206)*
 
 ### `smagorinsky_with_damping`
 
@@ -230,7 +230,7 @@ Smagorinsky model with Van Driest near-wall damping.
 
 where D = 1 - exp(-y⁺/A⁺)
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\les.py:254](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\les.py#L254)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\les.py:254](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\les.py#L254)*
 
 ### `strain_rate_magnitude`
 
@@ -244,7 +244,7 @@ S_ij = (1/2)(∂u_i/∂x_j + ∂u_j/∂x_i)
 
 **Returns**: `<class 'torch.Tensor'>` - |S| strain rate magnitude [1/s]
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\les.py:128](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\les.py#L128)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\les.py:128](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\les.py#L128)*
 
 ### `test_filter`
 
@@ -263,7 +263,7 @@ Uses simple box filter at scale Δ̂ = filter_ratio × Δ
 
 **Returns**: `<class 'torch.Tensor'>` - Test-filtered field
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\les.py:280](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\les.py#L280)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\les.py:280](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\les.py#L280)*
 
 ### `validate_les`
 
@@ -273,7 +273,7 @@ def validate_les()
 
 Run validation tests for LES module.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\les.py:832](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\les.py#L832)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\les.py:832](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\les.py#L832)*
 
 ### `van_driest_damping`
 
@@ -295,7 +295,7 @@ viscous sublayer.
 
 **Returns**: `<class 'torch.Tensor'>` - Damping factor D ∈ [0, 1]
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\les.py:232](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\les.py#L232)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\les.py:232](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\les.py#L232)*
 
 ### `vorticity_magnitude`
 
@@ -307,7 +307,7 @@ Compute vorticity magnitude |Ω| = √(2 Ω_ij Ω_ij).
 
 Ω_ij = (1/2)(∂u_i/∂x_j - ∂u_j/∂x_i)
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\les.py:170](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\les.py#L170)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\les.py:170](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\les.py#L170)*
 
 ### `vreman_viscosity`
 
@@ -337,7 +337,7 @@ Advantages:
 
 **Returns**: `<class 'torch.Tensor'>` - SGS eddy viscosity μ_sgs [Pa·s]
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\les.py:544](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\les.py#L544)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\les.py:544](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\les.py#L544)*
 
 ### `wale_viscosity`
 
@@ -367,4 +367,4 @@ Advantages:
 
 **Returns**: `<class 'torch.Tensor'>` - SGS eddy viscosity μ_sgs [Pa·s]
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\les.py:422](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\les.py#L422)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\les.py:422](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\les.py#L422)*

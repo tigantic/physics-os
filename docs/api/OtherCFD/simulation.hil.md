@@ -53,7 +53,7 @@ Abstract base class for actuator models.
 def __init__(self, actuator_type: hil.ActuatorType, rate_limit: float = 100.0, position_limit_min: float = -30.0, position_limit_max: float = 30.0, latency_ms: float = 2.0)
 ```
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\simulation\hil.py:389](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\simulation\hil.py#L389)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\simulation\hil.py:389](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\simulation\hil.py#L389)*
 
 ##### `update`
 
@@ -70,7 +70,7 @@ Update actuator position based on command.
 
 **Returns**: `<class 'float'>` - Actual position after dynamics
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\simulation\hil.py:406](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\simulation\hil.py#L406)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\simulation\hil.py:406](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\simulation\hil.py#L406)*
 
 ### class `ActuatorType`(Enum)
 
@@ -95,7 +95,7 @@ Models pitot-static system with:
 def __init__(self, update_rate_hz: float = 100.0, latency_ms: float = 5.0)
 ```
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\simulation\hil.py:318](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\simulation\hil.py#L318)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\simulation\hil.py:318](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\simulation\hil.py#L318)*
 
 ##### `measure`
 
@@ -105,7 +105,7 @@ def measure(self, true_state: Dict[str, float], t: float) -> Dict[str, float]
 
 Generate air data measurement.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\simulation\hil.py:346](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\simulation\hil.py#L346)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\simulation\hil.py:346](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\simulation\hil.py#L346)*
 
 ### class `ControlSurface`(ActuatorModel)
 
@@ -126,7 +126,7 @@ Models:
 def __init__(self, name: str = 'elevator', rate_limit_deg_s: float = 60.0, position_limit_deg: float = 30.0, bandwidth_hz: float = 10.0, latency_ms: float = 5.0)
 ```
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\simulation\hil.py:433](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\simulation\hil.py#L433)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\simulation\hil.py:433](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\simulation\hil.py#L433)*
 
 ##### `update`
 
@@ -136,7 +136,7 @@ def update(self, command: float, dt: float) -> float
 
 Update control surface position with second-order dynamics.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\simulation\hil.py:454](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\simulation\hil.py#L454)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\simulation\hil.py:454](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\simulation\hil.py#L454)*
 
 ### class `GPSSensor`(SensorModel)
 
@@ -157,7 +157,7 @@ Models GPS with:
 def __init__(self, update_rate_hz: float = 10.0, latency_ms: float = 50.0)
 ```
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\simulation\hil.py:238](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\simulation\hil.py#L238)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\simulation\hil.py:238](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\simulation\hil.py#L238)*
 
 ##### `measure`
 
@@ -167,7 +167,7 @@ def measure(self, true_state: Dict[str, float], t: float) -> Dict[str, float]
 
 Generate GPS measurement.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\simulation\hil.py:267](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\simulation\hil.py#L267)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\simulation\hil.py:267](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\simulation\hil.py#L267)*
 
 ### class `HILConfig`
 
@@ -211,7 +211,7 @@ Manages the complete HIL loop including:
 def __init__(self, config: hil.HILConfig = None)
 ```
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\simulation\hil.py:550](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\simulation\hil.py#L550)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\simulation\hil.py:550](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\simulation\hil.py#L550)*
 
 ##### `add_actuator`
 
@@ -221,7 +221,7 @@ def add_actuator(self, name: str, actuator: hil.ActuatorModel)
 
 Add an actuator to the HIL interface.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\simulation\hil.py:567](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\simulation\hil.py#L567)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\simulation\hil.py:567](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\simulation\hil.py#L567)*
 
 ##### `add_sensor`
 
@@ -231,7 +231,7 @@ def add_sensor(self, name: str, sensor: hil.SensorModel)
 
 Add a sensor to the HIL interface.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\simulation\hil.py:563](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\simulation\hil.py#L563)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\simulation\hil.py:563](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\simulation\hil.py#L563)*
 
 ##### `get_sensor_data`
 
@@ -247,7 +247,7 @@ Get all sensor measurements.
 
 **Returns**: `typing.Dict[str, typing.Dict]` - Dict of sensor name -> measurement
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\simulation\hil.py:571](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\simulation\hil.py#L571)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\simulation\hil.py:571](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\simulation\hil.py#L571)*
 
 ##### `get_telemetry`
 
@@ -257,7 +257,7 @@ def get_telemetry(self) -> List[Dict]
 
 Get logged telemetry.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\simulation\hil.py:708](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\simulation\hil.py#L708)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\simulation\hil.py:708](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\simulation\hil.py#L708)*
 
 ##### `reset`
 
@@ -267,7 +267,7 @@ def reset(self)
 
 Reset HIL state.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\simulation\hil.py:699](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\simulation\hil.py#L699)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\simulation\hil.py:699](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\simulation\hil.py#L699)*
 
 ##### `run_realtime`
 
@@ -283,7 +283,7 @@ Run HIL in real-time mode.
 - **get_commands** (`typing.Callable[[typing.Dict], typing.Dict[str, float]]`): Callback to get actuator commands from sensor data
 - **duration_s** (`<class 'float'>`): Duration to run
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\simulation\hil.py:646](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\simulation\hil.py#L646)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\simulation\hil.py:646](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\simulation\hil.py#L646)*
 
 ##### `set_actuator_commands`
 
@@ -300,7 +300,7 @@ Set actuator commands and get actual positions.
 
 **Returns**: `typing.Dict[str, float]` - Dict of actuator name -> actual position
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\simulation\hil.py:588](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\simulation\hil.py#L588)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\simulation\hil.py:588](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\simulation\hil.py#L588)*
 
 ##### `step`
 
@@ -317,7 +317,7 @@ Execute one HIL step.
 
 **Returns**: `typing.Tuple[typing.Dict[str, typing.Dict], typing.Dict[str, float]]` - (sensor_measurements, actuator_positions)
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\simulation\hil.py:609](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\simulation\hil.py#L609)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\simulation\hil.py:609](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\simulation\hil.py#L609)*
 
 ##### `stop`
 
@@ -327,7 +327,7 @@ def stop(self)
 
 Stop real-time HIL.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\simulation\hil.py:695](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\simulation\hil.py#L695)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\simulation\hil.py:695](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\simulation\hil.py#L695)*
 
 ### class `HILMode`(Enum)
 
@@ -351,7 +351,7 @@ Models a 6-DOF IMU with:
 def __init__(self, update_rate_hz: float = 400.0, latency_ms: float = 0.5)
 ```
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\simulation\hil.py:167](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\simulation\hil.py#L167)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\simulation\hil.py:167](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\simulation\hil.py#L167)*
 
 ##### `measure`
 
@@ -361,7 +361,7 @@ def measure(self, true_state: Dict[str, float], t: float) -> Dict[str, float]
 
 Generate IMU measurement.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\simulation\hil.py:198](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\simulation\hil.py#L198)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\simulation\hil.py:198](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\simulation\hil.py#L198)*
 
 ### class `SensorModel`(ABC)
 
@@ -375,7 +375,7 @@ Abstract base class for sensor models.
 def __init__(self, sensor_type: hil.SensorType, update_rate_hz: float = 100.0, latency_ms: float = 1.0)
 ```
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\simulation\hil.py:106](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\simulation\hil.py#L106)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\simulation\hil.py:106](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\simulation\hil.py#L106)*
 
 ##### `apply_noise`
 
@@ -385,7 +385,7 @@ def apply_noise(self, value: float, noise: hil.SensorNoise, dt: float) -> float
 
 Apply noise model to measurement.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\simulation\hil.py:132](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\simulation\hil.py#L132)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\simulation\hil.py:132](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\simulation\hil.py#L132)*
 
 ##### `measure`
 
@@ -402,7 +402,7 @@ Generate sensor measurement from true state.
 
 **Returns**: `typing.Dict[str, float]` - Sensor measurement with noise
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\simulation\hil.py:118](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\simulation\hil.py#L118)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\simulation\hil.py:118](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\simulation\hil.py#L118)*
 
 ### class `SensorNoise`
 
@@ -447,7 +447,7 @@ Models:
 def __init__(self, max_thrust_N: float = 100000.0, throttle_lag_s: float = 0.1, ignition_delay_s: float = 0.05, thrust_uncertainty_pct: float = 3.0)
 ```
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\simulation\hil.py:491](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\simulation\hil.py#L491)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\simulation\hil.py:491](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\simulation\hil.py#L491)*
 
 ##### `ignite`
 
@@ -457,7 +457,7 @@ def ignite(self, t: float)
 
 Command ignition.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\simulation\hil.py:512](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\simulation\hil.py#L512)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\simulation\hil.py:512](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\simulation\hil.py#L512)*
 
 ##### `update`
 
@@ -467,7 +467,7 @@ def update(self, command: float, dt: float) -> float
 
 Update thrust level.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\simulation\hil.py:516](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\simulation\hil.py#L516)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\simulation\hil.py:516](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\simulation\hil.py#L516)*
 
 ## Functions
 
@@ -485,7 +485,7 @@ Create a standard actuator suite for a vehicle class.
 
 **Returns**: `typing.Dict[str, hil.ActuatorModel]` - Dict of actuator name -> ActuatorModel
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\simulation\hil.py:740](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\simulation\hil.py#L740)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\simulation\hil.py:740](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\simulation\hil.py#L740)*
 
 ### `create_vehicle_sensors`
 
@@ -501,7 +501,7 @@ Create a standard sensor suite for a vehicle class.
 
 **Returns**: `typing.Dict[str, hil.SensorModel]` - Dict of sensor name -> SensorModel
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\simulation\hil.py:713](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\simulation\hil.py#L713)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\simulation\hil.py:713](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\simulation\hil.py#L713)*
 
 ### `validate_hil_module`
 
@@ -511,4 +511,4 @@ def validate_hil_module()
 
 Validate HIL module.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\simulation\hil.py:786](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\simulation\hil.py#L786)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\simulation\hil.py:786](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\simulation\hil.py#L786)*

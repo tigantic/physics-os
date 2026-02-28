@@ -3,7 +3,7 @@ hide:
   - navigation
 ---
 
-# HyperTensor
+# The Physics OS
 
 **The Physics-First Tensor Network Engine**
 
@@ -37,7 +37,7 @@ print(f"Ground state energy: {E:.8f}")
 
 ## Architecture
 
-HyperTensor is a **monorepo** with three tiers:
+The Physics OS is a **monorepo** with three tiers:
 
 | Tier | Package | Language | Purpose |
 |------|---------|----------|---------|

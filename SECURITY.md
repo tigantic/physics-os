@@ -10,7 +10,7 @@
 
 ## Reporting a Vulnerability
 
-We take the security of HyperTensor seriously. If you believe you have found a security vulnerability, please report it to us as described below.
+We take the security of The Physics OS seriously. If you believe you have found a security vulnerability, please report it to us as described below.
 
 ### How to Report
 
@@ -55,7 +55,7 @@ We will not pursue civil action or initiate a complaint to law enforcement for a
 
 ### Recognition
 
-We appreciate the security research community's efforts to help keep HyperTensor secure. Researchers who report valid vulnerabilities will be:
+We appreciate the security research community's efforts to help keep The Physics OS secure. Researchers who report valid vulnerabilities will be:
 
 - Credited in our security advisories (unless they prefer to remain anonymous)
 - Listed in our Security Hall of Fame (for significant findings)

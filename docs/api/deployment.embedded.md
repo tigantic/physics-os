@@ -46,7 +46,7 @@ Provides:
 def __init__(self, config: embedded.JetsonConfig = None)
 ```
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\deployment\embedded.py:266](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\deployment\embedded.py#L266)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\deployment\embedded.py:266](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\deployment\embedded.py#L266)*
 
 ##### `get_metrics`
 
@@ -56,7 +56,7 @@ def get_metrics(self) -> embedded.InferenceMetrics
 
 Get current performance metrics.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\deployment\embedded.py:430](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\deployment\embedded.py#L430)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\deployment\embedded.py:430](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\deployment\embedded.py#L430)*
 
 ##### `infer`
 
@@ -74,7 +74,7 @@ Run inference with deadline checking.
 
 **Returns**: `typing.Dict[str, torch.Tensor]` - Output tensors
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\deployment\embedded.py:372](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\deployment\embedded.py#L372)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\deployment\embedded.py:372](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\deployment\embedded.py#L372)*
 
 ##### `initialize`
 
@@ -88,7 +88,7 @@ Initialize runtime for inference.
 
 - **pool_size_mb** (`<class 'int'>`): Size of memory pool
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\deployment\embedded.py:278](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\deployment\embedded.py#L278)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\deployment\embedded.py:278](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\deployment\embedded.py#L278)*
 
 ##### `load_model`
 
@@ -104,7 +104,7 @@ Load and warm up a model.
 - **model_path** (`typing.Union[str, pathlib.Path]`): Path to ONNX or TRT model
 - **warmup_iterations** (`<class 'int'>`): Number of warmup inferences
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\deployment\embedded.py:295](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\deployment\embedded.py#L295)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\deployment\embedded.py:295](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\deployment\embedded.py#L295)*
 
 ##### `shutdown`
 
@@ -114,7 +114,7 @@ def shutdown(self)
 
 Clean shutdown of runtime.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\deployment\embedded.py:443](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\deployment\embedded.py#L443)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\deployment\embedded.py:443](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\deployment\embedded.py#L443)*
 
 ### class `InferenceMetrics`
 
@@ -141,7 +141,7 @@ def deadline_hit_rate(self) -> float
 
 Percentage of deadlines met.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\deployment\embedded.py:106](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\deployment\embedded.py#L106)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\deployment\embedded.py:106](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\deployment\embedded.py#L106)*
 
 #### Methods
 
@@ -190,7 +190,7 @@ Eliminates allocation jitter during real-time inference.
 def __init__(self, pool_size_mb: int = 1024, dtype: torch.dtype = torch.float32, device: str = 'cuda')
 ```
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\deployment\embedded.py:121](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\deployment\embedded.py#L121)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\deployment\embedded.py:121](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\deployment\embedded.py#L121)*
 
 ##### `allocate`
 
@@ -207,7 +207,7 @@ Allocate a tensor from the pool.
 
 **Returns**: `<class 'torch.Tensor'>` - Pre-allocated tensor view
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\deployment\embedded.py:143](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\deployment\embedded.py#L143)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\deployment\embedded.py:143](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\deployment\embedded.py#L143)*
 
 ##### `get_usage_mb`
 
@@ -217,7 +217,7 @@ def get_usage_mb(self) -> float
 
 Current memory usage in MB.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\deployment\embedded.py:173](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\deployment\embedded.py#L173)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\deployment\embedded.py:173](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\deployment\embedded.py#L173)*
 
 ##### `reset`
 
@@ -227,7 +227,7 @@ def reset(self)
 
 Reset pool for new inference cycle.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\deployment\embedded.py:167](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\deployment\embedded.py#L167)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\deployment\embedded.py:167](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\deployment\embedded.py#L167)*
 
 ### class `MemoryProfile`
 
@@ -252,7 +252,7 @@ def available_mb(self) -> int
 
 Available memory for application.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\deployment\embedded.py:79](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\deployment\embedded.py#L79)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\deployment\embedded.py:79](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\deployment\embedded.py#L79)*
 
 ##### `utilization_pct`
 
@@ -262,7 +262,7 @@ def utilization_pct(self) -> float
 
 Memory utilization percentage.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\deployment\embedded.py:86](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\deployment\embedded.py#L86)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\deployment\embedded.py:86](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\deployment\embedded.py#L86)*
 
 #### Methods
 
@@ -290,7 +290,7 @@ Prevents thermal throttling by proactive management.
 def __init__(self, config: embedded.JetsonConfig)
 ```
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\deployment\embedded.py:185](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\deployment\embedded.py#L185)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\deployment\embedded.py:185](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\deployment\embedded.py#L185)*
 
 ##### `get_recommended_power_mode`
 
@@ -300,7 +300,7 @@ def get_recommended_power_mode(self) -> embedded.PowerMode
 
 Recommend power mode based on thermal state.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\deployment\embedded.py:225](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\deployment\embedded.py#L225)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\deployment\embedded.py:225](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\deployment\embedded.py#L225)*
 
 ##### `get_temperatures`
 
@@ -310,7 +310,7 @@ def get_temperatures(self) -> Dict[str, float]
 
 Read current temperatures.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\deployment\embedded.py:192](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\deployment\embedded.py#L192)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\deployment\embedded.py:192](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\deployment\embedded.py#L192)*
 
 ##### `start_monitoring`
 
@@ -320,7 +320,7 @@ def start_monitoring(self, interval_s: float = 1.0)
 
 Start background thermal monitoring.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\deployment\embedded.py:236](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\deployment\embedded.py#L236)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\deployment\embedded.py:236](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\deployment\embedded.py#L236)*
 
 ##### `stop_monitoring`
 
@@ -330,7 +330,7 @@ def stop_monitoring(self)
 
 Stop thermal monitoring.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\deployment\embedded.py:248](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\deployment\embedded.py#L248)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\deployment\embedded.py:248](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\deployment\embedded.py#L248)*
 
 ##### `update_thermal_state`
 
@@ -340,7 +340,7 @@ def update_thermal_state(self)
 
 Update thermal state based on current temperatures.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\deployment\embedded.py:209](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\deployment\embedded.py#L209)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\deployment\embedded.py:209](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\deployment\embedded.py#L209)*
 
 ### class `ThermalState`(Enum)
 
@@ -356,7 +356,7 @@ def configure_jetson_power(config: embedded.JetsonConfig)
 
 Configure Jetson power mode.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\deployment\embedded.py:453](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\deployment\embedded.py#L453)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\deployment\embedded.py:453](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\deployment\embedded.py#L453)*
 
 ### `create_inference_pipeline`
 
@@ -373,7 +373,7 @@ Create a complete inference pipeline for embedded deployment.
 
 **Returns**: `<class 'embedded.EmbeddedRuntime'>` - Configured EmbeddedRuntime
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\deployment\embedded.py:518](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\deployment\embedded.py#L518)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\deployment\embedded.py:518](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\deployment\embedded.py#L518)*
 
 ### `optimize_memory_layout`
 
@@ -390,7 +390,7 @@ Optimize tensor memory layout for cache efficiency.
 
 **Returns**: `typing.List[torch.Tensor]` - List of optimized tensors
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\deployment\embedded.py:489](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\deployment\embedded.py#L489)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\deployment\embedded.py:489](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\deployment\embedded.py#L489)*
 
 ### `validate_embedded_module`
 
@@ -400,4 +400,4 @@ def validate_embedded_module()
 
 Validate embedded deployment module.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\deployment\embedded.py:548](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\deployment\embedded.py#L548)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\deployment\embedded.py:548](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\deployment\embedded.py#L548)*

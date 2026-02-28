@@ -37,9 +37,9 @@
 
 ## §1 Executive Summary
 
-HyperTensor is a computational physics operating system that uses Quantized Tensor Train (QTT) compression to operate on **10¹² grid points** without dense materialization — enabling simulations that previously required supercomputers to run on commodity hardware with cryptographic evidence guarantees.
+The Physics OS is a computational physics operating system that uses Quantized Tensor Train (QTT) compression to operate on **10¹² grid points** without dense materialization — enabling simulations that previously required supercomputers to run on commodity hardware with cryptographic evidence guarantees.
 
-| Capability | Traditional CFD | HyperTensor |
+| Capability | Traditional CFD | The Physics OS |
 |------------|:-:|:-:|
 | **Grid Resolution** | 10⁶ points | **10¹² points** |
 | **Memory Scaling** | O(N³) | **O(log N)** |
@@ -161,7 +161,7 @@ HyperTensor is a computational physics operating system that uses Quantized Tens
 
 ## §4 Product Architecture — Runtime Access Layer
 
-The HyperTensor Runtime Access Layer (v4.0.0) is the commercial product surface over the physics compute engine. It provides **licensed execution access** and **cryptographic evidence guarantees** without exposing any runtime internals, compression algorithms, or intellectual property.
+The Physics OS Platform Shell (v4.0.0) is the commercial product surface over the physics compute engine. It provides **licensed execution access** and **cryptographic evidence guarantees** without exposing any runtime internals, compression algorithms, or intellectual property.
 
 ### §4.1 Architecture Overview
 
@@ -176,7 +176,7 @@ The HyperTensor Runtime Access Layer (v4.0.0) is the commercial product surface 
 └────────────────────────────────┬──────────────────────────────────────────┘
                                  │ HTTPS / Bearer Auth
 ┌────────────────────────────────▼──────────────────────────────────────────┐
-│                     HyperTensor Runtime (FastAPI)                         │
+│                     Physics OS Platform Shell (FastAPI)                         │
 │  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐  │
 │  │   Auth   │  │   Rate   │  │   Job    │  │  Error   │  │ Metering │  │
 │  │  Bearer  │  │  Limiter │  │  Router  │  │  E001–   │  │  Shadow  │  │
@@ -361,8 +361,8 @@ When `HYPERTENSOR_DEVICE=cuda` (or `auto` with CUDA available), the GPU runtime 
 
 | # | Platform | Location | Size | Language | Purpose |
 |:-:|----------|----------|-----:|----------|---------|
-| 1 | **HyperTensor Runtime** | `hypertensor/` | 3,965 LOC | Python | Commercial product surface: API, SDK, CLI, MCP, billing, certificates |
-| 2 | **HyperTensor VM** | `tensornet/` | ~500K LOC | Python | Physics compute engine: 105+ modules, ~1,218 files |
+| 1 | **Physics OS Platform Shell** | `hypertensor/` | 3,965 LOC | Python | Commercial product surface: API, SDK, CLI, MCP, billing, certificates |
+| 2 | **The Ontic Engine** | `tensornet/` | ~500K LOC | Python | Physics compute engine: 105+ modules, ~1,218 files |
 | 3 | **FluidElite** | `crates/fluidelite*/` | 57K LOC | Python + Rust | Production tensor engine + ZK prover (24 binaries) |
 | 4 | **QTeneT** | `apps/qtenet/` | ~13K LOC | Python + LaTeX | Enterprise QTT SDK: TCI, operators, solvers, demos, benchmarks |
 | 5 | **Platform Substrate** | `tensornet/platform/` + `tensornet/sdk/` | 13.7K LOC | Python | Unified simulation API: WorkflowBuilder, domain packs, V&V harness |
@@ -392,7 +392,7 @@ The Platform Substrate (`tensornet/platform/`, 33 modules, 12,618 LOC) provides 
 
 | Type | Definition | Usage | Example |
 |------|------------|-------|---------|
-| **Platform** | Integrated system with APIs and infrastructure | Deploy & configure | HyperTensor Runtime |
+| **Platform** | Integrated system with APIs and infrastructure | Deploy & configure | Physics OS Platform Shell |
 | **Module** | Reusable library with `__init__.py` | `import` statement | `tensornet/cfd/` |
 | **Application** | Standalone executable with `main()` | `python script.py` | `hellskin_gauntlet.py` |
 | **Tool** | Single-purpose utility | Invoke for specific task | `verilog_elite_analyzer.py` |
@@ -404,7 +404,7 @@ All version numbers are synchronized via `tools/sync_versions.py`, which validat
 | Namespace | Current | Source | Scope |
 |-----------|:-------:|--------|-------|
 | **Release** | v4.0.1 | Git tag (v4.0.0 baseline: `569ff1da`) | Infrastructure-hardened baseline |
-| **Platform** | V3.0.0 | `README.md` badge | Overall HyperTensor platform version |
+| **Platform** | V3.0.0 | `README.md` badge | Overall The Physics OS version |
 | **Platform Substrate API** | V2.0.0 | `tensornet/platform/__init__.py` | Platform module API version |
 | **Package (tensornet)** | 40.0.1 | `tensornet.__version__` | Physics engine package version |
 | **Package (hypertensor)** | 40.0.1 | `hypertensor.__version__` | Runtime Access Layer package version |
@@ -430,7 +430,7 @@ All version numbers are synchronized via `tools/sync_versions.py`, which validat
 
 ## §7 Industry Coverage — 20 Verticals
 
-The HyperTensor Civilization Stack deploys QTT-compressed physics simulation across 20 industry verticals, each with dedicated domain packs, validation gauntlets, and attestation artifacts.
+The Physics OS Civilization Stack deploys QTT-compressed physics simulation across 20 industry verticals, each with dedicated domain packs, validation gauntlets, and attestation artifacts.
 
 | Phase | Industry | Key Physics | Representative Application |
 |:-----:|----------|-------------|---------------------------|
@@ -924,7 +924,7 @@ flowchart TB
         mcp_client["MCP (AI Agent)"]
     end
 
-    subgraph product["HyperTensor Runtime (v4.0.0)"]
+    subgraph product["Physics OS Platform Shell (v4.0.0)"]
         direction TB
         auth["Auth + Rate Limiting"]
         router["Job Router (9 endpoints)"]
@@ -983,7 +983,7 @@ flowchart TB
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────────┐
-│                           HyperTensor Platform V3.0.0                           │
+│                           The Physics OS V3.0.0                           │
 ├─────────────────────────────────────────────────────────────────────────────────┤
 │                                                                                 │
 │  Client Tier                                                                    │
@@ -993,7 +993,7 @@ flowchart TB
 │        └──────────────┴─────────────┴──────────────────────┘                   │
 │                                     │  HTTPS / Bearer Auth                      │
 │  ┌──────────────────────────────────▼───────────────────────────────────────┐  │
-│  │         HyperTensor Runtime Access Layer (v4.0.0, 31 files)              │  │
+│  │         Physics OS Platform Shell (v4.0.0, 31 files)              │  │
 │  │  Auth │ Rate Limit │ Job Router │ Sanitizer │ Evidence │ Certificates    │  │
 │  │  Metering (shadow billing) │ Error codes E001–E012 │ Idempotency       │  │
 │  └──────────────────────────────────┬───────────────────────────────────────┘  │
@@ -1071,8 +1071,8 @@ Client                    API                     Runtime                    VM
 
 | # | Platform | Location | Size | Language |
 |:-:|----------|----------|:----:|----------|
-| 1 | HyperTensor Runtime | `hypertensor/` | 3,965 LOC | Python |
-| 2 | HyperTensor VM | `tensornet/` | ~500K LOC | Python |
+| 1 | Physics OS Platform Shell | `hypertensor/` | 3,965 LOC | Python |
+| 2 | The Ontic Engine | `tensornet/` | ~500K LOC | Python |
 | 3 | FluidElite + ZK | `crates/fluidelite*/` | 57K LOC | Python + Rust |
 | 4 | QTeneT Enterprise SDK | `apps/qtenet/` | ~13K LOC | Python + LaTeX |
 | 5 | Platform Substrate + SDK | `tensornet/platform/`, `tensornet/sdk/` | 13.7K LOC | Python |
@@ -1139,7 +1139,7 @@ Deployment topology per [`OPERATIONS_RUNBOOK.md`](docs/operations/OPERATIONS_RUN
          │
     ┌────┴────┐
     ▼         ▼
-[HyperTensor  [HyperTensor
+[The Physics OS  [The Physics OS
  API  Node 1]  API  Node N]   ← Stateless; GPU-attached
     │              │
     └──────┬───────┘
@@ -1272,7 +1272,7 @@ Production-grade monitoring via Prometheus + Grafana, deployed as a Docker Compo
 
 ```
 ┌─────────────────────────────┐
-│  HyperTensor API Server     │
+│  Physics OS API Server     │
 │  :8000/metrics (Prometheus) │
 └──────────┬──────────────────┘
            │ scrape (15s)
@@ -1854,7 +1854,7 @@ This release hardens the v4.0.0 baseline with production-grade developer infrast
 
 **Tag**: `569ff1da` | **Scope**: Frozen baseline
 
-The v4.0.0 release introduces the **HyperTensor Runtime Access Layer** — the product-grade API, SDK, CLI, and MCP server that makes the physics engine commercially accessible. This release also establishes the scope freeze: all surfaces, schemas, error codes, and contracts are locked.
+The v4.0.0 release introduces the **Physics OS Platform Shell** — the product-grade API, SDK, CLI, and MCP server that makes the physics engine commercially accessible. This release also establishes the scope freeze: all surfaces, schemas, error codes, and contracts are locked.
 
 - **Runtime Access Layer** (`hypertensor/`, 31 files, 3,965 LOC):
   - FastAPI server with 9 frozen endpoints across 5 routers

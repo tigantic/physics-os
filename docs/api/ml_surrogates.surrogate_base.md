@@ -6,7 +6,7 @@ This module provides the foundational abstractions for neural network
 surrogate models used to accelerate CFD simulations. All specific
 architectures (PINN, DeepONet, FNO) inherit from these base classes.
 
-Author: HyperTensor Team
+Author: Tigantic Holdings LLC
 
 **Contents:**
 
@@ -30,7 +30,7 @@ network surrogates used to approximate CFD solutions.
 def __init__(self, config: surrogate_base.SurrogateConfig)
 ```
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\ml_surrogates\surrogate_base.py:91](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\ml_surrogates\surrogate_base.py#L91)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\ml_surrogates\surrogate_base.py:91](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\ml_surrogates\surrogate_base.py#L91)*
 
 ##### `build_network`
 
@@ -40,7 +40,7 @@ def build_network(self)
 
 Build the neural network architecture.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\ml_surrogates\surrogate_base.py:108](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\ml_surrogates\surrogate_base.py#L108)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\ml_surrogates\surrogate_base.py:108](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\ml_surrogates\surrogate_base.py#L108)*
 
 ##### `count_parameters`
 
@@ -50,7 +50,7 @@ def count_parameters(self) -> int
 
 Count trainable parameters.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\ml_surrogates\surrogate_base.py:173](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\ml_surrogates\surrogate_base.py#L173)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\ml_surrogates\surrogate_base.py:173](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\ml_surrogates\surrogate_base.py#L173)*
 
 ##### `denormalize_input`
 
@@ -60,7 +60,7 @@ def denormalize_input(self, x: torch.Tensor) -> torch.Tensor
 
 Denormalize inputs.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\ml_surrogates\surrogate_base.py:132](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\ml_surrogates\surrogate_base.py#L132)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\ml_surrogates\surrogate_base.py:132](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\ml_surrogates\surrogate_base.py#L132)*
 
 ##### `denormalize_output`
 
@@ -70,7 +70,7 @@ def denormalize_output(self, y: torch.Tensor) -> torch.Tensor
 
 Denormalize outputs.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\ml_surrogates\surrogate_base.py:144](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\ml_surrogates\surrogate_base.py#L144)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\ml_surrogates\surrogate_base.py:144](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\ml_surrogates\surrogate_base.py#L144)*
 
 ##### `forward`
 
@@ -86,7 +86,7 @@ Forward pass through the network.
 
 **Returns**: `<class 'torch.Tensor'>` - Output tensor of shape (batch, output_dim)
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\ml_surrogates\surrogate_base.py:113](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\ml_surrogates\surrogate_base.py#L113)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\ml_surrogates\surrogate_base.py:113](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\ml_surrogates\surrogate_base.py#L113)*
 
 ##### `get_activation`
 
@@ -96,7 +96,7 @@ def get_activation(self) -> torch.nn.modules.module.Module
 
 Get activation function based on config.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\ml_surrogates\surrogate_base.py:177](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\ml_surrogates\surrogate_base.py#L177)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\ml_surrogates\surrogate_base.py:177](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\ml_surrogates\surrogate_base.py#L177)*
 
 ##### `normalize_input`
 
@@ -106,7 +106,7 @@ def normalize_input(self, x: torch.Tensor) -> torch.Tensor
 
 Normalize inputs using stored statistics.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\ml_surrogates\surrogate_base.py:126](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\ml_surrogates\surrogate_base.py#L126)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\ml_surrogates\surrogate_base.py:126](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\ml_surrogates\surrogate_base.py#L126)*
 
 ##### `normalize_output`
 
@@ -116,7 +116,7 @@ def normalize_output(self, y: torch.Tensor) -> torch.Tensor
 
 Normalize outputs using stored statistics.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\ml_surrogates\surrogate_base.py:138](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\ml_surrogates\surrogate_base.py#L138)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\ml_surrogates\surrogate_base.py:138](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\ml_surrogates\surrogate_base.py#L138)*
 
 ##### `predict`
 
@@ -132,7 +132,7 @@ Make predictions with automatic normalization.
 
 **Returns**: `<class 'torch.Tensor'>` - Predicted CFD solution
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\ml_surrogates\surrogate_base.py:157](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\ml_surrogates\surrogate_base.py#L157)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\ml_surrogates\surrogate_base.py:157](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\ml_surrogates\surrogate_base.py#L157)*
 
 ##### `set_normalization`
 
@@ -142,7 +142,7 @@ def set_normalization(self, x_data: torch.Tensor, y_data: torch.Tensor)
 
 Compute and store normalization statistics from data.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\ml_surrogates\surrogate_base.py:150](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\ml_surrogates\surrogate_base.py#L150)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\ml_surrogates\surrogate_base.py:150](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\ml_surrogates\surrogate_base.py#L150)*
 
 ### class `MLPSurrogate`(CFDSurrogate)
 
@@ -158,7 +158,7 @@ Simple but effective baseline for learning input-output mappings.
 def __init__(self, config: surrogate_base.SurrogateConfig)
 ```
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\ml_surrogates\surrogate_base.py:197](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\ml_surrogates\surrogate_base.py#L197)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\ml_surrogates\surrogate_base.py:197](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\ml_surrogates\surrogate_base.py#L197)*
 
 ##### `build_network`
 
@@ -168,7 +168,7 @@ def build_network(self)
 
 Build MLP architecture.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\ml_surrogates\surrogate_base.py:201](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\ml_surrogates\surrogate_base.py#L201)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\ml_surrogates\surrogate_base.py:201](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\ml_surrogates\surrogate_base.py#L201)*
 
 ##### `forward`
 
@@ -178,7 +178,7 @@ def forward(self, x: torch.Tensor) -> torch.Tensor
 
 Forward pass through MLP.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\ml_surrogates\surrogate_base.py:223](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\ml_surrogates\surrogate_base.py#L223)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\ml_surrogates\surrogate_base.py:223](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\ml_surrogates\surrogate_base.py#L223)*
 
 ### class `ResNetSurrogate`(CFDSurrogate)
 
@@ -194,7 +194,7 @@ Better for deeper networks and complex mappings.
 def __init__(self, config: surrogate_base.SurrogateConfig, n_blocks: int = 4)
 ```
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\ml_surrogates\surrogate_base.py:254](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\ml_surrogates\surrogate_base.py#L254)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\ml_surrogates\surrogate_base.py:254](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\ml_surrogates\surrogate_base.py#L254)*
 
 ##### `build_network`
 
@@ -204,7 +204,7 @@ def build_network(self)
 
 Build ResNet architecture.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\ml_surrogates\surrogate_base.py:259](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\ml_surrogates\surrogate_base.py#L259)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\ml_surrogates\surrogate_base.py:259](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\ml_surrogates\surrogate_base.py#L259)*
 
 ##### `forward`
 
@@ -214,7 +214,7 @@ def forward(self, x: torch.Tensor) -> torch.Tensor
 
 Forward pass through ResNet.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\ml_surrogates\surrogate_base.py:276](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\ml_surrogates\surrogate_base.py#L276)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\ml_surrogates\surrogate_base.py:276](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\ml_surrogates\surrogate_base.py#L276)*
 
 ### class `ResidualBlock`(Module)
 
@@ -228,7 +228,7 @@ Residual block for deeper networks.
 def __init__(self, dim: int, activation: torch.nn.modules.module.Module, dropout: float = 0.0)
 ```
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\ml_surrogates\surrogate_base.py:231](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\ml_surrogates\surrogate_base.py#L231)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\ml_surrogates\surrogate_base.py:231](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\ml_surrogates\surrogate_base.py#L231)*
 
 ##### `forward`
 
@@ -236,7 +236,7 @@ def __init__(self, dim: int, activation: torch.nn.modules.module.Module, dropout
 def forward(self, x: torch.Tensor) -> torch.Tensor
 ```
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\ml_surrogates\surrogate_base.py:243](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\ml_surrogates\surrogate_base.py#L243)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\ml_surrogates\surrogate_base.py:243](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\ml_surrogates\surrogate_base.py#L243)*
 
 ### class `SurrogateConfig`
 
@@ -297,7 +297,7 @@ def to_dict(self) -> Dict[str, float]
 
 Convert to dictionary.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\ml_surrogates\surrogate_base.py:69](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\ml_surrogates\surrogate_base.py#L69)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\ml_surrogates\surrogate_base.py:69](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\ml_surrogates\surrogate_base.py#L69)*
 
 ### class `SurrogateType`(Enum)
 
@@ -320,7 +320,7 @@ Factory function to create surrogate models.
 
 **Returns**: `<class 'surrogate_base.CFDSurrogate'>` - Initialized surrogate model
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\ml_surrogates\surrogate_base.py:338](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\ml_surrogates\surrogate_base.py#L338)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\ml_surrogates\surrogate_base.py:338](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\ml_surrogates\surrogate_base.py#L338)*
 
 ### `evaluate_surrogate`
 
@@ -338,7 +338,7 @@ Evaluate surrogate model performance.
 
 **Returns**: `<class 'surrogate_base.SurrogateMetrics'>` - Quality metrics
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\ml_surrogates\surrogate_base.py:284](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\ml_surrogates\surrogate_base.py#L284)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\ml_surrogates\surrogate_base.py:284](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\ml_surrogates\surrogate_base.py#L284)*
 
 ### `test_surrogate_base`
 
@@ -348,4 +348,4 @@ def test_surrogate_base()
 
 Test surrogate base classes.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\ml_surrogates\surrogate_base.py:365](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\ml_surrogates\surrogate_base.py#L365)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\ml_surrogates\surrogate_base.py:365](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\ml_surrogates\surrogate_base.py#L365)*

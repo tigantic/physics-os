@@ -1,4 +1,4 @@
-# HyperTensor Runtime Contract — v1
+# Physics OS Platform Shell Contract — v1
 
 **Version**: 1.0.0
 **Status**: Active

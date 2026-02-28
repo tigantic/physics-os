@@ -10,7 +10,7 @@
 
 ## What This Release Contains
 
-HyperTensor Runtime Access Layer — a 3-surface product for licensed
+Physics OS Platform Shell — a 3-surface product for licensed
 execution access and evidence guarantees over compression-native
 physics compute.
 

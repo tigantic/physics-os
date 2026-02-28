@@ -1,6 +1,6 @@
 # Module `validation.regression`
 
-Regression Testing Module for Project HyperTensor.
+Regression Testing Module for Project The Physics OS.
 
 Provides regression testing framework including:
 - Golden value comparison and management
@@ -39,7 +39,7 @@ Initialize array comparator.
 - **atol** (`<class 'float'>`): Absolute tolerance
 - **comparison_type** (`<enum 'ComparisonType'>`): Type of comparison
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\regression.py:291](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\regression.py#L291)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\regression.py:291](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\regression.py#L291)*
 
 ##### `compare`
 
@@ -57,7 +57,7 @@ Compare two arrays.
 
 **Returns**: `<class 'regression.RegressionResult'>` - RegressionResult with comparison details
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\regression.py:309](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\regression.py#L309)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\regression.py:309](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\regression.py#L309)*
 
 ### class `ComparisonType`(Enum)
 
@@ -95,7 +95,7 @@ def to_dict(self) -> Dict
 
 Convert metadata to dictionary (excludes large value).
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\regression.py:128](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\regression.py#L128)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\regression.py:128](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\regression.py#L128)*
 
 ##### `verify_hash`
 
@@ -105,7 +105,7 @@ def verify_hash(self) -> bool
 
 Verify the stored hash matches current value.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\regression.py:124](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\regression.py#L124)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\regression.py:124](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\regression.py#L124)*
 
 ### class `GoldenValueStore`
 
@@ -128,7 +128,7 @@ Initialize golden value store.
 
 - **directory** (`typing.Union[str, pathlib.Path]`): Directory for storing golden values
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\regression.py:154](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\regression.py#L154)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\regression.py:154](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\regression.py#L154)*
 
 ##### `delete`
 
@@ -138,7 +138,7 @@ def delete(self, name: str)
 
 Delete a golden value.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\regression.py:240](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\regression.py#L240)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\regression.py:240](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\regression.py#L240)*
 
 ##### `exists`
 
@@ -148,7 +148,7 @@ def exists(self, name: str) -> bool
 
 Check if a golden value exists.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\regression.py:232](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\regression.py#L232)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\regression.py:232](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\regression.py#L232)*
 
 ##### `get_info`
 
@@ -158,7 +158,7 @@ def get_info(self, name: str) -> Optional[Dict]
 
 Get metadata about a golden value without loading it.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\regression.py:249](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\regression.py#L249)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\regression.py:249](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\regression.py#L249)*
 
 ##### `list_all`
 
@@ -168,7 +168,7 @@ def list_all(self) -> List[str]
 
 List all golden value names.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\regression.py:236](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\regression.py#L236)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\regression.py:236](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\regression.py#L236)*
 
 ##### `load`
 
@@ -184,7 +184,7 @@ Load a golden value.
 
 **Returns**: `typing.Optional[regression.GoldenValue]` - The GoldenValue or None if not found
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\regression.py:215](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\regression.py#L215)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\regression.py:215](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\regression.py#L215)*
 
 ##### `save`
 
@@ -202,7 +202,7 @@ Save a golden value.
 
 **Returns**: `<class 'regression.GoldenValue'>` - The created GoldenValue
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\regression.py:178](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\regression.py#L178)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\regression.py:178](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\regression.py#L178)*
 
 ### class `RegressionResult`
 
@@ -231,7 +231,7 @@ def mismatch_rate(self) -> float
 
 Fraction of elements that mismatch.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\regression.py:61](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\regression.py#L61)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\regression.py:61](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\regression.py#L61)*
 
 #### Methods
 
@@ -249,7 +249,7 @@ def to_dict(self) -> Dict
 
 Convert to dictionary.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\regression.py:68](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\regression.py#L68)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\regression.py:68](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\regression.py#L68)*
 
 ### class `RegressionSuite`
 
@@ -275,7 +275,7 @@ def all_passed(self) -> bool
 
 Check if all tests passed.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\regression.py:620](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\regression.py#L620)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\regression.py:620](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\regression.py#L620)*
 
 ##### `fail_count`
 
@@ -285,7 +285,7 @@ def fail_count(self) -> int
 
 Count of failed tests.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\regression.py:630](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\regression.py#L630)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\regression.py:630](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\regression.py#L630)*
 
 ##### `pass_count`
 
@@ -295,7 +295,7 @@ def pass_count(self) -> int
 
 Count of passed tests.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\regression.py:625](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\regression.py#L625)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\regression.py:625](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\regression.py#L625)*
 
 #### Methods
 
@@ -313,7 +313,7 @@ def add_test(self, test: regression.RegressionTest)
 
 Add a test to the suite.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\regression.py:591](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\regression.py#L591)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\regression.py:591](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\regression.py#L591)*
 
 ##### `report`
 
@@ -329,7 +329,7 @@ Generate regression test report.
 
 **Returns**: `<class 'str'>` - Formatted report
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\regression.py:635](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\regression.py#L635)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\regression.py:635](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\regression.py#L635)*
 
 ##### `run_all`
 
@@ -345,7 +345,7 @@ Run all regression tests.
 
 **Returns**: `typing.List[regression.RegressionResult]` - List of RegressionResult
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\regression.py:595](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\regression.py#L595)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\regression.py:595](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\regression.py#L595)*
 
 ### class `RegressionTest`
 
@@ -381,7 +381,7 @@ Run the regression test.
 
 **Returns**: `<class 'regression.RegressionResult'>` - RegressionResult
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\regression.py:521](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\regression.py#L521)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\regression.py:521](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\regression.py#L521)*
 
 ### class `StateComparator`
 
@@ -406,7 +406,7 @@ Initialize state comparator.
 - **default_rtol** (`<class 'float'>`): Default relative tolerance Default: `relative tolerance`.
 - **default_atol** (`<class 'float'>`): Default absolute tolerance Default: `absolute tolerance`.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\regression.py:421](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\regression.py#L421)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\regression.py:421](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\regression.py#L421)*
 
 ##### `compare`
 
@@ -424,7 +424,7 @@ Compare two states (dictionaries of fields).
 
 **Returns**: `typing.List[regression.RegressionResult]` - List of RegressionResult for each field
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\regression.py:439](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\regression.py#L439)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\regression.py:439](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\regression.py#L439)*
 
 ### class `TensorComparator`(ArrayComparator)
 
@@ -450,7 +450,7 @@ Compare two tensors.
 
 **Returns**: `<class 'regression.RegressionResult'>` - RegressionResult with comparison details
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\regression.py:382](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\regression.py#L382)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\regression.py:382](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\regression.py#L382)*
 
 ## Functions
 
@@ -470,7 +470,7 @@ Run full regression suite and optionally save report.
 
 **Returns**: `typing.Tuple[bool, typing.List[regression.RegressionResult]]` - Tuple of (all_passed, results)
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\regression.py:720](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\regression.py#L720)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\regression.py:720](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\regression.py#L720)*
 
 ### `run_regression_tests`
 
@@ -488,7 +488,7 @@ Run a list of regression tests.
 
 **Returns**: `typing.List[regression.RegressionResult]` - List of results
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\regression.py:688](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\regression.py#L688)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\regression.py:688](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\regression.py#L688)*
 
 ### `update_golden_values`
 
@@ -507,4 +507,4 @@ Update multiple golden values.
 
 **Returns**: `typing.Dict[str, bool]` - Dictionary of name -> whether updated
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\regression.py:254](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\regression.py#L254)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\regression.py:254](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\regression.py#L254)*

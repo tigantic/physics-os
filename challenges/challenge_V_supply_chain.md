@@ -19,7 +19,7 @@ Current supply chain models are discrete event simulations — they track indivi
 
 ## Demonstrated Capability
 
-### What HyperTensor Has Already Proven
+### What The Physics OS Has Already Proven
 
 | Capability | Evidence | Attestation |
 |-----------|----------|-------------|
@@ -97,7 +97,7 @@ QTT acceleration:
 
 ### Shock Capturing for Supply Chain Disruptions
 
-The WENO-TT shock capturing (world first, demonstrated in HyperTensor) handles supply chain discontinuities natively:
+The WENO-TT shock capturing (world first, demonstrated in The Physics OS) handles supply chain discontinuities natively:
 
 ```
 Scenario: Suez Canal blockage
@@ -109,7 +109,7 @@ Scenario: Suez Canal blockage
   Detection time: 114 ns (Oracle Kernel)
   
   The cascade IS the shock reflection off network boundaries.
-  HyperTensor's shock-capturing math was built for exactly this.
+  The Physics OS's shock-capturing math was built for exactly this.
 ```
 
 ---

@@ -1,4 +1,4 @@
-# HyperTensor Reviewer Runbook
+# The Physics OS — Reviewer Runbook
 
 **One command proves the thesis.**
 
@@ -23,7 +23,7 @@ python artifacts/evidence/flagship_pack/verify.py
 
 ## What the Flagship Pipeline Does
 
-The pipeline executes the complete HyperTensor thesis demonstration:
+The pipeline executes the complete Physics OS thesis demonstration:
 
 | Step | What Happens | Validates |
 |------|-------------|-----------|

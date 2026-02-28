@@ -1,6 +1,6 @@
 # Module `tensornet.ml_surrogates`
 
-Machine Learning Surrogate Models for HyperTensor.
+Machine Learning Surrogate Models for The Physics OS.
 
 This module provides neural network-based surrogate models for
 accelerating CFD simulations. These models learn from high-fidelity

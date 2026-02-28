@@ -2,7 +2,7 @@
 
 **Status:** Released  
 **Date:** 2026-02-24  
-**Maintainer:** Brad Tigantic (HyperTensor Project)  
+**Maintainer:** Brad Tigantic (Physics OS Project)  
 **Repository:** HyperTensor-VM  
 **Companion:** `benchmarks/rank_atlas/SPEC.md` (Rank Atlas Benchmark)
 
@@ -10,7 +10,7 @@
 
 ## 1. Purpose
 
-The Golden Physics Benchmark measures **end-to-end HyperTensor VM
+The Golden Physics Benchmark measures **end-to-end Ontic Engine
 correctness** across all 7 canonical QTT physics domains. It validates
 that every domain:
 
@@ -269,4 +269,4 @@ Example: `golden_results_hypertensor_20260224.json`
 
 ---
 
-*Golden Physics Benchmark v1.0 — HyperTensor Project*
+*Golden Physics Benchmark v1.0 — Physics OS Project*

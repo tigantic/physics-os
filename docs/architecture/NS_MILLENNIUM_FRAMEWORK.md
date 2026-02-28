@@ -283,7 +283,7 @@ What did we learn? Does this support or refute the hypothesis?
 
 1. **Novel lens:** Tensor network rank as regularity proxy (unexplored in NS literature)
 2. **Computational reach:** QTT enables extreme Re without O(N³) memory
-3. **Rigorous numerics:** Dense guard + proof infrastructure from HyperTensor
+3. **Rigorous numerics:** Dense guard + proof infrastructure from The Physics OS
 4. **Open science:** Full reproducibility; executable proofs
 
 ---

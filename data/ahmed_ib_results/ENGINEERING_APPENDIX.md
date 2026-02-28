@@ -1,4 +1,4 @@
-# HyperTensor QTT Engine — Engineering Specification Appendix
+# The Physics OS — QTT Engine — Engineering Specification Appendix
 
 **QTT Navier-Stokes Solver: Architecture, Algorithms, and Compliance**
 
@@ -241,5 +241,5 @@ The step gate prevents false convergence triggers during:
 ---
 
 *Appendix HTR-2026-002-APPENDIX-A*
-*HyperTensor QTT Engine v2.0 — Tigantic Holdings LLC*
+*Ontic Engine QTT Engine v2.0 — Tigantic Holdings LLC*
 *February 22, 2026*

@@ -2,7 +2,7 @@
 
 ## Overview
 
-HyperTensor uses tag-based release automation via GitHub Actions.
+The Physics OS uses tag-based release automation via GitHub Actions.
 
 ## Steps
 

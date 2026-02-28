@@ -5,7 +5,7 @@ Domain decomposition for parallel CFD simulations.
 This module implements domain decomposition strategies for
 distributing CFD grids across multiple processors/GPUs.
 
-Author: HyperTensor Team
+Author: Tigantic Holdings LLC
 
 **Contents:**
 
@@ -64,7 +64,7 @@ processors and management of ghost zones.
 def __init__(self, config: domain_decomp.DomainConfig)
 ```
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\distributed\domain_decomp.py:103](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\distributed\domain_decomp.py#L103)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\distributed\domain_decomp.py:103](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\distributed\domain_decomp.py#L103)*
 
 ##### `get_neighbors`
 
@@ -74,7 +74,7 @@ def get_neighbors(self, rank: int) -> Dict[str, Optional[int]]
 
 Get neighbor ranks for a processor.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\distributed\domain_decomp.py:264](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\distributed\domain_decomp.py#L264)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\distributed\domain_decomp.py:264](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\distributed\domain_decomp.py#L264)*
 
 ##### `get_subdomain`
 
@@ -84,7 +84,7 @@ def get_subdomain(self, rank: int) -> domain_decomp.SubdomainInfo
 
 Get subdomain information for a processor.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\distributed\domain_decomp.py:260](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\distributed\domain_decomp.py#L260)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\distributed\domain_decomp.py:260](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\distributed\domain_decomp.py#L260)*
 
 ##### `global_to_local`
 
@@ -94,7 +94,7 @@ def global_to_local(self, rank: int, i: int, j: int, k: int = 0) -> Tuple[int, i
 
 Convert global index to local index.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\distributed\domain_decomp.py:276](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\distributed\domain_decomp.py#L276)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\distributed\domain_decomp.py:276](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\distributed\domain_decomp.py#L276)*
 
 ##### `local_to_global`
 
@@ -104,7 +104,7 @@ def local_to_global(self, rank: int, i: int, j: int, k: int = 0) -> Tuple[int, i
 
 Convert local index to global index.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\distributed\domain_decomp.py:288](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\distributed\domain_decomp.py#L288)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\distributed\domain_decomp.py:288](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\distributed\domain_decomp.py#L288)*
 
 ### class `SubdomainInfo`
 
@@ -158,7 +158,7 @@ Extract ghost zone data to send to neighbors.
 
 **Returns**: `typing.Dict[str, torch.Tensor]` - Dictionary of ghost zone data per direction
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\distributed\domain_decomp.py:314](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\distributed\domain_decomp.py#L314)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\distributed\domain_decomp.py:314](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\distributed\domain_decomp.py#L314)*
 
 ### `decompose_domain`
 
@@ -174,7 +174,7 @@ Convenience function to create domain decomposition.
 
 **Returns**: `<class 'domain_decomp.DomainDecomposition'>` - Domain decomposition object
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\distributed\domain_decomp.py:301](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\distributed\domain_decomp.py#L301)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\distributed\domain_decomp.py:301](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\distributed\domain_decomp.py#L301)*
 
 ### `exchange_ghost_data`
 
@@ -193,7 +193,7 @@ Fill ghost zones with received data.
 
 **Returns**: `<class 'torch.Tensor'>` - Updated data with filled ghost zones
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\distributed\domain_decomp.py:372](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\distributed\domain_decomp.py#L372)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\distributed\domain_decomp.py:372](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\distributed\domain_decomp.py#L372)*
 
 ### `test_domain_decomposition`
 
@@ -203,4 +203,4 @@ def test_domain_decomposition()
 
 Test domain decomposition.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\distributed\domain_decomp.py:428](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\distributed\domain_decomp.py#L428)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\distributed\domain_decomp.py:428](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\distributed\domain_decomp.py#L428)*

@@ -19,7 +19,7 @@
 
 ## Preamble
 
-This document serves as the **canonical source of truth** for all HVAC CFD development within Project HyperTensor. Every design decision, implementation pattern, and optimization strategy discovered during development SHALL be recorded here.
+This document serves as the **canonical source of truth** for all HVAC CFD development within Project The Physics OS. Every design decision, implementation pattern, and optimization strategy discovered during development SHALL be recorded here.
 
 **High-end clients with critical dependencies demand elite engineering.**
 
@@ -288,4 +288,4 @@ Custom CUDA implementations require:
 
 ---
 
-*Source of Truth — HVAC CFD — Project HyperTensor*
+*Source of Truth — HVAC CFD — Project The Physics OS*

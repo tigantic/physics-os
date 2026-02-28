@@ -317,7 +317,7 @@ MIT License. See LICENSE file for details.
 ```bibtex
 @software{qtt_sdk_2025,
   title = {QTT-SDK: Billion-Point Tensor Compression},
-  author = {HyperTensor Team},
+  author = {Tigantic Holdings LLC},
   year = {2025},
   url = {https://github.com/tigantic/qtt-sdk}
 }

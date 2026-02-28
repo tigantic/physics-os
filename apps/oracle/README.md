@@ -191,4 +191,4 @@ Genesis Stack / HyperTensor VM
 
 ## License
 
-Proprietary - Part of HyperTensor-VM
+Proprietary - Part of The Physics OS-VM

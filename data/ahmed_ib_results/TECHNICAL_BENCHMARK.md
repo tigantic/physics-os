@@ -1,4 +1,4 @@
-# HyperTensor QTT Engine — Technical Benchmark Report
+# The Physics OS — QTT Engine — Technical Benchmark Report
 
 **QTT Navier-Stokes vs Dense CFD: Multi-Resolution Ahmed Body Gauntlet**
 
@@ -8,7 +8,7 @@
 | **Date** | February 22, 2026 |
 | **Author** | Brad Adams, Tigantic Holdings LLC |
 | **Classification** | Commercial — Engineering Benchmark |
-| **Engine Version** | HyperTensor QTT v2.0 (semi-implicit, correction-based) |
+| **Engine Version** | Ontic Engine QTT v2.0 (semi-implicit, correction-based) |
 | **Hardware** | NVIDIA RTX 5070 Laptop GPU, 8 GB VRAM |
 | **Software** | PyTorch 2.9.1+cu128, Python 3.12, Triton |
 | **OS** | Linux (WSL2) |
@@ -186,7 +186,7 @@ entirely in compressed tensor-train format.
 
 ### 4.1 Dataset Characteristics
 
-| Attribute | NVIDIA PhysicsNeMo | HyperTensor QTT |
+| Attribute | NVIDIA PhysicsNeMo | Ontic Engine QTT |
 |:----------|:------------------:|:----------------:|
 | Dataset | CFD-Ahmed-Body | QTT-NS + Brinkman IB |
 | Samples | 4,064 | Per-query (on demand) |
@@ -309,5 +309,5 @@ All artifacts are located in `ahmed_ib_results/`:
 ---
 
 *Report HTR-2026-002-AHMED-GAUNTLET*
-*HyperTensor QTT Engine v2.0 — Tigantic Holdings LLC*
+*Ontic Engine QTT Engine v2.0 — Tigantic Holdings LLC*
 *February 22, 2026*

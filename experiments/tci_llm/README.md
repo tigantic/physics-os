@@ -188,7 +188,7 @@ tci_llm/
 ```bibtex
 @software{tci_llm_2026,
   title = {TCI-LLM: Gradient-Free Language Modeling via Tensor Cross Interpolation},
-  author = {HyperTensor Team},
+  author = {Tigantic Holdings LLC},
   year = {2026},
   url = {https://github.com/hypertensor/tci-llm}
 }

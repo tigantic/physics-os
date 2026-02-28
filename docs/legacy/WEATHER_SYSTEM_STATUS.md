@@ -123,7 +123,7 @@ print(f"Surface wind at equator, 180°E: {wind_at_point:.1f} m/s")
   "cyclone_center": [35, -50],
   "timestamp": "2025-12-28T...",
   "resolution": "15x45x90",
-  "description": "Synthetic atmospheric data for HyperTensor"
+  "description": "Synthetic atmospheric data for The Physics OS"
 }
 ```
 
@@ -194,7 +194,7 @@ python3 demos/weather_viewer.py
 
 ## Integration Points
 
-### Use with HyperTensor Core
+### Use with The Physics OS Core
 
 ```python
 from tensornet.substrate.field import Field
@@ -293,7 +293,7 @@ For larger resolutions or real-time applications, use the QTT-compressed format 
 1. ✅ **Data Generated** - Weather data is ready to use
 2. 🟡 **Install matplotlib** - For visualization (optional)
 3. 🟡 **Install full dependencies** - For interactive viewer (optional)
-4. 🟡 **Integrate with HyperTensor** - Use in your simulations
+4. 🟡 **Integrate with The Physics OS** - Use in your simulations
 
 The weather system is **fully operational** in minimal mode and ready for exploration!
 

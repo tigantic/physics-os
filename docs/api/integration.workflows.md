@@ -1,6 +1,6 @@
 # Module `integration.workflows`
 
-Workflow Orchestration for Project HyperTensor.
+Workflow Orchestration for Project The Physics OS.
 
 Provides end-to-end workflow definitions and execution for:
 - CFD simulations
@@ -39,7 +39,7 @@ Initialize CFD workflow.
 
 - **config** (`typing.Optional[typing.Dict[str, typing.Any]]`): Simulation configuration
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\integration\workflows.py:370](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\integration\workflows.py#L370)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\workflows.py:370](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\workflows.py#L370)*
 
 ### class `DigitalTwinWorkflow`(Workflow)
 
@@ -61,7 +61,7 @@ def __init__(self, config: Optional[Dict[str, Any]] = None)
 
 Initialize digital twin workflow.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\integration\workflows.py:696](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\integration\workflows.py#L696)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\workflows.py:696](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\workflows.py#L696)*
 
 ### class `GuidanceWorkflow`(Workflow)
 
@@ -83,7 +83,7 @@ def __init__(self, config: Optional[Dict[str, Any]] = None)
 
 Initialize guidance workflow.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\integration\workflows.py:574](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\integration\workflows.py#L574)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\workflows.py:574](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\workflows.py#L574)*
 
 ### class `ValidationWorkflow`(Workflow)
 
@@ -105,7 +105,7 @@ def __init__(self, config: Optional[Dict[str, Any]] = None)
 
 Initialize validation workflow.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\integration\workflows.py:814](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\integration\workflows.py#L814)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\workflows.py:814](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\workflows.py#L814)*
 
 ### class `Workflow`
 
@@ -135,7 +135,7 @@ def add_stage(self, stage: workflows.WorkflowStage)
 
 Add a stage to the workflow.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\integration\workflows.py:158](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\integration\workflows.py#L158)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\workflows.py:158](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\workflows.py#L158)*
 
 ##### `add_step`
 
@@ -147,7 +147,7 @@ Add a step to a stage.
 
 If stage_name is None, creates a new stage for the step.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\integration\workflows.py:162](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\integration\workflows.py#L162)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\workflows.py:162](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\workflows.py#L162)*
 
 ### class `WorkflowEngine`
 
@@ -171,7 +171,7 @@ Initialize workflow engine.
 - **default_timeout** (`<class 'float'>`): Default step timeout Default: `step timeout`.
 - **verbose** (`<class 'bool'>`): Whether to print progress
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\integration\workflows.py:190](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\integration\workflows.py#L190)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\workflows.py:190](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\workflows.py#L190)*
 
 ##### `add_hook`
 
@@ -181,7 +181,7 @@ def add_hook(self, event: str, callback: Callable)
 
 Add a hook callback for an event.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\integration\workflows.py:213](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\integration\workflows.py#L213)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\workflows.py:213](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\workflows.py#L213)*
 
 ##### `run`
 
@@ -198,7 +198,7 @@ Execute a workflow.
 
 **Returns**: `<class 'workflows.WorkflowResult'>` - WorkflowResult with outcomes
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\integration\workflows.py:269](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\integration\workflows.py#L269)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\workflows.py:269](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\workflows.py#L269)*
 
 ### class `WorkflowResult`
 
@@ -223,7 +223,7 @@ def success(self) -> bool
 
 Whether workflow completed successfully.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\integration\workflows.py:112](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\integration\workflows.py#L112)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\workflows.py:112](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\workflows.py#L112)*
 
 #### Methods
 
@@ -241,7 +241,7 @@ def get_output(self, key: str, default: Any = None) -> Any
 
 Get an output from the context.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\integration\workflows.py:117](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\integration\workflows.py#L117)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\workflows.py:117](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\workflows.py#L117)*
 
 ##### `summary`
 
@@ -251,7 +251,7 @@ def summary(self) -> str
 
 Generate a summary of the workflow result.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\integration\workflows.py:121](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\integration\workflows.py#L121)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\workflows.py:121](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\workflows.py#L121)*
 
 ### class `WorkflowStage`
 
@@ -280,7 +280,7 @@ def add_step(self, step: workflows.WorkflowStep)
 
 Add a step to this stage.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\integration\workflows.py:87](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\integration\workflows.py#L87)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\workflows.py:87](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\workflows.py#L87)*
 
 ### class `WorkflowStatus`(Enum)
 
@@ -323,7 +323,7 @@ Execute the step.
 
 **Returns**: `typing.Dict[str, typing.Any]` - Step outputs to merge into context
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\integration\workflows.py:58](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\integration\workflows.py#L58)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\workflows.py:58](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\workflows.py#L58)*
 
 ##### `validate_inputs`
 
@@ -333,7 +333,7 @@ def validate_inputs(self, context: Dict[str, Any]) -> bool
 
 Check if all required inputs are available.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\integration\workflows.py:54](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\integration\workflows.py#L54)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\workflows.py:54](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\workflows.py#L54)*
 
 ## Functions
 
@@ -354,7 +354,7 @@ Create a CFD simulation workflow.
 
 **Returns**: `<class 'workflows.CFDSimulationWorkflow'>` - Configured CFDSimulationWorkflow
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\integration\workflows.py:857](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\integration\workflows.py#L857)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\workflows.py:857](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\workflows.py#L857)*
 
 ### `create_guidance_workflow`
 
@@ -370,7 +370,7 @@ Create a guidance workflow.
 
 **Returns**: `<class 'workflows.GuidanceWorkflow'>` - Configured GuidanceWorkflow
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\integration\workflows.py:887](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\integration\workflows.py#L887)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\workflows.py:887](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\workflows.py#L887)*
 
 ### `run_workflow`
 
@@ -388,4 +388,4 @@ Execute a workflow.
 
 **Returns**: `<class 'workflows.WorkflowResult'>` - WorkflowResult with outcomes
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\integration\workflows.py:837](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\integration\workflows.py#L837)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\workflows.py:837](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\workflows.py#L837)*

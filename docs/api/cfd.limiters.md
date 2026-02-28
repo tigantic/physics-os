@@ -52,7 +52,7 @@ Initialize MUSCL reconstruction.
 - **limiter** (`<class 'str'>`): Slope limiter to use
 - **kappa** (`<class 'float'>`): Interpolation parameter
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\limiters.py:248](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\limiters.py#L248)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\limiters.py:248](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\limiters.py#L248)*
 
 ##### `reconstruct`
 
@@ -68,7 +68,7 @@ Perform MUSCL reconstruction.
 
 **Returns**: `<class 'tuple'>` - Left and right interface values at N-1 faces
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\limiters.py:270](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\limiters.py#L270)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\limiters.py:270](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\limiters.py#L270)*
 
 ## Functions
 
@@ -87,7 +87,7 @@ Apply slope limiter to get limited gradients.
 
 **Returns**: `<class 'torch.Tensor'>` - Limited slopes for reconstruction
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\limiters.py:175](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\limiters.py#L175)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\limiters.py:175](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\limiters.py#L175)*
 
 ### `compute_slope_ratio`
 
@@ -101,7 +101,7 @@ r_i = (u_i - u_{i-1}) / (u_{i+1} - u_i)
 
 Handles boundary cases with one-sided differences.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\limiters.py:147](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\limiters.py#L147)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\limiters.py:147](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\limiters.py#L147)*
 
 ### `koren`
 
@@ -115,7 +115,7 @@ Koren limiter (third-order accurate in smooth regions).
 
 Optimized for third-order upstream-biased interpolation.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\limiters.py:118](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\limiters.py#L118)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\limiters.py:118](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\limiters.py#L118)*
 
 ### `mc_limiter`
 
@@ -130,7 +130,7 @@ MC (Monotonized Central) limiter.
 Symmetric limiter that uses the central difference when possible.
 Good balance of accuracy and stability.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\limiters.py:100](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\limiters.py#L100)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\limiters.py:100](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\limiters.py#L100)*
 
 ### `minmod`
 
@@ -151,7 +151,7 @@ at smooth extrema.
 
 **Returns**: `<class 'torch.Tensor'>` - Limiter value
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\limiters.py:25](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\limiters.py#L25)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\limiters.py:25](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\limiters.py#L25)*
 
 ### `minmod_3`
 
@@ -165,7 +165,7 @@ minmod(a, b, c) = sign(a) * min(|a|, |b|, |c|) if signs agree, else 0
 
 Used in higher-order reconstructions.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\limiters.py:43](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\limiters.py#L43)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\limiters.py:43](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\limiters.py#L43)*
 
 ### `ospre`
 
@@ -179,7 +179,7 @@ OSPRE limiter (Waterson & Deconinck, 2007).
 
 Smooth, symmetric limiter with good convergence properties.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\limiters.py:135](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\limiters.py#L135)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\limiters.py:135](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\limiters.py#L135)*
 
 ### `superbee`
 
@@ -194,7 +194,7 @@ Superbee limiter (Roe, 1985).
 Most compressive TVD limiter. Excellent for contact discontinuities
 but can steepen smooth waves too aggressively.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\limiters.py:58](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\limiters.py#L58)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\limiters.py:58](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\limiters.py#L58)*
 
 ### `van_albada`
 
@@ -208,7 +208,7 @@ Van Albada limiter.
 
 Differentiable limiter, useful for implicit schemes.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\limiters.py:88](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\limiters.py#L88)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\limiters.py:88](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\limiters.py#L88)*
 
 ### `van_leer`
 
@@ -223,4 +223,4 @@ Van Leer limiter.
 Smooth limiter with good balance between accuracy and
 oscillation suppression.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\limiters.py:76](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\limiters.py#L76)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\limiters.py:76](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\limiters.py#L76)*

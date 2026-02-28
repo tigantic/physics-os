@@ -1,11 +1,11 @@
-# HyperTensor Enterprise SDK
+# The Physics OS — Enterprise SDK
 
 **Version**: 1.0.0  
 **License**: Apache 2.0 / Enterprise
 
 ## Overview
 
-The HyperTensor Enterprise SDK provides production-ready packaging, deployment tools, and enterprise features for integrating HyperTensor into commercial applications.
+The HyperTensor Enterprise SDK provides production-ready packaging, deployment tools, and enterprise features for integrating The Physics OS into commercial applications.
 
 ## Distribution Formats
 
@@ -130,7 +130,7 @@ Enterprise licenses include:
 
 ```bash
 # Clone repository
-git clone https://github.com/tigantic/HyperTensor.git
+git clone https://github.com/tigantic/The Physics OS.git
 cd HyperTensor
 
 # Build Python wheel

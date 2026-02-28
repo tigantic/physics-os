@@ -187,7 +187,7 @@ cargo run --release
 When Glass Cockpit launches, you should see:
 
 **Window**:
-- Title: "HyperTensor Glass Cockpit - Phase 0"
+- Title: "The Physics OS Glass Cockpit - Phase 0"
 - Size: 1920×1080 (fullscreen optional)
 - Background: Dark gray (`#121212`, Doctrine 9)
 
@@ -257,7 +257,7 @@ cargo run --release 2>&1 | Select-String "Frame [0-9]+" | Measure-Object
 
 **Symptoms**: Glass Cockpit runs but shows "RAM bridge not available" warning.
 
-**Cause**: HyperTensor simulation not running or WSL path incorrect.
+**Cause**: Physics OS simulation not running or WSL path incorrect.
 
 **Resolution**:
 1. Check WSL is running: `wsl --status`

@@ -8,13 +8,13 @@
 
 ## Context
 
-Classical tensor operations decompress to full dense arrays for intermediate computations, causing memory consumption to scale as O(2^N) for N-dimensional problems. For a 128³ CFD mesh, a dense representation requires 16 GiB per field variable. HyperTensor's competitive moat depends on maintaining compression throughout the entire pipeline — from construction through arithmetic, solving, and output.
+Classical tensor operations decompress to full dense arrays for intermediate computations, causing memory consumption to scale as O(2^N) for N-dimensional problems. For a 128³ CFD mesh, a dense representation requires 16 GiB per field variable. The Physics OS's competitive moat depends on maintaining compression throughout the entire pipeline — from construction through arithmetic, solving, and output.
 
 Prior experiments revealed that even a single `to_dense()` call in a linear solver inner loop eliminated the 100–1000× memory advantage and regressed wall-clock time by 10–50×. Several third-party QTT libraries default to dense fallback when operations exceed an SVD tolerance threshold.
 
 ## Decision
 
-**All HyperTensor arithmetic, solver, and diagnostic operations operate exclusively in tensor-train (TT) or quantized tensor-train (QTT) format.** Specifically:
+**All Physics OS arithmetic, solver, and diagnostic operations operate exclusively in tensor-train (TT) or quantized tensor-train (QTT) format.** Specifically:
 
 1. No `to_dense()` or equivalent materialization appears in any production code path.
 2. All linear algebra (DMRG, ALS, MALS, CG, GMRES) operates on TT/QTT cores directly.

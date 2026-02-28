@@ -1,4 +1,4 @@
-# Project HyperTensor - Repository Inventory
+# The Physics OS - Repository Inventory
 
 ```
 ██╗  ██╗██╗   ██╗██████╗ ███████╗██████╗ ████████╗███████╗███╗   ██╗███████╗ ██████╗ ██████╗ 
@@ -513,7 +513,7 @@ memmap2 = "0.9"
 ## Repository Structure
 
 ```
-Project HyperTensor/
+The Physics OS/
 ├── tensornet/                  # Python backend (230K+ LOC)
 │   ├── cfd/                    # CFD solvers (59 files)
 │   ├── core/                   # Core operations (10 files)

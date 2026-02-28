@@ -1,8 +1,8 @@
-# HyperTensor Audit Execution Checklist
+# The Physics OS — Audit Execution Checklist
 
 **Audit Date:** 2025-12-26  
 **Last Updated:** 2025-12-27  
-**Repo Root:** `/mnt/data/hypertensor_repo/Project HyperTensor`  
+**Repo Root:** `/mnt/data/hypertensor_repo/The Physics OS`  
 **Total Files Analyzed:** 614 text files (2,812 total in archive)  
 **Total Code Lines:** ~168,623 (131,332 Python)
 
@@ -960,4 +960,4 @@ Cycle in `tensornet/ml_surrogates/` (size 4):
 
 ---
 
-*Generated from HyperTensor Audit Package (2025-12-26)*
+*Generated from The Physics OS Audit Package (2025-12-26)*

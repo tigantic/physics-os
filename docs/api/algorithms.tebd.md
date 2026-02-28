@@ -68,7 +68,7 @@ Extracts nearest-neighbor terms from the MPO.
 
 **Returns**: value - List of two-site gates
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\algorithms\tebd.py:132](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\algorithms\tebd.py#L132)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\algorithms\tebd.py:132](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\algorithms\tebd.py#L132)*
 
 ### `build_heisenberg_gates`
 
@@ -91,7 +91,7 @@ H = Σᵢ [Jx SˣᵢSˣᵢ₊₁ + Jy SʸᵢSʸᵢ₊₁ + Jz SᶻᵢSᶻᵢ₊�
 
 **Returns**: `typing.Tuple[typing.List[torch.Tensor], typing.List[torch.Tensor]]` - (gates_odd, gates_even) for TEBD
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\algorithms\tebd.py:236](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\algorithms\tebd.py#L236)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\algorithms\tebd.py:236](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\algorithms\tebd.py#L236)*
 
 ### `build_tfim_gates`
 
@@ -115,7 +115,7 @@ H = -J Σᵢ SᶻᵢSᶻᵢ₊₁ - g Σᵢ Sˣᵢ
 
 **Returns**: `typing.Tuple[typing.List[torch.Tensor], typing.List[torch.Tensor]]` - (gates_odd, gates_even) for TEBD
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\algorithms\tebd.py:321](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\algorithms\tebd.py#L321)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\algorithms\tebd.py:321](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\algorithms\tebd.py#L321)*
 
 ### `imaginary_time_evolution`
 
@@ -141,7 +141,7 @@ As β → ∞, |ψ⟩ → ground state (if overlap is non-zero).
 
 **Returns**: `<class 'tensornet.core.mps.MPS'>` - Ground state MPS
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\algorithms\tebd.py:461](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\algorithms\tebd.py#L461)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\algorithms\tebd.py:461](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\algorithms\tebd.py#L461)*
 
 ### `tebd`
 
@@ -168,7 +168,7 @@ Run TEBD time evolution.
 
 **Returns**: `<class 'tebd.TEBDResult'>` - TEBDResult with time evolution data
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\algorithms\tebd.py:385](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\algorithms\tebd.py#L385)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\algorithms\tebd.py:385](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\algorithms\tebd.py#L385)*
 
 ### `tebd_step`
 
@@ -192,4 +192,4 @@ For second-order:
 
 **Returns**: `<class 'float'>` - Maximum truncation error in this step
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\algorithms\tebd.py:160](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\algorithms\tebd.py#L160)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\algorithms\tebd.py:160](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\algorithms\tebd.py#L160)*

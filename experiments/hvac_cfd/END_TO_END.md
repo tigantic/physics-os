@@ -8,7 +8,7 @@
 
 ## Constitutional Compliance Statement
 
-This integration adheres to the following Project HyperTensor constitutional articles:
+This integration adheres to the following The Physics OS constitutional articles:
 
 | Article | Requirement | Compliance |
 |---------|-------------|------------|
@@ -393,4 +393,4 @@ pytest tests/test_eigenpsi_api.py -v
 
 ---
 
-*This document is part of Project HyperTensor's HVAC_CFD subsystem.*
+*This document is part of Project The Physics OS's HVAC_CFD subsystem.*

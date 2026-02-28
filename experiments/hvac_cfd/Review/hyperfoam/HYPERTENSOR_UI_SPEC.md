@@ -1,4 +1,4 @@
-# HyperTensor UI Specification
+# The Physics OS — UI Specification
 
 **Document Version:** 1.0  
 **Created:** January 18, 2026  
@@ -9,7 +9,7 @@
 
 ## Executive Summary
 
-This document specifies the complete UI implementation for HyperTensor/HyperFOAM, covering:
+This document specifies the complete UI implementation for The Physics OS/HyperFOAM, covering:
 
 1. **Project Structure** — Adapting creme-stack to `hypertensor-ui/`
 2. **Component Library** — Missing components for CFD workflows

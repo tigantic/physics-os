@@ -9,9 +9,9 @@
 
 ## ARTICLES OF CONSTITUTION — INVIOLABLE PRINCIPLES
 
-> *"This Constitution establishes the inviolable standards, protocols, and operational law governing all development within Project HyperTensor. These laws exist to ensure mathematical rigor, reproducibility, and the scientific integrity required for a system intended to solve physics in real-time on safety-critical platforms."*
+> *"This Constitution establishes the inviolable standards, protocols, and operational law governing all development within Project The Physics OS. These laws exist to ensure mathematical rigor, reproducibility, and the scientific integrity required for a system intended to solve physics in real-time on safety-critical platforms."*
 >
-> *— Project HyperTensor Constitution, Preamble*
+> *— Physics OS Constitution, Preamble*
 
 ### Code Quality Imperatives (Copilot Instructions)
 

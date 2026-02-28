@@ -1,4 +1,4 @@
-# HyperTensor OS Evolution Roadmap
+# The Physics OS — OS Evolution Roadmap
 
 | Field | Value |
 |-------|-------|
@@ -12,7 +12,7 @@
 
 ## Preamble
 
-HyperTensor is, as of this writing, the most comprehensive physics operating system in existence: 1,157K LOC across 9 languages, 168 taxonomy nodes spanning 20 domain packs, 826+ implemented equations, 8 Genesis mathematical layers, 6 Lean 4 formal proofs, a 4-phase ZK proving stack, 33 gauntlets, 19 validated industries, and a founding thesis — *never go dense* — that no competing framework has matched.
+The Physics OS is, as of this writing, the most comprehensive physics operating system in existence: 1,157K LOC across 9 languages, 168 taxonomy nodes spanning 20 domain packs, 826+ implemented equations, 8 Genesis mathematical layers, 6 Lean 4 formal proofs, a 4-phase ZK proving stack, 33 gauntlets, 19 validated industries, and a founding thesis — *never go dense* — that no competing framework has matched.
 
 This document catalogs every conceivable high-impact evolution. Items are organized by domain, not priority. There are no filters on difficulty, development time, or feasibility. This is the full possibility space. Execution decisions come after.
 
@@ -262,7 +262,7 @@ This document catalogs every conceivable high-impact evolution. Items are organi
 | 5.13 ✅ | **Transformer-based time-stepper** — Attention-based temporal prediction replacing numerical integration | Learned time integration |
 | 5.14 ✅ | **Active learning for experimental design** — Bayesian optimization of simulation parameters | Optimal parameter exploration |
 | 5.15 ✅ | **Operator learning on QTT** — Train neural operators directly on TT-compressed data | ML without ever going dense |
-| 5.16 ✅ | **Self-supervised pre-training on physics data** — Contrastive/masked pre-training on HyperTensor outputs | Embeddings for any physics field |
+| 5.16 ✅ | **Self-supervised pre-training on physics data** — Contrastive/masked pre-training on The Physics OS outputs | Embeddings for any physics field |
 | 5.17 ✅ | **Retrieval-Augmented Generation (RAG) for physics** — Vector DB of all HyperTensor results, LLM retrieves and reasons | Conversational physics analysis |
 | 5.18 ✅ | **Automated hyperparameter tuning** — Bayesian/evolutionary optimization of solver parameters | Optimal CFL, time-step, tolerance selection |
 | 5.19 ✅ | **Neural closure models** — Learned subgrid-scale models for LES/RANS trained on DNS data | Data-driven turbulence modeling |
@@ -319,7 +319,7 @@ This document catalogs every conceivable high-impact evolution. Items are organi
 | 8.3 | **GraphQL API** — Flexible query language for simulation results | Frontend-friendly data access |
 | 8.4 | **Python type stubs** — Complete .pyi stubs for entire tensornet package | IDE auto-complete everywhere |
 | 8.5 | **VS Code extension** — Syntax highlighting for .tpc, problem spec preview, solver launcher | IDE-native physics development |
-| 8.6 | **Jupyter kernel** — Native HyperTensor kernel with magic commands | `%simulate`, `%visualize`, `%compare` |
+| 8.6 | **Jupyter kernel** — Native Physics OS kernel with magic commands | `%simulate`, `%visualize`, `%compare` |
 | 8.7 | **CLI completeness** — Full CLI for every operation (simulate, benchmark, export, verify) | Scriptable physics |
 | 8.8 | **Plugin marketplace** — Community-contributed solvers, post-processors, visualizers | Ecosystem growth |
 | 8.9 | **Template gallery** — 100+ ready-to-run simulation templates | Instant start for common problems |
@@ -358,7 +358,7 @@ This document catalogs every conceivable high-impact evolution. Items are organi
 | 9.18 | **Supply chain** | Network flow optimization with physics constraints | Logistics under real-world physics |
 | 9.19 | **Additive manufacturing** | Laser powder bed fusion, DED, binder jetting process simulation | Print-right-first-time |
 | 9.20 | **Quantum computing hardware** | Qubit design, decoherence modeling, cryogenic systems | Next-gen quantum computer design |
-| 9.21 | ✅ **Facial plastic surgery** | Full surgical simulation platform — digital twin, plan DSL, FEM/CFD/FSI/cartilage/suture/healing/anisotropy/aging sim, aesthetic/functional/safety metrics, UQ, NSGA-II + distributed island-model optimizer, multi-tenant governance (audit/consent/RBAC/tenant isolation), cohort analytics, validation dashboard, post-op calibration loop | First shipped HyperTensor vertical product. v5 complete — 94 files, 43K LOC, 941 tests, 145 exports, 4 procedure families, CI 4-stage pipeline (mypy strict + pytest@85% coverage + benchmark + container). `products/facial_plastics/` |
+| 9.21 | ✅ **Facial plastic surgery** | Full surgical simulation platform — digital twin, plan DSL, FEM/CFD/FSI/cartilage/suture/healing/anisotropy/aging sim, aesthetic/functional/safety metrics, UQ, NSGA-II + distributed island-model optimizer, multi-tenant governance (audit/consent/RBAC/tenant isolation), cohort analytics, validation dashboard, post-op calibration loop | First shipped Physics OS vertical product. v5 complete — 94 files, 43K LOC, 941 tests, 145 exports, 4 procedure families, CI 4-stage pipeline (mypy strict + pytest@85% coverage + benchmark + container). `products/facial_plastics/` |
 
 ---
 
@@ -491,9 +491,9 @@ This document catalogs every conceivable high-impact evolution. Items are organi
 | 15.3 | **Marketplace for domain packs** — Third-party developers sell specialized solvers | Ecosystem economics |
 | 15.4 | **Certification programs** — HyperTensor Certified Engineer / Physicist badges | Community credentialing |
 | 15.5 | **University partnerships** — Free academic licenses, course materials, textbook integration | Next-gen physicist training |
-| 15.6 | **Industry-specific packaging** — "HyperTensor for Aerospace", "for Energy", "for Pharma" | Targeted go-to-market |
+| 15.6 | **Industry-specific packaging** — "The Physics OS for Aerospace", "for Energy", "for Pharma" | Targeted go-to-market |
 | 15.7 | **API metering and billing** — Usage-based pricing with Stripe/billing integration | Monetization infrastructure |
-| 15.8 | **White-label OEM** — Embed HyperTensor engine inside third-party products | B2B2C distribution |
+| 15.8 | **White-label OEM** — Embed The Ontic Engine inside third-party products | B2B2C distribution |
 | 15.9 | **Benchmarking service** — Paid benchmark reports comparing customer solver vs. HyperTensor | Land-and-expand sales tool |
 | 15.10 | **Consulting arm** — Professional services for custom solver development | High-touch revenue |
 | 15.11 | **Open-source core, commercial extensions** — Freemium model with Genesis/ZK as premium | Community growth + revenue |
@@ -529,10 +529,10 @@ This document catalogs every conceivable high-impact evolution. Items are organi
 |---|-------------|--------|
 | 17.1 | **Interactive documentation** — Every equation is a runnable simulation with sliders | Learning by doing |
 | 17.2 | **Video tutorials** — Professional production tutorials for each domain pack | Visual learning |
-| 17.3 | **Physics textbook** — "Computational Physics with HyperTensor" — full textbook | Definitive reference |
+| 17.3 | **Physics textbook** — "Computational Physics with The Physics OS" — full textbook | Definitive reference |
 | 17.4 | **API reference auto-generation** — Sphinx/mkdocs auto-generated from docstrings | Always-current docs |
 | 17.5 | **Example gallery** — 500+ runnable examples organized by physics domain | Searchable recipe book |
-| 17.6 | **Comparison guides** — "HyperTensor vs. OpenFOAM", "vs. ANSYS", "vs. COMSOL" | Competitive positioning |
+| 17.6 | **Comparison guides** — "The Physics OS vs. OpenFOAM", "vs. ANSYS", "vs. COMSOL" | Competitive positioning |
 | 17.7 | **Architecture deep dives** — Long-form technical articles on each subsystem | Developer education |
 | 17.8 | **Changelog automation** — Conventional commits → auto-generated changelogs | Effortless release notes |
 | 17.9 | **Knowledge base / FAQ** — Searchable Q&A database from support interactions | Self-service support |
@@ -571,7 +571,7 @@ This document catalogs every conceivable high-impact evolution. Items are organi
 | 18.2.6 | **Physics Working Groups** — Domain-specific committees owning pack direction | Distributed expertise |
 | 18.2.7 | **Bug bounty for numerical errors** — Reward discovery of incorrect physics implementations | Crowdsourced verification |
 | 18.2.8 | **Contributor leaderboard** — Track and recognize top contributors by domain | Gamified participation |
-| 18.2.9 | **Residency program** — 3-month embedded residency for researchers to build on HyperTensor | Deep integration with research community |
+| 18.2.9 | **Residency program** — 3-month embedded residency for researchers to build on The Physics OS | Deep integration with research community |
 
 ### 18.3 Architectural / Systemic
 

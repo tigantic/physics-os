@@ -10,7 +10,7 @@
 
 ## Executive Summary
 
-The Sovereign RAM Bridge is a zero-copy, lock-free shared memory interface enabling HyperTensor physics simulation (P-cores, Ubuntu/WSL2) to communicate with Glass Cockpit UI (E-cores, Windows) at 165Hz+ without network overhead, serialization, or synchronization primitives.
+The Sovereign RAM Bridge is a zero-copy, lock-free shared memory interface enabling Physics OS simulation (P-cores, Ubuntu/WSL2) to communicate with Glass Cockpit UI (E-cores, Windows) at 165Hz+ without network overhead, serialization, or synchronization primitives.
 
 **Key Properties:**
 - **Location**: `/dev/shm/sovereign_bridge` (Linux tmpfs, mapped to Windows)
@@ -454,7 +454,7 @@ This specification satisfies:
 ---
 
 **Status**: ✅ Ready for Phase 0 implementation  
-**Next Step**: Implement Python writer in HyperTensor simulation  
+**Next Step**: Implement Python writer in The Physics OS simulation  
 **Next Step**: Implement Rust reader in Glass Cockpit UI
 
 ---

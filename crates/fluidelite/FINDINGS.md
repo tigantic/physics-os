@@ -1621,8 +1621,8 @@ The argmax function `ctx → byte` has much simpler structure than the full dist
 When starting from corpus position and generating:
 ```
 Start 0:
-  Original:  # Project HyperTensor: Constitutional Law
-  Generated: # Project HyperTensor networks▕   ├── bon
+  Original:  # Project The Physics OS: Constitutional Law
+  Generated: # The Physics OS networks▕   ├── bon
 
 Start 1000:
   Original:  : Clear PASS/FAIL criteria with numerical threshol

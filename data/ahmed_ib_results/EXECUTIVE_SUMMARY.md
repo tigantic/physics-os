@@ -1,4 +1,4 @@
-# HyperTensor QTT Engine — Executive Summary
+# The Physics OS — QTT Engine — Executive Summary
 
 **Quantized Tensor Train Navier-Stokes Solver vs Dense CFD**
 
@@ -7,7 +7,7 @@
 | **Date** | February 22, 2026 |
 | **Author** | Brad Adams, Tigantic Holdings LLC |
 | **Classification** | Commercial — Pre-Release Benchmark |
-| **Engine** | HyperTensor QTT v2.0 |
+| **Engine** | Ontic Engine QTT v2.0 |
 | **Hardware** | Single NVIDIA RTX 5070 Laptop GPU (8 GB VRAM) |
 
 ---
@@ -23,7 +23,7 @@ data center infrastructure. For parametric design sweeps at production resolutio
 
 ## The Solution
 
-HyperTensor's Quantized Tensor Train (QTT) Navier-Stokes engine replaces dense CFD
+The Physics OS's Quantized Tensor Train (QTT) Navier-Stokes engine replaces dense CFD
 entirely. Instead of solving on a mesh and storing N³ arrays, the solver operates
 natively in compressed tensor-train format with **O(r² log N)** storage and compute —
 logarithmic in grid size. A complete 3D velocity field at 512³ resolution (134 million
@@ -49,7 +49,7 @@ degrees of freedom per scale.
 
 ### Direct Comparison with NVIDIA
 
-| Metric | NVIDIA PhysicsNeMo | HyperTensor QTT | Advantage |
+| Metric | NVIDIA PhysicsNeMo | Ontic Engine QTT | Advantage |
 |:-------|:------------------:|:----------------:|:---------:|
 | Storage per sample | 11.5 MB (VTP) | 68.6 KB | **168×** |
 | Data content | Surface fields only | **Full 3D volume** | Volumetric |
@@ -112,4 +112,4 @@ All six QTT engineering rules are verified:
 
 *Total gauntlet execution: 20.6 minutes on a single NVIDIA RTX 5070 Laptop GPU.*
 
-*HyperTensor QTT Engine — Tigantic Holdings LLC — February 2026*
+*Ontic Engine QTT Engine — Tigantic Holdings LLC — February 2026*

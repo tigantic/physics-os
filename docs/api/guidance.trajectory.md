@@ -94,7 +94,7 @@ def mach_from_velocity(self) -> Callable[[float], float]
 
 Return function to compute Mach from velocity.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\guidance\trajectory.py:80](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\guidance\trajectory.py#L80)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\guidance\trajectory.py:80](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\guidance\trajectory.py#L80)*
 
 #### Methods
 
@@ -148,7 +148,7 @@ Features:
 def __init__(self, config: trajectory.TrajectoryConfig = None, geometry: trajectory.VehicleGeometry = None, aero: trajectory.AeroCoefficients = None)
 ```
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\guidance\trajectory.py:377](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\guidance\trajectory.py#L377)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\guidance\trajectory.py:377](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\guidance\trajectory.py#L377)*
 
 ##### `compute_aero_forces`
 
@@ -166,7 +166,7 @@ Compute aerodynamic forces and moments.
 
 **Returns**: `typing.Tuple[torch.Tensor, torch.Tensor]` - (forces_body, moments_body) in N and N*m
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\guidance\trajectory.py:417](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\guidance\trajectory.py#L417)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\guidance\trajectory.py:417](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\guidance\trajectory.py#L417)*
 
 ##### `compute_gravity_force`
 
@@ -182,7 +182,7 @@ Compute gravity force in body frame.
 
 **Returns**: `<class 'torch.Tensor'>` - Gravity force vector in body frame
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\guidance\trajectory.py:504](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\guidance\trajectory.py#L504)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\guidance\trajectory.py:504](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\guidance\trajectory.py#L504)*
 
 ##### `get_atmosphere`
 
@@ -192,7 +192,7 @@ def get_atmosphere(self, altitude_m: float) -> trajectory.AtmosphericModel
 
 Get atmospheric properties at altitude.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\guidance\trajectory.py:410](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\guidance\trajectory.py#L410)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\guidance\trajectory.py:410](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\guidance\trajectory.py#L410)*
 
 ##### `propagate`
 
@@ -210,7 +210,7 @@ Propagate trajectory for given duration.
 
 **Returns**: `typing.List[trajectory.VehicleState]` - List of states at save intervals
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\guidance\trajectory.py:668](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\guidance\trajectory.py#L668)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\guidance\trajectory.py:668](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\guidance\trajectory.py#L668)*
 
 ##### `set_cfd_lookup`
 
@@ -224,7 +224,7 @@ Set CFD-based aerodynamic coefficient lookup.
 
 - **lookup_fn** (`typing.Callable[[float, float, float], trajectory.AeroCoefficients]`): Function(Mach, alpha, beta) -> AeroCoefficients
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\guidance\trajectory.py:401](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\guidance\trajectory.py#L401)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\guidance\trajectory.py:401](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\guidance\trajectory.py#L401)*
 
 ##### `single_step`
 
@@ -241,7 +241,7 @@ Advance one time step (for real-time loop).
 
 **Returns**: `<class 'trajectory.VehicleState'>` - New state
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\guidance\trajectory.py:719](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\guidance\trajectory.py#L719)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\guidance\trajectory.py:719](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\guidance\trajectory.py#L719)*
 
 ##### `state_derivative`
 
@@ -258,7 +258,7 @@ Compute state derivative for integration.
 
 **Returns**: `<class 'torch.Tensor'>` - State derivative vector (14 elements)
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\guidance\trajectory.py:530](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\guidance\trajectory.py#L530)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\guidance\trajectory.py:530](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\guidance\trajectory.py#L530)*
 
 ##### `step_rk4`
 
@@ -276,7 +276,7 @@ Advance state using RK4 integration.
 
 **Returns**: `<class 'trajectory.VehicleState'>` - New state after dt
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\guidance\trajectory.py:624](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\guidance\trajectory.py#L624)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\guidance\trajectory.py:624](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\guidance\trajectory.py#L624)*
 
 ### class `VehicleGeometry`
 
@@ -334,7 +334,7 @@ def angle_of_attack(self) -> float
 
 Angle of attack (alpha) in radians.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\guidance\trajectory.py:142](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\guidance\trajectory.py#L142)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\guidance\trajectory.py:142](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\guidance\trajectory.py#L142)*
 
 ##### `euler_angles`
 
@@ -344,7 +344,7 @@ def euler_angles(self) -> Tuple[float, float, float]
 
 Convert quaternion to Euler angles (phi, theta, psi).
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\guidance\trajectory.py:124](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\guidance\trajectory.py#L124)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\guidance\trajectory.py:124](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\guidance\trajectory.py#L124)*
 
 ##### `sideslip_angle`
 
@@ -354,7 +354,7 @@ def sideslip_angle(self) -> float
 
 Sideslip angle (beta) in radians.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\guidance\trajectory.py:149](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\guidance\trajectory.py#L149)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\guidance\trajectory.py:149](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\guidance\trajectory.py#L149)*
 
 ##### `velocity_magnitude`
 
@@ -364,7 +364,7 @@ def velocity_magnitude(self) -> float
 
 Total velocity magnitude.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\guidance\trajectory.py:119](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\guidance\trajectory.py#L119)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\guidance\trajectory.py:119](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\guidance\trajectory.py#L119)*
 
 #### Methods
 
@@ -382,7 +382,7 @@ def from_tensor(t: torch.Tensor) -> 'VehicleState'
 
 Create state from tensor.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\guidance\trajectory.py:167](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\guidance\trajectory.py#L167)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\guidance\trajectory.py:167](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\guidance\trajectory.py#L167)*
 
 ##### `to_tensor`
 
@@ -392,7 +392,7 @@ def to_tensor(self) -> torch.Tensor
 
 Convert state to tensor for integration.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\guidance\trajectory.py:157](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\guidance\trajectory.py#L157)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\guidance\trajectory.py:157](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\guidance\trajectory.py#L157)*
 
 ## Functions
 
@@ -413,7 +413,7 @@ Create a simple reentry trajectory for testing.
 
 **Returns**: `typing.List[trajectory.VehicleState]` - List of vehicle states
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\guidance\trajectory.py:737](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\guidance\trajectory.py#L737)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\guidance\trajectory.py:737](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\guidance\trajectory.py#L737)*
 
 ### `exponential_atmosphere`
 
@@ -432,7 +432,7 @@ Fast computation for trajectory optimization.
 
 **Returns**: `<class 'trajectory.AtmosphericModel'>` - AtmosphericModel
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\guidance\trajectory.py:306](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\guidance\trajectory.py#L306)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\guidance\trajectory.py:306](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\guidance\trajectory.py#L306)*
 
 ### `gravity_model`
 
@@ -451,7 +451,7 @@ Uses WGS84 ellipsoidal Earth model with J2 perturbation.
 
 **Returns**: `<class 'float'>` - Gravitational acceleration in m/s²
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\guidance\trajectory.py:339](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\guidance\trajectory.py#L339)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\guidance\trajectory.py:339](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\guidance\trajectory.py#L339)*
 
 ### `isa_atmosphere`
 
@@ -469,7 +469,7 @@ Valid for altitudes up to 85 km.
 
 **Returns**: `<class 'trajectory.AtmosphericModel'>` - AtmosphericModel with atmospheric properties
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\guidance\trajectory.py:248](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\guidance\trajectory.py#L248)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\guidance\trajectory.py:248](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\guidance\trajectory.py#L248)*
 
 ### `validate_trajectory_module`
 
@@ -479,4 +479,4 @@ def validate_trajectory_module()
 
 Validate trajectory solver module.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\guidance\trajectory.py:777](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\guidance\trajectory.py#L777)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\guidance\trajectory.py:777](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\guidance\trajectory.py#L777)*

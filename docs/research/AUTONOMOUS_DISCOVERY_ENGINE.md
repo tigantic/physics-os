@@ -1894,7 +1894,7 @@ for finding in findings:
     }
   ],
   "attestation": {
-    "signer": "HyperTensor ADE v1.0",
+    "signer": "The Physics OS ADE v1.0",
     "signature": "ed25519:..."
   }
 }

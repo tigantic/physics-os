@@ -21,7 +21,7 @@ Private fusion companies (Commonwealth Fusion, TAE, Helion, Zap Energy) are rais
 
 ## Demonstrated Capability
 
-### What HyperTensor Has Already Proven
+### What The Physics OS Has Already Proven
 
 | Capability | Evidence | Attestation |
 |-----------|----------|-------------|
@@ -50,7 +50,7 @@ Required:                                <1,000 microseconds
 Margin:                                  5.6x faster than needed
 ```
 
-At 177 μs total cycle time (prediction + control + actuation), HyperTensor operates 5.6x faster than real-time. This means the controller can evaluate, decide, and actuate a counter-pulse before the instability has time to grow.
+At 177 μs total cycle time (prediction + control + actuation), The Ontic Engine operates 5.6x faster than real-time. This means the controller can evaluate, decide, and actuate a counter-pulse before the instability has time to grow.
 
 ---
 
@@ -92,7 +92,7 @@ Performance:
   τ_E = 3.21 s
 
 Control:
-  Method:     HyperTensor-RL Feedback
+  Method:     Physics OS-RL Feedback
   TT Rank:    12
   Feedback:   1,000,000 Hz (1 MHz)
   Mode:       LAMINAR (instabilities damped before growth)

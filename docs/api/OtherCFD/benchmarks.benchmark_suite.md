@@ -26,7 +26,7 @@ def __init__(self, config: benchmark_suite.BenchmarkConfig)
 
 Initialize benchmark.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\benchmarks\benchmark_suite.py:384](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\benchmarks\benchmark_suite.py#L384)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\benchmarks\benchmark_suite.py:384](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\benchmarks\benchmark_suite.py#L384)*
 
 ##### `run`
 
@@ -44,7 +44,7 @@ Compare accuracy between reference and optimized models.
 
 **Returns**: `<class 'benchmark_suite.AccuracyStats'>` - AccuracyStats with comparison
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\benchmarks\benchmark_suite.py:388](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\benchmarks\benchmark_suite.py#L388)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\benchmarks\benchmark_suite.py:388](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\benchmarks\benchmark_suite.py#L388)*
 
 ### class `AccuracyStats`
 
@@ -74,7 +74,7 @@ def to_dict(self) -> Dict[str, float]
 
 Convert to dictionary.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\benchmarks\benchmark_suite.py:157](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\benchmarks\benchmark_suite.py#L157)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\benchmarks\benchmark_suite.py:157](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\benchmarks\benchmark_suite.py#L157)*
 
 ### class `BenchmarkConfig`
 
@@ -113,7 +113,7 @@ def to_dict(self) -> Dict[str, Any]
 
 Convert to dictionary.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\benchmarks\benchmark_suite.py:55](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\benchmarks\benchmark_suite.py#L55)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\benchmarks\benchmark_suite.py:55](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\benchmarks\benchmark_suite.py#L55)*
 
 ### class `BenchmarkResult`
 
@@ -148,7 +148,7 @@ def to_dict(self) -> Dict[str, Any]
 
 Convert to dictionary.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\benchmarks\benchmark_suite.py:186](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\benchmarks\benchmark_suite.py#L186)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\benchmarks\benchmark_suite.py:186](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\benchmarks\benchmark_suite.py#L186)*
 
 ### class `LatencyBenchmark`
 
@@ -164,7 +164,7 @@ def __init__(self, config: benchmark_suite.BenchmarkConfig)
 
 Initialize benchmark.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\benchmarks\benchmark_suite.py:211](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\benchmarks\benchmark_suite.py#L211)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\benchmarks\benchmark_suite.py:211](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\benchmarks\benchmark_suite.py#L211)*
 
 ##### `run`
 
@@ -181,7 +181,7 @@ Run latency benchmark.
 
 **Returns**: `<class 'benchmark_suite.LatencyStats'>` - LatencyStats with measurements
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\benchmarks\benchmark_suite.py:215](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\benchmarks\benchmark_suite.py#L215)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\benchmarks\benchmark_suite.py:215](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\benchmarks\benchmark_suite.py#L215)*
 
 ### class `LatencyStats`
 
@@ -214,7 +214,7 @@ def from_measurements(measurements_ms: List[float]) -> 'LatencyStats'
 
 Create from measurements.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\benchmarks\benchmark_suite.py:80](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\benchmarks\benchmark_suite.py#L80)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\benchmarks\benchmark_suite.py:80](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\benchmarks\benchmark_suite.py#L80)*
 
 ##### `to_dict`
 
@@ -224,7 +224,7 @@ def to_dict(self) -> Dict[str, float]
 
 Convert to dictionary.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\benchmarks\benchmark_suite.py:100](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\benchmarks\benchmark_suite.py#L100)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\benchmarks\benchmark_suite.py:100](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\benchmarks\benchmark_suite.py#L100)*
 
 ### class `MemoryBenchmark`
 
@@ -240,7 +240,7 @@ def __init__(self, config: benchmark_suite.BenchmarkConfig)
 
 Initialize benchmark.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\benchmarks\benchmark_suite.py:316](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\benchmarks\benchmark_suite.py#L316)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\benchmarks\benchmark_suite.py:316](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\benchmarks\benchmark_suite.py#L316)*
 
 ##### `run`
 
@@ -257,7 +257,7 @@ Run memory benchmark.
 
 **Returns**: `<class 'benchmark_suite.MemoryStats'>` - MemoryStats with measurements
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\benchmarks\benchmark_suite.py:320](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\benchmarks\benchmark_suite.py#L320)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\benchmarks\benchmark_suite.py:320](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\benchmarks\benchmark_suite.py#L320)*
 
 ### class `MemoryStats`
 
@@ -286,7 +286,7 @@ def to_dict(self) -> Dict[str, float]
 
 Convert to dictionary.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\benchmarks\benchmark_suite.py:122](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\benchmarks\benchmark_suite.py#L122)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\benchmarks\benchmark_suite.py:122](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\benchmarks\benchmark_suite.py#L122)*
 
 ### class `PrecisionBenchmark`
 
@@ -302,7 +302,7 @@ def __init__(self, config: benchmark_suite.BenchmarkConfig)
 
 Initialize benchmark.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\benchmarks\benchmark_suite.py:432](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\benchmarks\benchmark_suite.py#L432)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\benchmarks\benchmark_suite.py:432](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\benchmarks\benchmark_suite.py#L432)*
 
 ##### `run`
 
@@ -319,7 +319,7 @@ Run precision comparison benchmark.
 
 **Returns**: `typing.Dict[benchmark_suite.PrecisionMode, benchmark_suite.BenchmarkResult]` - Dictionary of precision mode to results
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\benchmarks\benchmark_suite.py:439](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\benchmarks\benchmark_suite.py#L439)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\benchmarks\benchmark_suite.py:439](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\benchmarks\benchmark_suite.py#L439)*
 
 ### class `PrecisionMode`(Enum)
 
@@ -346,7 +346,7 @@ Initialize benchmark suite.
 
 - **config** (`typing.Optional[benchmark_suite.BenchmarkConfig]`): Benchmark configuration
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\benchmarks\benchmark_suite.py:499](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\benchmarks\benchmark_suite.py#L499)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\benchmarks\benchmark_suite.py:499](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\benchmarks\benchmark_suite.py#L499)*
 
 ##### `get_summary`
 
@@ -356,7 +356,7 @@ def get_summary(self) -> Dict[str, Any]
 
 Get benchmark summary.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\benchmarks\benchmark_suite.py:651](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\benchmarks\benchmark_suite.py#L651)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\benchmarks\benchmark_suite.py:651](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\benchmarks\benchmark_suite.py#L651)*
 
 ##### `run_full_suite`
 
@@ -373,7 +373,7 @@ Run full benchmark suite.
 
 **Returns**: `typing.List[benchmark_suite.BenchmarkResult]` - List of all benchmark results
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\benchmarks\benchmark_suite.py:581](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\benchmarks\benchmark_suite.py#L581)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\benchmarks\benchmark_suite.py:581](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\benchmarks\benchmark_suite.py#L581)*
 
 ##### `run_latency_sweep`
 
@@ -390,7 +390,7 @@ Run latency benchmarks across batch sizes.
 
 **Returns**: `typing.List[benchmark_suite.BenchmarkResult]` - List of benchmark results
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\benchmarks\benchmark_suite.py:509](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\benchmarks\benchmark_suite.py#L509)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\benchmarks\benchmark_suite.py:509](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\benchmarks\benchmark_suite.py#L509)*
 
 ##### `run_precision_comparison`
 
@@ -407,7 +407,7 @@ Compare precision modes.
 
 **Returns**: `typing.Dict[benchmark_suite.PrecisionMode, benchmark_suite.BenchmarkResult]` - Dictionary of results by precision
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\benchmarks\benchmark_suite.py:560](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\benchmarks\benchmark_suite.py#L560)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\benchmarks\benchmark_suite.py:560](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\benchmarks\benchmark_suite.py#L560)*
 
 ### class `ThroughputBenchmark`
 
@@ -423,7 +423,7 @@ def __init__(self, config: benchmark_suite.BenchmarkConfig)
 
 Initialize benchmark.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\benchmarks\benchmark_suite.py:259](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\benchmarks\benchmark_suite.py#L259)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\benchmarks\benchmark_suite.py:259](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\benchmarks\benchmark_suite.py#L259)*
 
 ##### `run`
 
@@ -441,7 +441,7 @@ Run throughput benchmark.
 
 **Returns**: `<class 'benchmark_suite.ThroughputStats'>` - ThroughputStats with measurements
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\benchmarks\benchmark_suite.py:263](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\benchmarks\benchmark_suite.py#L263)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\benchmarks\benchmark_suite.py:263](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\benchmarks\benchmark_suite.py#L263)*
 
 ### class `ThroughputStats`
 
@@ -469,7 +469,7 @@ def to_dict(self) -> Dict[str, Any]
 
 Convert to dictionary.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\benchmarks\benchmark_suite.py:139](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\benchmarks\benchmark_suite.py#L139)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\benchmarks\benchmark_suite.py:139](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\benchmarks\benchmark_suite.py#L139)*
 
 ## Functions
 
@@ -488,7 +488,7 @@ Compare model performance across precision modes.
 
 **Returns**: `typing.Dict[str, typing.Any]` - Comparison results
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\benchmarks\benchmark_suite.py:710](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\benchmarks\benchmark_suite.py#L710)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\benchmarks\benchmark_suite.py:710](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\benchmarks\benchmark_suite.py#L710)*
 
 ### `run_tensorrt_benchmarks`
 
@@ -506,4 +506,4 @@ Run TensorRT benchmarks on a model.
 
 **Returns**: `typing.List[benchmark_suite.BenchmarkResult]` - List of benchmark results
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\benchmarks\benchmark_suite.py:682](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\benchmarks\benchmark_suite.py#L682)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\benchmarks\benchmark_suite.py:682](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\benchmarks\benchmark_suite.py#L682)*

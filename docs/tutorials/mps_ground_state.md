@@ -1,6 +1,6 @@
 # Tutorial: Ground State Physics with Tensor Networks
 
-This tutorial demonstrates how to use HyperTensor to compute ground states of quantum spin chains using the Density Matrix Renormalization Group (DMRG) algorithm.
+This tutorial demonstrates how to use The Physics OS to compute ground states of quantum spin chains using the Density Matrix Renormalization Group (DMRG) algorithm.
 
 ## Overview
 

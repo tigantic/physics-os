@@ -43,19 +43,19 @@ Under what conditions should this be revisited?
 **Status:** DECIDED  
 
 **Context:**  
-The χ-regularity research is exploratory and high-risk. HyperTensor is a production CFD framework with existing proofs and stability guarantees.
+The χ-regularity research is exploratory and high-risk. The Physics OS is a production CFD framework with existing proofs and stability guarantees.
 
 **Options Considered:**  
-1. Develop in HyperTensor main — keeps code together but mixes stable/experimental
-2. Create branch in HyperTensor — still pollutes history
+1. Develop in The Physics OS main — keeps code together but mixes stable/experimental
+2. Create branch in The Physics OS — still pollutes history
 3. Create separate repository — clean separation of concerns
 
 **Decision:**  
-Create `tigantic/NS-Millennium` as a fork of HyperTensor. This provides:
+Create `tigantic/NS-Millennium` as a fork of The Physics OS. This provides:
 - Full HyperTensor infrastructure (QTT, proofs, dense guard)
 - Clean separation for experimental work
 - Independent versioning and releases
-- No risk to HyperTensor stability
+- No risk to The Physics OS stability
 
 **Consequences:**  
 - Maintain two repositories
@@ -63,7 +63,7 @@ Create `tigantic/NS-Millennium` as a fork of HyperTensor. This provides:
 - NS-specific code lives only in NS-Millennium
 
 **Review Trigger:**  
-If research produces stable tools useful for general CFD, consider backporting to HyperTensor.
+If research produces stable tools useful for general CFD, consider backporting to The Physics OS.
 
 ---
 

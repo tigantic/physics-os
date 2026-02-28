@@ -1,4 +1,4 @@
-# HyperTensor Strategic Roadmap
+# The Physics OS — Strategic Roadmap
 
 **Document ID**: ROADMAP-001  
 **Version**: 3.1.0  
@@ -352,7 +352,7 @@ result = lap.apply(field)  # Rank stays bounded
 **Validation Evidence:**
 - `demos/layer9_engine_integration.py` - Complete bridge test suite (8/8 tests)
 - `layer9_integration_results.json` - Protocol validation results
-- **Live Unreal 5.7 Connection** - Python socket connected to HyperTensor bridge
+- **Live Unreal 5.7 Connection** - Python socket connected to The Physics OS bridge
 
 **Tests Validated:**
 1. ✅ PING (Health Check) - Bridge connectivity
@@ -368,7 +368,7 @@ result = lap.apply(field)  # Rank stays bounded
 - Unreal Engine 5.7 installed and running
 - Blueprint project created: `HyperTensorDemo`
 - Python Foundation plugin enabled
-- **Socket connection from Unreal to HyperTensor bridge: SUCCESS**
+- **Socket connection from Unreal to The Physics OS bridge: SUCCESS**
 
 **Protocol Demonstrated:**
 - ZMQ REQ/REP communication pattern
@@ -573,7 +573,7 @@ Prepare the FieldBundle replay tool for external verification of the 512³ singu
 The HyperTensor World Data Slicer transforms interaction with global datasets from "download and wait" to "point and synthesize". Instead of handling petabytes of raw pixels, you query a Quantum-Inspired manifold that resolves detail on demand.
 
 **Demonstrated Capabilities:**
-| Feature | Traditional GIS | HyperTensor |
+| Feature | Traditional GIS | The Physics OS |
 |---------|-----------------|-------------|
 | Sentinel-2 Satellite | Gigabyte-scale tiles with "popping" LODs | Continuous manifold; smooth zoom 100km→1m |
 | NCAR 3km Forecasts | Massive 3km-grid atmospheric simulations | Rank-stable synthesis; resolution independent |
@@ -585,7 +585,7 @@ The HyperTensor World Data Slicer transforms interaction with global datasets fr
 - MortonSlicer: O(L×r²) extraction makes 1024³ as fast as 16³
 - Resolution agnosticism: physical laws preserved across modalities
 
-### HyperTensor Hub (Primary Demo Interface)
+### The Physics OS — Hub (Primary Demo Interface)
 
 **Status:** Implemented (`demos/hypertensor_hub.py`)
 
@@ -628,4 +628,4 @@ Unreal is now a plugin for others to use. The primary demo happens in the clean,
 > No more Potemkin villages.
 ---
 
-*This roadmap is governed by the HyperTensor Constitution. All development must comply with its provisions.*
+*This roadmap is governed by the Physics OS Constitution. All development must comply with its provisions.*

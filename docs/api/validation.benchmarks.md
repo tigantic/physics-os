@@ -1,6 +1,6 @@
 # Module `validation.benchmarks`
 
-Benchmark Module for Project HyperTensor.
+Benchmark Module for Project The Physics OS.
 
 Provides performance benchmarking utilities including:
 - Timing measurement with statistical analysis
@@ -47,7 +47,7 @@ def to_dict(self) -> Dict
 
 Convert to dictionary.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\benchmarks.py:48](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\benchmarks.py#L48)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\benchmarks.py:48](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\benchmarks.py#L48)*
 
 ### class `BenchmarkResult`
 
@@ -76,7 +76,7 @@ def median_time(self) -> float
 
 Compute median time if raw timings available.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\benchmarks.py:89](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\benchmarks.py#L89)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\benchmarks.py:89](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\benchmarks.py#L89)*
 
 ##### `throughput`
 
@@ -86,7 +86,7 @@ def throughput(self) -> Optional[float]
 
 Compute throughput if work size specified in metadata.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\benchmarks.py:96](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\benchmarks.py#L96)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\benchmarks.py:96](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\benchmarks.py#L96)*
 
 #### Methods
 
@@ -104,7 +104,7 @@ def summary(self) -> str
 
 Generate human-readable summary.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\benchmarks.py:120](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\benchmarks.py#L120)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\benchmarks.py:120](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\benchmarks.py#L120)*
 
 ##### `to_dict`
 
@@ -114,7 +114,7 @@ def to_dict(self) -> Dict
 
 Convert to dictionary for serialization.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\benchmarks.py:103](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\benchmarks.py#L103)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\benchmarks.py:103](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\benchmarks.py#L103)*
 
 ### class `BenchmarkSuite`
 
@@ -151,7 +151,7 @@ Add a benchmark to the suite.
 - **name** (`<class 'str'>`): Benchmark name
 - **fn** (`typing.Callable[[], NoneType]`): Function to benchmark (no arguments) **metadata: Additional metadata for this benchmark
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\benchmarks.py:584](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\benchmarks.py#L584)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\benchmarks.py:584](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\benchmarks.py#L584)*
 
 ##### `report`
 
@@ -167,7 +167,7 @@ Generate benchmark report.
 
 **Returns**: `<class 'str'>` - Formatted report string
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\benchmarks.py:623](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\benchmarks.py#L623)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\benchmarks.py:623](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\benchmarks.py#L623)*
 
 ##### `run_all`
 
@@ -183,7 +183,7 @@ Run all benchmarks in the suite.
 
 **Returns**: `typing.Dict[str, benchmarks.BenchmarkResult]` - Dictionary mapping names to results
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\benchmarks.py:595](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\benchmarks.py#L595)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\benchmarks.py:595](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\benchmarks.py#L595)*
 
 ##### `save`
 
@@ -193,7 +193,7 @@ def save(self, filepath: Union[str, pathlib.Path])
 
 Save results to JSON file.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\benchmarks.py:687](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\benchmarks.py#L687)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\benchmarks.py:687](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\benchmarks.py#L687)*
 
 ### class `MemorySnapshot`
 
@@ -224,7 +224,7 @@ def capture() -> 'MemorySnapshot'
 
 Capture current memory state.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\benchmarks.py:268](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\benchmarks.py#L268)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\benchmarks.py:268](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\benchmarks.py#L268)*
 
 ##### `to_dict`
 
@@ -234,7 +234,7 @@ def to_dict(self) -> Dict
 
 Convert to dictionary.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\benchmarks.py:285](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\benchmarks.py#L285)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\benchmarks.py:285](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\benchmarks.py#L285)*
 
 ### class `MemoryTracker`
 
@@ -253,7 +253,7 @@ def peak_cpu(self) -> int
 
 Peak CPU memory allocated.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\benchmarks.py:343](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\benchmarks.py#L343)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\benchmarks.py:343](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\benchmarks.py#L343)*
 
 ##### `peak_gpu`
 
@@ -263,7 +263,7 @@ def peak_gpu(self) -> int
 
 Peak GPU memory allocated.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\benchmarks.py:336](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\benchmarks.py#L336)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\benchmarks.py:336](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\benchmarks.py#L336)*
 
 #### Methods
 
@@ -279,7 +279,7 @@ Initialize memory tracker.
 
 - **interval** (`<class 'float'>`): Sampling interval in seconds
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\benchmarks.py:310](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\benchmarks.py#L310)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\benchmarks.py:310](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\benchmarks.py#L310)*
 
 ##### `report`
 
@@ -289,7 +289,7 @@ def report(self) -> Dict
 
 Generate memory usage report.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\benchmarks.py:350](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\benchmarks.py#L350)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\benchmarks.py:350](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\benchmarks.py#L350)*
 
 ##### `snapshot`
 
@@ -299,7 +299,7 @@ def snapshot(self)
 
 Take a manual snapshot.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\benchmarks.py:332](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\benchmarks.py#L332)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\benchmarks.py:332](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\benchmarks.py#L332)*
 
 ##### `start`
 
@@ -309,7 +309,7 @@ def start(self)
 
 Start memory tracking.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\benchmarks.py:322](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\benchmarks.py#L322)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\benchmarks.py:322](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\benchmarks.py#L322)*
 
 ##### `stop`
 
@@ -319,7 +319,7 @@ def stop(self)
 
 Stop memory tracking and take final snapshot.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\benchmarks.py:327](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\benchmarks.py#L327)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\benchmarks.py:327](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\benchmarks.py#L327)*
 
 ### class `PerformanceTimer`
 
@@ -337,7 +337,7 @@ def max(self) -> float
 
 Maximum timing.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\benchmarks.py:225](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\benchmarks.py#L225)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\benchmarks.py:225](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\benchmarks.py#L225)*
 
 ##### `mean`
 
@@ -347,7 +347,7 @@ def mean(self) -> float
 
 Mean timing.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\benchmarks.py:210](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\benchmarks.py#L210)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\benchmarks.py:210](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\benchmarks.py#L210)*
 
 ##### `min`
 
@@ -357,7 +357,7 @@ def min(self) -> float
 
 Minimum timing.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\benchmarks.py:220](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\benchmarks.py#L220)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\benchmarks.py:220](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\benchmarks.py#L220)*
 
 ##### `std`
 
@@ -367,7 +367,7 @@ def std(self) -> float
 
 Standard deviation of timings.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\benchmarks.py:215](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\benchmarks.py#L215)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\benchmarks.py:215](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\benchmarks.py#L215)*
 
 #### Methods
 
@@ -384,7 +384,7 @@ Initialize performance timer.
 - **name** (`<class 'str'>`): Timer name for reporting
 - **sync_cuda** (`<class 'bool'>`): Synchronize CUDA for timing
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\benchmarks.py:186](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\benchmarks.py#L186)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\benchmarks.py:186](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\benchmarks.py#L186)*
 
 ##### `reset`
 
@@ -394,7 +394,7 @@ def reset(self)
 
 Clear all recorded timings.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\benchmarks.py:206](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\benchmarks.py#L206)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\benchmarks.py:206](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\benchmarks.py#L206)*
 
 ##### `summary`
 
@@ -404,7 +404,7 @@ def summary(self) -> str
 
 Generate summary string.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\benchmarks.py:243](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\benchmarks.py#L243)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\benchmarks.py:243](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\benchmarks.py#L243)*
 
 ##### `time`
 
@@ -426,7 +426,7 @@ def to_result(self, **metadata) -> benchmarks.BenchmarkResult
 
 Convert to BenchmarkResult.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\benchmarks.py:230](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\benchmarks.py#L230)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\benchmarks.py:230](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\benchmarks.py#L230)*
 
 ### class `ScalabilityTest`(ABC)
 
@@ -449,7 +449,7 @@ Initialize scalability test.
 - **name** (`<class 'str'>`): Test name
 - **config** (`typing.Optional[benchmarks.BenchmarkConfig]`): Benchmark configuration
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\benchmarks.py:371](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\benchmarks.py#L371)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\benchmarks.py:371](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\benchmarks.py#L371)*
 
 ##### `analyze_scaling`
 
@@ -461,7 +461,7 @@ Analyze scaling behavior from results.
 
 **Returns**: `typing.Dict` - Dictionary with scaling analysis
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\benchmarks.py:461](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\benchmarks.py#L461)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\benchmarks.py:461](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\benchmarks.py#L461)*
 
 ##### `execute`
 
@@ -477,7 +477,7 @@ Execute scalability test across scales.
 
 **Returns**: `typing.List[benchmarks.BenchmarkResult]` - List of BenchmarkResult for each scale
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\benchmarks.py:419](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\benchmarks.py#L419)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\benchmarks.py:419](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\benchmarks.py#L419)*
 
 ##### `run`
 
@@ -491,7 +491,7 @@ Run the benchmark at given scale.
 
 - **setup_data** (`typing.Any`): Data from setup()
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\benchmarks.py:400](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\benchmarks.py#L400)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\benchmarks.py:400](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\benchmarks.py#L400)*
 
 ##### `setup`
 
@@ -507,7 +507,7 @@ Set up test for given scale.
 
 **Returns**: `typing.Any` - Setup data needed for run
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\benchmarks.py:387](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\benchmarks.py#L387)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\benchmarks.py:387](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\benchmarks.py#L387)*
 
 ##### `teardown`
 
@@ -521,7 +521,7 @@ Clean up after test (optional).
 
 - **setup_data** (`typing.Any`): Data from setup()
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\benchmarks.py:410](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\benchmarks.py#L410)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\benchmarks.py:410](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\benchmarks.py#L410)*
 
 ### class `StrongScalingTest`(ScalabilityTest)
 
@@ -547,7 +547,7 @@ Initialize strong scaling test.
 - **benchmark_fn** (`typing.Callable[[typing.Any, int], NoneType]`): Function(workload, n_workers) -> None
 - **config** (`typing.Optional[benchmarks.BenchmarkConfig]`): Benchmark configuration
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\benchmarks.py:541](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\benchmarks.py#L541)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\benchmarks.py:541](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\benchmarks.py#L541)*
 
 ##### `run`
 
@@ -557,7 +557,7 @@ def run(self, setup_data: Tuple[Any, int]) -> None
 
 Run benchmark with given worker count.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\benchmarks.py:565](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\benchmarks.py#L565)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\benchmarks.py:565](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\benchmarks.py#L565)*
 
 ##### `setup`
 
@@ -567,7 +567,7 @@ def setup(self, scale: int) -> Tuple[Any, int]
 
 Return workload and worker count.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\benchmarks.py:561](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\benchmarks.py#L561)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\benchmarks.py:561](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\benchmarks.py#L561)*
 
 ### class `TimerContext`
 
@@ -589,7 +589,7 @@ Initialize timer context.
 
 - **sync_cuda** (`<class 'bool'>`): Synchronize CUDA before/after timing
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\benchmarks.py:147](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\benchmarks.py#L147)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\benchmarks.py:147](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\benchmarks.py#L147)*
 
 ### class `WeakScalingTest`(ScalabilityTest)
 
@@ -615,7 +615,7 @@ Initialize weak scaling test.
 - **benchmark_fn** (`typing.Callable[[typing.Any], NoneType]`): Function(workload) -> None
 - **config** (`typing.Optional[benchmarks.BenchmarkConfig]`): Benchmark configuration
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\benchmarks.py:504](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\benchmarks.py#L504)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\benchmarks.py:504](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\benchmarks.py#L504)*
 
 ##### `run`
 
@@ -625,7 +625,7 @@ def run(self, setup_data: Any) -> None
 
 Run benchmark on workload.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\benchmarks.py:528](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\benchmarks.py#L528)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\benchmarks.py:528](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\benchmarks.py#L528)*
 
 ##### `setup`
 
@@ -635,7 +635,7 @@ def setup(self, scale: int) -> Any
 
 Generate workload for scale.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\benchmarks.py:524](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\benchmarks.py#L524)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\benchmarks.py:524](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\benchmarks.py#L524)*
 
 ## Functions
 
@@ -655,7 +655,7 @@ Compare two sets of benchmark results.
 
 **Returns**: `typing.Dict[str, typing.Dict]` - Comparison report with speedups and regressions
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\benchmarks.py:772](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\benchmarks.py#L772)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\benchmarks.py:772](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\benchmarks.py#L772)*
 
 ### `run_benchmark`
 
@@ -673,7 +673,7 @@ Run a single benchmark with given configuration.
 
 **Returns**: `<class 'benchmarks.BenchmarkResult'>` - BenchmarkResult with timing statistics
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\benchmarks.py:698](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\benchmarks.py#L698)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\benchmarks.py:698](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\benchmarks.py#L698)*
 
 ### `run_benchmark_suite`
 
@@ -691,4 +691,4 @@ Run a benchmark suite and optionally save results.
 
 **Returns**: `typing.Dict[str, benchmarks.BenchmarkResult]` - Dictionary of benchmark results
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\benchmarks.py:748](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\benchmarks.py#L748)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\benchmarks.py:748](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\benchmarks.py#L748)*

@@ -1,4 +1,4 @@
-# HyperTensor Glass Cockpit
+# The Physics OS — Glass Cockpit
 
 **Phase 0: Foundation**
 
@@ -99,7 +99,7 @@ If simulation is not running:
 
 ### "Failed to open RAM bridge"
 
-**Cause**: HyperTensor simulation not running or WSL path incorrect.
+**Cause**: Physics OS simulation not running or WSL path incorrect.
 
 **Solution**: 
 1. Check WSL is running: `wsl --status`

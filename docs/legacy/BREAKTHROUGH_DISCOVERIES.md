@@ -1,4 +1,4 @@
-# HyperTensor: Breakthrough Discoveries and Technical Achievements
+# The Physics OS: Breakthrough Discoveries and Technical Achievements
 
 **Document Version**: 1.0  
 **Date**: December 22, 2025  
@@ -9,7 +9,7 @@
 
 ## Executive Summary
 
-Project HyperTensor represents a multi-year research effort combining quantum-inspired tensor network mathematics with computational fluid dynamics. This document summarizes the verified technical achievements, novel discoveries, and their implications for both defense/commercial applications and scientific research.
+The Physics OS represents a multi-year research effort combining quantum-inspired tensor network mathematics with computational fluid dynamics. This document summarizes the verified technical achievements, novel discoveries, and their implications for both defense/commercial applications and scientific research.
 
 All claims in this document are backed by reproducible code artifacts, test suites, and logged experimental results within the repository.
 

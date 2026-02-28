@@ -1,6 +1,6 @@
 # Safe Serialization Patterns
 
-This document describes safe serialization practices for HyperTensor to prevent deserialization vulnerabilities.
+This document describes safe serialization practices for The Physics OS to prevent deserialization vulnerabilities.
 
 ---
 

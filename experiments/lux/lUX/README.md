@@ -1,6 +1,6 @@
 # lUX — Luxury Physics Viewer
 
-Production-grade proof viewer for **HyperTensor TPC** (Tensor Proof Certificate). Renders cryptographically-signed scientific proof packages — covering 140 physics & engineering domains — with full schema validation, domain-specific formatting, and accessibility-first design.
+Production-grade proof viewer for **Physics OS TPC** (Tensor Proof Certificate). Renders cryptographically-signed scientific proof packages — covering 140 physics & engineering domains — with full schema validation, domain-specific formatting, and accessibility-first design.
 
 ## Architecture
 

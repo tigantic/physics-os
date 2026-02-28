@@ -14,7 +14,7 @@ Zero-knowledge proof systems (Groth16, Halo2, STARKs) operate over prime fields 
 2. Encoding a float as a field element requires prohibitively expensive range checks.
 3. Different hardware produces different rounding results — violating the bit-exactness requirement for TPC attestation.
 
-HyperTensor's ZK pipeline must prove that a CFD solver produced the claimed result. This requires the solver's arithmetic to be representable as native field operations.
+The Physics OS's ZK pipeline must prove that a CFD solver produced the claimed result. This requires the solver's arithmetic to be representable as native field operations.
 
 ## Decision
 

@@ -2,7 +2,7 @@
 
 **Status:** Released  
 **Date:** 2026-02-24  
-**Maintainer:** Brad Tigantic (HyperTensor Project)  
+**Maintainer:** Brad Tigantic (Physics OS Project)  
 **Repository:** HyperTensor-VM  
 **Companion Papers:**
 - Paper A: *χ-Regularity and Rank Atlas* (`docs/research/paper_a_chi_regularity_atlas.md`)
@@ -271,4 +271,4 @@ Reference data files:
 
 ---
 
-*Rank Atlas Benchmark v1.0 — HyperTensor Project*
+*Rank Atlas Benchmark v1.0 — Physics OS Project*

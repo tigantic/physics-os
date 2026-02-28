@@ -1,6 +1,6 @@
 # Architecture
 
-This section describes the high-level architecture of the HyperTensor
+This section describes the high-level architecture of the The Physics OS
 monorepo, the three-tier package design, and the tensor network engine
 internals.
 

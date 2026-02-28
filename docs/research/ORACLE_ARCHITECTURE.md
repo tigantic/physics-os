@@ -21,7 +21,7 @@
 11. [Implementation Plan](#implementation-plan)
 12. [Timeline](#timeline)
 13. [Success Metrics](#success-metrics)
-14. [Integration with HyperTensor](#integration-with-hypertensor)
+14. [Integration with The Physics OS](#integration-with-hypertensor)
 
 ---
 
@@ -1082,7 +1082,7 @@ class ExecutionTrace:
 
 @dataclass 
 class ChiMetrics:
-    """Exploit proximity metrics (from HyperTensor CFD)."""
+    """Exploit proximity metrics (from The Physics OS CFD)."""
     storage_writes: int
     unique_slots: int
     call_depth: int
@@ -1223,8 +1223,8 @@ class ExploitVerifier:
     def __init__(
         self,
         evm: InstrumentedEVM,
-        interval_engine: IntervalEngine,      # from HyperTensor
-        kantorovich: KantorovichVerifier      # from HyperTensor
+        interval_engine: IntervalEngine,      # from The Physics OS
+        kantorovich: KantorovichVerifier      # from The Physics OS
     ):
         self.evm = evm
         self.interval = interval_engine
@@ -1389,7 +1389,7 @@ contract ExploitTest is Test {{
 1. [ ] Implement scenario-to-transactions converter
 2. [ ] Implement interval verification method
 3. [ ] Implement concrete execution method
-4. [ ] Integrate Kantorovich verifier from HyperTensor
+4. [ ] Integrate Kantorovich verifier from The Physics OS
 5. [ ] Implement Foundry test generation
 6. [ ] Add transaction encoding helpers
 7. [ ] Add profit calculation
@@ -1539,8 +1539,8 @@ class ReportGenerator:
 | **tree-sitter** | USE | Battle-tested parser generator, no opinions |
 | **py-evm** | USE AS REFERENCE | Don't reinvent EVM opcodes |
 | **Claude API** | USE | The LLM is the LLM |
-| **interval.py** | HAVE | Already built in HyperTensor |
-| **kantorovich.py** | HAVE | Already built in HyperTensor |
+| **interval.py** | HAVE | Already built in The Physics OS |
+| **kantorovich.py** | HAVE | Already built in The Physics OS |
 | **Z3** | OPTIONAL FALLBACK | Only for the 5% of queries that need full SMT |
 | **Anvil** | FINAL VERIFY ONLY | Too slow for exploration, no instrumentation |
 
@@ -1721,7 +1721,7 @@ ORACLE is considered successful if it can:
 
 ---
 
-## Integration with HyperTensor
+## Integration with The Physics OS
 
 ### Existing Tools to Integrate
 

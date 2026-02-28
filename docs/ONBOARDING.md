@@ -1,8 +1,8 @@
-# HyperTensor Onboarding Guide
+# The Physics OS — Onboarding Guide
 
-**Your First 30 Minutes with HyperTensor**
+**Your First 30 Minutes with The Physics OS**
 
-Welcome to HyperTensor! This guide will get you up and running with the project in under 30 minutes.
+Welcome to The Physics OS! This guide will get you up and running with the project in under 30 minutes.
 
 ---
 
@@ -42,9 +42,9 @@ python -c "import tensornet; print(f'Version: {tensornet.__version__}')"
 
 ## 🎯 Core Concepts (10 minutes)
 
-### What is HyperTensor?
+### What is The Physics OS?
 
-HyperTensor is a quantum-inspired tensor network library for:
+The Physics OS is a quantum-inspired tensor network library for:
 - **Many-body physics**: DMRG, TEBD for quantum systems
 - **CFD**: Tensor-compressed fluid dynamics solvers
 - **QTT**: Quantized tensor train compression

@@ -1,6 +1,6 @@
 # lUX — Elite Engineering Roadmap
 
-> **Forensic inspection interface for HyperTensor TPC proof certificates.**
+> **Forensic inspection interface for The Physics OS TPC proof certificates.**
 > A luxury-grade, production-hardened viewer rendering trustless physics verification with the visual authority and precision the underlying science demands.
 
 ---

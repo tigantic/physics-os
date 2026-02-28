@@ -1,4 +1,4 @@
-# HyperTensor Capability Audit
+# The Physics OS — Capability Audit
 
 **Date:** December 25, 2025  
 **Version:** 2.0  
@@ -1278,7 +1278,7 @@ Global effective rank: ~16 (weighted average)
 
 ### What We CAN Claim:
 
-> "HyperTensor stores CFD state in O(log N) memory using Quantized Tensor Trains, enabling billion-point simulations on commodity hardware for problems with smooth or piecewise-smooth solutions."
+> "The Physics OS stores CFD state in O(log N) memory using Quantized Tensor Trains, enabling billion-point simulations on commodity hardware for problems with smooth or piecewise-smooth solutions."
 
 > "Linear PDEs (heat, advection, diffusion) are solved entirely in TT format with O(log N) complexity per timestep."
 
@@ -1316,7 +1316,7 @@ Global effective rank: ~16 (weighted average)
 
 ## Signatures
 
-This document represents an honest assessment of HyperTensor's capabilities as of December 25, 2025.
+This document represents an honest assessment of The Physics OS's capabilities as of December 25, 2025.
 
 ### Summary of Key Decisions
 

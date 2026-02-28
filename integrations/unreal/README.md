@@ -1,4 +1,4 @@
-# HyperTensor Unreal Engine Plugin
+# The Physics OS — Unreal Engine Plugin
 
 **Version**: 1.0.0  
 **Engine Compatibility**: Unreal Engine 5.3+  
@@ -10,15 +10,15 @@ The HyperTensor Unreal Plugin provides native Blueprint and C++ integration for 
 
 ## Features
 
-- **Field Actor**: Spawn and visualize HyperTensor fields in 3D space
+- **Field Actor**: Spawn and visualize Physics OS fields in 3D space
 - **Blueprint Nodes**: Full Blueprint API for field manipulation
 - **Material Integration**: Custom material functions for field-based shading
 - **Niagara Support**: Field-driven particle systems
-- **Python Bridge**: Connect to HyperTensor Python backend via ZMQ
+- **Python Bridge**: Connect to The Physics OS Python backend via ZMQ
 
 ## Installation
 
-1. Copy the `HyperTensor` folder to your project's `Plugins` directory
+1. Copy the `The Physics OS` folder to your project's `Plugins` directory
 2. Enable the plugin in Project Settings → Plugins
 3. Restart the editor
 
@@ -54,13 +54,13 @@ Field->Step(DeltaTime);
 ├─────────────────────────────────────────────────────────────┤
 │  Blueprint API    │  C++ API    │  Editor Tools             │
 ├───────────────────┴─────────────┴───────────────────────────┤
-│              HyperTensor Plugin Runtime                      │
+│              Physics OS Plugin Runtime                      │
 ├─────────────────────────────────────────────────────────────┤
 │  Field Actor  │  Field Component  │  Material Functions     │
 ├───────────────┴─────────────────┴───────────────────────────┤
 │              Native Bridge (ZMQ/SharedMemory)                │
 ├─────────────────────────────────────────────────────────────┤
-│              HyperTensor Python Backend                      │
+│              Physics OS Python Backend                      │
 └─────────────────────────────────────────────────────────────┘
 ```
 

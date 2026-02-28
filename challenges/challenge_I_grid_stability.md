@@ -21,7 +21,7 @@ Renewable integration makes it worse. Solar and wind inject stochastic variabili
 
 ## Demonstrated Capability
 
-### What HyperTensor Has Already Proven
+### What The Physics OS Has Already Proven
 
 | Capability | Evidence | Attestation |
 |-----------|----------|-------------|
@@ -34,7 +34,7 @@ Renewable integration makes it worse. Solar and wind inject stochastic variabili
 
 ### Why This Is Sufficient
 
-A continental grid with 100,000 buses at 1ms resolution is ~2^30 state variables. HyperTensor has verified 2^50 on-chain — 2^20 times larger than needed. The regime detection latency of 114 ns is 10,000x faster than the fastest grid protection relay (typically 1-5 ms). The QTT compression means the entire grid state fits in single-digit megabytes.
+A continental grid with 100,000 buses at 1ms resolution is ~2^30 state variables. The Physics OS has verified 2^50 on-chain — 2^20 times larger than needed. The regime detection latency of 114 ns is 10,000x faster than the fastest grid protection relay (typically 1-5 ms). The QTT compression means the entire grid state fits in single-digit megabytes.
 
 The disruption predictor (built for fusion plasma) already handles the same mathematical problem: detecting instability onset in a complex nonlinear system before it propagates. Grid cascades and plasma disruptions are mathematically isomorphic — both are nonlinear instabilities in coupled differential systems where small perturbations grow exponentially.
 
@@ -74,7 +74,7 @@ Power flow:
   Q_i = Σ_j |V_i||V_j|(G_ij sin(δ_i - δ_j) - B_ij cos(δ_i - δ_j))
 ```
 
-These are nonlinear coupled ODEs — the same mathematical structure as Navier-Stokes (nonlinear advection) and MHD (coupled field equations). HyperTensor already solves both.
+These are nonlinear coupled ODEs — the same mathematical structure as Navier-Stokes (nonlinear advection) and MHD (coupled field equations). The Ontic Engine already solves both.
 
 ### QTT Formulation
 
@@ -182,7 +182,7 @@ These are nonlinear coupled ODEs — the same mathematical structure as Navier-S
 
 ## Key Differentiator
 
-No existing tool can hold the full continental grid state at millisecond resolution in laptop RAM while detecting cascade onset faster than protection relays can operate. HyperTensor can. The proof is on the blockchain.
+No existing tool can hold the full continental grid state at millisecond resolution in laptop RAM while detecting cascade onset faster than protection relays can operate. The Physics OS can. The proof is on the blockchain.
 
 ---
 

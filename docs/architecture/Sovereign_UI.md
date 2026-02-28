@@ -1,4 +1,4 @@
-# HyperTensor Glass Cockpit
+# The Physics OS — Glass Cockpit
 ## Vision, Roadmap & Execution Doctrine
 
 **Classification:** Internal Engineering Doctrine  
@@ -109,7 +109,7 @@ This document establishes the architectural principles, engineering patterns, an
 
 **The simulation never waits for the display.**
 
-The Glass Cockpit operates under a strict isolation contract. The i9-14900HX P-cores (logical processors 0-15) are sovereign territory—reserved exclusively for HyperTensor physics computation. The UI exists on E-cores (16-31), reading from shared memory like a passive sensor.
+The Glass Cockpit operates under a strict isolation contract. The i9-14900HX P-cores (logical processors 0-15) are sovereign territory—reserved exclusively for The Physics OS physics computation. The UI exists on E-cores (16-31), reading from shared memory like a passive sensor.
 
 ### The Sovereignty Contract
 
@@ -577,7 +577,7 @@ This is not weather visualization. This is **weather auditing**.
 
 ## Commercial Positioning
 
-The Glass Cockpit serves as the **entry point** to the HyperTensor commercialization funnel:
+The Glass Cockpit serves as the **entry point** to the Physics OS commercialization funnel:
 
 ```
 ┌────────────────────────────────────────────────────────────────┐
@@ -985,7 +985,7 @@ The demo must be *undeniably impressive*. Infinite zoom with no latency. Real-ti
 
 - [x] **Terminal Output**: Bottom pane
   - [x] Glass panel frame with title bar
-  - [x] Scrolling log of HyperTensor events
+  - [x] Scrolling log of The Physics OS events
   - [x] Timestamps with millisecond precision
   - [x] Event filtering by category
 
@@ -1194,7 +1194,7 @@ OFFSET    SIZE    TYPE        DESCRIPTION
 ---
 
 
-# HyperTensor Glass Cockpit
+# The Physics OS — Glass Cockpit
 ## Appendices D–H: Technical Specifications
 
 **Classification:** Internal Engineering Doctrine  

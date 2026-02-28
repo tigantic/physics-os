@@ -1,4 +1,4 @@
-# HyperTensor — UI/UX Build Directive
+# The Physics OS — — UI/UX Build Directive
 
 ## "Luxury-Grade Trustless Physics Certification Platform"
 
@@ -466,5 +466,5 @@ If a reviewer opens this and doesn't instinctively sit up straighter, it's not d
 
 ---
 
-_Directive for HyperTensor OBSIDIAN UI_
+_Directive for The Physics OS OBSIDIAN UI_
 _© 2026 Brad McAllister / Tigantic Holdings. All rights reserved._

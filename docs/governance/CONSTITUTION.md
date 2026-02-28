@@ -1,4 +1,4 @@
-# Project HyperTensor: Constitutional Law
+# Project The Physics OS: Constitutional Law
 
 **Ratified**: 2025-12-20  
 **Version**: 1.3.0  
@@ -9,7 +9,7 @@
 
 ## Preamble
 
-This Constitution establishes the inviolable standards, protocols, and operational law governing all development within Project HyperTensor. These laws exist to ensure mathematical rigor, reproducibility, and the scientific integrity required for a system intended to solve physics in real-time on safety-critical platforms.
+This Constitution establishes the inviolable standards, protocols, and operational law governing all development within Project The Physics OS. These laws exist to ensure mathematical rigor, reproducibility, and the scientific integrity required for a system intended to solve physics in real-time on safety-critical platforms.
 
 **Violation of any Article herein constitutes grounds for immediate rejection of contribution.**
 
@@ -50,7 +50,7 @@ Every proof MUST generate:
 ### Section 2.1 — Module Organization
 
 ```
-Project HyperTensor/
+The Physics OS/
 ├── tensornet/              # Core library (pip-installable)
 │   ├── substrate/          # Layer 0: Field Oracle API (THE SPINE)
 │   │   ├── field.py        # sample(), slice(), step(), stats(), serialize()
@@ -448,4 +448,4 @@ Adding new dependencies requires explicit justification and PI approval.
 
 ---
 
-*This Constitution is the supreme law of Project HyperTensor. All code, documentation, and artifacts are subject to its provisions.*
+*This Constitution is the supreme law of Project The Physics OS. All code, documentation, and artifacts are subject to its provisions.*

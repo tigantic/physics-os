@@ -35,7 +35,7 @@ assignees: ''
 - **OS:** <!-- e.g., Windows 11, Ubuntu 22.04, macOS 14 -->
 - **Python Version:** <!-- e.g., 3.11.5 -->
 - **PyTorch Version:** <!-- e.g., 2.1.0 -->
-- **HyperTensor Version:** <!-- e.g., 0.1.0 or git commit hash -->
+- **Physics OS Version:** <!-- e.g., 0.1.0 or git commit hash -->
 - **CUDA Version (if applicable):** <!-- e.g., 12.1 -->
 
 ## Minimal Reproducible Example

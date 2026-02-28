@@ -1,7 +1,7 @@
 # The χ-Regularity Conjecture: QTT Bond-Dimension Universality Across Physical Law
 
 **Author:** Brad Tigantic  
-**Affiliation:** Independent Research — HyperTensor Project  
+**Affiliation:** Independent Research — Physics OS Project  
 **Date:** 2026-02-22 (initial evidence) — 2026-02-24 (20-pack campaign) — 2026-02-25 (QTT Physics VM) — 2026-02-25 (scientific hardening) — Living Document  
 **Version:** 3.0.0  
 **Status:** This document has been split into two focused papers and a benchmark suite:
@@ -56,7 +56,7 @@ compressibility of PDE solutions:
   not N-independent.
 
 The conjecture originates from an empirical observation: across the 20
-physics domain packs implemented in the HyperTensor platform — spanning
+physics domain packs implemented in the The Physics OS — spanning
 fluid dynamics, quantum mechanics, electromagnetism, plasma physics, general
 relativity, and 15 additional categories (140 sub-domains total) — QTT
 compression is observed wherever rank has been measured. Systematic
@@ -221,7 +221,7 @@ classical-data analogue of the Schmidt decomposition. We use "bond dimension" an
 "Schmidt rank at cut k" interchangeably, noting that for classical (non-quantum)
 fields the SVD is the canonical procedure.
 
-**Implementation note:** The HyperTensor codebase performs bond-dimension
+**Implementation note:** The Ontic Engine codebase performs bond-dimension
 measurement via SVD of the QTT cores (see `oracle/qtt_encoder.py`,
 `oracle/qtt_encoder_cuda.py`). The `EntanglementSpectrum.from_singular_values()`
 class method in `tensornet/adaptive/entanglement.py` computes the full
@@ -363,7 +363,7 @@ counts against dense storage from 3D through 6D:
 
 ### 3.4 Physics Domain Coverage
 
-The HyperTensor platform implements 20 domain packs (I–XX) registered via
+The The Physics OS implements 20 domain packs (I–XX) registered via
 the `DomainRegistry` (see `tensornet/packs/__init__.py`) covering:
 
 CFD, Structural, Thermal, Electromagnetics, Quantum, Acoustics, Plasma,
@@ -785,7 +785,7 @@ $O(N)$ rank of unstructured data, but it is not constant. Accordingly,
 
 **Turbulent cascades.** In 3D turbulence, the K41 theory predicts a -5/3
 energy spectrum, implying energy at all scales down to the Kolmogorov
-microscale η. The GLOBAL SLO in HyperTensor requires the Kolmogorov slope
+microscale η. The GLOBAL SLO in The Physics OS requires the Kolmogorov slope
 to be -5/3 ± 10%. If the QTT truncation corrupts the inertial range, the
 simulation loses physical fidelity. The evidence in Section 3.1 shows this
 is not occurring at Re = 2.75M.
@@ -891,7 +891,7 @@ zero B_HIGHER violations.
 
 ### 7.1 Objective
 
-Systematically measure QTT bond dimensions across all 20 HyperTensor domain
+Systematically measure QTT bond dimensions across all 20 Physics OS domain
 packs, varying both the complexity parameter (ξ) and grid resolution (n_bits),
 to confirm or falsify Sub-Conjecture 4.3.4 (Universality).
 
@@ -1799,6 +1799,6 @@ and inspectable data.
 
 ---
 
-*Document generated from HyperTensor-VM repository evidence.*
+*Document generated from The Physics OS-VM repository evidence.*
 *Last verified: 2026-02-25 (v2.5.0 — dual-measurement validated, Pack VI resolved, protocol compliant).*
 *Evidence manifest: `docs/research/evidence_manifest.json`*

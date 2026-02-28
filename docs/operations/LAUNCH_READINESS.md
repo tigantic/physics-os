@@ -1,4 +1,4 @@
-# Launch Readiness — HyperTensor Runtime
+# Launch Readiness — Physics OS Platform Shell
 
 **Document owner**: Brad / Tigantic Labs
 **Baseline**: `v4.0.1` (`7c89bcd0`)

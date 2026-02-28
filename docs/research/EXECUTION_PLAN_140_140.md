@@ -1,4 +1,4 @@
-# HyperTensor 140/140 Capability Domain Execution Plan
+# The Physics OS — 140/140 Capability Domain Execution Plan
 
 **Repository**: HyperTensor-VM (`workspace-reorg` branch)
 **Date**: February 7, 2026

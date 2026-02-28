@@ -1,4 +1,4 @@
-# HyperTensor Server Configuration Guide
+# The Physics OS — Server Configuration Guide
 
 This document describes how to configure the HyperTensor REST API server for production deployments.
 

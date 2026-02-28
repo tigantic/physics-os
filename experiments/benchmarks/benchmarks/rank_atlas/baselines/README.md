@@ -2,7 +2,7 @@
 
 ## Baseline A: In-Solver QTT (Rank Atlas Campaign)
 
-These results are from the Rank Atlas Campaign executed with HyperTensor's
+These results are from the Rank Atlas Campaign executed with The Physics OS's
 native QTT solver infrastructure. They measure the bond dimension of QTT
 states *during and after* solver time-integration with SVD truncation.
 

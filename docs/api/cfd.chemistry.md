@@ -54,7 +54,7 @@ def compute(self, T: torch.Tensor) -> torch.Tensor
 
 Compute forward rate coefficient at temperature T.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\chemistry.py:88](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\chemistry.py#L88)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\chemistry.py:88](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\chemistry.py#L88)*
 
 ### class `ChemistryState`
 
@@ -75,7 +75,7 @@ State for multi-species chemistry solver.
 def shape(self) -> torch.Size
 ```
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\chemistry.py:304](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\chemistry.py#L304)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\chemistry.py:304](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\chemistry.py#L304)*
 
 #### Methods
 
@@ -93,7 +93,7 @@ def concentrations(self) -> Dict[chemistry.Species, torch.Tensor]
 
 Compute molar concentrations [mol/m³].
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\chemistry.py:308](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\chemistry.py#L308)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\chemistry.py:308](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\chemistry.py#L308)*
 
 ##### `mixture_R`
 
@@ -103,7 +103,7 @@ def mixture_R(self) -> torch.Tensor
 
 Compute mixture gas constant [J/(kg·K)].
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\chemistry.py:322](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\chemistry.py#L322)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\chemistry.py:322](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\chemistry.py#L322)*
 
 ##### `mixture_molecular_weight`
 
@@ -113,7 +113,7 @@ def mixture_molecular_weight(self) -> torch.Tensor
 
 Compute mixture molecular weight [kg/mol].
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\chemistry.py:315](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\chemistry.py#L315)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\chemistry.py:315](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\chemistry.py#L315)*
 
 ##### `validate`
 
@@ -123,7 +123,7 @@ def validate(self) -> bool
 
 Check physical constraints.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\chemistry.py:327](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\chemistry.py#L327)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\chemistry.py:327](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\chemistry.py#L327)*
 
 ### class `Reaction`
 
@@ -170,7 +170,7 @@ This is provided for simple cases only.
 
 **Returns**: `<class 'chemistry.ChemistryState'>` - Updated state
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\chemistry.py:420](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\chemistry.py#L420)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\chemistry.py:420](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\chemistry.py#L420)*
 
 ### `air_5species_ic`
 
@@ -195,7 +195,7 @@ Default is standard atmospheric composition:
 
 **Returns**: `<class 'chemistry.ChemistryState'>` - ChemistryState initial condition
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\chemistry.py:344](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\chemistry.py#L344)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\chemistry.py:344](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\chemistry.py#L344)*
 
 ### `chemistry_timestep`
 
@@ -214,7 +214,7 @@ dt_chem = safety * min(ρYᵢ / |ω̇ᵢ|)
 
 **Returns**: `<class 'torch.Tensor'>` - Chemistry timestep [s]
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\chemistry.py:390](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\chemistry.py#L390)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\chemistry.py:390](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\chemistry.py#L390)*
 
 ### `compute_reaction_rates`
 
@@ -234,7 +234,7 @@ Compute species production rates from finite-rate chemistry.
 **Returns**: `typing.Tuple[typing.Dict[chemistry.Species, torch.Tensor], torch.Tensor]` - - Dict of mass production rates [kg/(m³·s)]
         - Total heat release rate [W/m³]
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\chemistry.py:229](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\chemistry.py#L229)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\chemistry.py:229](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\chemistry.py#L229)*
 
 ### `equilibrium_constant`
 
@@ -255,7 +255,7 @@ Simplified curve fit approach for 5-species air.
 
 **Returns**: `<class 'torch.Tensor'>` - Equilibrium constant K_eq
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\chemistry.py:161](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\chemistry.py#L161)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\chemistry.py:161](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\chemistry.py#L161)*
 
 ### `post_shock_composition`
 
@@ -277,7 +277,7 @@ behind a normal shock.
 
 **Returns**: `typing.Dict[chemistry.Species, float]` - Dictionary of mass fractions
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\chemistry.py:474](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\chemistry.py#L474)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\chemistry.py:474](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\chemistry.py#L474)*
 
 ### `third_body_concentration`
 
@@ -298,7 +298,7 @@ where αᵢ is the third-body efficiency of species i.
 
 **Returns**: `<class 'torch.Tensor'>` - Effective third-body concentration [mol/m³]
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\chemistry.py:198](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\chemistry.py#L198)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\chemistry.py:198](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\chemistry.py#L198)*
 
 ### `validate_chemistry`
 
@@ -308,4 +308,4 @@ def validate_chemistry()
 
 Run validation tests for chemistry module.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\chemistry.py:541](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\chemistry.py#L541)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\chemistry.py:541](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\chemistry.py#L541)*

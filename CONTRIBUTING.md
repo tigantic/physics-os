@@ -1,6 +1,6 @@
-# Contributing to HyperTensor
+# Contributing to The Physics OS
 
-Thank you for your interest in contributing to HyperTensor! This document provides a quick-start guide for new contributors.
+Thank you for your interest in contributing to The Physics OS! This document provides a quick-start guide for new contributors.
 
 ## Quick Start
 

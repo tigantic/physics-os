@@ -1,10 +1,10 @@
-# Tutorial: Compressible Flow Simulation with HyperTensor
+# Tutorial: Compressible Flow Simulation with The Physics OS
 
-This tutorial demonstrates how to use HyperTensor's CFD module to simulate compressible flows, including shock waves and supersonic aerodynamics.
+This tutorial demonstrates how to use The Physics OS's CFD module to simulate compressible flows, including shock waves and supersonic aerodynamics.
 
 ## Overview
 
-HyperTensor provides GPU-accelerated solvers for the compressible Euler equations:
+The Physics OS provides GPU-accelerated solvers for the compressible Euler equations:
 
 $$\frac{\partial \mathbf{U}}{\partial t} + \nabla \cdot \mathbf{F}(\mathbf{U}) = 0$$
 
@@ -68,7 +68,7 @@ plt.show()
 
 ## Riemann Solvers
 
-HyperTensor provides several flux schemes:
+The Physics OS provides several flux schemes:
 
 ```python
 from tensornet.cfd.godunov import exact_riemann, hll_flux, hllc_flux, roe_flux

@@ -383,7 +383,7 @@
 
 ---
 
-## NEW DOMAINS NOT IN TAXONOMY (Unique to HyperTensor)
+## NEW DOMAINS NOT IN TAXONOMY (Unique to The Physics OS)
 
 These physics domains exist in the repository but do not appear in the 140-domain taxonomy:
 

@@ -42,7 +42,7 @@ The HVAC_CFD folder contains a **complete CFD simulation system** with:
 
 ```bash
 # All commands (from Review/ directory)
-cd /home/brad/TiganticLabz/Main_Projects/Project\ HyperTensor/HVAC_CFD/Review
+cd /home/brad/TiganticLabz/Main_Projects/Project\ The Physics OS/HVAC_CFD/Review
 source ../.venv/bin/activate  # If using venv
 
 # Available CLI commands:
@@ -70,7 +70,7 @@ hyperfoam run projects/2026-001/job_spec.json
 
 ```bash
 # Build (requires Qt 6.6+, CMake, vcpkg)
-cd /home/brad/TiganticLabz/Main_Projects/Project\ HyperTensor/HVAC_CFD/ui
+cd /home/brad/TiganticLabz/Main_Projects/Project\ The Physics OS/HVAC_CFD/ui
 cmake -B build -S . --preset=release
 cmake --build build
 
@@ -185,7 +185,7 @@ python -m hyperfoam.bridge_main --bridge-mode --grid 64 --preset conference
 ### Build Commands
 
 ```bash
-cd /home/brad/TiganticLabz/Main_Projects/Project\ HyperTensor/HVAC_CFD/ui
+cd /home/brad/TiganticLabz/Main_Projects/Project\ The Physics OS/HVAC_CFD/ui
 
 # Configure (Debug)
 cmake -B build -S . -DCMAKE_BUILD_TYPE=Debug
@@ -347,7 +347,7 @@ Key settings:
 
 **Usage:**
 ```bash
-cd /home/brad/TiganticLabz/Main_Projects/Project\ HyperTensor/HVAC_CFD/Review
+cd /home/brad/TiganticLabz/Main_Projects/Project\ The Physics OS/HVAC_CFD/Review
 python -m hyperfoam run ../sample_projects/demo_office/job_spec.json
 ```
 
@@ -381,7 +381,7 @@ python -m hyperfoam run ../sample_projects/demo_office/job_spec.json
 
 **Run Tests:**
 ```bash
-cd /home/brad/TiganticLabz/Main_Projects/Project\ HyperTensor/HVAC_CFD/Review
+cd /home/brad/TiganticLabz/Main_Projects/Project\ The Physics OS/HVAC_CFD/Review
 pytest tests/ -v
 ```
 
@@ -394,7 +394,7 @@ pytest tests/ -v
 **Purpose:** See HyperFOAM in action immediately
 
 ```bash
-cd /home/brad/TiganticLabz/Main_Projects/Project\ HyperTensor/HVAC_CFD/Review
+cd /home/brad/TiganticLabz/Main_Projects/Project\ The Physics OS/HVAC_CFD/Review
 python -m hyperfoam demo
 ```
 
@@ -409,7 +409,7 @@ python -m hyperfoam demo
 **Purpose:** Real-time parameter exploration with sliders
 
 ```bash
-cd /home/brad/TiganticLabz/Main_Projects/Project\ HyperTensor/HVAC_CFD/Review
+cd /home/brad/TiganticLabz/Main_Projects/Project\ The Physics OS/HVAC_CFD/Review
 python -m hyperfoam dashboard --port 8501
 # Open http://localhost:8501
 ```
@@ -425,7 +425,7 @@ python -m hyperfoam dashboard --port 8501
 **Purpose:** Find optimal HVAC settings for specific occupancy
 
 ```bash
-cd /home/brad/TiganticLabz/Main_Projects/Project\ HyperTensor/HVAC_CFD/Review
+cd /home/brad/TiganticLabz/Main_Projects/Project\ The Physics OS/HVAC_CFD/Review
 
 # Full optimization (12 occupants)
 python -m hyperfoam optimize -n 12 --target-temp 22.0
@@ -448,7 +448,7 @@ python -m hyperfoam optimize -n 30 --max-velocity 0.2 --method differential_evol
 **Purpose:** Automated production run from specification file
 
 ```bash
-cd /home/brad/TiganticLabz/Main_Projects/Project\ HyperTensor/HVAC_CFD/Review
+cd /home/brad/TiganticLabz/Main_Projects/Project\ The Physics OS/HVAC_CFD/Review
 
 # Run existing spec
 python -m hyperfoam run ../sample_projects/demo_office/job_spec.json
@@ -473,7 +473,7 @@ python -m hyperfoam run projects/2026-001/job_spec.json --duration 600 --skip-op
 **Purpose:** Interactive project setup wizard
 
 ```bash
-cd /home/brad/TiganticLabz/Main_Projects/Project\ HyperTensor/HVAC_CFD/Review
+cd /home/brad/TiganticLabz/Main_Projects/Project\ The Physics OS/HVAC_CFD/Review
 python -m hyperfoam new
 ```
 
@@ -488,7 +488,7 @@ python -m hyperfoam new
 **Purpose:** Create PDF deliverable for existing results
 
 ```bash
-cd /home/brad/TiganticLabz/Main_Projects/Project\ HyperTensor/HVAC_CFD/Review
+cd /home/brad/TiganticLabz/Main_Projects/Project\ The Physics OS/HVAC_CFD/Review
 python -m hyperfoam report --client "Apex Corp" --project "2026-001" --author "Engineering Team"
 ```
 
@@ -503,7 +503,7 @@ python -m hyperfoam report --client "Apex Corp" --project "2026-001" --author "E
 **Purpose:** Measure performance, compare to legacy solvers
 
 ```bash
-cd /home/brad/TiganticLabz/Main_Projects/Project\ HyperTensor/HVAC_CFD/Review
+cd /home/brad/TiganticLabz/Main_Projects/Project\ The Physics OS/HVAC_CFD/Review
 python -m hyperfoam benchmark --steps 1000
 ```
 
@@ -519,11 +519,11 @@ python -m hyperfoam benchmark --steps 1000
 
 ```bash
 # Terminal 1: Start bridge
-cd /home/brad/TiganticLabz/Main_Projects/Project\ HyperTensor/HVAC_CFD/Review
+cd /home/brad/TiganticLabz/Main_Projects/Project\ The Physics OS/HVAC_CFD/Review
 python -m hyperfoam.bridge_main --bridge-mode --grid 64 --preset conference
 
 # Terminal 2: Start UI (if built)
-cd /home/brad/TiganticLabz/Main_Projects/Project\ HyperTensor/HVAC_CFD/ui
+cd /home/brad/TiganticLabz/Main_Projects/Project\ The Physics OS/HVAC_CFD/ui
 ./build/HyperFOAM
 ```
 
@@ -539,7 +539,7 @@ cd /home/brad/TiganticLabz/Main_Projects/Project\ HyperTensor/HVAC_CFD/ui
 
 ```bash
 # Build
-cd /home/brad/TiganticLabz/Main_Projects/Project\ HyperTensor/HVAC_CFD/ui
+cd /home/brad/TiganticLabz/Main_Projects/Project\ The Physics OS/HVAC_CFD/ui
 cmake -B build -S . --preset=release
 cmake --build build
 
@@ -584,7 +584,7 @@ solver = hyperfoam.Solver(config)
 **Purpose:** Validate solver against published experimental data
 
 ```bash
-cd /home/brad/TiganticLabz/Main_Projects/Project\ HyperTensor/HVAC_CFD/Review
+cd /home/brad/TiganticLabz/Main_Projects/Project\ The Physics OS/HVAC_CFD/Review
 
 # Quick baseline
 python fast_benchmark.py
@@ -607,7 +607,7 @@ python nielsen_3d_realistic.py
 **Purpose:** Verify all capabilities
 
 ```bash
-cd /home/brad/TiganticLabz/Main_Projects/Project\ HyperTensor/HVAC_CFD/Review
+cd /home/brad/TiganticLabz/Main_Projects/Project\ The Physics OS/HVAC_CFD/Review
 
 # Run all tests
 pytest tests/ -v

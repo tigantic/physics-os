@@ -9,7 +9,7 @@
 | **Organization** | Tigantic Holdings LLC |
 | **Contact** | Brad Adams |
 | **Date** | February 22, 2026 |
-| **Engine** | HyperTensor QTT v2.0.0 |
+| **Engine** | Ontic Engine QTT v2.0.0 |
 | **Hardware** | NVIDIA RTX 5070 Laptop GPU (8 GB VRAM) |
 
 ---
@@ -65,7 +65,7 @@ At 4096³ — a resolution relevant to production wall-resolved LES — a single
 
 ## 3. Head-to-Head: QTT vs PhysicsNeMo Ahmed Body
 
-| Metric | NVIDIA PhysicsNeMo | HyperTensor QTT | Factor |
+| Metric | NVIDIA PhysicsNeMo | Ontic Engine QTT | Factor |
 |:-------|:------------------:|:----------------:|:------:|
 | Storage per sample | 11.5 MB (VTP) | ~69 KB | **168×** |
 | Data content | Surface fields only | **Full 3D volume** | Volumetric |
@@ -296,4 +296,4 @@ python tools/scripts/run_trustless_ahmed.py --verify ahmed_ib_results/512/trustl
 
 ---
 
-*HyperTensor QTT Engine v2.0.0 — Tigantic Holdings LLC — February 2026*
+*Ontic Engine QTT Engine v2.0.0 — Tigantic Holdings LLC — February 2026*

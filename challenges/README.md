@@ -1,6 +1,6 @@
 # Mutationes Civilizatoriae — Civilization Challenges
 
-**Six execution documents demonstrating how HyperTensor's verified physics engine addresses civilization-scale problems.**
+**Six execution documents demonstrating how The Physics OS's verified physics engine addresses civilization-scale problems.**
 
 Each challenge maps existing, demonstrated capabilities (with cryptographic attestations) to a specific global crisis, then lays out a phased execution plan from benchmark validation to production deployment with on-chain trustless verification.
 
@@ -55,4 +55,4 @@ These documents are **CONFIDENTIAL** — Tigantic Holdings LLC proprietary execu
 
 ---
 
-**HyperTensor** · *Mutationes Civilizatoriae* · © 2025–2026 Bradly Biron Baker Adams / Tigantic Holdings LLC
+**The Physics OS** · *Mutationes Civilizatoriae* · © 2025–2026 Bradly Biron Baker Adams / Tigantic Holdings LLC

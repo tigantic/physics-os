@@ -1,5 +1,5 @@
 # The Civilization Stack
-## HyperTensor Gauntlet Attestation Registry
+## The Physics OS — Gauntlet Attestation Registry
 
 **Purpose**: External audit registry for civilization-critical projects.  
 **Status**: ★★★★★ 20/20 GAUNTLETS PASSED — SOVEREIGN GENESIS INITIALIZED ★★★★★  

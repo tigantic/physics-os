@@ -86,7 +86,7 @@ def to_controls(self) -> Dict[str, float]
 
 Convert to control surface deflections.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\guidance\controller.py:71](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\guidance\controller.py#L71)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\guidance\controller.py:71](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\guidance\controller.py#L71)*
 
 ### class `GuidanceController`
 
@@ -106,7 +106,7 @@ Implements a predictor-corrector guidance scheme with:
 def __init__(self, corridor: controller.CorridorBounds = None, target: controller.WaypointTarget = None, dt: float = 0.01)
 ```
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\guidance\controller.py:290](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\guidance\controller.py#L290)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\guidance\controller.py:290](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\guidance\controller.py#L290)*
 
 ##### `apply_constraint_limiting`
 
@@ -128,7 +128,7 @@ Uses a priority-based approach:
 
 **Returns**: `<class 'controller.GuidanceCommand'>` - Constraint-limited command
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\guidance\controller.py:492](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\guidance\controller.py#L492)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\guidance\controller.py:492](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\guidance\controller.py#L492)*
 
 ##### `compute_guidance`
 
@@ -145,7 +145,7 @@ Main guidance computation loop.
 
 **Returns**: `<class 'controller.GuidanceCommand'>` - Guidance command
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\guidance\controller.py:565](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\guidance\controller.py#L565)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\guidance\controller.py:565](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\guidance\controller.py#L565)*
 
 ##### `estimate_g_load`
 
@@ -164,7 +164,7 @@ Estimate normal g-load.
 
 **Returns**: `<class 'float'>` - Normal load factor (g's)
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\guidance\controller.py:416](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\guidance\controller.py#L416)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\guidance\controller.py:416](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\guidance\controller.py#L416)*
 
 ##### `estimate_heating`
 
@@ -183,7 +183,7 @@ Uses Sutton-Graves correlation for convective heating.
 
 **Returns**: `<class 'float'>` - Heat rate in W/cm²
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\guidance\controller.py:382](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\guidance\controller.py#L382)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\guidance\controller.py:382](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\guidance\controller.py#L382)*
 
 ##### `lookup_aerodynamics`
 
@@ -200,7 +200,7 @@ Look up aerodynamic coefficients.
 
 **Returns**: `typing.Tuple[float, float, float]` - (CL, CD, Cm)
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\guidance\controller.py:348](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\guidance\controller.py#L348)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\guidance\controller.py:348](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\guidance\controller.py#L348)*
 
 ##### `predict_trajectory`
 
@@ -218,7 +218,7 @@ Predict future trajectory with current command.
 
 **Returns**: `typing.List[tensornet.guidance.trajectory.VehicleState]` - Predicted trajectory
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\guidance\controller.py:541](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\guidance\controller.py#L541)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\guidance\controller.py:541](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\guidance\controller.py#L541)*
 
 ##### `reset`
 
@@ -228,7 +228,7 @@ def reset(self)
 
 Reset controller state for new trajectory.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\guidance\controller.py:610](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\guidance\controller.py#L610)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\guidance\controller.py:610](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\guidance\controller.py#L610)*
 
 ##### `set_aero_table`
 
@@ -242,7 +242,7 @@ Set aerodynamic lookup table from CFD.
 
 - **table** (`typing.Dict`): Dict with keys (Mach, alpha_deg) -> (CL, CD, Cm)
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\guidance\controller.py:339](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\guidance\controller.py#L339)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\guidance\controller.py:339](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\guidance\controller.py#L339)*
 
 ##### `update_constraints`
 
@@ -257,7 +257,7 @@ Update constraint values based on current state.
 - **state** (`<class 'tensornet.guidance.trajectory.VehicleState'>`): Current vehicle state
 - **command** (`<class 'controller.GuidanceCommand'>`): Current guidance command
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\guidance\controller.py:456](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\guidance\controller.py#L456)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\guidance\controller.py:456](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\guidance\controller.py#L456)*
 
 ### class `GuidanceMode`(Enum)
 
@@ -284,7 +284,7 @@ def is_active(self) -> bool
 
 Whether constraint is active (within margin of limit).
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\guidance\controller.py:102](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\guidance\controller.py#L102)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\guidance\controller.py:102](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\guidance\controller.py#L102)*
 
 ##### `relative_margin`
 
@@ -294,7 +294,7 @@ def relative_margin(self) -> float
 
 Relative margin to constraint (1 = at limit, 0 = far from limit).
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\guidance\controller.py:95](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\guidance\controller.py#L95)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\guidance\controller.py:95](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\guidance\controller.py#L95)*
 
 ##### `violation`
 
@@ -304,7 +304,7 @@ def violation(self) -> float
 
 Constraint violation (0 if satisfied, positive if violated).
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\guidance\controller.py:90](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\guidance\controller.py#L90)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\guidance\controller.py:90](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\guidance\controller.py#L90)*
 
 #### Methods
 
@@ -356,7 +356,7 @@ equilibrium glide within thermal and structural constraints.
 
 **Returns**: `<class 'controller.GuidanceCommand'>` - GuidanceCommand with bank angle and mode
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\guidance\controller.py:178](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\guidance\controller.py#L178)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\guidance\controller.py:178](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\guidance\controller.py#L178)*
 
 ### `closed_loop_simulation`
 
@@ -375,7 +375,7 @@ Run closed-loop guidance simulation.
 
 **Returns**: `typing.Tuple[typing.List[tensornet.guidance.trajectory.VehicleState], typing.List[controller.GuidanceCommand]]` - (trajectory, commands)
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\guidance\controller.py:617](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\guidance\controller.py#L617)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\guidance\controller.py:617](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\guidance\controller.py#L617)*
 
 ### `proportional_navigation`
 
@@ -396,7 +396,7 @@ is nulled by commanding acceleration perpendicular to LOS.
 
 **Returns**: `<class 'float'>` - Commanded lateral acceleration (m/s²)
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\guidance\controller.py:131](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\guidance\controller.py#L131)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\guidance\controller.py:131](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\guidance\controller.py#L131)*
 
 ### `validate_guidance_module`
 
@@ -406,4 +406,4 @@ def validate_guidance_module()
 
 Validate guidance controller module.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\guidance\controller.py:658](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\guidance\controller.py#L658)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\guidance\controller.py:658](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\guidance\controller.py#L658)*

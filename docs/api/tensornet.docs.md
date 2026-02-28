@@ -1,6 +1,6 @@
 # Module `tensornet.docs`
 
-Documentation Module for Project HyperTensor.
+Documentation Module for Project The Physics OS.
 
 Phase 14: Comprehensive documentation framework including:
 - API reference generation from docstrings

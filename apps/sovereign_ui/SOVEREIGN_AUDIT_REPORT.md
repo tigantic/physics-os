@@ -11,7 +11,7 @@
 
 ## Executive Summary
 
-The Sovereign UI is a SvelteKit single-page application serving as the surgical-planning cockpit for the HyperTensor Facial Plastics platform. It comprises **34 source files** (~5,200 lines of application code) connecting to a Python `http.server` backend on port 8420 via 21 typed API endpoints.
+The Sovereign UI is a SvelteKit single-page application serving as the surgical-planning cockpit for The Physics OS Facial Plastics platform. It comprises **34 source files** (~5,200 lines of application code) connecting to a Python `http.server` backend on port 8420 via 21 typed API endpoints.
 
 **Overall health:** The codebase is architecturally sound — clean API/store/view separation, typed endpoint registry, comprehensive design system, and no mock data. The original audit identified 3 **critical bugs**, 10 **major issues**, and 15+ **minor issues**. **All findings have been remediated.** The build compiles cleanly with no TypeScript or lint errors.
 

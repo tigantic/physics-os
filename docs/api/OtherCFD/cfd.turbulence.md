@@ -56,7 +56,7 @@ For SA: nu_tilde (modified viscosity)
 def shape(self) -> torch.Size
 ```
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\turbulence.py:98](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\turbulence.py#L98)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\turbulence.py:98](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\turbulence.py#L98)*
 
 #### Methods
 
@@ -74,7 +74,7 @@ def zeros(shape: Tuple[int, int], dtype=torch.float64) -> 'TurbulentState'
 
 Create zero-initialized turbulent state with all fields.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\turbulence.py:106](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\turbulence.py#L106)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\turbulence.py:106](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\turbulence.py#L106)*
 
 ## Functions
 
@@ -93,7 +93,7 @@ Compute friction velocity u_τ = √(τ_w / ρ).
 
 **Returns**: `<class 'torch.Tensor'>` - Friction velocity [m/s]
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\turbulence.py:161](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\turbulence.py#L161)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\turbulence.py:161](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\turbulence.py#L161)*
 
 ### `initialize_turbulence`
 
@@ -114,7 +114,7 @@ Initialize turbulent quantities for a given model.
 
 **Returns**: `<class 'turbulence.TurbulentState'>` - TurbulentState with initialized fields
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\turbulence.py:593](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\turbulence.py#L593)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\turbulence.py:593](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\turbulence.py#L593)*
 
 ### `k_epsilon_eddy_viscosity`
 
@@ -134,7 +134,7 @@ Compute eddy viscosity for k-ε model.
 
 **Returns**: `<class 'torch.Tensor'>` - Eddy viscosity [Pa·s]
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\turbulence.py:182](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\turbulence.py#L182)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\turbulence.py:182](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\turbulence.py#L182)*
 
 ### `k_epsilon_production`
 
@@ -154,7 +154,7 @@ For 2D: S² = 2[(∂u/∂x)² + (∂v/∂y)² + 0.5(∂u/∂y + ∂v/∂x)²]
 
 **Returns**: `<class 'torch.Tensor'>` - Production rate [kg/(m·s³)]
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\turbulence.py:203](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\turbulence.py#L203)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\turbulence.py:203](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\turbulence.py#L203)*
 
 ### `k_epsilon_source`
 
@@ -176,7 +176,7 @@ S_ε = C_ε1 (ε/k) P_k - C_ε2 ρ ε²/k
 
 **Returns**: `typing.Tuple[torch.Tensor, torch.Tensor]` - Tuple of (S_k, S_epsilon) source terms
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\turbulence.py:233](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\turbulence.py#L233)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\turbulence.py:233](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\turbulence.py#L233)*
 
 ### `k_omega_blending`
 
@@ -196,7 +196,7 @@ Blends between k-ω (near wall, F1→1) and k-ε (freestream, F1→0).
 
 **Returns**: `<class 'torch.Tensor'>` - Blending function F1 ∈ [0, 1]
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\turbulence.py:268](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\turbulence.py#L268)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\turbulence.py:268](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\turbulence.py#L268)*
 
 ### `k_omega_sst_eddy_viscosity`
 
@@ -221,7 +221,7 @@ If F2 and S are not provided, uses simplified formula:
 
 **Returns**: `<class 'torch.Tensor'>` - Eddy viscosity [Pa·s]
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\turbulence.py:315](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\turbulence.py#L315)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\turbulence.py:315](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\turbulence.py#L315)*
 
 ### `k_omega_sst_source`
 
@@ -240,7 +240,7 @@ Compute source terms for k-ω SST model.
 
 **Returns**: `typing.Tuple[torch.Tensor, torch.Tensor]` - Tuple of (S_k, S_omega) source terms
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\turbulence.py:394](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\turbulence.py#L394)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\turbulence.py:394](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\turbulence.py#L394)*
 
 ### `log_law_velocity`
 
@@ -261,7 +261,7 @@ u⁺ = y⁺                  for y⁺ ≤ 11.6 (viscous sublayer)
 
 **Returns**: `<class 'torch.Tensor'>` - u⁺ dimensionless velocity
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\turbulence.py:517](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\turbulence.py#L517)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\turbulence.py:517](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\turbulence.py#L517)*
 
 ### `sarkar_correction`
 
@@ -284,7 +284,7 @@ where M_t = √(2k) / a is turbulent Mach number.
 
 **Returns**: `<class 'torch.Tensor'>` - Additional dissipation term (or M_t^2 if epsilon is None)
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\turbulence.py:659](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\turbulence.py#L659)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\turbulence.py:659](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\turbulence.py#L659)*
 
 ### `spalart_allmaras_eddy_viscosity`
 
@@ -306,7 +306,7 @@ f_v1 = χ³ / (χ³ + c_v1³)
 
 **Returns**: `<class 'torch.Tensor'>` - Eddy viscosity [Pa·s]
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\turbulence.py:441](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\turbulence.py#L441)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\turbulence.py:441](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\turbulence.py#L441)*
 
 ### `spalart_allmaras_source`
 
@@ -328,7 +328,7 @@ Source = c_b1 S̃ ν̃ - c_w1 f_w (ν̃/d)²
 
 **Returns**: `<class 'torch.Tensor'>` - Source term for ν̃ equation
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\turbulence.py:467](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\turbulence.py#L467)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\turbulence.py:467](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\turbulence.py#L467)*
 
 ### `sst_blending_functions`
 
@@ -350,7 +350,7 @@ Simplified version without gradient terms.
 
 **Returns**: `typing.Tuple[torch.Tensor, torch.Tensor]` - Tuple of (F1, F2) blending functions
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\turbulence.py:352](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\turbulence.py#L352)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\turbulence.py:352](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\turbulence.py#L352)*
 
 ### `validate_turbulence`
 
@@ -360,7 +360,7 @@ def validate_turbulence()
 
 Run validation tests for turbulence module.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\turbulence.py:733](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\turbulence.py#L733)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\turbulence.py:733](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\turbulence.py#L733)*
 
 ### `wall_distance`
 
@@ -377,7 +377,7 @@ Compute distance from wall for each grid point.
 
 **Returns**: `<class 'torch.Tensor'>` - Wall distance field [m]
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\turbulence.py:118](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\turbulence.py#L118)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\turbulence.py:118](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\turbulence.py#L118)*
 
 ### `wall_function_tau`
 
@@ -401,7 +401,7 @@ Iteratively solves for u_τ using log-law.
 
 **Returns**: `<class 'torch.Tensor'>` - Wall shear stress [Pa]
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\turbulence.py:545](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\turbulence.py#L545)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\turbulence.py:545](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\turbulence.py#L545)*
 
 ### `wilcox_compressibility`
 
@@ -423,7 +423,7 @@ Modifies β* based on turbulent Mach number.
 
 **Returns**: `typing.Tuple[torch.Tensor, torch.Tensor]` - Tuple of (beta_star_modified, F_Mt)
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\turbulence.py:696](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\turbulence.py#L696)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\turbulence.py:696](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\turbulence.py#L696)*
 
 ### `y_plus`
 
@@ -442,4 +442,4 @@ Compute dimensionless wall distance y⁺ = ρ u_τ y / μ.
 
 **Returns**: `<class 'torch.Tensor'>` - y⁺ dimensionless wall distance
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\turbulence.py:140](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\turbulence.py#L140)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\turbulence.py:140](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\turbulence.py#L140)*

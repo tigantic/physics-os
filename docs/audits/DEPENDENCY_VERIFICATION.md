@@ -1,11 +1,11 @@
 # Dependency Verification Guide
-## Project HyperTensor - Sovereign Glass Cockpit
+## The Physics OS - Sovereign Glass Cockpit
 
 **CRITICAL: All environments, installations, and execution must occur in Linux (WSL Ubuntu)**
 
 This repository is hosted on the WSL filesystem at:
 ```
-/home/brad/TiganticLabz/Main_Projects/Project HyperTensor
+/home/brad/TiganticLabz/Main_Projects/The Physics OS
 ```
 
 **DO NOT** install dependencies or run commands from Windows PowerShell or CMD. Always use WSL bash.
@@ -564,7 +564,7 @@ mount | grep shm
 **Configuration** (`.vscode/settings.json`):
 ```json
 {
-    "python.defaultInterpreterPath": "/home/brad/TiganticLabz/Main_Projects/Project HyperTensor/venv/bin/python",
+    "python.defaultInterpreterPath": "/home/brad/TiganticLabz/Main_Projects/The Physics OS/venv/bin/python",
     "python.analysis.extraPaths": [
         "${workspaceFolder}",
         "${workspaceFolder}/tensornet"
@@ -723,14 +723,14 @@ Run this script to verify all dependencies:
 
 ```bash
 #!/bin/bash
-# Comprehensive dependency verification for Project HyperTensor
+# Comprehensive dependency verification for The Physics OS
 # Save as: verify_dependencies.sh
 # Run: bash verify_dependencies.sh
 
 set -e
 
 echo "======================================"
-echo "Project HyperTensor Dependency Check"
+echo "The Physics OS Dependency Check"
 echo "======================================"
 echo ""
 

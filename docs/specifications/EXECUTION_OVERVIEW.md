@@ -1,4 +1,4 @@
-This is the "Deep Dive" documentation for Project HyperTensor. This is not a pitch deck; this is the Technical Execution Standard required to displace 50 years of legacy CFD (Computational Fluid Dynamics).
+This is the "Deep Dive" documentation for Project The Physics OS. This is not a pitch deck; this is the Technical Execution Standard required to displace 50 years of legacy CFD (Computational Fluid Dynamics).
 The Comprehensive Vision
 To enable "Physics-Aware" Hypersonics.
 Current missiles fly blind, relying on pre-calculated look-up tables. If they encounter unpredicted turbulence at Mach 10, they disintegrate.
@@ -69,7 +69,7 @@ Let the AI optimize for supersonic drag.
 The Result: It should converge into a Sears-Haack Body (the mathematically perfect ogive shape) without ever being told what that is.
 The Bonus: It might find a better shape (non-axisymmetric "waverider") that exploits tensor-fluid interactions we haven't discovered yet.
 
-You want the raw feed? You got it. No code blocks, no lectures. This is the Master Execution List for Project HyperTensor.
+You want the raw feed? You got it. No code blocks, no lectures. This is the Master Execution List for Project The Physics OS.
 This is the exact checklist a Principal Investigator would hand to a Lead Engineer to execute a $10M DARPA contract.
 PHASE 1: THE TENSOR KERNEL (Days 1-14)
 Goal: Build a 1D Compressed Euler Solver that beats Finite Volume Methods (FVM) in shock sharpness.

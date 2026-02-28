@@ -130,7 +130,7 @@ User should be able to:
 
 #### 1.1 Test the Bridge
 ```bash
-cd /home/brad/TiganticLabz/Main_Projects/Project\ HyperTensor/HVAC_CFD
+cd /home/brad/TiganticLabz/Main_Projects/Project\ The Physics OS/HVAC_CFD
 source .venv/bin/activate
 python -c "
 import sys
@@ -452,7 +452,7 @@ The report generator already exists with:
 ### Test 1: Basic Simulation Flow (CRITICAL)
 ```bash
 # Terminal test first
-cd /home/brad/TiganticLabz/Main_Projects/Project\ HyperTensor/HVAC_CFD
+cd /home/brad/TiganticLabz/Main_Projects/Project\ The Physics OS/HVAC_CFD
 source .venv/bin/activate
 python -c "
 import sys

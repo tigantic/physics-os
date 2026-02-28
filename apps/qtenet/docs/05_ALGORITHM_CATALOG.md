@@ -977,7 +977,7 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `class ManifoldSampler` (L124) — Samples the manifold at arbitrary resolution within view bounds.
   - `class VectorFieldRenderer` (L193) — Renders vector fields as flow barbs instead of blurry heatmaps.
   - `class ForensicViewportV2` (L293) — Resolution-independent viewport with:
-  - `class ForensicHubV2` (L612) — HyperTensor Forensic Hub v2
+  - `class ForensicHubV2` (L612) — Physics OS Forensic Hub v2
   - `function main` (L895)
 - **demos/forensic_instrument.py**
   - `class ManifoldEngine` (L129) — The mathematical core - performs contractions at arbitrary resolution.
@@ -2831,7 +2831,7 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `function check_imports` (L21) — Check if all tensornet modules can be imported.
   - `function main` (L75) — Run import cycle check.
 - **scripts/compare_tenpy.py**
-  - `function run_hypertensor_dmrg` (L28) — Run DMRG with HyperTensor.
+  - `function run_hypertensor_dmrg` (L28) — Run DMRG with The Physics OS.
   - `function run_tenpy_dmrg` (L49) — Run DMRG with TeNPy (if installed).
   - `function bethe_ansatz_energy` (L99) — Approximate Bethe ansatz energy for Heisenberg chain.
   - `function main` (L112)
@@ -3177,10 +3177,10 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `class GuideSection` (L117) — A section within a user guide.
   - `class Tutorial` (L231) — A complete tutorial or user guide.
   - `class GuideBuilder` (L350) — Builder class for constructing tutorials and guides.
-  - `function create_getting_started` (L590) — Create the Getting Started guide for HyperTensor.
-  - `function create_cfd_tutorial` (L773) — Create the CFD tutorial for HyperTensor.
-  - `function create_tensor_network_primer` (L981) — Create the Tensor Network primer for HyperTensor.
-  - `function create_deployment_guide` (L1187) — Create the Deployment guide for HyperTensor.
+  - `function create_getting_started` (L590) — Create the Getting Started guide for The Physics OS.
+  - `function create_cfd_tutorial` (L773) — Create the CFD tutorial for The Physics OS.
+  - `function create_tensor_network_primer` (L981) — Create the Tensor Network primer for The Physics OS.
+  - `function create_deployment_guide` (L1187) — Create the Deployment guide for The Physics OS.
 - **tensornet/exploit/bounty_api.py**
   - `class Platform` (L96) — Supported bounty platforms.
   - `class SubmissionStatus` (L104) — Status of a bounty submission.
@@ -3503,7 +3503,7 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `class ThemeLayout` (L104) — Layout configuration.
   - `class ThemeConfig` (L148) — Complete theme configuration.
   - `class Theme` (L182) — Documentation site theme.
-  - `class HyperTensorTheme` (L340) — Custom theme for HyperTensor documentation.
+  - `class HyperTensorTheme` (L340) — Custom theme for The Physics OS documentation.
   - `function get_theme` (L505) — Get theme by name.
   - `function list_themes` (L523) — List available theme names.
   - `function register_theme` (L533) — Register a custom theme.

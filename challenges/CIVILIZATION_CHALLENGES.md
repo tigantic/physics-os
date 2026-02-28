@@ -10,7 +10,7 @@
 
 ## Executive Summary
 
-HyperTensor's Civilization Challenge suite demonstrates, through production-grade verified physics pipelines, that the Quantized Tensor Train (QTT) engine can address six civilization-scale crises — from cascading blackouts to deepfake collapse — with cryptographic attestation end-to-end. Every pipeline is deterministic, fully implemented (no mocks, no stubs, no placeholders), and produces triple-hash attestation artifacts (SHA-256 + SHA3-256 + BLAKE2b).
+The Physics OS's Civilization Challenge suite demonstrates, through production-grade verified physics pipelines, that the Quantized Tensor Train (QTT) engine can address six civilization-scale crises — from cascading blackouts to deepfake collapse — with cryptographic attestation end-to-end. Every pipeline is deterministic, fully implemented (no mocks, no stubs, no placeholders), and produces triple-hash attestation artifacts (SHA-256 + SHA3-256 + BLAKE2b).
 
 **Current state:** ALL 30 of 30 phases complete and passing across all 6 challenges. Every challenge is fully mature (all 5 phases each). Zero phases remaining.
 
@@ -655,4 +655,4 @@ Triple-hash integrity ensures that if any single hash algorithm is compromised, 
 
 ---
 
-**HyperTensor** · *Mutationes Civilizatoriae* · © 2025–2026 Bradly Biron Baker Adams / Tigantic Holdings LLC
+**The Physics OS** · *Mutationes Civilizatoriae* · © 2025–2026 Bradly Biron Baker Adams / Tigantic Holdings LLC

@@ -1,4 +1,4 @@
-# HyperTensor Performance Audit: Dense, SVD, and Python Loops
+# The Physics OS — Performance Audit: Dense, SVD, and Python Loops
 
 **Date:** 2025-12-28  
 **Scope:** Full codebase review for anti-patterns affecting 165Hz Sovereign mandate  

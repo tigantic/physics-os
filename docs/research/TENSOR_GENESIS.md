@@ -34,7 +34,7 @@
 
 ## Preamble
 
-We, the architects of HyperTensor, recognize that Quantized Tensor Train (QTT) compression represents not merely an optimization technique, but a **fundamental shift in computational possibility**. Where others see O(N³) walls, we see O(log N) pathways.
+We, the architects of The Physics OS, recognize that Quantized Tensor Train (QTT) compression represents not merely an optimization technique, but a **fundamental shift in computational possibility**. Where others see O(N³) walls, we see O(log N) pathways.
 
 This document establishes the constitutional framework for extending QTT into seven unexploited mathematical domains, creating capabilities that **no other organization on Earth can replicate**.
 

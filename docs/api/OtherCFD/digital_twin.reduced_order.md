@@ -11,7 +11,7 @@ Key methods:
     - Dynamic Mode Decomposition (DMD): Linear dynamics extraction
     - Autoencoders: Nonlinear manifold learning with neural networks
 
-Author: HyperTensor Team
+Author: Tigantic Holdings LLC
 
 **Contents:**
 
@@ -35,7 +35,7 @@ high-dimensional and latent spaces.
 def input_dim(self) -> int
 ```
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\digital_twin\reduced_order.py:85](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\digital_twin\reduced_order.py#L85)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\reduced_order.py:85](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\reduced_order.py#L85)*
 
 ##### `latent_dim`
 
@@ -43,7 +43,7 @@ def input_dim(self) -> int
 def latent_dim(self) -> int
 ```
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\digital_twin\reduced_order.py:91](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\digital_twin\reduced_order.py#L91)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\reduced_order.py:91](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\reduced_order.py#L91)*
 
 #### Methods
 
@@ -53,7 +53,7 @@ def latent_dim(self) -> int
 def __init__(self, config: reduced_order.ROMConfig)
 ```
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\digital_twin\reduced_order.py:374](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\digital_twin\reduced_order.py#L374)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\reduced_order.py:374](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\reduced_order.py#L374)*
 
 ##### `decode`
 
@@ -63,7 +63,7 @@ def decode(self, z: torch.Tensor) -> torch.Tensor
 
 Decode from latent space.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\digital_twin\reduced_order.py:525](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\digital_twin\reduced_order.py#L525)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\reduced_order.py:525](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\reduced_order.py#L525)*
 
 ##### `encode`
 
@@ -73,7 +73,7 @@ def encode(self, x: torch.Tensor) -> torch.Tensor
 
 Encode to latent space.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\digital_twin\reduced_order.py:509](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\digital_twin\reduced_order.py#L509)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\reduced_order.py:509](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\reduced_order.py#L509)*
 
 ##### `train_from_snapshots`
 
@@ -90,7 +90,7 @@ Train autoencoder on snapshot data.
 - **batch_size** (`<class 'int'>`): Batch size for training
 - **lr** (`<class 'float'>`): Learning rate
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\digital_twin\reduced_order.py:423](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\digital_twin\reduced_order.py#L423)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\reduced_order.py:423](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\reduced_order.py#L423)*
 
 ### class `DMDModel`(ReducedOrderModel)
 
@@ -107,7 +107,7 @@ enabling prediction of future states based on linear dynamics.
 def input_dim(self) -> int
 ```
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\digital_twin\reduced_order.py:85](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\digital_twin\reduced_order.py#L85)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\reduced_order.py:85](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\reduced_order.py#L85)*
 
 ##### `latent_dim`
 
@@ -115,7 +115,7 @@ def input_dim(self) -> int
 def latent_dim(self) -> int
 ```
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\digital_twin\reduced_order.py:91](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\digital_twin\reduced_order.py#L91)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\reduced_order.py:91](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\reduced_order.py#L91)*
 
 #### Methods
 
@@ -125,7 +125,7 @@ def latent_dim(self) -> int
 def __init__(self, config: reduced_order.ROMConfig)
 ```
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\digital_twin\reduced_order.py:246](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\digital_twin\reduced_order.py#L246)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\reduced_order.py:246](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\reduced_order.py#L246)*
 
 ##### `decode`
 
@@ -135,7 +135,7 @@ def decode(self, z: torch.Tensor) -> torch.Tensor
 
 Reconstruct from DMD amplitudes.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\digital_twin\reduced_order.py:322](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\digital_twin\reduced_order.py#L322)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\reduced_order.py:322](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\reduced_order.py#L322)*
 
 ##### `encode`
 
@@ -145,7 +145,7 @@ def encode(self, x: torch.Tensor) -> torch.Tensor
 
 Project to DMD mode amplitudes.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\digital_twin\reduced_order.py:308](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\digital_twin\reduced_order.py#L308)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\reduced_order.py:308](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\reduced_order.py#L308)*
 
 ##### `predict`
 
@@ -162,7 +162,7 @@ Predict future states using DMD dynamics.
 
 **Returns**: `<class 'torch.Tensor'>` - Predicted states of shape (n_steps, n_dof)
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\digital_twin\reduced_order.py:333](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\digital_twin\reduced_order.py#L333)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\reduced_order.py:333](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\reduced_order.py#L333)*
 
 ##### `train_from_snapshots`
 
@@ -176,7 +176,7 @@ Compute DMD from time-series snapshots.
 
 - **snapshots** (`<class 'torch.Tensor'>`): Tensor of shape (n_snapshots, n_dof)  where snapshots are sequential in time
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\digital_twin\reduced_order.py:256](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\digital_twin\reduced_order.py#L256)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\reduced_order.py:256](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\reduced_order.py#L256)*
 
 ### class `PODModel`(ReducedOrderModel)
 
@@ -193,7 +193,7 @@ Also known as Principal Component Analysis (PCA) in other contexts.
 def input_dim(self) -> int
 ```
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\digital_twin\reduced_order.py:85](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\digital_twin\reduced_order.py#L85)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\reduced_order.py:85](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\reduced_order.py#L85)*
 
 ##### `latent_dim`
 
@@ -201,7 +201,7 @@ def input_dim(self) -> int
 def latent_dim(self) -> int
 ```
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\digital_twin\reduced_order.py:91](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\digital_twin\reduced_order.py#L91)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\reduced_order.py:91](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\reduced_order.py#L91)*
 
 #### Methods
 
@@ -211,7 +211,7 @@ def latent_dim(self) -> int
 def __init__(self, config: reduced_order.ROMConfig)
 ```
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\digital_twin\reduced_order.py:172](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\digital_twin\reduced_order.py#L172)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\reduced_order.py:172](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\reduced_order.py#L172)*
 
 ##### `decode`
 
@@ -221,7 +221,7 @@ def decode(self, z: torch.Tensor) -> torch.Tensor
 
 Reconstruct from POD coefficients.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\digital_twin\reduced_order.py:228](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\digital_twin\reduced_order.py#L228)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\reduced_order.py:228](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\reduced_order.py#L228)*
 
 ##### `encode`
 
@@ -231,7 +231,7 @@ def encode(self, x: torch.Tensor) -> torch.Tensor
 
 Project to POD coefficients.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\digital_twin\reduced_order.py:219](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\digital_twin\reduced_order.py#L219)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\reduced_order.py:219](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\reduced_order.py#L219)*
 
 ##### `train_from_snapshots`
 
@@ -245,7 +245,7 @@ Compute POD basis from snapshot matrix.
 
 - **snapshots** (`<class 'torch.Tensor'>`): Tensor of shape (n_snapshots, n_dof)
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\digital_twin\reduced_order.py:179](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\digital_twin\reduced_order.py#L179)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\reduced_order.py:179](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\reduced_order.py#L179)*
 
 ### class `ROMConfig`
 
@@ -312,7 +312,7 @@ encoding, decoding, and prediction capabilities.
 def input_dim(self) -> int
 ```
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\digital_twin\reduced_order.py:85](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\digital_twin\reduced_order.py#L85)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\reduced_order.py:85](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\reduced_order.py#L85)*
 
 ##### `latent_dim`
 
@@ -320,7 +320,7 @@ def input_dim(self) -> int
 def latent_dim(self) -> int
 ```
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\digital_twin\reduced_order.py:91](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\digital_twin\reduced_order.py#L91)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\reduced_order.py:91](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\reduced_order.py#L91)*
 
 #### Methods
 
@@ -330,7 +330,7 @@ def latent_dim(self) -> int
 def __init__(self, config: reduced_order.ROMConfig)
 ```
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\digital_twin\reduced_order.py:76](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\digital_twin\reduced_order.py#L76)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\reduced_order.py:76](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\reduced_order.py#L76)*
 
 ##### `compute_metrics`
 
@@ -340,7 +340,7 @@ def compute_metrics(self, snapshots: torch.Tensor) -> reduced_order.ROMMetrics
 
 Compute quality metrics on test data.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\digital_twin\reduced_order.py:131](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\digital_twin\reduced_order.py#L131)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\reduced_order.py:131](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\reduced_order.py#L131)*
 
 ##### `decode`
 
@@ -350,7 +350,7 @@ def decode(self, z: torch.Tensor) -> torch.Tensor
 
 Reconstruct high-dimensional state from latent representation.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\digital_twin\reduced_order.py:110](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\digital_twin\reduced_order.py#L110)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\reduced_order.py:110](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\reduced_order.py#L110)*
 
 ##### `denormalize`
 
@@ -360,7 +360,7 @@ def denormalize(self, x: torch.Tensor) -> torch.Tensor
 
 Denormalize output using stored statistics.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\digital_twin\reduced_order.py:125](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\digital_twin\reduced_order.py#L125)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\reduced_order.py:125](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\reduced_order.py#L125)*
 
 ##### `encode`
 
@@ -370,7 +370,7 @@ def encode(self, x: torch.Tensor) -> torch.Tensor
 
 Project high-dimensional state to latent space.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\digital_twin\reduced_order.py:106](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\digital_twin\reduced_order.py#L106)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\reduced_order.py:106](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\reduced_order.py#L106)*
 
 ##### `forward`
 
@@ -380,7 +380,7 @@ def forward(self, x: torch.Tensor) -> torch.Tensor
 
 Encode then decode (reconstruction).
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\digital_twin\reduced_order.py:114](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\digital_twin\reduced_order.py#L114)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\reduced_order.py:114](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\reduced_order.py#L114)*
 
 ##### `normalize`
 
@@ -390,7 +390,7 @@ def normalize(self, x: torch.Tensor) -> torch.Tensor
 
 Normalize input using stored statistics.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\digital_twin\reduced_order.py:119](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\digital_twin\reduced_order.py#L119)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\reduced_order.py:119](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\reduced_order.py#L119)*
 
 ##### `train_from_snapshots`
 
@@ -404,7 +404,7 @@ Train ROM from snapshot matrix.
 
 - **snapshots** (`<class 'torch.Tensor'>`): Tensor of shape (n_snapshots, n_dof)
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\digital_twin\reduced_order.py:97](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\digital_twin\reduced_order.py#L97)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\reduced_order.py:97](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\reduced_order.py#L97)*
 
 ## Functions
 
@@ -425,7 +425,7 @@ Useful for determining optimal number of modes.
 
 **Returns**: `<class 'float'>` - Relative projection error
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\digital_twin\reduced_order.py:587](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\digital_twin\reduced_order.py#L587)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\reduced_order.py:587](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\reduced_order.py#L587)*
 
 ### `create_rom_from_snapshots`
 
@@ -443,7 +443,7 @@ Factory function to create and train a ROM.
 
 **Returns**: `<class 'reduced_order.ReducedOrderModel'>` - Trained reduced-order model
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\digital_twin\reduced_order.py:542](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\digital_twin\reduced_order.py#L542)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\reduced_order.py:542](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\reduced_order.py#L542)*
 
 ### `test_reduced_order`
 
@@ -453,7 +453,7 @@ def test_reduced_order()
 
 Test reduced-order model implementations.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\digital_twin\reduced_order.py:620](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\digital_twin\reduced_order.py#L620)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\reduced_order.py:620](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\reduced_order.py#L620)*
 
 ### `validate_rom_accuracy`
 
@@ -470,4 +470,4 @@ Validate ROM accuracy on test data.
 
 **Returns**: `<class 'reduced_order.ROMMetrics'>` - Quality metrics
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\digital_twin\reduced_order.py:572](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\digital_twin\reduced_order.py#L572)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\reduced_order.py:572](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\reduced_order.py#L572)*

@@ -1,6 +1,6 @@
-# HyperTensor Release Process
+# The Physics OS — Release Process
 
-This document describes the release process for HyperTensor.
+This document describes the release process for The Physics OS.
 
 ---
 

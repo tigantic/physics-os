@@ -374,4 +374,4 @@ Synthesize **(Hf,Ta,Zr,Nb)C** High-Entropy Carbide with aerogel porosity for hyp
 
 *Protocol for (Hf,Ta,Zr,Nb)C Hypersonic Shield*  
 *Project HELL-SKIN — The Heat Dies Here*  
-*HyperTensor Physics Engine — January 5, 2026*
+*The Ontic Engine — January 5, 2026*

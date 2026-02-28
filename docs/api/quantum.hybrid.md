@@ -35,7 +35,7 @@ Standard quantum gate matrices.
 def cnot() -> torch.Tensor
 ```
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\quantum\hybrid.py:186](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\quantum\hybrid.py#L186)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\hybrid.py:186](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\hybrid.py#L186)*
 
 ##### `cz`
 
@@ -43,7 +43,7 @@ def cnot() -> torch.Tensor
 def cz() -> torch.Tensor
 ```
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\quantum\hybrid.py:195](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\quantum\hybrid.py#L195)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\hybrid.py:195](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\hybrid.py#L195)*
 
 ##### `hadamard`
 
@@ -51,7 +51,7 @@ def cz() -> torch.Tensor
 def hadamard() -> torch.Tensor
 ```
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\quantum\hybrid.py:163](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\quantum\hybrid.py#L163)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\hybrid.py:163](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\hybrid.py#L163)*
 
 ##### `pauli_x`
 
@@ -59,7 +59,7 @@ def hadamard() -> torch.Tensor
 def pauli_x() -> torch.Tensor
 ```
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\quantum\hybrid.py:151](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\quantum\hybrid.py#L151)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\hybrid.py:151](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\hybrid.py#L151)*
 
 ##### `pauli_y`
 
@@ -67,7 +67,7 @@ def pauli_x() -> torch.Tensor
 def pauli_y() -> torch.Tensor
 ```
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\quantum\hybrid.py:155](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\quantum\hybrid.py#L155)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\hybrid.py:155](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\hybrid.py#L155)*
 
 ##### `pauli_z`
 
@@ -75,7 +75,7 @@ def pauli_y() -> torch.Tensor
 def pauli_z() -> torch.Tensor
 ```
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\quantum\hybrid.py:159](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\quantum\hybrid.py#L159)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\hybrid.py:159](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\hybrid.py#L159)*
 
 ##### `rx`
 
@@ -83,7 +83,7 @@ def pauli_z() -> torch.Tensor
 def rx(theta: float) -> torch.Tensor
 ```
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\quantum\hybrid.py:167](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\quantum\hybrid.py#L167)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\hybrid.py:167](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\hybrid.py#L167)*
 
 ##### `ry`
 
@@ -91,7 +91,7 @@ def rx(theta: float) -> torch.Tensor
 def ry(theta: float) -> torch.Tensor
 ```
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\quantum\hybrid.py:173](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\quantum\hybrid.py#L173)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\hybrid.py:173](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\hybrid.py#L173)*
 
 ##### `rz`
 
@@ -99,7 +99,7 @@ def ry(theta: float) -> torch.Tensor
 def rz(theta: float) -> torch.Tensor
 ```
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\quantum\hybrid.py:179](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\quantum\hybrid.py#L179)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\hybrid.py:179](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\hybrid.py#L179)*
 
 ### class `GateType`(Enum)
 
@@ -125,7 +125,7 @@ cost_hamiltonian: Problem Hamiltonian as Pauli terms
     n_qubits: Number of qubits
     config: QAOA configuration
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\quantum\hybrid.py:627](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\quantum\hybrid.py#L627)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\hybrid.py:627](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\hybrid.py#L627)*
 
 ##### `cost_expectation`
 
@@ -135,7 +135,7 @@ def cost_expectation(self, sim: hybrid.TNQuantumSimulator) -> float
 
 Compute expectation of cost Hamiltonian.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\quantum\hybrid.py:646](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\quantum\hybrid.py#L646)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\hybrid.py:646](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\hybrid.py#L646)*
 
 ##### `optimize`
 
@@ -147,7 +147,7 @@ Optimize QAOA parameters.
 
 **Returns**: `typing.Dict` - Optimization results
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\quantum\hybrid.py:695](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\quantum\hybrid.py#L695)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\hybrid.py:695](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\hybrid.py#L695)*
 
 ##### `run_circuit`
 
@@ -164,7 +164,7 @@ Run QAOA circuit and return cost expectation.
 
 **Returns**: `<class 'float'>` - Cost expectation value
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\quantum\hybrid.py:654](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\quantum\hybrid.py#L654)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\hybrid.py:654](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\hybrid.py#L654)*
 
 ### class `QAOAConfig`
 
@@ -206,7 +206,7 @@ def depth(self) -> int
 
 Circuit depth (number of time steps).
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\quantum\hybrid.py:125](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\quantum\hybrid.py#L125)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\hybrid.py:125](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\hybrid.py#L125)*
 
 ##### `n_parameters`
 
@@ -216,7 +216,7 @@ def n_parameters(self) -> int
 
 Total number of variational parameters.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\quantum\hybrid.py:138](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\quantum\hybrid.py#L138)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\hybrid.py:138](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\hybrid.py#L138)*
 
 #### Methods
 
@@ -234,7 +234,7 @@ def add_gate(self, gate: hybrid.QuantumGate)
 
 Add a gate to the circuit.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\quantum\hybrid.py:88](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\quantum\hybrid.py#L88)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\hybrid.py:88](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\hybrid.py#L88)*
 
 ##### `cnot`
 
@@ -244,7 +244,7 @@ def cnot(self, control: int, target: int)
 
 Add CNOT gate.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\quantum\hybrid.py:115](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\quantum\hybrid.py#L115)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\hybrid.py:115](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\hybrid.py#L115)*
 
 ##### `cz`
 
@@ -254,7 +254,7 @@ def cz(self, q1: int, q2: int)
 
 Add CZ gate.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\quantum\hybrid.py:120](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\quantum\hybrid.py#L120)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\hybrid.py:120](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\hybrid.py#L120)*
 
 ##### `h`
 
@@ -264,7 +264,7 @@ def h(self, qubit: int)
 
 Add Hadamard gate.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\quantum\hybrid.py:110](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\quantum\hybrid.py#L110)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\hybrid.py:110](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\hybrid.py#L110)*
 
 ##### `rx`
 
@@ -274,7 +274,7 @@ def rx(self, qubit: int, theta: float)
 
 Add RX rotation gate.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\quantum\hybrid.py:95](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\quantum\hybrid.py#L95)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\hybrid.py:95](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\hybrid.py#L95)*
 
 ##### `ry`
 
@@ -284,7 +284,7 @@ def ry(self, qubit: int, theta: float)
 
 Add RY rotation gate.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\quantum\hybrid.py:100](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\quantum\hybrid.py#L100)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\hybrid.py:100](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\hybrid.py#L100)*
 
 ##### `rz`
 
@@ -294,7 +294,7 @@ def rz(self, qubit: int, theta: float)
 
 Add RZ rotation gate.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\quantum\hybrid.py:105](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\quantum\hybrid.py#L105)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\hybrid.py:105](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\hybrid.py#L105)*
 
 ### class `QuantumGate`
 
@@ -338,7 +338,7 @@ objective: Function to minimize
     bounds: Variable bounds
     resolution: Grid resolution per dimension
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\quantum\hybrid.py:934](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\quantum\hybrid.py#L934)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\hybrid.py:934](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\hybrid.py#L934)*
 
 ##### `optimize_bruteforce`
 
@@ -348,7 +348,7 @@ def optimize_bruteforce(self) -> Tuple[torch.Tensor, float]
 
 Brute-force grid search (for validation).
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\quantum\hybrid.py:956](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\quantum\hybrid.py#L956)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\hybrid.py:956](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\hybrid.py#L956)*
 
 ##### `optimize_mps`
 
@@ -360,7 +360,7 @@ Optimize using MPS representation of objective landscape.
 
 Uses alternating least squares to fit objective as TT-decomposition.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\quantum\hybrid.py:975](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\quantum\hybrid.py#L975)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\hybrid.py:975](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\hybrid.py#L975)*
 
 ### class `TNQuantumSimulator`
 
@@ -381,7 +381,7 @@ Args:
 n_qubits: Number of qubits
     chi_max: Maximum bond dimension for MPS
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\quantum\hybrid.py:216](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\quantum\hybrid.py#L216)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\hybrid.py:216](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\hybrid.py#L216)*
 
 ##### `apply_circuit`
 
@@ -391,7 +391,7 @@ def apply_circuit(self, circuit: hybrid.QuantumCircuit)
 
 Apply a quantum circuit to the state.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\quantum\hybrid.py:308](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\quantum\hybrid.py#L308)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\hybrid.py:308](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\hybrid.py#L308)*
 
 ##### `apply_single_qubit_gate`
 
@@ -401,7 +401,7 @@ def apply_single_qubit_gate(self, gate_matrix: torch.Tensor, qubit: int)
 
 Apply a single-qubit gate to the MPS.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\quantum\hybrid.py:248](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\quantum\hybrid.py#L248)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\hybrid.py:248](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\hybrid.py#L248)*
 
 ##### `apply_two_qubit_gate`
 
@@ -413,7 +413,7 @@ Apply a two-qubit gate using SVD compression.
 
 For adjacent qubits, contract and re-decompose.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\quantum\hybrid.py:257](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\quantum\hybrid.py#L257)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\hybrid.py:257](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\hybrid.py#L257)*
 
 ##### `expectation_value`
 
@@ -429,7 +429,7 @@ Compute ⟨ψ|O|ψ⟩ using MPS-MPO-MPS contraction.
 
 **Returns**: `<class 'complex'>` - Expectation value
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\quantum\hybrid.py:342](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\quantum\hybrid.py#L342)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\hybrid.py:342](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\hybrid.py#L342)*
 
 ##### `measure_pauli_string`
 
@@ -445,7 +445,7 @@ Measure expectation of Pauli string.
 
 **Returns**: `<class 'complex'>` - Expectation value
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\quantum\hybrid.py:379](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\quantum\hybrid.py#L379)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\hybrid.py:379](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\hybrid.py#L379)*
 
 ### class `TensorNetworkBornMachine`
 
@@ -468,7 +468,7 @@ n_sites: Number of visible units
     local_dim: Local Hilbert space dimension
     bond_dim: MPS bond dimension
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\quantum\hybrid.py:763](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\quantum\hybrid.py#L763)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\hybrid.py:763](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\hybrid.py#L763)*
 
 ##### `amplitude`
 
@@ -484,7 +484,7 @@ Compute amplitude ⟨config|ψ⟩.
 
 **Returns**: `<class 'torch.Tensor'>` - Amplitude (scalar tensor)
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\quantum\hybrid.py:798](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\quantum\hybrid.py#L798)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\hybrid.py:798](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\hybrid.py#L798)*
 
 ##### `probability`
 
@@ -494,7 +494,7 @@ def probability(self, config: List[int]) -> torch.Tensor
 
 Compute probability P(config) = |amplitude|².
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\quantum\hybrid.py:813](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\quantum\hybrid.py#L813)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\hybrid.py:813](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\hybrid.py#L813)*
 
 ##### `sample`
 
@@ -508,7 +508,7 @@ Uses sequential sampling from conditional distributions.
 
 **Returns**: `<class 'torch.Tensor'>` - Tensor of shape (n_samples, n_sites)
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\quantum\hybrid.py:818](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\quantum\hybrid.py#L818)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\hybrid.py:818](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\hybrid.py#L818)*
 
 ##### `train`
 
@@ -527,7 +527,7 @@ Train the Born machine on data.
 
 **Returns**: `typing.List[float]` - Training loss history
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\quantum\hybrid.py:870](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\quantum\hybrid.py#L870)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\hybrid.py:870](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\hybrid.py#L870)*
 
 ### class `VQE`
 
@@ -549,7 +549,7 @@ hamiltonian: Function that computes ⟨H⟩ given simulator
     n_qubits: Number of qubits
     config: VQE configuration
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\quantum\hybrid.py:443](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\quantum\hybrid.py#L443)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\hybrid.py:443](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\hybrid.py#L443)*
 
 ##### `energy`
 
@@ -559,7 +559,7 @@ def energy(self, params: torch.Tensor) -> float
 
 Compute energy for given parameters.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\quantum\hybrid.py:521](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\quantum\hybrid.py#L521)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\hybrid.py:521](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\hybrid.py#L521)*
 
 ##### `optimize`
 
@@ -571,7 +571,7 @@ Run VQE optimization.
 
 **Returns**: `typing.Dict` - Dictionary with optimization results
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\quantum\hybrid.py:528](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\quantum\hybrid.py#L528)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\hybrid.py:528](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\hybrid.py#L528)*
 
 ### class `VQEConfig`
 
@@ -607,7 +607,7 @@ Create Ising Hamiltonian for VQE.
 
 H = -J Σ Z_i Z_{i+1} - h Σ X_i
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\quantum\hybrid.py:1029](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\quantum\hybrid.py#L1029)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\hybrid.py:1029](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\hybrid.py#L1029)*
 
 ### `create_maxcut_hamiltonian`
 
@@ -619,4 +619,4 @@ Create MaxCut cost Hamiltonian for QAOA.
 
 H = Σ_{(i,j) ∈ E} (1 - Z_i Z_j) / 2
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\quantum\hybrid.py:1053](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\quantum\hybrid.py#L1053)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\hybrid.py:1053](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\hybrid.py#L1053)*

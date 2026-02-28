@@ -45,7 +45,7 @@ def fingerprint(self)
 
 Add content hash to filename for cache busting.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\site\assets.py:118](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\site\assets.py#L118)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\site\assets.py:118](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\site\assets.py#L118)*
 
 ##### `to_data_uri`
 
@@ -55,7 +55,7 @@ def to_data_uri(self) -> str
 
 Convert to data URI for embedding.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\site\assets.py:127](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\site\assets.py#L127)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\site\assets.py:127](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\site\assets.py#L127)*
 
 ### class `AssetManager`
 
@@ -80,7 +80,7 @@ Initialize asset manager.
 - **optimize_images** (`<class 'bool'>`): Optimize images
 - **fingerprint** (`<class 'bool'>`): Add content hash to filenames
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\site\assets.py:260](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\site\assets.py#L260)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\site\assets.py:260](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\site\assets.py#L260)*
 
 ##### `add_asset`
 
@@ -97,7 +97,7 @@ Add asset to manager.
 
 **Returns**: `<class 'assets.Asset'>` - Asset object
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\site\assets.py:289](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\site\assets.py#L289)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\site\assets.py:289](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\site\assets.py#L289)*
 
 ##### `add_from_directory`
 
@@ -112,7 +112,7 @@ Add all assets from directory.
 - **directory** (`typing.Union[str, pathlib.Path]`): Directory path
 - **prefix** (`<class 'str'>`): Path prefix for output
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\site\assets.py:329](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\site\assets.py#L329)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\site\assets.py:329](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\site\assets.py#L329)*
 
 ##### `add_from_file`
 
@@ -129,7 +129,7 @@ Add asset from file.
 
 **Returns**: `<class 'assets.Asset'>` - Asset object
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\site\assets.py:312](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\site\assets.py#L312)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\site\assets.py:312](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\site\assets.py#L312)*
 
 ##### `get_inline`
 
@@ -145,7 +145,7 @@ Get asset content for inlining.
 
 **Returns**: `<class 'str'>` - Content string (for CSS/JS) or data URI (for images)
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\site\assets.py:419](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\site\assets.py#L419)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\site\assets.py:419](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\site\assets.py#L419)*
 
 ##### `get_url`
 
@@ -161,7 +161,7 @@ Get output URL for asset.
 
 **Returns**: `<class 'str'>` - Output path (possibly fingerprinted)
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\site\assets.py:407](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\site\assets.py#L407)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\site\assets.py:407](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\site\assets.py#L407)*
 
 ##### `process`
 
@@ -171,7 +171,7 @@ def process(self)
 
 Process all assets (minify, optimize, fingerprint).
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\site\assets.py:348](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\site\assets.py#L348)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\site\assets.py:348](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\site\assets.py#L348)*
 
 ##### `summary`
 
@@ -181,7 +181,7 @@ def summary(self) -> Dict[str, Any]
 
 Get asset processing summary.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\site\assets.py:438](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\site\assets.py#L438)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\site\assets.py:438](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\site\assets.py#L438)*
 
 ##### `write`
 
@@ -195,7 +195,7 @@ Write assets to output directory.
 
 - **output_dir** (`typing.Union[str, pathlib.Path]`): Output directory
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\site\assets.py:388](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\site\assets.py#L388)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\site\assets.py:388](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\site\assets.py#L388)*
 
 ### class `AssetType`(Enum)
 
@@ -221,7 +221,7 @@ Minify CSS content.
 
 **Returns**: `<class 'str'>` - Minified CSS
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\site\assets.py:136](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\site\assets.py#L136)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\site\assets.py:136](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\site\assets.py#L136)*
 
 ### class `ImageOptimizer`
 
@@ -237,7 +237,7 @@ def __init__(self)
 
 Initialize optimizer.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\site\assets.py:206](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\site\assets.py#L206)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\site\assets.py:206](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\site\assets.py#L206)*
 
 ##### `generate_srcset`
 
@@ -254,7 +254,7 @@ Generate responsive image srcset.
 
 **Returns**: `typing.Dict[int, bytes]` - Dictionary of width -> image bytes
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\site\assets.py:232](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\site\assets.py#L232)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\site\assets.py:232](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\site\assets.py#L232)*
 
 ##### `optimize`
 
@@ -271,7 +271,7 @@ Optimize image content.
 
 **Returns**: `<class 'bytes'>` - Optimized image bytes
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\site\assets.py:210](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\site\assets.py#L210)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\site\assets.py:210](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\site\assets.py#L210)*
 
 ### class `JSMinifier`
 
@@ -293,7 +293,7 @@ Minify JavaScript content.
 
 **Returns**: `<class 'str'>` - Minified JavaScript
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\site\assets.py:167](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\site\assets.py#L167)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\site\assets.py:167](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\site\assets.py#L167)*
 
 ## Functions
 
@@ -312,7 +312,7 @@ Optimize all images in a directory.
 
 **Returns**: `<class 'int'>` - Number of images optimized
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\site\assets.py:488](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\site\assets.py#L488)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\site\assets.py:488](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\site\assets.py#L488)*
 
 ### `process_assets`
 
@@ -331,4 +331,4 @@ Process all assets in a directory.
 
 **Returns**: `<class 'assets.AssetManager'>` - AssetManager with processed assets
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\site\assets.py:456](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\site\assets.py#L456)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\site\assets.py:456](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\site\assets.py#L456)*

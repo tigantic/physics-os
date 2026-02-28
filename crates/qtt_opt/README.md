@@ -89,7 +89,7 @@ Stage 13: Architecture validation                ✓
 Builds on top of and integrates with:
 - **FEA-QTT**: Structural mechanics (forward solver)
 - **CEM-QTT**: Electromagnetics (multi-physics optimization)
-- **CFD (HyperTensor)**: Fluid topology optimization
+- **CFD (The Physics OS)**: Fluid topology optimization
 - **FluideLite**: ZK proof framework (verifiable optimization)
 
 ## Build

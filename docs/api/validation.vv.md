@@ -1,6 +1,6 @@
 # Module `validation.vv`
 
-Verification and Validation (V&V) Module for Project HyperTensor.
+Verification and Validation (V&V) Module for Project The Physics OS.
 
 Provides formal V&V framework including:
 - Verification: Solving the equations right (code correctness)
@@ -39,7 +39,7 @@ Initialize analytical validation.
 - **case** (`<class 'vv.ValidationCase'>`): Validation case with analytical solution
 - **grid_sizes** (`typing.List[int]`): Grid sizes for convergence study
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\vv.py:576](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\vv.py#L576)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\vv.py:576](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\vv.py#L576)*
 
 ##### `validate`
 
@@ -51,7 +51,7 @@ Run convergence study against analytical solution.
 
 **Returns**: `typing.Dict[str, typing.Any]` - Dictionary with convergence results
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\vv.py:591](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\vv.py#L591)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\vv.py:591](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\vv.py#L591)*
 
 ### class `CodeVerification`(ABC)
 
@@ -71,7 +71,7 @@ Run verification test.
 
 **Returns**: `typing.Dict[str, typing.Any]` - Dictionary of verification metrics
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\vv.py:367](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\vv.py#L367)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\vv.py:367](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\vv.py#L367)*
 
 ### class `ExperimentalValidation`
 
@@ -94,7 +94,7 @@ Initialize experimental validation.
 - **case** (`<class 'vv.ValidationCase'>`): Validation case definition
 - **metrics** (`typing.Optional[typing.List[str]]`): Specific metrics to compare
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\vv.py:512](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\vv.py#L512)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\vv.py:512](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\vv.py#L512)*
 
 ##### `validate`
 
@@ -106,7 +106,7 @@ Run validation against experimental data.
 
 **Returns**: `typing.Dict[str, typing.Any]` - Dictionary of validation results
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\vv.py:527](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\vv.py#L527)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\vv.py:527](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\vv.py#L527)*
 
 ### class `IntegrationVerification`(CodeVerification)
 
@@ -129,7 +129,7 @@ Initialize integration verification.
 - **workflow** (`typing.Callable[[], typing.Any]`): Function that runs the integration test
 - **expected_properties** (`typing.Dict[str, typing.Callable[[typing.Any], bool]]`): Dict of property_name -> checker function
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\vv.py:443](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\vv.py#L443)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\vv.py:443](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\vv.py#L443)*
 
 ##### `verify`
 
@@ -139,7 +139,7 @@ def verify(self) -> Dict[str, Any]
 
 Run integration test.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\vv.py:458](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\vv.py#L458)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\vv.py:458](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\vv.py#L458)*
 
 ### class `UncertaintyBand`
 
@@ -163,7 +163,7 @@ def width(self) -> numpy.ndarray
 
 Get band width at each point.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\vv.py:675](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\vv.py#L675)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\vv.py:675](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\vv.py#L675)*
 
 #### Methods
 
@@ -181,7 +181,7 @@ def contains(self, values: numpy.ndarray) -> numpy.ndarray
 
 Check which values fall within the band.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\vv.py:671](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\vv.py#L671)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\vv.py:671](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\vv.py#L671)*
 
 ##### `from_mean_std`
 
@@ -199,7 +199,7 @@ Create uncertainty band from mean and standard deviation.
 
 **Returns**: `<class 'vv.UncertaintyBand'>` - UncertaintyBand
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\vv.py:647](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\vv.py#L647)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\vv.py:647](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\vv.py#L647)*
 
 ### class `UnitVerification`(CodeVerification)
 
@@ -223,7 +223,7 @@ Initialize unit verification.
 - **test_cases** (`typing.List[typing.Tuple[tuple, typing.Any]]`): List of (inputs, expected_output) tuples
 - **comparator** (`typing.Optional[typing.Callable[[typing.Any, typing.Any], bool]]`): Custom comparison function
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\vv.py:385](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\vv.py#L385)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\vv.py:385](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\vv.py#L385)*
 
 ##### `verify`
 
@@ -233,7 +233,7 @@ def verify(self) -> Dict[str, Any]
 
 Run all test cases.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\vv.py:403](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\vv.py#L403)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\vv.py:403](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\vv.py#L403)*
 
 ### class `VVCategory`(Enum)
 
@@ -267,7 +267,7 @@ def summary(self) -> Dict
 
 Get summary statistics.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\vv.py:239](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\vv.py#L239)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\vv.py:239](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\vv.py#L239)*
 
 #### Methods
 
@@ -285,7 +285,7 @@ def add_test(self, test: vv.VVTest)
 
 Add a test to the plan.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\vv.py:161](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\vv.py#L161)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\vv.py:161](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\vv.py#L161)*
 
 ##### `get_tests_by_category`
 
@@ -295,7 +295,7 @@ def get_tests_by_category(self, category: vv.VVCategory) -> List[vv.VVTest]
 
 Get all tests in a category.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\vv.py:165](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\vv.py#L165)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\vv.py:165](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\vv.py#L165)*
 
 ##### `get_tests_by_level`
 
@@ -305,7 +305,7 @@ def get_tests_by_level(self, level: vv.VVLevel) -> List[vv.VVTest]
 
 Get all tests at a given level.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\vv.py:169](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\vv.py#L169)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\vv.py:169](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\vv.py#L169)*
 
 ##### `run`
 
@@ -323,7 +323,7 @@ Execute the V&V plan.
 
 **Returns**: `typing.List[vv.VVTestResult]` - List of test results
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\vv.py:196](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\vv.py#L196)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\vv.py:196](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\vv.py#L196)*
 
 ### class `VVReport`
 
@@ -357,7 +357,7 @@ Save report to file.
 - **filepath** (`typing.Union[str, pathlib.Path]`): Output file path
 - **format** (`<class 'str'>`): "markdown" or "json"
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\vv.py:345](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\vv.py#L345)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\vv.py:345](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\vv.py#L345)*
 
 ##### `to_dict`
 
@@ -367,7 +367,7 @@ def to_dict(self) -> Dict
 
 Convert to dictionary.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\vv.py:335](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\vv.py#L335)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\vv.py:335](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\vv.py#L335)*
 
 ##### `to_markdown`
 
@@ -377,7 +377,7 @@ def to_markdown(self) -> str
 
 Generate markdown report.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\vv.py:266](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\vv.py#L266)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\vv.py:266](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\vv.py#L266)*
 
 ### class `VVTest`
 
@@ -412,7 +412,7 @@ Execute the V&V test.
 
 **Returns**: `<class 'vv.VVTestResult'>` - VVTestResult with outcomes
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\vv.py:63](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\vv.py#L63)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\vv.py:63](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\vv.py#L63)*
 
 ### class `VVTestResult`
 
@@ -444,7 +444,7 @@ def to_dict(self) -> Dict
 
 Convert to dictionary.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\vv.py:134](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\vv.py#L134)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\vv.py:134](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\vv.py#L134)*
 
 ### class `ValidationCase`
 
@@ -490,7 +490,7 @@ Initialize validation uncertainty.
 - **experimental_uncertainty** (`<class 'vv.UncertaintyBand'>`): Experimental data uncertainty
 - **numerical_uncertainty** (`typing.Optional[vv.UncertaintyBand]`): Numerical solution uncertainty
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\vv.py:688](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\vv.py#L688)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\vv.py:688](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\vv.py#L688)*
 
 ##### `compute_validation_metric`
 
@@ -509,7 +509,7 @@ Uses ASME V&V 20-2009 approach.
 
 **Returns**: `typing.Dict[str, float]` - Dictionary of validation metrics
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\vv.py:703](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\vv.py#L703)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\vv.py:703](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\vv.py#L703)*
 
 ## Functions
 
@@ -528,7 +528,7 @@ Generate V&V report from completed plan.
 
 **Returns**: `<class 'str'>` - Formatted report string
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\vv.py:779](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\vv.py#L779)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\vv.py:779](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\vv.py#L779)*
 
 ### `run_vv_plan`
 
@@ -546,4 +546,4 @@ Execute a V&V plan and generate report.
 
 **Returns**: `typing.Tuple[bool, vv.VVReport]` - Tuple of (all_passed, report)
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\vv.py:751](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\validation\vv.py#L751)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\vv.py:751](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\vv.py#L751)*

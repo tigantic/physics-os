@@ -77,7 +77,7 @@ Random phases, prescribed energy spectrum E(k) ~ k^(-5/3)
 
 ## Running on Remote Machine
 
-1. Clone repo: `git clone https://github.com/tigantic/HyperTensor.git`
+1. Clone repo: `git clone https://github.com/tigantic/The Physics OS.git`
 2. Install deps: `pip install -r requirements-lock.txt && pip install dilithium-py`
 3. Run trap: `python demos/trap_the_swan.py --ic <IC_NAME>`
 4. Check `logs/` for BLACK_SWAN_*.json or HUNT_COMPLETE_*.json

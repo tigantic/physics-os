@@ -76,7 +76,7 @@ Stage 13: Architecture validation        ✓
 ## Integration
 
 Designed to integrate with:
-- **HyperTensor**: Physics engine (upstream)
+- **The Physics OS**: Physics engine (upstream)
 - **CEM-QTT**: Electromagnetics solver (sibling domain)
 - **FluideLite**: ZK proof framework (downstream)
 - **QTT compression**: Published O(log N) scaling

@@ -423,4 +423,4 @@ For 10 mmol Li₃InCl₄.₈Br₁.₂:
 *Protocol for Li₃InCl₄.₈Br₁.₂ Superionic Electrolyte synthesis*  
 *Target: Fast-charging solid-state batteries*  
 *Physics-first materials design → Bench chemistry*  
-*HyperTensor Physics Engine — January 5, 2026*
+*The Ontic Engine — January 5, 2026*

@@ -1,6 +1,6 @@
 # Architecture Decision Records (ADR)
 
-This directory contains platform-wide Architecture Decision Records for HyperTensor-VM.
+This directory contains platform-wide Architecture Decision Records for The Physics OS-VM.
 
 ## What is an ADR?
 

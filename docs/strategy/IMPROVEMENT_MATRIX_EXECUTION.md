@@ -1,4 +1,4 @@
-# HyperTensor QTT Engine — Improvement Matrix Execution Report
+# The Physics OS — QTT Engine — Improvement Matrix Execution Report
 
 **Version:** 2.0.0  
 **Date:** February 2026  
@@ -9,7 +9,7 @@
 
 ## Executive Summary
 
-A systematic improvement sprint was executed against the HyperTensor QTT‑based Navier–Stokes solver, trustless physics proof engine, Triton GPU kernels, and supporting infrastructure. The matrix was identified through a 30+ item opportunity analysis across six domains, consolidated into 12 actionable work items, and implemented to production grade with full test coverage.
+A systematic improvement sprint was executed against the Ontic Engine QTT‑based Navier–Stokes solver, trustless physics proof engine, Triton GPU kernels, and supporting infrastructure. The matrix was identified through a 30+ item opportunity analysis across six domains, consolidated into 12 actionable work items, and implemented to production grade with full test coverage.
 
 **Platform:** PyTorch 2.9.1+cu128 · NVIDIA RTX 5070 Laptop GPU (8 GB VRAM) · Python 3.12  
 **Solver grid:** Morton-ordered QTT vorticity-velocity on 128³ (n_bits=7) default, tested at 32³/64³/128³

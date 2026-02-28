@@ -99,7 +99,7 @@ objectives: List of objective specifications
     bounds: (lower, upper) bounds for design variables
     config: Optimization configuration
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\multi_objective.py:294](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\multi_objective.py#L294)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\multi_objective.py:294](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\multi_objective.py#L294)*
 
 ##### `crossover`
 
@@ -112,7 +112,7 @@ Simulated Binary Crossover (SBX).
 Creates two offspring from two parents with distribution
 controlled by η_c parameter.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\multi_objective.py:333](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\multi_objective.py#L333)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\multi_objective.py:333](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\multi_objective.py#L333)*
 
 ##### `evaluate`
 
@@ -122,7 +122,7 @@ def evaluate(self, design: torch.Tensor) -> Dict[str, float]
 
 Evaluate all objectives for a design.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\multi_objective.py:315](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\multi_objective.py#L315)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\multi_objective.py:315](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\multi_objective.py#L315)*
 
 ##### `initialize_population`
 
@@ -132,7 +132,7 @@ def initialize_population(self) -> List[multi_objective.ParetoSolution]
 
 Create initial random population.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\multi_objective.py:324](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\multi_objective.py#L324)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\multi_objective.py:324](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\multi_objective.py#L324)*
 
 ##### `mutate`
 
@@ -142,7 +142,7 @@ def mutate(self, design: torch.Tensor) -> torch.Tensor
 
 Polynomial mutation.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\multi_objective.py:392](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\multi_objective.py#L392)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\multi_objective.py:392](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\multi_objective.py#L392)*
 
 ##### `optimize`
 
@@ -152,7 +152,7 @@ def optimize(self) -> multi_objective.MOOResult
 
 Run optimization with configured algorithm.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\multi_objective.py:619](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\multi_objective.py#L619)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\multi_objective.py:619](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\multi_objective.py#L619)*
 
 ##### `random_design`
 
@@ -162,7 +162,7 @@ def random_design(self) -> torch.Tensor
 
 Generate a random design within bounds.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\multi_objective.py:320](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\multi_objective.py#L320)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\multi_objective.py:320](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\multi_objective.py#L320)*
 
 ##### `run_nsga2`
 
@@ -174,7 +174,7 @@ Run NSGA-II algorithm.
 
 **Returns**: `<class 'multi_objective.MOOResult'>` - MOOResult with Pareto front and metrics
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\multi_objective.py:450](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\multi_objective.py#L450)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\multi_objective.py:450](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\multi_objective.py#L450)*
 
 ##### `run_weighted_sum`
 
@@ -186,7 +186,7 @@ Run weighted sum scalarization.
 
 Samples different weight combinations to approximate Pareto front.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\multi_objective.py:549](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\multi_objective.py#L549)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\multi_objective.py:549](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\multi_objective.py#L549)*
 
 ##### `tournament_selection`
 
@@ -196,7 +196,7 @@ def tournament_selection(self, population: List[multi_objective.ParetoSolution])
 
 Binary tournament selection based on rank and crowding distance.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\multi_objective.py:426](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\multi_objective.py#L426)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\multi_objective.py:426](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\multi_objective.py#L426)*
 
 ### class `ObjectiveSpec`
 
@@ -254,7 +254,7 @@ Uses simplified analytical objectives for testing.
 
 **Returns**: `typing.Tuple[typing.List[multi_objective.ObjectiveSpec], typing.Tuple[torch.Tensor, torch.Tensor]]` - (objectives, bounds)
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\multi_objective.py:629](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\multi_objective.py#L629)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\multi_objective.py:629](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\multi_objective.py#L629)*
 
 ### `crowding_distance`
 
@@ -273,7 +273,7 @@ Higher distance = more isolated = better diversity.
 - **front_indices** (`typing.List[int]`): Indices of solutions in this front
 - **minimize** (`typing.Dict[str, bool]`): Minimization flags (not used directly)
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\multi_objective.py:197](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\multi_objective.py#L197)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\multi_objective.py:197](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\multi_objective.py#L197)*
 
 ### `dominates`
 
@@ -293,7 +293,7 @@ A dominates B if:
 
 **Returns**: `<class 'bool'>` - True if A dominates B
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\multi_objective.py:97](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\multi_objective.py#L97)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\multi_objective.py:97](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\multi_objective.py#L97)*
 
 ### `fast_non_dominated_sort`
 
@@ -313,7 +313,7 @@ Rank 0 = non-dominated, Rank 1 = dominated by rank 0, etc.
 
 **Returns**: `typing.List[typing.List[int]]` - List of fronts, each containing indices of solutions
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\multi_objective.py:134](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\multi_objective.py#L134)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\multi_objective.py:134](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\multi_objective.py#L134)*
 
 ### `hypervolume_2d`
 
@@ -334,7 +334,7 @@ and bounded by the reference point.
 
 **Returns**: `<class 'float'>` - Hypervolume value
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\multi_objective.py:249](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\multi_objective.py#L249)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\multi_objective.py:249](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\multi_objective.py#L249)*
 
 ### `validate_moo`
 
@@ -344,4 +344,4 @@ def validate_moo()
 
 Run validation tests for multi-objective optimization.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\multi_objective.py:676](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\cfd\multi_objective.py#L676)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\multi_objective.py:676](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\multi_objective.py#L676)*

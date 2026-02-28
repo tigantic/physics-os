@@ -302,4 +302,4 @@ Synthesize **LaLuH₆** Clathrate Superconductor for room-temperature supercondu
 
 *Protocol for LaLuH₆ Room-Temperature Superconductor*  
 *Project ODIN — The Cage is the Pressure Vessel*  
-*HyperTensor Physics Engine — January 5, 2026*
+*The Ontic Engine — January 5, 2026*

@@ -1,6 +1,6 @@
 # Module `tensornet.integration`
 
-Integration Module for Project HyperTensor.
+Integration Module for Project The Physics OS.
 
 Phase 16: System integration and deployment hardening including:
 - End-to-end workflow orchestration

@@ -113,4 +113,4 @@ Proprietary - HyperTensor Research
 
 ---
 
-*This workflow is self-contained and can be executed independently of the main HyperTensor-VM repository.*
+*This workflow is self-contained and can be executed independently of the main The Physics OS-VM repository.*

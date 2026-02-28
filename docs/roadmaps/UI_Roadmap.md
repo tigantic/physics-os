@@ -1,4 +1,4 @@
-# HyperTensor Forensic Visualization Roadmap
+# The Physics OS — Forensic Visualization Roadmap
 
 ## Vision Statement
 

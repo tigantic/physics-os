@@ -44,7 +44,7 @@ def add_result(self, result: Any)
 
 Add benchmark result.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\benchmarks\reports.py:44](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\benchmarks\reports.py#L44)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\benchmarks\reports.py:44](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\benchmarks\reports.py#L44)*
 
 ##### `add_results`
 
@@ -54,7 +54,7 @@ def add_results(self, results: List[Any])
 
 Add multiple benchmark results.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\benchmarks\reports.py:51](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\benchmarks\reports.py#L51)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\benchmarks\reports.py:51](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\benchmarks\reports.py#L51)*
 
 ##### `export`
 
@@ -69,7 +69,7 @@ Export report to file.
 - **path** (`typing.Union[str, pathlib.Path]`): Output file path
 - **format** (`<enum 'ReportFormat'>`): Report format
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\benchmarks\reports.py:324](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\benchmarks\reports.py#L324)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\benchmarks\reports.py:324](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\benchmarks\reports.py#L324)*
 
 ##### `set_environment`
 
@@ -79,7 +79,7 @@ def set_environment(self, env: Dict[str, Any])
 
 Set environment info.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\benchmarks\reports.py:60](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\benchmarks\reports.py#L60)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\benchmarks\reports.py:60](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\benchmarks\reports.py#L60)*
 
 ##### `set_summary`
 
@@ -89,7 +89,7 @@ def set_summary(self, summary: Dict[str, Any])
 
 Set report summary.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\benchmarks\reports.py:56](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\benchmarks\reports.py#L56)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\benchmarks\reports.py:56](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\benchmarks\reports.py#L56)*
 
 ##### `to_csv`
 
@@ -99,7 +99,7 @@ def to_csv(self) -> str
 
 Generate CSV report.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\benchmarks\reports.py:219](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\benchmarks\reports.py#L219)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\benchmarks\reports.py:219](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\benchmarks\reports.py#L219)*
 
 ##### `to_html`
 
@@ -109,7 +109,7 @@ def to_html(self) -> str
 
 Generate HTML report.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\benchmarks\reports.py:240](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\benchmarks\reports.py#L240)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\benchmarks\reports.py:240](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\benchmarks\reports.py#L240)*
 
 ##### `to_json`
 
@@ -119,7 +119,7 @@ def to_json(self, indent: int = 2) -> str
 
 Generate JSON report.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\benchmarks\reports.py:203](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\benchmarks\reports.py#L203)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\benchmarks\reports.py:203](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\benchmarks\reports.py#L203)*
 
 ##### `to_markdown`
 
@@ -129,7 +129,7 @@ def to_markdown(self) -> str
 
 Generate Markdown report.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\benchmarks\reports.py:64](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\benchmarks\reports.py#L64)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\benchmarks\reports.py:64](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\benchmarks\reports.py#L64)*
 
 ##### `to_text`
 
@@ -139,7 +139,7 @@ def to_text(self) -> str
 
 Generate plain text report.
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\benchmarks\reports.py:273](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\benchmarks\reports.py#L273)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\benchmarks\reports.py:273](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\benchmarks\reports.py#L273)*
 
 ### class `ReportFormat`(Enum)
 
@@ -160,7 +160,7 @@ Export results to CSV file.
 - **results** (`typing.List[typing.Any]`): Benchmark results
 - **path** (`typing.Union[str, pathlib.Path]`): Output file path
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\benchmarks\reports.py:400](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\benchmarks\reports.py#L400)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\benchmarks\reports.py:400](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\benchmarks\reports.py#L400)*
 
 ### `export_to_json`
 
@@ -175,7 +175,7 @@ Export results to JSON file.
 - **results** (`typing.List[typing.Any]`): Benchmark results
 - **path** (`typing.Union[str, pathlib.Path]`): Output file path
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\benchmarks\reports.py:416](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\benchmarks\reports.py#L416)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\benchmarks\reports.py:416](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\benchmarks\reports.py#L416)*
 
 ### `export_to_markdown`
 
@@ -191,7 +191,7 @@ Export results to Markdown file.
 - **path** (`typing.Union[str, pathlib.Path]`): Output file path
 - **title** (`<class 'str'>`): Report title
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\benchmarks\reports.py:432](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\benchmarks\reports.py#L432)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\benchmarks\reports.py:432](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\benchmarks\reports.py#L432)*
 
 ### `generate_report`
 
@@ -209,4 +209,4 @@ Generate benchmark report from results.
 
 **Returns**: `<class 'str'>` - Formatted report string
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\benchmarks\reports.py:352](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\benchmarks\reports.py#L352)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\benchmarks\reports.py:352](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\benchmarks\reports.py#L352)*

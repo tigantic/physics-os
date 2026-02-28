@@ -382,7 +382,7 @@ Holy Grail Query:
 | Field | Value |
 |-------|-------|
 | Created | 2026-01-04 |
-| Author | HyperTensor AI System |
+| Author | Physics OS AI System |
 | Repository | HyperTensor-VM |
 | License | See repository LICENSE |
 

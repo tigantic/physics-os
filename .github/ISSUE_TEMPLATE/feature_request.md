@@ -1,6 +1,6 @@
 ---
 name: Feature Request
-about: Suggest a new feature or improvement for HyperTensor
+about: Suggest a new feature or improvement for The Physics OS
 title: '[FEATURE] '
 labels: enhancement, triage
 assignees: ''
@@ -33,7 +33,7 @@ import tensornet
 
 ## Related Components
 
-<!-- Which parts of HyperTensor would this feature affect? -->
+<!-- Which parts of The Physics OS would this feature affect? -->
 
 - [ ] Core (MPS/MPO operations)
 - [ ] CFD (Euler solvers, flux computation)

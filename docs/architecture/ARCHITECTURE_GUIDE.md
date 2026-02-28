@@ -1,6 +1,6 @@
-# HyperTensor Architecture Guide
+# The Physics OS — Architecture Guide
 
-This document provides detailed architecture documentation for HyperTensor, including dependency diagrams and data flow for key operations.
+This document provides detailed architecture documentation for The Physics OS, including dependency diagrams and data flow for key operations.
 
 ---
 

@@ -41,7 +41,7 @@ Compute local density ⟨n_i⟩ for each site.
 
 **Returns**: `<class 'torch.Tensor'>` - Tensor of local densities
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\algorithms\fermionic.py:318](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\algorithms\fermionic.py#L318)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\algorithms\fermionic.py:318](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\algorithms\fermionic.py#L318)*
 
 ### `fermi_sea_mps`
 
@@ -63,7 +63,7 @@ the first n_particles sites occupied.
 
 **Returns**: `<class 'tensornet.core.mps.MPS'>` - MPS representing the Fermi sea
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\algorithms\fermionic.py:248](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\algorithms\fermionic.py#L248)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\algorithms\fermionic.py:248](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\algorithms\fermionic.py#L248)*
 
 ### `half_filled_mps`
 
@@ -84,7 +84,7 @@ This is a good initial state for repulsive interactions
 
 **Returns**: `<class 'tensornet.core.mps.MPS'>` - MPS with alternating occupation
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\algorithms\fermionic.py:284](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\algorithms\fermionic.py#L284)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\algorithms\fermionic.py:284](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\algorithms\fermionic.py#L284)*
 
 ### `hubbard_mpo`
 
@@ -110,7 +110,7 @@ Uses a 4-dimensional local Hilbert space:
 
 **Returns**: `<class 'tensornet.core.mpo.MPO'>` - MPO representation
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\algorithms\fermionic.py:128](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\algorithms\fermionic.py#L128)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\algorithms\fermionic.py:128](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\algorithms\fermionic.py#L128)*
 
 ### `spinless_fermion_mpo`
 
@@ -137,4 +137,4 @@ n_i = (1 + σ^z_i) / 2
 
 **Returns**: `<class 'tensornet.core.mpo.MPO'>` - MPO representation
 
-*Source: [C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\algorithms\fermionic.py:31](C:\TiganticLabz\Main_Projects\Project HyperTensor\tensornet\algorithms\fermionic.py#L31)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\algorithms\fermionic.py:31](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\algorithms\fermionic.py#L31)*

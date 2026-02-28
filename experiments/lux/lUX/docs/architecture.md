@@ -1,6 +1,6 @@
 # lUX — Architecture
 
-> Forensic inspection interface for HyperTensor TPC proof certificates.
+> Forensic inspection interface for The Physics OS TPC proof certificates.
 
 ## System Overview
 

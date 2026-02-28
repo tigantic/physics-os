@@ -1,6 +1,6 @@
 # HyperFOAM Backend
 
-FastAPI server providing REST endpoints for the HyperTensor UI.
+FastAPI server providing REST endpoints for the Physics OS UI.
 
 ## Quick Start
 
