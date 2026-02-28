@@ -125,7 +125,7 @@ HyperTensor is a computational physics operating system that uses Quantized Tens
 | **Languages Detected** | 19 |
 | **Test Files** | ~195 |
 | **Tests Passing** | 370+ |
-| **Gauntlet Runners** | 33 |
+| **Gauntlet Runners** | 38 |
 | **Attestation JSONs** | 125+ |
 | **Documentation Files** | 461+ |
 | **Documentation Directories** | 27 |
@@ -361,9 +361,9 @@ When `HYPERTENSOR_DEVICE=cuda` (or `auto` with CUDA available), the GPU runtime 
 | # | Platform | Location | Size | Language | Purpose |
 |:-:|----------|----------|-----:|----------|---------|
 | 1 | **HyperTensor Runtime** | `hypertensor/` | 3,965 LOC | Python | Commercial product surface: API, SDK, CLI, MCP, billing, certificates |
-| 2 | **HyperTensor VM** | `tensornet/` | 471K LOC | Python | Physics compute engine: 105 modules, 1,082 files |
+| 2 | **HyperTensor VM** | `tensornet/` | ~492K LOC | Python | Physics compute engine: 105+ modules, ~1,192 files |
 | 3 | **FluidElite** | `crates/fluidelite*/` | 57K LOC | Python + Rust | Production tensor engine + ZK prover (24 binaries) |
-| 4 | **QTeneT** | `apps/qtenet/` | 10K LOC | Python + LaTeX | Enterprise QTT SDK: TCI, operators, solvers, demos, benchmarks |
+| 4 | **QTeneT** | `apps/qtenet/` | ~13K LOC | Python + LaTeX | Enterprise QTT SDK: TCI, operators, solvers, demos, benchmarks |
 | 5 | **Platform Substrate** | `tensornet/platform/` + `tensornet/sdk/` | 13.7K LOC | Python | Unified simulation API: WorkflowBuilder, domain packs, V&V harness |
 | 6 | **Sovereign Compute** | `tensornet/sovereign/`, `crates/gevulot/` | 3K LOC | Python | Decentralized physics computation network |
 
@@ -691,9 +691,9 @@ Verification and Validation follows ASME V&V 10-2019 principles via `tensornet/p
 | Benchmark comparison | `vv/benchmarks.py` | Reference solution comparison suite |
 | Performance profiling | `vv/performance.py` | Timing, memory, scaling analysis |
 
-### §13.4 Gauntlets (33)
+### §13.4 Gauntlets (38)
 
-33 dedicated validation gauntlets covering all major subsystems. Each gauntlet produces a cryptographically signed attestation JSON with SHA-256 commit binding.
+38 dedicated validation gauntlets covering all major subsystems. Each gauntlet produces a cryptographically signed attestation JSON with SHA-256 commit binding.
 
 <details>
 <summary><strong>Full Gauntlet List</strong></summary>
@@ -756,7 +756,7 @@ Test suites introduced for the Runtime Access Layer (all post-February 10, 2026)
 |--------|------:|-------:|:------:|
 | **Test Files** | ~195 | — | ✅ |
 | **Tests Passing** | 370+ | — | ✅ |
-| **Gauntlet Runners** | 33 | — | ✅ |
+| **Gauntlet Runners** | 38 | — | ✅ |
 | **Test Coverage** | ~45% | 51%+ | 🟡 |
 | **Clippy Warnings (Rust)** | 0 | 0 | ✅ |
 | **Bare `except:` (Python)** | 0 | 0 | ✅ |
@@ -812,7 +812,9 @@ Launch readiness is tracked via [`LAUNCH_GATE_MATRIX.json`](docs/operations/LAUN
 | `core/` | 11 | 4,050 | TT/QTT fundamental operations |
 | `sdk/` | 3 | 1,072 | Platform SDK (WorkflowBuilder, recipes) |
 | + 93 more | ~660 | ~209,035 | Domain-specific modules (fusion, hyperenv, guidance, etc.) |
-| **Total** | **1,082** | **471,534** | |
+| **Total** | **~1,192** | **~492,000** | |
+
+> *The forensic sweep (§3, February 26) measured 471,534 lines / 1,082 files. The higher totals above reflect the full INVENTORY.md file traversal, which includes additional shim `__init__.py` files and modules added after the sweep.*
 
 ### §14.3 Rust Workspace Inventory (19 Members)
 
@@ -913,7 +915,7 @@ flowchart TB
         vm["Physics VM (tensornet/vm/)"]
         compilers["7 Domain Compilers"]
         rank_gov["Rank Governor"]
-        subgraph physics["tensornet/ — 471K LOC"]
+        subgraph physics["tensornet/ — ~492K LOC"]
             direction LR
             cfd["CFD 77K"]
             genesis["Genesis 42K"]
@@ -926,7 +928,7 @@ flowchart TB
 
     subgraph rust["Rust Layer (132K LOC)"]
         direction LR
-        gc["Glass Cockpit 31K"]
+        gc["Glass Cockpit ~26K"]
         fez["FluidElite-ZK 31K"]
         cem_fea["CEM/FEA/OPT 5K"]
     end
@@ -979,7 +981,7 @@ flowchart TB
 │  └──────────────────────────────────┬───────────────────────────────────────┘  │
 │                                     │                                           │
 │  ┌──────────────────────────────────▼───────────────────────────────────────┐  │
-│  │         tensornet/ Physics Engine (1,082 files, 471K LOC)                │  │
+│  │         tensornet/ Physics Engine (~1,192 files, ~492K LOC)              │  │
 │  │  ┌────────┐ ┌────────┐ ┌────────┐ ┌────────┐ ┌────────┐ ┌────────┐     │  │
 │  │  │ CFD    │ │Genesis │ │Exploit │ │ Packs  │ │Discover│ │Platform│     │  │
 │  │  │ 77K    │ │ 42K    │ │ 28K    │ │ 26K    │ │ 25K    │ │ 15K    │     │  │
@@ -1047,9 +1049,9 @@ Client                    API                     Runtime                    VM
 | # | Platform | Location | Size | Language |
 |:-:|----------|----------|:----:|----------|
 | 1 | HyperTensor Runtime | `hypertensor/` | 3,965 LOC | Python |
-| 2 | HyperTensor VM | `tensornet/` | 471K LOC | Python |
+| 2 | HyperTensor VM | `tensornet/` | ~492K LOC | Python |
 | 3 | FluidElite + ZK | `crates/fluidelite*/` | 57K LOC | Python + Rust |
-| 4 | QTeneT Enterprise SDK | `apps/qtenet/` | 10K LOC | Python + LaTeX |
+| 4 | QTeneT Enterprise SDK | `apps/qtenet/` | ~13K LOC | Python + LaTeX |
 | 5 | Platform Substrate + SDK | `tensornet/platform/`, `tensornet/sdk/` | 13.7K LOC | Python |
 | 6 | Sovereign Compute | `tensornet/sovereign/`, `crates/gevulot/` | 3K LOC | Python |
 
@@ -1065,11 +1067,11 @@ See [§14.3](#143-rust-workspace-inventory-19-members) for the full inventory.
 
 | Category | Count | Examples |
 |----------|:-----:|---------|
-| Gauntlets | 33 | `hellskin_gauntlet.py`, `trustless_physics_phase3_gauntlet.py` |
+| Gauntlets | 38 | `hellskin_gauntlet.py`, `trustless_physics_phase3_gauntlet.py` |
 | Proof Pipelines | 5 | `navier_stokes_millennium_pipeline.py`, `yang_mills_proof_pipeline.py` |
 | Specialized Solvers | 4 | `hellskin_thermal_solver.py`, `odin_superconductor_solver.py` |
 | Research Experiments | 10+ | `run_convergence_study.py`, `run_exascale_invention_sweep.py` |
-| Product Verticals | 1 | `products/facial_plastics/` (94 files, 43K LOC, 941 tests) |
+| Product Verticals | 1 | `products/facial_plastics/` (102 files, ~50K LOC, 941 tests) |
 
 ### §16.5 Tools (15)
 
@@ -1470,11 +1472,11 @@ pip install tensornet[all]              # Everything
 
 | Integration | Protocol | Location | Maturity |
 |-------------|----------|----------|:--------:|
-| **Unity** (C# SDK) | WebSocket / REST | `integrations/unity-hypertensor-sdk/` | Alpha |
-| **Unreal Engine** (C++ Plugin) | REST | `integrations/unreal-hypertensor-plugin/` | Alpha |
-| **Blender** | Python add-on | `integrations/blender-hypertensor/` | Alpha |
-| **FreeCAD** | Python add-on | `integrations/freecad-hypertensor/` | Alpha |
-| **VS Code** | Extension | `integrations/vscode-hypertensor/` | Alpha |
+| **Unity** (C# SDK) | WebSocket / REST | `integrations/unity/` | Alpha |
+| **Unreal Engine** (C++ Plugin) | REST | `integrations/unreal/` | Alpha |
+| **Blender** | Python add-on | — | Planned |
+| **FreeCAD** | Python add-on | — | Planned |
+| **VS Code** | Extension | — | Planned |
 | **Blockchain** | Substrate / Polkadot | `tensornet/sovereign/` | Beta |
 | **ZK Network** | Gevulot protocol | `crates/gevulot/`, `crates/fluidelite_zk/` | Beta |
 | **MCP** | Model Context Protocol | `hypertensor/mcp/server.py` (11 tools) | v1.0.0 |
@@ -1707,10 +1709,10 @@ HyperTensor-VM-main/
 │   ├── sdk/                        #   WorkflowBuilder + recipes (1K LOC)
 │   └── ... (93 more modules)       #   Domain-specific physics
 ├── apps/                           # Standalone applications & demos
-│   ├── glass_cockpit/              #   Flight visualization (Rust + WGSL, 31K LOC)
+│   ├── glass_cockpit/              #   Flight visualization (Rust + WGSL, ~26K LOC)
 │   ├── global_eye/                 #   Global monitoring dashboard (Rust)
 │   ├── golden_demo/                #   Golden path demo (Rust)
-│   ├── qtenet/                     #   Enterprise QTT SDK (10K LOC)
+│   ├── qtenet/                     #   Enterprise QTT SDK (~13K LOC)
 │   ├── trustless_verify/           #   Standalone certificate verifier (1K LOC)
 │   ├── vlasov_proof/               #   Vlasov equation proof (Rust)
 │   └── ...                         #   + 9 more (oracle, ledger, sovereign, etc.)
@@ -1771,7 +1773,7 @@ HyperTensor-VM-main/
 │       ├── challenge_ii_phase3_atlas.py
 │       ├── challenge_ii_phase4_pandemic.py
 │       └── challenge_ii_phase5_zk_proofs.py
-├── integrations/                   # Unity, Unreal, Blender, FreeCAD, VS Code
+├── integrations/                   # Unity, Unreal
 ├── products/                       # Shipped vertical products (~78K LOC)
 │   ├── facial_plastics/            #   Surgical simulation (50K LOC, 941 tests)
 │   ├── fluidelite/                 #   FluidElite CFD product (Rust)
@@ -1784,7 +1786,7 @@ HyperTensor-VM-main/
 ├── tools/                          # Build scripts, utilities, infrastructure
 │   ├── dep_graph.py                #   Dependency graph visualizer (16 nodes, 34 edges)
 │   ├── sync_versions.py            #   Version sync validator (7 checkpoints)
-│   └── scripts/                    #   75+ maintenance & CI scripts
+│   └── scripts/                    #   190+ maintenance & CI scripts
 ├── INVENTORY.md                    # Comprehensive repository inventory (1,079 lines)
 ├── AUDIT_EXECUTION_TRACKER.md      # Audit finding tracker (35 items)
 ├── PLATFORM_SPECIFICATION.md       # ← This document

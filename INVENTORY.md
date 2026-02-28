@@ -12,7 +12,7 @@
 | § | Section | Scope |
 |---|---------|-------|
 | 1 | [The Civilization Stack](#1-the-civilization-stack) | 20 grand R&D projects + validation gauntlets |
-| 2 | [TensorNet Core Library](#2-tensornet-core-library) | 16 physics modules, ~310K LOC, ~765 files |
+| 2 | [TensorNet Core Library](#2-tensornet-core-library) | 16 physics modules, ~492K LOC, ~1,192 files |
 | 3 | [Applications](#3-applications) | 15 deployed apps in `apps/` |
 | 4 | [Products](#4-products) | Shippable products in `products/` |
 | 5 | [Experiments](#5-experiments) | Frontier physics, demos, research |
@@ -38,13 +38,13 @@
 | `products/` | 154 | ~78K | Python |
 | `experiments/` | 2,623 | ~442K | Python |
 | `tools/` | 200 | ~110K | Python |
-| `tests/` | 115 | ~52K | Python |
+| `tests/` | 104 | ~52K | Python |
 | `proofs/` | 7,473 | ~371K | Python + JSON |
 | `crates/` | 716 | ~204K | Rust |
 | `contracts/` | 3 | ~675 | Solidity |
 | `hypertensor/` | 31 | ~3.9K | Python |
 | `integrations/` | 1 | ~518 | C# / C++ |
-| **Total** | **~12,715** | **~1.84M** | |
+| **Total** | **~10,364** | **~1.84M** | |
 
 ---
 
@@ -379,7 +379,7 @@ system processing live exchange data from Coinbase, Binance, and Bybit.
 
 ### 3.2 `apps/glass_cockpit/` — Atmospheric Observation Layer *(APPLICATION)*
 
-**68 code files (62 Rust + 11 WGSL shaders), ~23,708 LOC**
+**65 code files (53 Rust + 12 WGSL shaders), ~26,400 LOC**
 
 Sovereign GPU-native atmospheric visualization layer built on `wgpu`. Real-time
 globe rendering with QTT tensor field overlays.
@@ -894,7 +894,7 @@ ZK proof circuits, conservation proofs, and Yang-Mills research.
 | `CODEOWNERS` | Code ownership map |
 | `CITATION.cff` | Citation metadata |
 | `CHANGELOG.md` | Version changelog |
-| `PLATFORM_SPECIFICATION.md` | Authoritative platform specification (~2,068 lines) |
+| `PLATFORM_SPECIFICATION.md` | Authoritative platform specification (~2,080 lines) |
 | `ARCHITECTURE.md` | System architecture |
 | `ROADMAP.md` | Strategic roadmap |
 | `README.md` | Repository README |
