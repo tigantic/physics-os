@@ -68,7 +68,6 @@ plugins:
             separate_signature: true
             filters:
               - "!^_"
-            on_error: warn
   # Auto-generate API nav from source tree
   - gen-files:
       scripts:
