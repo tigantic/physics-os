@@ -11,7 +11,7 @@
 
 ### **Powered by The Ontic Engine**
 
-*One codebase. ~2 million lines of code. 20 industries. Cryptographic proof that the physics is real.*
+*One codebase. ~9 million lines of code. 20 industries. Cryptographic proof that the physics is real.*
 
 **Tigantic Holdings LLC** · **DBA: HolonomiX**
 
@@ -24,14 +24,14 @@
 [![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/tigantic/physics-os/badge)](https://scorecard.dev/viewer/?uri=github.com/tigantic/physics-os)
 
 [![Release](https://img.shields.io/github/v/release/tigantic/physics-os?style=for-the-badge&color=blue)](https://github.com/tigantic/physics-os/releases/latest)
-[![LOC](https://img.shields.io/badge/LOC-1.99M-blue?style=for-the-badge)](PLATFORM_SPECIFICATION.md)
-[![Tests](https://img.shields.io/badge/Tests-370%2B_Passing-brightgreen?style=for-the-badge)](https://github.com/tigantic/physics-os/actions/workflows/ci.yml)
+[![LOC](https://img.shields.io/badge/LOC-9M-blue?style=for-the-badge)](PLATFORM_SPECIFICATION.md)
+[![Tests](https://img.shields.io/badge/Tests-2%2C195_Passing-brightgreen?style=for-the-badge)](https://github.com/tigantic/physics-os/actions/workflows/ci.yml)
 [![V&V](https://img.shields.io/badge/V%26V-ASME_10--2019-gold?style=for-the-badge)](PLATFORM_SPECIFICATION.md)
 [![License](https://img.shields.io/badge/License-Proprietary-red?style=for-the-badge)](LICENSE)
 
-[![Python](https://img.shields.io/badge/Python-803K_LOC-3776AB?style=flat-square&logo=python&logoColor=white)]()
-[![Rust](https://img.shields.io/badge/Rust-132K_LOC-000000?style=flat-square&logo=rust&logoColor=white)]()
-[![Lean 4](https://img.shields.io/badge/Lean_4-57%2B_Theorems-purple?style=flat-square)]()
+[![Python](https://img.shields.io/badge/Python-1.7M_LOC-3776AB?style=flat-square&logo=python&logoColor=white)]()
+[![Rust](https://img.shields.io/badge/Rust-1.7M_LOC-000000?style=flat-square&logo=rust&logoColor=white)]()
+[![Lean 4](https://img.shields.io/badge/Lean_4-525%2B_Theorems-purple?style=flat-square)]()
 [![CUDA](https://img.shields.io/badge/CUDA-GPU_Accelerated-76B900?style=flat-square&logo=nvidia&logoColor=white)]()
 [![OpenSSF Best Practices](https://img.shields.io/badge/OpenSSF-Best_Practices-green?style=flat-square&logo=opensourceinitiative&logoColor=white)](https://github.com/tigantic/physics-os/blob/main/SECURITY.md)
 
