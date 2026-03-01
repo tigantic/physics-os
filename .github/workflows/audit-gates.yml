@@ -93,25 +93,38 @@ jobs:
   solidity-check:
     name: Solidity Audit Gates
     runs-on: ubuntu-latest
-    if: github.event_name != 'workflow_dispatch' && hashFiles('contracts/**/*.sol') != ''
     steps:
       - uses: actions/checkout@v4
 
+      - name: Check for Solidity contracts
+        id: sol_check
+        run: |
+          if compgen -G "contracts/**/*.sol" > /dev/null 2>&1; then
+            echo "has_contracts=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "has_contracts=false" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Install Foundry
+        if: steps.sol_check.outputs.has_contracts == 'true'
         uses: foundry-rs/foundry-toolchain@v1
 
       - name: Compile contracts
+        if: steps.sol_check.outputs.has_contracts == 'true'
         run: forge build
         working-directory: contracts
 
       - name: Run Foundry tests
+        if: steps.sol_check.outputs.has_contracts == 'true'
         run: forge test -vvv
         working-directory: contracts
 
       - name: Install Slither
+        if: steps.sol_check.outputs.has_contracts == 'true'
         run: pip3 install slither-analyzer
 
       - name: Run Slither (static analysis)
+        if: steps.sol_check.outputs.has_contracts == 'true'
         run: slither . --filter-paths "test" --exclude naming-convention
         working-directory: contracts
         continue-on-error: true  # Informational during audit prep
