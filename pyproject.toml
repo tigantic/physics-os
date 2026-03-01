@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "ontic-engine"
 version = "40.0.1"
-description = "The Physics OS — Powered by The Ontic Engine | ~2M LOC, 168 physics taxonomy nodes, 20 domain packs | Tigantic Holdings LLC, DBA HolonomiX"
+description = "The Physics OS — Powered by The Ontic Engine | 3.27M SLOC, 168 physics taxonomy nodes, 20 domain packs | Tigantic Holdings LLC, DBA HolonomiX"
 readme = "README.md"
 license = {text = "Proprietary - Tigantic Holdings LLC"}
 requires-python = ">=3.11"

@@ -411,20 +411,20 @@ All version numbers are synchronized via `tools/sync_versions.py`, which validat
 | **Runtime Version** | 1.0.0 | `physics_os.RUNTIME_VERSION` | Execution engine compatibility version |
 | **API Version** | 2.0.0 | `physics_os.API_VERSION` | API contract schema version |
 | **API Contract (URI)** | v1 | `/v1/` URI prefix | Frozen endpoint contract |
-| **Cargo Workspace** | 4.0.0 | `Cargo.toml` header | Rust workspace release version |
-| **CITATION** | 4.0.0 | `CITATION.cff` | Academic citation version (tracks RELEASE) |
+| **Cargo Workspace** | 4.0.1 | `Cargo.toml` header | Rust workspace release version |
+| **CITATION** | 4.0.1 | `CITATION.cff` | Academic citation version (tracks RELEASE) |
 
 **Version Sync Checkpoints:**
 
 | Checkpoint | File | Field |
 |:----------:|------|-------|
 | 1 | `pyproject.toml` | `version` → PACKAGE (40.0.1) |
-| 2 | `CITATION.cff` | `version` → RELEASE (4.0.0) |
+| 2 | `CITATION.cff` | `version` → RELEASE (4.0.1) |
 | 3 | `ontic/__init__.py` | `__version__` → PACKAGE (40.0.1) |
 | 4 | `physics_os/__init__.py` | `__version__` → PACKAGE (40.0.1) |
 | 5 | `physics_os/__init__.py` | `RUNTIME_VERSION` → RUNTIME (1.0.0) |
 | 6 | `physics_os/__init__.py` | `API_VERSION` → SUBSTRATE_API (2.0.0) |
-| 7 | `Cargo.toml` | `# Version:` comment → RELEASE (4.0.0) |
+| 7 | `Cargo.toml` | `# Version:` comment → RELEASE (4.0.1) |
 
 ---
 
@@ -1320,16 +1320,16 @@ Single-command validation that all version numbers are consistent:
 $ python tools/sync_versions.py
 Reading VERSION...
   API_CONTRACT=1  PACKAGE=40.0.1  PLATFORM=3.0.0
-  RELEASE=4.0.0   RUNTIME=1.0.0   SUBSTRATE_API=2.0.0
+  RELEASE=4.0.1   RUNTIME=1.0.0   SUBSTRATE_API=2.0.0
 
 Checking manifests:
   OK: pyproject.toml version=40.0.1
-  OK: CITATION.cff version=4.0.0
+  OK: CITATION.cff version=4.0.1
   OK: __init__.py __version__=40.0.1
   OK: __init__.py __version__=40.0.1
   OK: __init__.py RUNTIME_VERSION=1.0.0
   OK: __init__.py API_VERSION=2.0.0
-  OK: Cargo.toml Version=4.0.0
+  OK: Cargo.toml Version=4.0.1
 
 All versions in sync.
 ```

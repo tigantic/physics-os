@@ -566,8 +566,8 @@ All version numbers are validated by `tools/sync_versions.py` across 7 checkpoin
 | Package (physics_os) | 40.0.1 | `physics_os.__version__` |
 | API Version | 2.0.0 | `physics_os.API_VERSION` |
 | Runtime Version | 1.0.0 | `physics_os.RUNTIME_VERSION` |
-| Cargo Workspace | 4.0.0 | `Cargo.toml` |
-| CITATION | 4.0.0 | `CITATION.cff` |
+| Cargo Workspace | 4.0.1 | `Cargo.toml` |
+| CITATION | 4.0.1 | `CITATION.cff` |
 
 ```bash
 $ python tools/sync_versions.py

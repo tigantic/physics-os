@@ -1,6 +1,6 @@
 {
   "title": "The Physics OS: Compression-Native Computational Physics — Powered by The Ontic Engine",
-  "description": "The Physics OS replaces dense numerical arrays with Quantized Tensor Trains (QTT) to run exascale simulations on commodity hardware. Powered by The Ontic Engine — a register-based bytecode VM where physics are compiled, executed, and constrained by conservation laws. ~2M LOC, 168 physics nodes, 20 industries, cryptographic trust certificates. Tigantic Holdings LLC, DBA HolonomiX.",
+  "description": "The Physics OS replaces dense numerical arrays with Quantized Tensor Trains (QTT) to run exascale simulations on commodity hardware. Powered by The Ontic Engine — a register-based bytecode VM where physics are compiled, executed, and constrained by conservation laws. 3.27M SLOC, 168 physics nodes, 20 industries, cryptographic trust certificates. Tigantic Holdings LLC, DBA HolonomiX.",
   "upload_type": "software",
   "creators": [
     {
