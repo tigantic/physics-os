@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Real-world simulation scenario runner.
+"""Real-world simulation scenario runner with full output packages.
 
 Runs 10 diverse engineering scenarios through the full Problem Template
 pipeline:
@@ -11,8 +11,12 @@ pipeline:
 Each scenario models a legitimate engineering situation with real
 fluid properties, realistic geometry, and correct flow conditions.
 
-Output: ``scenario_results.json`` — a combined review package with
-every scenario's compilation, execution, validation, and certificate.
+Outputs (all written to ``scenario_output/``):
+- ``scenario_results.json``  — structured data for every scenario
+- ``images/``                — field contour PNGs, diagnostics, summary charts
+- ``videos/``                — GIF / MP4 time-evolution animations
+- ``reports/scenario_report.html`` — standalone HTML report
+- ``reports/scenario_report.pdf``  — PDF report (via WeasyPrint)
 """
 
 from __future__ import annotations
@@ -22,13 +26,16 @@ import logging
 import sys
 import time
 import traceback
+from dataclasses import asdict
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
 # ── Ensure project root is on sys.path ───────────────────────────
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
+SCRIPTS_DIR = Path(__file__).resolve().parent
 sys.path.insert(0, str(PROJECT_ROOT))
+sys.path.insert(0, str(SCRIPTS_DIR))
 
 import physics_os
 from physics_os.core.certificates import issue_certificate
@@ -44,6 +51,11 @@ from physics_os.templates.models import (
     GeometryType,
     ProblemClass,
     ProblemSpec,
+)
+from scenario_viz import generate_all_visuals
+from scenario_report import (
+    generate_html_report,
+    generate_pdf_report,
 )
 
 logging.basicConfig(
@@ -279,6 +291,87 @@ SCENARIOS: list[dict[str, Any]] = [
 MAX_N_BITS = 6       # 64×64 grid — preview resolution for review
 MAX_N_STEPS = 100    # enough steps for qualitative results
 
+# Step counts at which to capture field snapshots for animation.
+# Each snapshot requires a separate execution (from step 0), so
+# keep the count small to stay within a reasonable runtime.
+SNAPSHOT_STEPS: list[int] = [10, 25, 50, 75, 100]
+
+# Output directory for all generated artifacts
+OUTPUT_DIR = PROJECT_ROOT / "scenario_output"
+
+
+# ═══════════════════════════════════════════════════════════════════
+# Telemetry / snapshot extraction helpers
+# ═══════════════════════════════════════════════════════════════════
+
+
+def _extract_telemetry_steps(result: Any) -> list[dict[str, Any]]:
+    """Extract per-step telemetry from an execution result.
+
+    Returns a list of dicts (one per step) with chi_max,
+    wall_time_s, field_norms, invariant_values, etc.
+    """
+    try:
+        if hasattr(result, "telemetry") and result.telemetry is not None:
+            steps = result.telemetry.steps
+            if steps:
+                return [asdict(s) for s in steps]
+    except Exception as exc:
+        logger.debug("Could not extract telemetry steps: %s", exc)
+    return []
+
+
+def _capture_field_snapshots(
+    config_template: ExecutionConfig,
+    domain: str,
+    step_counts: list[int],
+) -> dict[str, list[dict[str, Any]]]:
+    """Capture intermediate field states by running sub-simulations.
+
+    For each step_count in *step_counts*, runs a fresh execution
+    from step 0 and extracts the sanitized field values.
+
+    Returns
+    -------
+    dict[str, list[dict]]
+        Mapping from field_name → list of {step, values} dicts.
+    """
+    snapshots: dict[str, list[dict[str, Any]]] = {}
+
+    for n_steps in step_counts:
+        try:
+            sub_config = ExecutionConfig(
+                domain=config_template.domain,
+                n_bits=config_template.n_bits,
+                n_steps=n_steps,
+                dt=config_template.dt,
+                max_rank=config_template.max_rank,
+                truncation_tol=config_template.truncation_tol,
+                parameters=config_template.parameters,
+            )
+            sub_result = execute(sub_config)
+            if not sub_result.success:
+                continue
+
+            sanitized = sanitize_result(sub_result, domain)
+            fields = sanitized.get("fields", {})
+
+            for fname, fdata in fields.items():
+                values = fdata.get("values", [])
+                if not values:
+                    continue
+                if fname not in snapshots:
+                    snapshots[fname] = []
+                snapshots[fname].append({
+                    "step": n_steps,
+                    "values": values,
+                })
+        except Exception as exc:
+            logger.debug("Snapshot at step %d failed: %s", n_steps, exc)
+            continue
+
+    return snapshots
+
 
 # ═══════════════════════════════════════════════════════════════════
 # Pipeline runner
@@ -374,6 +467,16 @@ def run_scenario(scenario: dict[str, Any], index: int) -> dict[str, Any]:
             "[%d] %-45s  executed in %.3f s",
             index, name, exec_time,
         )
+
+        # Extract per-step telemetry for diagnostics
+        telemetry_steps = _extract_telemetry_steps(result)
+        if telemetry_steps:
+            package["telemetry_steps"] = telemetry_steps
+            logger.info(
+                "[%d] %-45s  captured %d telemetry steps",
+                index, name, len(telemetry_steps),
+            )
+
     except Exception as exc:
         package["status"] = "execution_error"
         package["error"] = str(exc)
@@ -396,6 +499,39 @@ def run_scenario(scenario: dict[str, Any], index: int) -> dict[str, Any]:
         package["traceback"] = traceback.format_exc()
         logger.error("[%d] %-45s  SANITIZE FAILED: %s", index, name, exc)
         return package
+
+    # ── Step 3b: Capture field snapshots for animation ───────────
+    try:
+        snapshot_steps = [s for s in SNAPSHOT_STEPS if s < exec_n_steps]
+        if snapshot_steps:
+            logger.info(
+                "[%d] %-45s  capturing snapshots at steps %s ...",
+                index, name, snapshot_steps,
+            )
+            field_snapshots = _capture_field_snapshots(
+                config, compiled.domain, snapshot_steps,
+            )
+            # Add the final field state as the last snapshot
+            for fname, fdata in sanitized.get("fields", {}).items():
+                if fdata.get("values"):
+                    if fname not in field_snapshots:
+                        field_snapshots[fname] = []
+                    field_snapshots[fname].append({
+                        "step": exec_n_steps,
+                        "values": fdata["values"],
+                    })
+            package["field_snapshots"] = field_snapshots
+            total_snaps = sum(len(v) for v in field_snapshots.values())
+            logger.info(
+                "[%d] %-45s  captured %d total snapshots across %d fields",
+                index, name, total_snaps, len(field_snapshots),
+            )
+    except Exception as exc:
+        logger.warning(
+            "[%d] %-45s  snapshot capture failed (non-fatal): %s",
+            index, name, exc,
+        )
+        package["field_snapshots"] = {}
 
     # ── Step 4: Validate ─────────────────────────────────────────
     try:
@@ -579,9 +715,18 @@ def main() -> None:
         "scenarios": packages,
     }
 
-    # ── Write output ─────────────────────────────────────────────
-    out_path = PROJECT_ROOT / "scenario_results.json"
+    # ── Write data output ──────────────────────────────────────
+    OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+    data_dir = OUTPUT_DIR / "data"
+    data_dir.mkdir(parents=True, exist_ok=True)
+
+    out_path = data_dir / "scenario_results.json"
     with open(out_path, "w") as f:
+        json.dump(combined, f, indent=2, default=str)
+
+    # Also keep the legacy location
+    legacy_path = PROJECT_ROOT / "scenario_results.json"
+    with open(legacy_path, "w") as f:
         json.dump(combined, f, indent=2, default=str)
 
     print(f"\n{'═' * 60}")
@@ -595,7 +740,7 @@ def main() -> None:
     print(f"  Fields produced:  {summary['total_fields_produced']}")
     print(f"  All valid:        {summary['all_validations_passed']}")
     print(f"  All claims met:   {summary['all_claims_satisfied']}")
-    print(f"  Output:           {out_path}")
+    print(f"  Data output:      {out_path}")
     print(f"{'═' * 60}\n")
 
     if summary["failed"]:
@@ -603,6 +748,65 @@ def main() -> None:
         for f_item in summary["failed_scenarios"]:
             print(f"    [{f_item['index']}] {f_item['name']}: {f_item['error']}")
         print()
+
+    # ── Generate visualizations ──────────────────────────────────
+    print(f"\n{'═' * 60}")
+    print(f"  GENERATING VISUALIZATIONS")
+    print(f"{'═' * 60}\n")
+
+    try:
+        manifest = generate_all_visuals(packages, OUTPUT_DIR)
+        n_images = sum(
+            len(v) if isinstance(v, dict) else 0
+            for v in manifest.get("images", {}).values()
+        )
+        n_videos = len(manifest.get("videos", {}))
+        print(f"  Images:  {n_images}")
+        print(f"  Videos:  {n_videos}")
+    except Exception as exc:
+        logger.error("Visualization generation failed: %s", exc)
+        traceback.print_exc()
+        manifest = {"images": {}, "videos": {}, "base64": {}}
+
+    # ── Generate reports ─────────────────────────────────────────
+    print(f"\n{'═' * 60}")
+    print(f"  GENERATING REPORTS")
+    print(f"{'═' * 60}\n")
+
+    reports_dir = OUTPUT_DIR / "reports"
+    reports_dir.mkdir(parents=True, exist_ok=True)
+
+    try:
+        html_path = generate_html_report(
+            combined, manifest,
+            reports_dir / "scenario_report.html",
+        )
+        print(f"  HTML:    {html_path}")
+
+        pdf_path = generate_pdf_report(
+            html_path,
+            reports_dir / "scenario_report.pdf",
+        )
+        if pdf_path.suffix == ".pdf":
+            print(f"  PDF:     {pdf_path}")
+        else:
+            print(f"  PDF:     skipped (WeasyPrint not available)")
+    except Exception as exc:
+        logger.error("Report generation failed: %s", exc)
+        traceback.print_exc()
+
+    # ── Final summary ────────────────────────────────────────────
+    print(f"\n{'═' * 60}")
+    print(f"  OUTPUT PACKAGE COMPLETE")
+    print(f"{'═' * 60}")
+    print(f"  Directory:  {OUTPUT_DIR}")
+    print(f"  Data:       {out_path.relative_to(OUTPUT_DIR)}")
+    print(f"  Images:     images/")
+    print(f"  Videos:     videos/")
+    print(f"  Reports:    reports/")
+    t_grand_total = time.perf_counter() - t_start
+    print(f"  Total time: {t_grand_total:.1f}s")
+    print(f"{'═' * 60}\n")
 
 
 if __name__ == "__main__":

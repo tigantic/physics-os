@@ -188,3 +188,4 @@ proofs/zk_targets/
 
 # Generated simulation output
 scenario_results.json
+scenario_output/
