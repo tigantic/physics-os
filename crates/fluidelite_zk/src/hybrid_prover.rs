@@ -62,14 +62,20 @@ impl HybridProof {
 /// Statistics for hybrid prover
 #[derive(Debug, Default, Clone)]
 pub struct HybridProverStats {
+    /// Total number of proofs generated.
     pub total_proofs: usize,
+    /// Number of lookup table cache hits.
     pub lookup_hits: usize,
+    /// Number of fallback (full computation) proof generations.
     pub fallback_uses: usize,
+    /// Cumulative proof generation time in milliseconds.
     pub total_time_ms: u64,
+    /// Total constraint count across all proofs.
     pub total_constraints: usize,
 }
 
 impl HybridProverStats {
+    /// Record statistics from a completed proof generation.
     pub fn record(&mut self, proof: &HybridProof) {
         self.total_proofs += 1;
         if proof.lookup_hit {
@@ -81,6 +87,7 @@ impl HybridProverStats {
         self.total_constraints += proof.num_constraints;
     }
     
+    /// Compute the lookup cache hit rate as a fraction in `[0.0, 1.0]`.
     pub fn lookup_rate(&self) -> f64 {
         if self.total_proofs == 0 {
             0.0
@@ -97,6 +104,7 @@ pub struct FeatureExtractor {
 }
 
 impl FeatureExtractor {
+    /// Create a new feature extractor with the given configuration.
     pub fn new(config: HybridConfig) -> Self {
         Self { config }
     }
