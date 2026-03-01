@@ -385,7 +385,7 @@ mod tests {
         assert!(batch.len() >= 100);  // Padded to min
         
         // All indices should be in range
-        for idx in &batch.indices {
+        for idx in &batch.indices() {
             assert!(*idx < 1024);
         }
     }
@@ -398,8 +398,8 @@ mod tests {
         let batch = sampler.sample_uniform(64);
         
         // Should have ~16 uniformly spaced samples + padding
-        assert!(batch.indices.iter().any(|&x| x == 0));
-        assert!(batch.indices.iter().any(|&x| x == 64));
+        assert!(batch.indices().iter().any(|&x| x == 0));
+        assert!(batch.indices().iter().any(|&x| x == 64));
     }
     
     #[test]
