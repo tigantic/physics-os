@@ -14,6 +14,9 @@ edit_uri: edit/main/docs/
 
 copyright: "&copy; 2024-2026 Tigantic Holdings LLC. All rights reserved."
 
+hooks:
+  - docs/hooks/lenient_collection.py
+
 theme:
   name: material
   icon:

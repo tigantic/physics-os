@@ -16,7 +16,6 @@ import logging
 import sys
 from pathlib import Path
 
-import griffe  # used by mkdocstrings — pre-check that collection works
 import mkdocs_gen_files  # type: ignore[import-untyped]
 
 log = logging.getLogger("mkdocs.plugins.gen_ref_pages")
@@ -95,16 +94,6 @@ for path in sorted(src.rglob("*.py")):
     if any(sentinel in captured for sentinel in _IMPORT_ERROR_SENTINELS):
         skipped.append(ident)
         log.info("Skipping %s — import emitted: %s", ident, captured.strip()[:120])
-        continue
-
-    # Final gate: verify griffe (which mkdocstrings uses) can actually
-    # collect the module.  If griffe cannot resolve the module, a
-    # reference page for it will always crash the build.
-    try:
-        griffe.load(ident)
-    except Exception:  # noqa: BLE001
-        skipped.append(ident)
-        log.info("Skipping %s — griffe collection failed", ident)
         continue
 
     nav_parts = list(parts)
