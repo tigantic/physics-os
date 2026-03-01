@@ -43,6 +43,7 @@
 .PHONY: fp-test fp-typecheck fp-build fp-up fp-down fp-logs fp-keys
 .PHONY: docs-serve docs-build dep-graph
 .PHONY: dev-deps lockfile lockfile-check
+.PHONY: serve deploy deploy-provision deploy-update deploy-logs
 
 # ── Configuration ─────────────────────────────────────────────────────
 PYTHON      ?= python
@@ -521,3 +522,48 @@ fp-keys:
 		exit 1; \
 	fi
 	@$(PYTHON) -c "import sys; from products.facial_plastics.ui.auth import KeyStore; from pathlib import Path; store = KeyStore(Path('fp_keys.json')); t = sys.argv[1]; r = sys.argv[2] if len(sys.argv) > 2 else 'surgeon'; key, rec = store.generate_key(t, r, 'cli-generated'); print(f'Tenant: {rec.tenant_id}'); print(f'Role:   {rec.role}'); print(f'Key:    {key}'); print(f'Hash:   {rec.key_hash[:16]}...'); print(); print('Saved to fp_keys.json'); print('To use in Docker: copy fp_keys.json into the fp-keys volume'); print('  docker cp fp_keys.json fp-app:/etc/fp/keys.json')" $(TENANT) $(ROLE)
+
+# ═══════════════════════════════════════════════════════════════════════
+# API Server & Production Deploy
+# ═══════════════════════════════════════════════════════════════════════
+
+serve:  ## Start local dev server (single worker, auto-reload)
+	@echo "=== Starting Physics OS API (dev) ==="
+	PYTHONPATH="$(CURDIR):$$PYTHONPATH" $(PYTHON) -m uvicorn physics_os.api.app:app \
+		--host 0.0.0.0 --port 8000 --reload --log-level info
+
+deploy-provision:  ## Provision a fresh production server (run with sudo on target)
+	@echo "=== Physics OS: Server Provisioning ==="
+	@if [ "$$(id -u)" -ne 0 ]; then echo "Error: run with sudo"; exit 1; fi
+	bash deploy/production/setup-server.sh
+
+deploy-update:  ## Pull latest code and restart service
+	@echo "=== Physics OS: Rolling Update ==="
+	cd /opt/physics-os && \
+		git fetch origin main && \
+		git reset --hard origin/main && \
+		./venv/bin/pip install -e ".[server]" -q && \
+		sudo systemctl restart physics-os
+	@echo "✓ Updated and restarted"
+
+deploy-logs:  ## Tail production logs
+	journalctl -u physics-os -f --no-pager
+
+deploy:  ## Show deployment commands
+	@echo "Physics OS Deployment"
+	@echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+	@echo ""
+	@echo "  Local development:"
+	@echo "    make serve"
+	@echo ""
+	@echo "  First-time server setup:"
+	@echo "    sudo make deploy-provision"
+	@echo ""
+	@echo "  Update running server:"
+	@echo "    make deploy-update"
+	@echo ""
+	@echo "  View logs:"
+	@echo "    make deploy-logs"
+	@echo ""
+	@echo "  Config: /opt/physics-os/.env"
+	@echo "  Template: deploy/production/.env.production.template"

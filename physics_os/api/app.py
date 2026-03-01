@@ -154,6 +154,7 @@ def create_app() -> FastAPI:
     app.add_exception_handler(Exception, _generic_error)  # type: ignore[arg-type]
 
     # ── Routers ─────────────────────────────────────────────────────
+    from .routers.billing import router as billing_router
     from .routers.capabilities import router as capabilities_router
     from .routers.contracts import router as contracts_router
     from .routers.health import router as health_router
@@ -165,6 +166,7 @@ def create_app() -> FastAPI:
     app.include_router(contracts_router)
     app.include_router(jobs_router)
     app.include_router(validate_router)
+    app.include_router(billing_router)
 
     # ── Root (convenience) ──────────────────────────────────────────
     @app.get("/", include_in_schema=False)

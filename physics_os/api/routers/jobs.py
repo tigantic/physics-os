@@ -392,17 +392,32 @@ async def _run_physics_execution(job: Job, loop: asyncio.AbstractEventLoop) -> N
     result_hash = content_hash(result_payload)
     job.artifact_hashes["result"] = result_hash
 
-    # ── Metering (shadow billing) ───────────────────────────────────
+    # ── Metering (shadow billing + Stripe) ──────────────────────────
     from physics_os.billing.meter import ledger as _billing_ledger
+    from physics_os.billing.stripe_billing import get_billing
 
     wall_time = sanitized.get("performance", {}).get("wall_time_s", 0.0)
-    _billing_ledger.record(
+    meter_record = _billing_ledger.record(
         job_id=job.job_id,
         api_key_suffix=job.api_key_suffix,
         domain=inp.domain or "",
         device_class=settings.device,
         wall_time_s=wall_time,
     )
+
+    # Report usage to Stripe (no-op in shadow mode)
+    try:
+        stripe_billing = get_billing()
+        stripe_billing.report_usage(
+            api_key=job.api_key_suffix,
+            compute_units=meter_record.compute_units if meter_record else 0.0,
+            job_id=job.job_id,
+        )
+    except Exception:
+        logger.warning(
+            "Stripe usage reporting failed for job %s (non-fatal)",
+            job.job_id,
+        )
 
     job.transition(JobState.SUCCEEDED)
     store.update(job)

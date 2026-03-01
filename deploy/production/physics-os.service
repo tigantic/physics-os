@@ -1,0 +1,62 @@
+[Unit]
+Description=Physics OS — Ontic Engine API
+Documentation=https://github.com/tigantic/physics-os
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=notify
+User=ontic
+Group=ontic
+WorkingDirectory=/opt/physics-os
+
+# Environment file with ONTIC_* variables
+EnvironmentFile=/opt/physics-os/.env
+
+# Gunicorn with uvicorn workers — production-grade ASGI
+ExecStart=/opt/physics-os/venv/bin/gunicorn \
+    physics_os.api.app:app \
+    --worker-class uvicorn.workers.UvicornWorker \
+    --workers ${ONTIC_WORKERS:-2} \
+    --bind 127.0.0.1:8000 \
+    --timeout 300 \
+    --graceful-timeout 30 \
+    --max-requests 10000 \
+    --max-requests-jitter 500 \
+    --access-logfile - \
+    --error-logfile - \
+    --log-level info \
+    --capture-output \
+    --enable-stdio-inheritance
+
+ExecReload=/bin/kill -s HUP $MAINPID
+KillMode=mixed
+TimeoutStopSec=30
+
+# Security hardening
+NoNewPrivileges=yes
+ProtectSystem=strict
+ProtectHome=yes
+PrivateTmp=yes
+PrivateDevices=yes
+ProtectKernelModules=yes
+ProtectKernelTunables=yes
+ReadWritePaths=/opt/physics-os/data /opt/physics-os/logs
+
+# Resource limits — adjust per machine
+LimitNOFILE=65536
+LimitNPROC=4096
+
+# Auto-restart on failure
+Restart=on-failure
+RestartSec=5
+StartLimitBurst=5
+StartLimitIntervalSec=60
+
+# Logging
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=physics-os
+
+[Install]
+WantedBy=multi-user.target

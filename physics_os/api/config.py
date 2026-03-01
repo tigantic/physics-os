@@ -41,6 +41,13 @@ class Settings(BaseSettings):
     truncation_tol: float = 1e-10
     job_timeout_s: float = 300.0
 
+    # ── Billing ────────────────────────────────────────────────────
+    stripe_secret_key: str = ""
+    stripe_webhook_secret: str = ""
+    stripe_price_builder: str = ""
+    stripe_price_pro: str = ""
+    billing_mode: str = "shadow"  # "shadow" | "live"
+
     # ── Rate limiting ───────────────────────────────────────────────
     rate_limit_rpm: int = 60
     rate_limit_burst: int = 10
