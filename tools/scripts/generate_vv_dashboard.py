@@ -15,10 +15,21 @@ Tags: [V&V] [CI/CD] [DASHBOARD]
 import argparse
 import json
 import os
+import re
 import sys
 from datetime import datetime
 from pathlib import Path
 from typing import Any
+
+
+def _safe_template_fill(template: str, **kwargs: Any) -> str:
+    """Replace ``{key}`` patterns only for known keys, leaving CSS/HTML braces intact."""
+    def _replacer(match: re.Match[str]) -> str:
+        key = match.group(1)
+        if key in kwargs:
+            return str(kwargs[key])
+        return match.group(0)
+    return re.sub(r"\{([a-z_]+)\}", _replacer, template)
 
 # HTML Template
 DASHBOARD_TEMPLATE = """
@@ -564,7 +575,8 @@ def generate_dashboard(artifacts_dir: Path, commit: str, branch: str) -> str:
         )
 
     # Fill template
-    html = DASHBOARD_TEMPLATE.format(
+    html = _safe_template_fill(
+        DASHBOARD_TEMPLATE,
         generated_date=datetime.now().strftime("%Y-%m-%d %H:%M UTC"),
         commit=commit[:7] if len(commit) > 7 else commit,
         branch=branch,

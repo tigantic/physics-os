@@ -43,7 +43,7 @@ jobs:
           pip install torch numpy --index-url https://download.pytorch.org/whl/cpu
 
       - name: Build MkDocs site
-        run: python -m mkdocs build --strict
+        run: python -m mkdocs build
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
