@@ -36,7 +36,7 @@ import torch
 import numpy as np
 
 from .gpu_tensor import GPUQTTTensor
-from .gpu_operators import GPUOperatorCache, gpu_mpo_apply
+from .gpu_operators import GPUOperatorCache, gpu_mpo_apply, gpu_poisson_solve
 from .ir import BCKind, FieldSpec, Instruction, OpCode, Program
 from .qtt_tensor import QTTTensor
 from .telemetry import ProgramTelemetry, StepTelemetry, TelemetryCollector
@@ -436,30 +436,21 @@ class GPURuntime:
             regs[instr.dst] = self._apply_bc_gpu(a, kind, bc_p)
 
         elif op == OpCode.LAPLACE_SOLVE:
-            # QTT-EXCEPTION: Rule 1 — QTT Stays Native
-            # Why: GPU-native CG Poisson solver not yet implemented.
-            #      Falls back to CPU QTT CG solver via GPU→CPU→GPU transfer.
-            # Cost: Full PCIe round-trip per NS2D timestep. CPU-bound CG
-            #       with NumPy SVD. GPU sits idle during solve. This is the
-            #       PRIMARY reason GPU utilization is near 0% for NS2D runs.
-            # Fix: Implement GPU-native CG solver using gpu_mpo_apply +
-            #      qtt_round_native, eliminating all CPU transfers.
-            #
-            # QTT-EXCEPTION: Rule 8 — Adaptive Rank
-            # Why: Passes raw max_rank ceiling instead of adaptive rank.
-            # Cost: Over-ranked solve wastes compute at large scales.
-            # Fix: Use self.governor.get_effective_rank(rhs.n_cores).
+            # V-01 RESOLVED: GPU-native CG Poisson solver.
+            # No CPU fallback. No PCIe round-trip. Adaptive rank.
+            # All operations (matvec, inner, axpy, round) stay on GPU.
             rhs = self._get_reg(regs, instr.src[0])
-            cpu_rhs = rhs.to_cpu()
-            from .operators import poisson_solve
-
-            cpu_result = poisson_solve(
-                cpu_rhs,
-                dim=instr.params.get("dim", None),
-                max_rank=self.governor.max_rank,
+            dim = instr.params.get("dim", None)
+            lap_mpo = self.op_cache.get_laplacian(
+                rhs.bits_per_dim, rhs.domain, dim=dim
+            )
+            effective_rank = self.governor.get_effective_rank(rhs.n_cores)
+            regs[instr.dst] = gpu_poisson_solve(
+                lap_mpo,
+                rhs,
+                max_rank=effective_rank,
                 cutoff=self.governor.rel_tol,
             )
-            regs[instr.dst] = GPUQTTTensor.from_cpu(cpu_result)
 
         elif op == OpCode.INTEGRATE:
             a = self._get_reg(regs, instr.src[0])

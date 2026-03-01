@@ -68,16 +68,16 @@ signatures, but callers in the hot path must always pass the
 adaptive value.
 
 ### Known Violations (tracked for remediation)
-- **V-01 CRITICAL**: `LAPLACE_SOLVE` opcode (gpu_runtime.py:438) does
-  GPU→CPU→GPU round-trip for Poisson solve.  Fix: GPU-native CG solver.
+- **V-01 RESOLVED**: `LAPLACE_SOLVE` opcode now uses `gpu_poisson_solve()`
+  — GPU-native CG with adaptive rank. No CPU fallback.
 - **V-02–V-03**: `qtt_dot_native`, `qtt_hadamard_native` use Python
   loops over physical modes.  Fix: fused batched contraction.
 - **V-04**: `_tt_core_contract_kernel` has untiled nested loops.
   Fix: tiled SRAM access.
 - **V-08**: `gpu_mpo_apply` Python loop over cores.  Fix: batched
   einsum or Triton kernel.
-- **V-09**: Poisson solver receives fixed rank.  Fix: pass
-  `get_effective_rank()`.
+- **V-09 RESOLVED**: Poisson solver now receives adaptive rank via
+  `governor.get_effective_rank()`.
 
 ### Exception Template
 When a rule must be violated, add this comment block:

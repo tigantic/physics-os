@@ -102,6 +102,120 @@ def gpu_mpo_apply(
 
 
 # ─────────────────────────────────────────────────────────────────────
+# GPU-native Conjugate Gradient Poisson solver
+# ─────────────────────────────────────────────────────────────────────
+
+
+def gpu_poisson_solve(
+    lap_mpo: list[torch.Tensor],
+    rhs: GPUQTTTensor,
+    max_rank: int = 64,
+    cutoff: float = 1e-12,
+    max_iter: int = 80,
+    tol: float = 1e-8,
+) -> GPUQTTTensor:
+    """Solve nabla^2 phi = rhs via CG entirely on GPU in QTT format.
+
+    This is the GPU-native replacement for the CPU ``poisson_solve``
+    that previously required GPU->CPU->GPU round-trips every timestep.
+    All operations stay on CUDA -- no ``.cpu()`` calls, no NumPy,
+    no dense materialization.
+
+    Algorithm: standard Conjugate Gradient, with QTT rounding after
+    every linear combination to control rank growth.  The matvec
+    uses ``gpu_mpo_apply`` (cuBLAS einsum), inner products use
+    ``GPUQTTTensor.inner`` (GPU transfer-matrix contraction), and
+    rounding uses ``qtt_round_native`` (QR + rSVD, NEVER full SVD).
+
+    Parameters
+    ----------
+    lap_mpo : list[torch.Tensor]
+        Laplacian MPO cores on GPU (from GPUOperatorCache).
+    rhs : GPUQTTTensor
+        Right-hand side on GPU.
+    max_rank : int
+        Maximum bond dimension during CG (adaptive from GPURankGovernor).
+    cutoff : float
+        rSVD truncation tolerance.
+    max_iter : int
+        Maximum CG iterations.
+    tol : float
+        Convergence tolerance on ||r||^2.
+
+    Returns
+    -------
+    GPUQTTTensor
+        Approximate solution phi on GPU.
+    """
+    import logging
+
+    logger = logging.getLogger(__name__)
+
+    # Initial guess: zero
+    x = GPUQTTTensor.zeros(rhs.bits_per_dim, rhs.domain)
+
+    # r = rhs - A*x = rhs (since x = 0)
+    r = rhs.clone()
+    p = r.clone()
+    rs_old = r.inner(r)
+
+    if rs_old < tol * tol:
+        logger.debug("GPU Poisson CG: rhs is near-zero, returning zero")
+        return x
+
+    converged = False
+    for it in range(max_iter):
+        # Ap = L * p  (GPU MPO apply + rSVD rounding)
+        Ap = gpu_mpo_apply(lap_mpo, p, max_rank=max_rank, cutoff=cutoff)
+
+        # pAp = <p, Ap>  (GPU transfer-matrix contraction)
+        pAp = p.inner(Ap)
+        if abs(pAp) < 1e-30:
+            logger.debug("GPU Poisson CG: pAp near-zero at iter %d", it)
+            break
+
+        alpha = rs_old / pAp
+
+        # x = x + alpha * p, then rSVD truncation
+        x = x.add(p.scale(alpha)).truncate(
+            max_rank=max_rank, cutoff=cutoff
+        )
+
+        # r = r - alpha * Ap, then rSVD truncation
+        r = r.sub(Ap.scale(alpha)).truncate(
+            max_rank=max_rank, cutoff=cutoff
+        )
+
+        rs_new = r.inner(r)
+        if rs_new < tol * tol:
+            converged = True
+            logger.debug(
+                "GPU Poisson CG converged in %d iters (||r||^2=%.2e)",
+                it + 1,
+                rs_new,
+            )
+            break
+
+        beta = rs_new / rs_old
+
+        # p = r + beta * p, then rSVD truncation
+        p = r.add(p.scale(beta)).truncate(
+            max_rank=max_rank, cutoff=cutoff
+        )
+
+        rs_old = rs_new
+
+    if not converged:
+        logger.warning(
+            "GPU Poisson CG did NOT converge in %d iters (||r||^2=%.2e)",
+            max_iter,
+            rs_old,
+        )
+
+    return x
+
+
+# ─────────────────────────────────────────────────────────────────────
 # MPO construction: CPU → GPU (one-time cost)
 # ─────────────────────────────────────────────────────────────────────
 
