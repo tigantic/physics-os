@@ -1,4 +1,4 @@
-# .gitignore for Project HyperTensor
+# .gitignore for The Physics OS
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -176,3 +176,12 @@ experiments/frontier/07_GENOMICS/data/clinvar.vcf.gz
 
 pdb_cache/
 data/pdb_cache/
+
+# ── Former submodule directories (gitlinks removed, dirs remain on disk) ──────
+archive/vendor/circom-ecdsa/
+archive/vendor/semaphore-circuits/
+proofs/yang_mills/unified/.lake/
+proofs/zk_circuits/tornado/
+proofs/zk_circuits/worldcoin_circuits/
+proofs/zk_circuits/worldcoin_id/
+proofs/zk_targets/

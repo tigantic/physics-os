@@ -460,8 +460,8 @@ pip install -e ".[cfd,quantum]"     # CFD + Quantum only
 pip install -e ".[dev,docs]"        # Development + documentation
 
 # Verify
-python -c "import tensornet; import physics_os; print(f'ontic {ontic.__version__} | physics_os {physics_os.__version__}')"
-# → tensornet 40.0.1 | physics_os 40.0.1
+python -c "import ontic; import physics_os; print(f'ontic {ontic.__version__} | physics_os {physics_os.__version__}')"
+# → ontic 40.0.1 | physics_os 40.0.1
 
 # Run tests
 make check                          # Full quality gate (Python + Rust)
@@ -471,18 +471,18 @@ pytest tests/ -v                    # 2,195+ tests
 ### 16 Feature Flags (pip extras)
 
 ```bash
-pip install tensornet[cfd]              # CFD solvers
-pip install tensornet[quantum]          # Quantum many-body
-pip install tensornet[plasma]           # Plasma physics
-pip install tensornet[materials]        # Condensed matter
-pip install tensornet[aerospace]        # Aerospace & guidance
-pip install tensornet[em]              # Electromagnetics
-pip install tensornet[ml]             # ML surrogates
-pip install tensornet[physics-all]     # All physics domains
-pip install tensornet[dev]             # ruff, mypy, pytest, coverage
-pip install tensornet[docs]            # MkDocs Material + mkdocstrings
-pip install tensornet[viz]             # matplotlib, plotly
-pip install tensornet[io]              # h5py, netCDF4, vtk
+pip install ontic-engine[cfd]            # CFD solvers
+pip install ontic-engine[quantum]        # Quantum many-body
+pip install ontic-engine[plasma]         # Plasma physics
+pip install ontic-engine[materials]      # Condensed matter
+pip install ontic-engine[aerospace]      # Aerospace & guidance
+pip install ontic-engine[em]             # Electromagnetics
+pip install ontic-engine[ml]             # ML surrogates
+pip install ontic-engine[physics-all]    # All physics domains
+pip install ontic-engine[dev]            # ruff, mypy, pytest, coverage
+pip install ontic-engine[docs]           # MkDocs Material + mkdocstrings
+pip install ontic-engine[viz]            # matplotlib, plotly
+pip install ontic-engine[io]             # h5py, netCDF4, vtk
 ```
 
 ---
