@@ -11,7 +11,7 @@
 
 ### **Powered by The Ontic Engine**
 
-*One codebase. ~9 million lines of code. 20 industries. Cryptographic proof that the physics is real.*
+*One codebase. 3.27 million SLOC. 20 industries. Cryptographic proof that the physics is real.*
 
 **Tigantic Holdings LLC** · **DBA: HolonomiX**
 
@@ -24,13 +24,13 @@
 [![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/tigantic/physics-os/badge)](https://scorecard.dev/viewer/?uri=github.com/tigantic/physics-os)
 
 [![Release](https://img.shields.io/github/v/release/tigantic/physics-os?style=for-the-badge&color=blue)](https://github.com/tigantic/physics-os/releases/latest)
-[![LOC](https://img.shields.io/badge/LOC-9M-blue?style=for-the-badge)](PLATFORM_SPECIFICATION.md)
+[![SLOC](https://img.shields.io/badge/SLOC-3.27M-blue?style=for-the-badge)](PLATFORM_SPECIFICATION.md)
 [![Tests](https://img.shields.io/badge/Tests-2%2C195_Passing-brightgreen?style=for-the-badge)](https://github.com/tigantic/physics-os/actions/workflows/ci.yml)
 [![V&V](https://img.shields.io/badge/V%26V-ASME_10--2019-gold?style=for-the-badge)](PLATFORM_SPECIFICATION.md)
 [![License](https://img.shields.io/badge/License-Proprietary-red?style=for-the-badge)](LICENSE)
 
-[![Python](https://img.shields.io/badge/Python-1.7M_LOC-3776AB?style=flat-square&logo=python&logoColor=white)]()
-[![Rust](https://img.shields.io/badge/Rust-1.7M_LOC-000000?style=flat-square&logo=rust&logoColor=white)]()
+[![Python](https://img.shields.io/badge/Python-927K_SLOC-3776AB?style=flat-square&logo=python&logoColor=white)]()
+[![Rust](https://img.shields.io/badge/Rust-932K_SLOC-000000?style=flat-square&logo=rust&logoColor=white)]()
 [![Lean 4](https://img.shields.io/badge/Lean_4-525%2B_Theorems-purple?style=flat-square)]()
 [![CUDA](https://img.shields.io/badge/CUDA-GPU_Accelerated-76B900?style=flat-square&logo=nvidia&logoColor=white)]()
 [![OpenSSF Best Practices](https://img.shields.io/badge/OpenSSF-Best_Practices-green?style=flat-square&logo=opensourceinitiative&logoColor=white)](https://github.com/tigantic/physics-os/blob/main/SECURITY.md)
@@ -284,7 +284,7 @@ Six execution documents mapping demonstrated capabilities to civilization-scale 
 
 | Metric | Value |
 |--------|------:|
-| **Total Authored Lines** | 9,015,890 |
+| **Total SLOC** | 3,266,949 |
 | **Source Files** | 5,882 |
 | **Languages** | 19 |
 | **Tests Passing** | 2,195+ |
@@ -434,7 +434,7 @@ A dedicated verification and validation framework implementing the full ASME V&V
 │   │   + 99 more domain-specific modules                                      │  │
 │   └──────────────────────────────────────────────────────────────────────────┘  │
 │                                                                                  │
-│   Rust Substrate (19 workspace members, 1.7M LOC)                                │
+│   Rust Substrate (19 workspace members, 932K SLOC)                               │
 │   ┌──────────────┐ ┌──────────────┐ ┌──────────────┐ ┌──────────────┐          │
 │   │FluidElite-ZK │ │Glass Cockpit │ │ Ontic Bridge │ │CEM / FEA /   │          │
 │   │  31K LOC     │ │  31K LOC     │ │   6K LOC     │ │OPT  5K LOC   │          │
@@ -518,7 +518,7 @@ The Physics OS/
 │   │   └── vv/                     #     V&V framework (MMS, conservation, convergence)
 │   ├── sdk/                        #   WorkflowBuilder + recipes
 │   └── ... (93 more modules)       #   Quantum, plasma, fusion, materials, ...
-├── crates/                         # Rust workspace — 19 members (1.7M LOC)
+├── crates/                         # Rust workspace — 19 members (932K SLOC)
 │   ├── fluidelite_zk/              #   ZK prover (Halo2, Gevulot, multi-tenant)
 │   ├── ontic_bridge/               #   Python↔Rust IPC (mmap + protobuf)
 │   ├── qtt_cem/                    #   Maxwell FDTD solver (Q16.16)
@@ -660,7 +660,7 @@ This software and all associated intellectual property are the exclusive propert
   year      = {2026},
   version   = {4.0.1},
   url       = {https://github.com/tigantic/physics-os},
-  note      = {~9M LOC. 20 industries. 168 physics nodes. Trustless certificates.
+  note      = {3.27M SLOC. 20 industries. 168 physics nodes. Trustless certificates.
                Three-layer verification: Lean 4 + Halo2 ZK + Ed25519.
                Tigantic Holdings LLC, DBA HolonomiX.}
 }
@@ -675,7 +675,7 @@ This software and all associated intellectual property are the exclusive propert
 ║                                                                                          ║
 ║      O N E   C O D E B A S E   ·   T H E   O N T I C   E N G I N E                      ║
 ║                                                                                          ║
-║      9 , 0 1 5 , 8 9 0   L I N E S   O F   C O D E                                      ║
+║      3 , 2 6 6 , 9 4 9   S L O C                                                        ║
 ║                                                                                          ║
 ║      2 0   I N D U S T R I E S   ·   1 6 8   T A X O N O M Y   N O D E S                ║
 ║                                                                                          ║
