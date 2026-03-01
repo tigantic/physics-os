@@ -39,7 +39,17 @@ from typing import Any, Dict, List, Optional, Tuple
 import numpy as np
 import torch
 from scipy.optimize import curve_fit, minimize
-from scipy.special import factorial, sph_harm
+from scipy.special import factorial
+
+# scipy >= 1.14 removed sph_harm; use sph_harm_y or provide compat shim.
+try:
+    from scipy.special import sph_harm
+except ImportError:
+    from scipy.special import sph_harm_y as _sph_harm_y
+
+    def sph_harm(m: int, n: int, theta: float, phi: float) -> complex:  # type: ignore[misc]
+        """Back-compat wrapper: old sph_harm(m, n, theta, phi) → sph_harm_y(n, m, theta, phi)."""
+        return _sph_harm_y(n, m, theta, phi)  # type: ignore[return-value]
 from torch import Tensor
 
 

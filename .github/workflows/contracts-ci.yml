@@ -220,16 +220,18 @@ jobs:
           if [[ -f "$BROADCAST" ]]; then
             echo "✓ Deployment broadcast found"
             python3 -c "
-import json
-with open('$BROADCAST') as f:
-    data = json.load(f)
-creates = [tx for tx in data.get('transactions', []) if tx.get('transactionType') == 'CREATE']
-print(f'  Contracts deployed: {len(creates)}')
-for tx in creates:
-    print(f'    {tx.get(\"contractName\", \"?\")}: {tx.get(\"contractAddress\", \"?\")}')
-assert len(creates) >= 4, 'Expected at least 4 contract deployments'
-print('✓ All contracts deployed successfully')
-" || echo "  (python3 not available for detailed check)"
+          import json
+          with open('$BROADCAST') as f:
+              data = json.load(f)
+          creates = [tx for tx in data.get('transactions', []) if tx.get('transactionType') == 'CREATE']
+          print(f'  Contracts deployed: {len(creates)}')
+          for tx in creates:
+              cn = tx.get('contractName', '?')
+              ca = tx.get('contractAddress', '?')
+              print(f'    {cn}: {ca}')
+          assert len(creates) >= 4, 'Expected at least 4 contract deployments'
+          print('All contracts deployed successfully')
+          " || echo "  (python3 not available for detailed check)"
           else
             echo "ERROR: No deployment broadcast found"
             exit 1

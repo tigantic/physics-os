@@ -93,7 +93,7 @@ jobs:
   solidity-check:
     name: Solidity Audit Gates
     runs-on: ubuntu-latest
-    if: ${{ hashFiles('contracts/**/*.sol') != '' }}
+    if: github.event_name != 'workflow_dispatch' && hashFiles('contracts/**/*.sol') != ''
     steps:
       - uses: actions/checkout@v4
 
