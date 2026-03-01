@@ -18,7 +18,7 @@ $$|\psi\rangle = \sum_{s_1 \ldots s_L} A^{s_1} A^{s_2} \cdots A^{s_L} |s_1 s_2 \
 
 ### Matrix Product Operators (MPO)
 
-::: tensornet.mpo
+::: ontic.mpo
     options:
       show_source: false
       members: false
