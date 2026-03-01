@@ -219,7 +219,7 @@ Three verification layers that establish mathematical certainty, not statistical
 | 2 | Multi-Domain | 45/45 | NS-IMEX circuit, 20+ Lean 4 theorems, REST API |
 | 3 | Production Scale | 40/40 | Prover pool, Gevulot decentralized network, multi-tenant, WAL persistence |
 
-**134/134 Python tests · 299/299 Rust tests · 57+ Lean 4 theorems**
+**134/134 Python tests · 299/299 Rust tests · 525+ Lean 4 theorems**
 
 ---
 
@@ -284,10 +284,10 @@ Six execution documents mapping demonstrated capabilities to civilization-scale 
 
 | Metric | Value |
 |--------|------:|
-| **Total Authored Lines** | 1,988,811 |
+| **Total Authored Lines** | 9,015,890 |
 | **Source Files** | 5,882 |
 | **Languages** | 19 |
-| **Tests Passing** | 370+ |
+| **Tests Passing** | 2,195+ |
 | **Validation Gauntlets** | 38 |
 | **Attestation JSONs** | 125+ |
 | **Physics Taxonomy Nodes** | 168 |
@@ -434,7 +434,7 @@ A dedicated verification and validation framework implementing the full ASME V&V
 │   │   + 99 more domain-specific modules                                      │  │
 │   └──────────────────────────────────────────────────────────────────────────┘  │
 │                                                                                  │
-│   Rust Substrate (19 workspace members, 132K LOC)                                │
+│   Rust Substrate (19 workspace members, 1.7M LOC)                                │
 │   ┌──────────────┐ ┌──────────────┐ ┌──────────────┐ ┌──────────────┐          │
 │   │FluidElite-ZK │ │Glass Cockpit │ │ Ontic Bridge │ │CEM / FEA /   │          │
 │   │  31K LOC     │ │  31K LOC     │ │   6K LOC     │ │OPT  5K LOC   │          │
@@ -465,7 +465,7 @@ python -c "import tensornet; import physics_os; print(f'ontic {ontic.__version__
 
 # Run tests
 make check                          # Full quality gate (Python + Rust)
-pytest tests/ -v                    # 370+ tests
+pytest tests/ -v                    # 2,195+ tests
 ```
 
 ### 16 Feature Flags (pip extras)
@@ -518,7 +518,7 @@ The Physics OS/
 │   │   └── vv/                     #     V&V framework (MMS, conservation, convergence)
 │   ├── sdk/                        #   WorkflowBuilder + recipes
 │   └── ... (93 more modules)       #   Quantum, plasma, fusion, materials, ...
-├── crates/                         # Rust workspace — 19 members (132K LOC)
+├── crates/                         # Rust workspace — 19 members (1.7M LOC)
 │   ├── fluidelite_zk/              #   ZK prover (Halo2, Gevulot, multi-tenant)
 │   ├── ontic_bridge/               #   Python↔Rust IPC (mmap + protobuf)
 │   ├── qtt_cem/                    #   Maxwell FDTD solver (Q16.16)
@@ -535,7 +535,7 @@ The Physics OS/
 ├── deploy/telemetry/               # Prometheus + Grafana observability stack
 ├── challenges/                     # 6 Civilization Challenge execution documents
 ├── docs/                           # 27 subdirectories, 25 ADRs
-├── tests/                          # 370+ tests across integration + unit suites
+├── tests/                          # 2,195+ tests across integration + unit suites
 ├── tools/                          # sync_versions.py, dep_graph.py, 75+ scripts
 ├── .github/workflows/              # 11 CI/CD workflows
 ├── .github/ISSUE_TEMPLATE/         # Bug report, feature request, template chooser
@@ -623,7 +623,7 @@ All versions in sync.       # 7/7 OK
 | **Dependencies** | Dependabot weekly (pip + cargo + Actions), lockfile pinning | Automated PRs |
 | **Review** | CODEOWNERS with 278 path-to-owner rules — domain-expert approval required | Every PR |
 | **Secrets** | Pre-commit hooks with detect-secrets + bare-except prevention | Pre-push gate |
-| **Formal** | Lean 4 theorem proving (57+ theorems) — mathematical correctness proofs | Build artifact |
+| **Formal** | Lean 4 theorem proving (525+ theorems) — mathematical correctness proofs | Build artifact |
 | **ZK** | Halo2 circuits — computation integrity without revealing internals | Attestation layer |
 
 Full policy: [`SECURITY.md`](SECURITY.md) · [`SECURITY_OPERATIONS.md`](docs/operations/SECURITY_OPERATIONS.md) · [`FORBIDDEN_OUTPUTS.md`](FORBIDDEN_OUTPUTS.md)
@@ -660,7 +660,7 @@ This software and all associated intellectual property are the exclusive propert
   year      = {2026},
   version   = {4.0.1},
   url       = {https://github.com/tigantic/physics-os},
-  note      = {~1.99M LOC. 20 industries. 168 physics nodes. Trustless certificates.
+  note      = {~9M LOC. 20 industries. 168 physics nodes. Trustless certificates.
                Three-layer verification: Lean 4 + Halo2 ZK + Ed25519.
                Tigantic Holdings LLC, DBA HolonomiX.}
 }
@@ -675,7 +675,7 @@ This software and all associated intellectual property are the exclusive propert
 ║                                                                                          ║
 ║      O N E   C O D E B A S E   ·   T H E   O N T I C   E N G I N E                      ║
 ║                                                                                          ║
-║      1 , 9 8 8 , 8 1 1   L I N E S   O F   C O D E                                      ║
+║      9 , 0 1 5 , 8 9 0   L I N E S   O F   C O D E                                      ║
 ║                                                                                          ║
 ║      2 0   I N D U S T R I E S   ·   1 6 8   T A X O N O M Y   N O D E S                ║
 ║                                                                                          ║
