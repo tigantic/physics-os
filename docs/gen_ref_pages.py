@@ -50,7 +50,7 @@ for path in sorted(src.rglob("*.py")):
     # are skipped to prevent mkdocstrings CollectionError during build.
     try:
         importlib.import_module(ident)
-    except Exception:  # noqa: BLE001
+    except BaseException:  # noqa: BLE001  — includes SystemExit from GPU-only modules
         skipped.append(ident)
         continue
 
