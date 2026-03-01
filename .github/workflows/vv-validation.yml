@@ -10,6 +10,10 @@
 
 name: V&V Validation
 
+permissions:
+  contents: write
+  pages: write
+
 on:
   push:
     branches: [main, develop, master]
@@ -310,12 +314,19 @@ jobs:
           name: vv-dashboard
           path: vv_dashboard.html
 
+      - name: Prepare deploy directory
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        run: |
+          mkdir -p _deploy
+          cp vv_dashboard.html _deploy/index.html
+
       - name: Deploy dashboard to Pages (main only)
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        continue-on-error: true
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: .
+          publish_dir: ./_deploy
           destination_dir: vv-reports
           keep_files: true
 
