@@ -185,3 +185,6 @@ proofs/zk_circuits/tornado/
 proofs/zk_circuits/worldcoin_circuits/
 proofs/zk_circuits/worldcoin_id/
 proofs/zk_targets/
+
+# Generated simulation output
+scenario_results.json
