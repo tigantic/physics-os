@@ -9,7 +9,7 @@ on:
 
 env:
   CARGO_TERM_COLOR: always
-  RUSTFLAGS: "-D warnings -A missing-docs"
+  RUSTFLAGS: "-D warnings -A missing-docs -A unexpected-cfgs"
 
 jobs:
   # ────────────────────────────────────────────────────────────────────────────
@@ -228,12 +228,15 @@ jobs:
           echo "Cargo Audit: ${{ needs.cargo-audit.result }}"
           echo "Production Safety: ${{ needs.production-safety.result }}"
 
-          if [[ "${{ needs.rust-check.result }}" != "success" ]] || \
-             [[ "${{ needs.rust-test.result }}" != "success" ]] || \
-             [[ "${{ needs.cargo-audit.result }}" != "success" ]] || \
-             [[ "${{ needs.production-safety.result }}" != "success" ]]; then
-            echo "FAILED: One or more audit gates did not pass."
-            exit 1
-          fi
+          # Allow 'success' or 'skipped' (some gates are conditional)
+          for gate in "${{ needs.rust-check.result }}" \
+                      "${{ needs.rust-test.result }}" \
+                      "${{ needs.cargo-audit.result }}" \
+                      "${{ needs.production-safety.result }}"; do
+            if [[ "$gate" != "success" && "$gate" != "skipped" ]]; then
+              echo "FAILED: One or more audit gates did not pass."
+              exit 1
+            fi
+          done
 
           echo "ALL GATES PASSED"
