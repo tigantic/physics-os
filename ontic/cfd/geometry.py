@@ -8,6 +8,13 @@ The wedge is defined by a half-angle θ, with the leading edge
 at a specified (x, y) location. Cells inside the wedge are
 treated as solid using ghost-cell immersed boundary method.
 
+``ImmersedBoundary`` accepts **any** :class:`~ontic.cfd.sdf.SDFGeometry`
+implementation, enabling immersed-boundary treatment for circles,
+airfoils, fin arrays, and arbitrary bodies — not just wedges.
+
+The legacy ``WedgeGeometry`` dataclass is retained for backward
+compatibility but new code should prefer the SDF library.
+
 References:
     [1] Mittal & Iaccarino, "Immersed Boundary Methods",
         Annu. Rev. Fluid Mech. 37:239-261, 2005
@@ -18,9 +25,12 @@ from __future__ import annotations
 
 import math
 from dataclasses import dataclass
+from typing import Union
 
 import torch
 from torch import Tensor
+
+from ontic.cfd.sdf import SDFGeometry
 
 # Default ratio of specific heats for diatomic gas (air)
 gamma_default = 1.4
@@ -180,23 +190,33 @@ class ImmersedBoundary:
     mirror the flow outside, with reflected velocity to enforce
     no-penetration condition.
 
+    Accepts any :class:`~ontic.cfd.sdf.SDFGeometry` implementation
+    (circle, airfoil, fin-array, etc.) **or** the legacy
+    :class:`WedgeGeometry` for backward compatibility.
+
     Attributes:
-        geometry: Body geometry (e.g., WedgeGeometry)
+        geometry: Body geometry (SDFGeometry or WedgeGeometry)
         X, Y: Grid coordinate meshes
         mask: Boolean tensor, True inside solid
     """
 
-    def __init__(self, geometry: WedgeGeometry, X: Tensor, Y: Tensor):
+    def __init__(
+        self,
+        geometry: Union[SDFGeometry, WedgeGeometry],
+        X: Tensor,
+        Y: Tensor,
+    ) -> None:
         """
         Initialize immersed boundary.
 
         Args:
-            geometry: Body geometry
+            geometry: Any SDFGeometry (preferred) or WedgeGeometry
             X, Y: 2D coordinate meshgrids (Ny, Nx)
         """
         self.geometry = geometry
         self.X = X
         self.Y = Y
+        self._is_sdf = isinstance(geometry, SDFGeometry)
 
         # Compute solid mask
         self.mask = geometry.is_inside(X, Y)
@@ -244,6 +264,9 @@ class ImmersedBoundary:
 
         For each ghost cell, find the mirror image point
         on the fluid side of the boundary.
+
+        Dispatches between SDFGeometry (normal / sdf) and
+        legacy WedgeGeometry (surface_normal / distance_to_surface).
         """
         # Get coordinates of ghost cells
         ghost_idx = torch.nonzero(self.ghost_mask)
@@ -259,11 +282,14 @@ class ImmersedBoundary:
         x_ghost = self.X[j_ghost, i_ghost]
         y_ghost = self.Y[j_ghost, i_ghost]
 
-        # Get surface normal at ghost cell locations
-        nx, ny = self.geometry.surface_normal(x_ghost, y_ghost)
-
-        # Distance to surface (negative since inside)
-        d = self.geometry.distance_to_surface(x_ghost, y_ghost)
+        if self._is_sdf:
+            # SDFGeometry protocol: sdf() + normal()
+            nx, ny = self.geometry.normal(x_ghost, y_ghost)
+            d = self.geometry.sdf(x_ghost, y_ghost)
+        else:
+            # Legacy WedgeGeometry
+            nx, ny = self.geometry.surface_normal(x_ghost, y_ghost)
+            d = self.geometry.distance_to_surface(x_ghost, y_ghost)
 
         # Image point: reflect across surface
         # x_image = x_ghost + 2*|d|*nx
@@ -452,7 +478,10 @@ def compute_pressure_coefficient(
 
 
 def compute_drag_coefficient(
-    surface_data: dict, wedge: WedgeGeometry, q_inf: float, reference_length: float
+    surface_data: dict,
+    wedge: Union[SDFGeometry, WedgeGeometry],
+    q_inf: float,
+    reference_length: float,
 ) -> float:
     """
     Compute drag coefficient by integrating surface pressure.
@@ -476,7 +505,10 @@ def compute_drag_coefficient(
     p = surface_data["p"]
 
     # Surface normal components
-    nx, ny = wedge.surface_normal(x, y)
+    if isinstance(wedge, SDFGeometry):
+        nx, ny = wedge.normal(x, y)
+    else:
+        nx, ny = wedge.surface_normal(x, y)
 
     # Pressure force in x-direction (per unit span)
     # F_x = ∫ p * n_x * ds

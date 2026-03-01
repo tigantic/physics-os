@@ -153,8 +153,11 @@
 /physics_os/sdk/                    @tigantic/sdk
 /physics_os/mcp/                    @tigantic/sdk
 /physics_os/cli/                    @tigantic/sdk
-/physics_os/core/                   @tigantic/core @tigantic/security
-/physics_os/jobs/                   @tigantic/core
+/physics_os/core/                   @tigantic/core @tigantic/security/physics_os/core/fluids.py           @tigantic/cfd @tigantic/core
+/physics_os/core/materials.py        @tigantic/cfd @tigantic/core
+/physics_os/core/dimensionless.py    @tigantic/cfd @tigantic/physics
+/physics_os/core/resolution.py       @tigantic/core
+/physics_os/templates/               @tigantic/core @tigantic/cfd @tigantic/sdk/physics_os/jobs/                   @tigantic/core
 /physics_os/billing/                @tigantic/core
 
 # ============================================

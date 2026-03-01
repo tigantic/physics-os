@@ -245,6 +245,113 @@ class OnticClient:
         """Get contract schemas for a version."""
         return self._get(f"/v1/contracts/{version}")
 
+    # ── Problem templates ───────────────────────────────────────────
+
+    def list_templates(self) -> list[dict[str, Any]]:
+        """List available problem templates.
+
+        Returns
+        -------
+        list[dict]
+            Template descriptors with problem_class, label,
+            supported_geometries, and example_params.
+        """
+        resp = self._get("/v1/templates")
+        return resp.get("templates", [])
+
+    def get_template(self, problem_class: str) -> dict[str, Any]:
+        """Get details for a specific problem template.
+
+        Parameters
+        ----------
+        problem_class : str
+            Template key (e.g. ``"external_flow"``).
+        """
+        return self._get(f"/v1/templates/{problem_class}")
+
+    def solve_problem(
+        self,
+        problem_class: str,
+        geometry: dict[str, Any],
+        flow: dict[str, Any],
+        *,
+        boundaries: dict[str, str] | None = None,
+        quality: str = "standard",
+        t_end: float | None = None,
+        domain_multiplier: float = 10.0,
+        max_rank: int = 64,
+        idempotency_key: str | None = None,
+        wait: bool = True,
+    ) -> JobResult:
+        """Submit a high-level physics problem.
+
+        The Problem Compiler resolves geometry, fluid properties,
+        dimensionless numbers, and optimal resolution automatically.
+
+        Parameters
+        ----------
+        problem_class : str
+            One of: external_flow, internal_flow, heat_transfer,
+            wave_propagation, natural_convection, boundary_layer,
+            vortex_dynamics, channel_flow.
+        geometry : dict
+            ``{"shape": "circle", "params": {"radius": 0.01}}``.
+        flow : dict
+            ``{"velocity": 10.0, "fluid": "air"}``.
+        boundaries : dict, optional
+            Boundary conditions (inlet, outlet, walls, top, bottom).
+        quality : str
+            Quality tier: quick, standard, high, maximum.
+        t_end : float, optional
+            Simulation end time in seconds.
+        domain_multiplier : float
+            Domain size as multiple of characteristic length.
+        max_rank : int
+            Maximum tensor-train rank.
+        idempotency_key : str, optional
+            Prevents duplicate submissions.
+        wait : bool
+            If True (default), polls until job completes.
+
+        Returns
+        -------
+        JobResult
+            Completed job with result, validation, and certificate.
+        """
+        body: dict[str, Any] = {
+            "problem_class": problem_class,
+            "geometry": geometry,
+            "flow": flow,
+            "quality": quality,
+            "domain_multiplier": domain_multiplier,
+            "max_rank": max_rank,
+        }
+        if boundaries:
+            body["boundaries"] = boundaries
+        if t_end is not None:
+            body["t_end"] = t_end
+
+        headers: dict[str, str] = {}
+        if idempotency_key:
+            headers["X-Idempotency-Key"] = idempotency_key
+
+        resp = self._post("/v1/problems", body, extra_headers=headers)
+        job_id = resp["job_id"]
+        domain = resp.get("compilation", {}).get("domain", "unknown")
+        logger.info(
+            "Problem submitted: %s (class=%s, domain=%s)",
+            job_id, problem_class, domain,
+        )
+
+        if not wait:
+            return JobResult(
+                job_id=job_id,
+                status=resp.get("status", "queued"),
+                domain=domain,
+            )
+
+        return self.wait_for(job_id, domain=domain)
+
     # ── Batch / convenience ─────────────────────────────────────────
 
     def run_batch(

@@ -60,6 +60,24 @@ from ontic.cfd.multi_objective import (
 # --- navier_stokes -------------------------------------------------------
 from ontic.cfd.navier_stokes import NavierStokes2D, NavierStokes2DConfig
 
+# --- geometry / SDF library ----------------------------------------------
+from ontic.cfd.geometry import ImmersedBoundary, WedgeGeometry
+from ontic.cfd.sdf import (
+    CircleSDF,
+    ConcentricAnnulusSDF,
+    EllipseSDF,
+    FinArraySDF,
+    FlatPlateSDF,
+    MultiBodySDF,
+    NACA4DigitSDF,
+    PipeBendSDF,
+    RectangleSDF,
+    RoundedRectSDF,
+    SDFGeometry,
+    StepSDF,
+    WedgeSDF,
+)
+
 # --- pure_qtt_ops (imported as submodule by ontic.cuda) ---------------
 from ontic.cfd import pure_qtt_ops  # noqa: F401  — submodule re-export
 
@@ -102,6 +120,22 @@ __all__ = [
     # navier_stokes
     "NavierStokes2D",
     "NavierStokes2DConfig",
+    # geometry / SDF
+    "SDFGeometry",
+    "CircleSDF",
+    "EllipseSDF",
+    "RectangleSDF",
+    "RoundedRectSDF",
+    "WedgeSDF",
+    "NACA4DigitSDF",
+    "FlatPlateSDF",
+    "FinArraySDF",
+    "PipeBendSDF",
+    "ConcentricAnnulusSDF",
+    "MultiBodySDF",
+    "StepSDF",
+    "ImmersedBoundary",
+    "WedgeGeometry",
     # submodules
     "pure_qtt_ops",
 ]

@@ -159,12 +159,14 @@ def create_app() -> FastAPI:
     from .routers.contracts import router as contracts_router
     from .routers.health import router as health_router
     from .routers.jobs import router as jobs_router
+    from .routers.problems import router as problems_router
     from .routers.validate import router as validate_router
 
     app.include_router(health_router)
     app.include_router(capabilities_router)
     app.include_router(contracts_router)
     app.include_router(jobs_router)
+    app.include_router(problems_router)
     app.include_router(validate_router)
     app.include_router(billing_router)
 

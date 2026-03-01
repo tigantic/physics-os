@@ -296,6 +296,191 @@ def cmd_capabilities(args: argparse.Namespace) -> None:
     _json_out({"domains": domains, "count": len(domains)})
 
 
+def cmd_problem(args: argparse.Namespace) -> None:
+    """Compile and run a high-level physics problem."""
+    from physics_os.templates.compiler import compile_problem
+    from physics_os.templates.models import (
+        BoundarySpec,
+        FlowConditions,
+        GeometrySpec,
+        GeometryType,
+        ProblemClass,
+        ProblemSpec,
+    )
+    from physics_os.core.executor import ExecutionConfig, execute
+    from physics_os.core.sanitizer import sanitize_result
+    from physics_os.core.evidence import generate_validation_report, generate_claims
+    from physics_os.core.certificates import issue_certificate
+    from physics_os.core.hasher import content_hash
+
+    # ── Parse problem class ─────────────────────────────────────────
+    try:
+        pc = ProblemClass(args.problem_class)
+    except ValueError:
+        available = [p.value for p in ProblemClass]
+        _stderr(f"Error: unknown problem class '{args.problem_class}'.  Available: {', '.join(available)}")
+        sys.exit(1)
+
+    # ── Parse geometry ──────────────────────────────────────────────
+    try:
+        geo_type = GeometryType(args.shape)
+    except ValueError:
+        available = [g.value for g in GeometryType]
+        _stderr(f"Error: unknown shape '{args.shape}'.  Available: {', '.join(available)}")
+        sys.exit(1)
+
+    geo_params: dict[str, Any] = {}
+    if args.geo_param:
+        for kv in args.geo_param:
+            if "=" not in kv:
+                _stderr(f"Error: --geo-param must be key=value, got '{kv}'")
+                sys.exit(1)
+            k, v = kv.split("=", 1)
+            try:
+                geo_params[k] = json.loads(v)
+            except json.JSONDecodeError:
+                geo_params[k] = v
+
+    geometry = GeometrySpec(shape=geo_type, params=geo_params)
+    flow = FlowConditions(
+        velocity=args.velocity,
+        fluid=args.fluid,
+        temperature=args.temperature,
+        pressure=args.pressure,
+    )
+
+    boundaries = None
+    if args.boundary:
+        bd: dict[str, str] = {}
+        for kv in args.boundary:
+            if "=" not in kv:
+                _stderr(f"Error: --boundary must be key=value, got '{kv}'")
+                sys.exit(1)
+            k, v = kv.split("=", 1)
+            bd[k] = v
+        boundaries = BoundarySpec(**bd)
+
+    spec = ProblemSpec(
+        problem_class=pc,
+        geometry=geometry,
+        flow=flow,
+        boundaries=boundaries,
+        quality=args.quality,
+        t_end=args.t_end,
+        domain_multiplier=args.domain_multiplier,
+        max_rank=args.max_rank,
+    )
+
+    # ── Compile ─────────────────────────────────────────────────────
+    _stderr(f"Compiling: {args.problem_class} / {args.shape} / {args.fluid}")
+    try:
+        compiled = compile_problem(spec)
+    except (ValueError, KeyError) as exc:
+        _stderr(f"Compilation error: {exc}")
+        sys.exit(1)
+
+    _stderr(
+        f"  → domain={compiled.domain}  n_bits={compiled.n_bits}  "
+        f"n_steps={compiled.n_steps}  Re={compiled.reynolds_number:.1f}"
+    )
+
+    # ── Execute ─────────────────────────────────────────────────────
+    config = ExecutionConfig(
+        domain=compiled.domain,
+        n_bits=compiled.n_bits,
+        n_steps=compiled.n_steps,
+        dt=compiled.dt,
+        max_rank=compiled.max_rank,
+        truncation_tol=1e-10,
+        parameters=compiled.parameters,
+    )
+
+    _stderr(f"Running simulation...")
+    result = execute(config)
+    if not result.success:
+        _stderr(f"Execution failed: {result.error}")
+        _json_out({"success": False, "error": str(result.error), "warnings": compiled.warnings})
+        sys.exit(2)
+
+    sanitized = sanitize_result(
+        result,
+        compiled.domain,
+        precision=args.precision,
+        include_fields=not args.no_fields,
+    )
+
+    _stderr(f"Completed in {sanitized['performance']['wall_time_s']:.4f}s")
+
+    output: dict[str, Any] = {
+        "problem_class": args.problem_class,
+        "domain": compiled.domain,
+        "reynolds_number": compiled.reynolds_number,
+        "mach_number": compiled.mach_number,
+        "characteristic_length": compiled.characteristic_length,
+        "fluid_name": compiled.fluid_name,
+        "quality_tier": compiled.quality_tier,
+        "warnings": compiled.warnings,
+        "result": sanitized,
+    }
+
+    # Validate
+    if not args.no_validate:
+        report = generate_validation_report(sanitized, compiled.domain)
+        output["validation"] = report
+        valid_status = "PASS" if report["valid"] else "FAIL"
+        _stderr(f"Validation: {valid_status}")
+
+    # Attest
+    if args.attest:
+        claims = generate_claims(sanitized, compiled.domain)
+        result_hash = content_hash(sanitized)
+        config_hash = content_hash(config.merged_parameters)
+        cert = issue_certificate(
+            job_id=f"cli-problem-{content_hash({'t': __import__('time').time()})[:12]}",
+            claims=claims,
+            input_manifest_hash=content_hash(spec.model_dump()),
+            result_hash=result_hash,
+            config_hash=config_hash,
+            runtime_version=physics_os.RUNTIME_VERSION,
+        )
+        output["certificate"] = cert
+        satisfied = sum(1 for c in claims if c["satisfied"])
+        _stderr(f"Certificate: {satisfied}/{len(claims)} claims satisfied")
+
+    # Write output
+    if args.output:
+        Path(args.output).write_text(json.dumps(output, indent=2, default=str))
+        _stderr(f"Written to {args.output}")
+    else:
+        _json_out(output)
+
+
+def cmd_templates(args: argparse.Namespace) -> None:
+    """List available problem templates."""
+    from physics_os.templates.models import ProblemClass
+    from physics_os.templates.registry import TemplateRegistry
+
+    registry = TemplateRegistry()
+    templates: list[dict[str, Any]] = []
+    for pc in ProblemClass:
+        info = registry.get(pc)
+        if info is None:
+            continue
+        templates.append({
+            "problem_class": info.problem_class.value,
+            "label": info.label,
+            "supported_geometries": [g.value for g in info.supported_geometries],
+            "default_geometry": info.default_geometry.value,
+        })
+
+    _stderr(f"{len(templates)} problem templates available:")
+    for t in templates:
+        geos = ", ".join(t["supported_geometries"])
+        _stderr(f"  {t['problem_class']:25s}  {t['label']:35s}  [{geos}]")
+
+    _json_out({"templates": templates, "count": len(templates)})
+
+
 def cmd_serve(args: argparse.Namespace) -> None:
     """Start the HTTP API server."""
     import uvicorn
@@ -358,6 +543,29 @@ def build_parser() -> argparse.ArgumentParser:
     # ── capabilities ─────────────────────────────────────────────
     subs.add_parser("capabilities", help="List available physics domains")
 
+    # ── templates ────────────────────────────────────────────────
+    subs.add_parser("templates", help="List available problem templates")
+
+    # ── problem ──────────────────────────────────────────────────
+    p_prob = subs.add_parser("problem", help="Compile and run a high-level physics problem")
+    p_prob.add_argument("--problem-class", required=True, help="Problem type (e.g. external_flow)")
+    p_prob.add_argument("--shape", required=True, help="Geometry shape (e.g. circle, naca4)")
+    p_prob.add_argument("--velocity", type=float, required=True, help="Free-stream velocity (m/s)")
+    p_prob.add_argument("--fluid", default="air", help="Fluid name (default: air)")
+    p_prob.add_argument("--temperature", type=float, default=None, help="Temperature (K)")
+    p_prob.add_argument("--pressure", type=float, default=None, help="Pressure (Pa)")
+    p_prob.add_argument("--quality", default="standard", help="Quality tier: quick, standard, high, maximum")
+    p_prob.add_argument("--t-end", type=float, default=None, help="Simulation end time (s)")
+    p_prob.add_argument("--domain-multiplier", type=float, default=10.0, help="Domain size multiplier")
+    p_prob.add_argument("--max-rank", type=int, default=64, help="Max TT rank (default: 64)")
+    p_prob.add_argument("--geo-param", action="append", help="Geometry param as key=value (repeatable)")
+    p_prob.add_argument("--boundary", action="append", help="Boundary as key=value (repeatable)")
+    p_prob.add_argument("--precision", type=int, default=8, help="Output decimal precision")
+    p_prob.add_argument("--no-fields", action="store_true", help="Omit field arrays from output")
+    p_prob.add_argument("--no-validate", action="store_true", help="Skip validation")
+    p_prob.add_argument("--attest", action="store_true", help="Issue trust certificate")
+    p_prob.add_argument("-o", "--output", help="Write result to file instead of stdout")
+
     # ── serve ────────────────────────────────────────────────────
     p_serve = subs.add_parser("serve", help="Start the HTTP API server")
     p_serve.add_argument("--host", default="0.0.0.0", help="Bind host")
@@ -374,6 +582,8 @@ _DISPATCH: dict[str, Any] = {
     "attest": cmd_attest,
     "verify": cmd_verify,
     "capabilities": cmd_capabilities,
+    "templates": cmd_templates,
+    "problem": cmd_problem,
     "serve": cmd_serve,
 }
 

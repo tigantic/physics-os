@@ -169,6 +169,153 @@ def _verify_certificate(certificate: dict[str, Any]) -> dict[str, Any]:
     }
 
 
+def _list_templates() -> dict[str, Any]:
+    """List available problem templates."""
+    from physics_os.templates.models import ProblemClass
+    from physics_os.templates.registry import TemplateRegistry
+
+    registry = TemplateRegistry()
+    templates: list[dict[str, Any]] = []
+    for pc in ProblemClass:
+        info = registry.get(pc)
+        if info is None:
+            continue
+        templates.append({
+            "problem_class": info.problem_class.value,
+            "label": info.label,
+            "description": info.description,
+            "supported_geometries": [g.value for g in info.supported_geometries],
+            "default_geometry": info.default_geometry.value,
+            "required_flow_fields": info.required_flow_fields,
+            "optional_flow_fields": info.optional_flow_fields,
+            "example_params": info.example_params,
+        })
+    return {"templates": templates, "count": len(templates)}
+
+
+def _solve_problem(
+    problem_class: str,
+    geometry: dict[str, Any],
+    flow: dict[str, Any],
+    boundaries: dict[str, str] | None = None,
+    quality: str = "standard",
+    t_end: float | None = None,
+    domain_multiplier: float = 10.0,
+    max_rank: int = 64,
+) -> dict[str, Any]:
+    """Compile and run a high-level physics problem."""
+    from physics_os.templates.compiler import compile_problem
+    from physics_os.templates.models import (
+        BoundarySpec,
+        FlowConditions,
+        GeometrySpec,
+        GeometryType,
+        ProblemClass,
+        ProblemSpec,
+    )
+    from physics_os.core.executor import ExecutionConfig, execute
+    from physics_os.core.sanitizer import sanitize_result
+    from physics_os.core.evidence import generate_validation_report, generate_claims
+    from physics_os.core.certificates import issue_certificate
+    from physics_os.core.hasher import content_hash
+
+    import physics_os
+    import time
+
+    # Parse inputs
+    try:
+        pc = ProblemClass(problem_class)
+    except ValueError:
+        return {"error": f"Unknown problem_class: {problem_class!r}"}
+
+    geo_shape = geometry.get("shape")
+    if not geo_shape:
+        return {"error": "geometry.shape is required"}
+
+    try:
+        geo_type = GeometryType(geo_shape)
+    except ValueError:
+        return {"error": f"Unknown geometry shape: {geo_shape!r}"}
+
+    geo_spec = GeometrySpec(shape=geo_type, params=geometry.get("params", {}))
+    flow_spec = FlowConditions(
+        velocity=flow.get("velocity", 1.0),
+        fluid=flow.get("fluid", "air"),
+        temperature=flow.get("temperature"),
+        pressure=flow.get("pressure"),
+    )
+
+    boundary_spec = None
+    if boundaries:
+        boundary_spec = BoundarySpec(**boundaries)
+
+    spec = ProblemSpec(
+        problem_class=pc,
+        geometry=geo_spec,
+        flow=flow_spec,
+        boundaries=boundary_spec,
+        quality=quality,
+        t_end=t_end,
+        domain_multiplier=domain_multiplier,
+        max_rank=max_rank,
+    )
+
+    # Compile
+    try:
+        compiled = compile_problem(spec)
+    except (ValueError, KeyError) as exc:
+        return {"error": f"Compilation error: {exc}"}
+
+    # Execute
+    config = ExecutionConfig(
+        domain=compiled.domain,
+        n_bits=compiled.n_bits,
+        n_steps=compiled.n_steps,
+        dt=compiled.dt,
+        max_rank=compiled.max_rank,
+        truncation_tol=1e-10,
+        parameters=compiled.parameters,
+    )
+
+    result = execute(config)
+    if not result.success:
+        return {"error": str(result.error), "success": False}
+
+    sanitized = sanitize_result(result, compiled.domain)
+
+    output: dict[str, Any] = {
+        "problem_class": problem_class,
+        "domain": compiled.domain,
+        "success": True,
+        "reynolds_number": compiled.reynolds_number,
+        "mach_number": compiled.mach_number,
+        "characteristic_length": compiled.characteristic_length,
+        "fluid_name": compiled.fluid_name,
+        "quality_tier": compiled.quality_tier,
+        "warnings": compiled.warnings,
+        "result": sanitized,
+    }
+
+    # Validate + attest
+    report = generate_validation_report(sanitized, compiled.domain)
+    output["validation"] = report
+
+    claims = generate_claims(sanitized, compiled.domain)
+    result_hash = content_hash(sanitized)
+    config_hash = content_hash(config.merged_parameters)
+    cert = issue_certificate(
+        job_id=f"mcp-problem-{content_hash({'t': time.time()})[:12]}",
+        claims=claims,
+        input_manifest_hash=content_hash(spec.model_dump()),
+        result_hash=result_hash,
+        config_hash=config_hash,
+        runtime_version=physics_os.RUNTIME_VERSION,
+    )
+    output["certificate"] = cert
+
+    return output
+
+
 # ── Tool metadata ──────────────────────────────────────────────────
 
 TOOLS: list[dict[str, Any]] = [
@@ -275,6 +422,87 @@ TOOLS: list[dict[str, Any]] = [
             "required": ["certificate"],
         },
     },
+    {
+        "name": "ontic_list_templates",
+        "description": (
+            "List all available physics problem templates.  Returns "
+            "template descriptors with problem classes, supported "
+            "geometries, required/optional fields, and example parameters.  "
+            "Use this to discover what problems the solver can handle."
+        ),
+        "inputSchema": {
+            "type": "object",
+            "properties": {},
+        },
+    },
+    {
+        "name": "ontic_solve_problem",
+        "description": (
+            "Submit a high-level physics problem.  Specify the physical "
+            "scenario (shape, flow conditions, fluid) instead of raw PDE "
+            "parameters.  The Problem Compiler automatically resolves "
+            "geometry, dimensionless numbers, and optimal resolution.  "
+            "Returns the simulation result, validation, and certificate."
+        ),
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "problem_class": {
+                    "type": "string",
+                    "enum": [
+                        "external_flow",
+                        "internal_flow",
+                        "heat_transfer",
+                        "wave_propagation",
+                        "natural_convection",
+                        "boundary_layer",
+                        "vortex_dynamics",
+                        "channel_flow",
+                    ],
+                    "description": "Physics problem type.",
+                },
+                "geometry": {
+                    "type": "object",
+                    "description": (
+                        'Geometry spec with "shape" and "params" keys. '
+                        'Example: {"shape": "circle", "params": {"radius": 0.01}}'
+                    ),
+                },
+                "flow": {
+                    "type": "object",
+                    "description": (
+                        'Flow conditions with "velocity" (required), '
+                        '"fluid" (default "air"), "temperature", "pressure".'
+                    ),
+                },
+                "boundaries": {
+                    "type": "object",
+                    "description": "Boundary conditions (inlet, outlet, walls, top, bottom).",
+                },
+                "quality": {
+                    "type": "string",
+                    "enum": ["quick", "standard", "high", "maximum"],
+                    "default": "standard",
+                    "description": "Simulation quality tier.",
+                },
+                "t_end": {
+                    "type": "number",
+                    "description": "Simulation end time in seconds.",
+                },
+                "domain_multiplier": {
+                    "type": "number",
+                    "default": 10.0,
+                    "description": "Domain size as multiple of characteristic length.",
+                },
+                "max_rank": {
+                    "type": "integer",
+                    "default": 64,
+                    "description": "Maximum tensor-train rank.",
+                },
+            },
+            "required": ["problem_class", "geometry", "flow"],
+        },
+    },
 ]
 
 
@@ -283,6 +511,8 @@ _TOOL_DISPATCH: dict[str, Any] = {
     "ontic_run_simulation": lambda args: _submit_job(**args),
     "ontic_validate": lambda args: _validate_artifact(args["artifact"]),
     "ontic_verify_certificate": lambda args: _verify_certificate(args["certificate"]),
+    "ontic_list_templates": lambda args: _list_templates(),
+    "ontic_solve_problem": lambda args: _solve_problem(**args),
 }
 
 
