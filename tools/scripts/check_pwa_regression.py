@@ -27,7 +27,7 @@ import sys
 from pathlib import Path
 from typing import Any, Dict, List, Tuple
 
-METADATA_PATH = Path(__file__).resolve().parent.parent / "paper" / "figures" / "pwa_engine_metadata.json"
+METADATA_PATH = Path(__file__).resolve().parent.parent.parent / "docs" / "papers" / "paper" / "figures" / "pwa_engine_metadata.json"
 
 # ── Thresholds ──────────────────────────────────────────────────────────────
 # Each entry: (json_path, comparator, threshold, description)

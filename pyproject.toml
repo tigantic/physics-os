@@ -116,7 +116,7 @@ io = [
     "h5py>=3.8",
 ]
 benchmark = [
-    "tenpy>=0.10",
+    "physics-tenpy>=0.10",
     "scipy>=1.10",
     "pytest-benchmark>=5.0",
 ]

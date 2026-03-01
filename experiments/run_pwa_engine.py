@@ -100,7 +100,7 @@ from experiments.pwa_engine.core import (
     wave_set_scan,
 )
 
-OUTPUT_DIR = Path(__file__).resolve().parent.parent / "paper" / "figures"
+OUTPUT_DIR = Path(__file__).resolve().parent.parent / "docs" / "papers" / "paper" / "figures"
 
 
 # ════════════════════════════════════════════════════════════════════════════════
