@@ -70,7 +70,7 @@ try:
     from ontic.cfd.qtt import field_to_qtt, qtt_to_field
 except ImportError:
     print("[FATAL] Ontic QTT engine not found.")
-    print("        Ensure tensornet.cfd.qtt is importable.")
+    print("        Ensure ontic.cfd.qtt is importable.")
     sys.exit(1)
 
 # ── SciPy (for KD-tree spatial queries) ──────────────────────────────

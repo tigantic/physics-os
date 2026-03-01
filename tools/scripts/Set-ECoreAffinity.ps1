@@ -143,7 +143,7 @@ function Measure-StabilityScore {
 # MAIN EXECUTION
 # ═══════════════════════════════════════════════════════════════════════════
 
-Write-Banner "HyperTensor E-Core Affinity Enforcement"
+Write-Banner "The Physics OS E-Core Affinity Enforcement"
 
 Get-ProcessorInfo
 

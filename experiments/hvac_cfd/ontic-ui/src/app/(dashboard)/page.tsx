@@ -1,5 +1,5 @@
 /**
- * HyperTensor Dashboard - Main Landing Page
+ * The Physics OS Dashboard - Main Landing Page
  * 
  * Overview of system status, active simulations, and quick actions.
  */

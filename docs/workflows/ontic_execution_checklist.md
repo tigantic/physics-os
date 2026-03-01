@@ -209,7 +209,7 @@
 **Evidence:** `requirements-lock.txt` exists but not referenced by `pyproject.toml`/`Makefile`
 
 - [x] ✅ **DECIDED:** pip freeze for simplicity (lockfiles are reference, not enforced) (2025-12-27)
-- [x] ✅ Generated lockfile for root `tensornet` package (`requirements-lock.txt`) (2025-12-27)
+- [x] ✅ Generated lockfile for root `ontic` package (`requirements-lock.txt`) (2025-12-27)
 - [x] ✅ Generated lockfile for `apps/sdk_legacy/qtt-sdk` package (`apps/sdk_legacy/qtt-sdk/requirements-lock.txt`) (2025-12-27)
 - [x] ✅ Documented lockfile generation/update process in CONTRIBUTING.md (2025-12-27)
 - [x] ✅ Added `make lockfile` and `make lockfile-check` targets (2025-12-27)
@@ -578,7 +578,7 @@ Cycle in `ontic/ml_surrogates/` (size 4):
 
 **Evidence:** `pyproject.toml:L98-L108` has coverage config, not wired to `make test`
 
-- [x] ✅ Add `--cov=tensornet` to pytest command (via `make test-cov` 2025-12-27)
+- [x] ✅ Add `--cov=ontic` to pytest command (via `make test-cov` 2025-12-27)
 - [x] ✅ Add `--cov-report=term-missing` for local development (2025-12-27)
 - [x] ✅ Add `--cov-report=xml` for CI (2025-12-27)
 - [x] ✅ Set coverage threshold (70% minimum in pyproject.toml) (2025-12-27)
@@ -694,7 +694,7 @@ Cycle in `ontic/ml_surrogates/` (size 4):
 
 | Project | Location | Build Tool |
 |---------|----------|------------|
-| tensornet | root | setuptools |
+| ontic | root | setuptools |
 | qtt-sdk | `apps/sdk_legacy/qtt-sdk/` | setuptools |
 | tci_core_rust | `crates/tci_core_rust/` | maturin |
 

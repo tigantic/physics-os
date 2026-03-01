@@ -1,5 +1,5 @@
 /**
- * HyperTensor Simulation Types
+ * The Physics OS Simulation Types
  * 
  * Type definitions for CFD simulation management.
  * Uses camelCase for TypeScript conventions.

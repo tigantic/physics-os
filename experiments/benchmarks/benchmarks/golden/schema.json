@@ -186,7 +186,7 @@
     },
     "runtime_version": {
       "type": "string",
-      "description": "tensornet.vm runtime version string."
+      "description": "ontic.vm runtime version string."
     },
     "error_message": {
       "type": "string",

@@ -3,7 +3,7 @@
 Static documentation site generation module.
 
 This module provides infrastructure for generating static documentation
-sites from the tensornet codebase, including:
+sites from the ontic codebase, including:
 - Sphinx-compatible configuration
 - Static site generation (HTML, PDF)
 - Search index generation

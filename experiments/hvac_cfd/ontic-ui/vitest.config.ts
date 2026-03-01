@@ -1,5 +1,5 @@
 /**
- * Vitest Configuration - HyperTensor UI
+ * Vitest Configuration - The Physics OS UI
  * 
  * Testing framework configuration with coverage thresholds
  * per Article III of the Constitution.

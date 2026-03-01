@@ -3,7 +3,7 @@ Matrix Product State (MPS)
 ==========================
 
 Core MPS class for representing 1D quantum states and classical fields.
-COPIED from tensornet/core/mps.py for isolation per user requirement.
+COPIED from ontic/core/mps.py for isolation per user requirement.
 
 Tensor convention:
     A[i] : (χ_left, d, χ_right)

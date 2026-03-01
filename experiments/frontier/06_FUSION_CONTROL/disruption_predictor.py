@@ -183,7 +183,7 @@ class PredictorConfig:
     })
 
 
-class TensorNetworkStateEstimator:
+class Ontic EngineworkStateEstimator:
     """
     Tensor network-based plasma state estimator.
     
@@ -295,7 +295,7 @@ class DisruptionPredictor:
     
     def __init__(self, config: Optional[PredictorConfig] = None):
         self.config = config or PredictorConfig()
-        self.state_estimator = TensorNetworkStateEstimator(
+        self.state_estimator = Ontic EngineworkStateEstimator(
             n_psi=64,
             max_rank=self.config.max_rank,
         )

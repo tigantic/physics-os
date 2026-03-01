@@ -1142,7 +1142,7 @@ The Physics OS/
 | TNQuantumSimulator | `quantum/hybrid.py` | ✅ Implemented | MPS-based quantum simulator |
 | VQE | `quantum/hybrid.py` | ✅ Implemented | Variational Quantum Eigensolver |
 | QAOA | `quantum/hybrid.py` | ✅ Implemented | Quantum Approximate Optimization |
-| TensorNetworkBornMachine | `quantum/hybrid.py` | ✅ Implemented | Generative model via MPS |
+| Ontic EngineworkBornMachine | `quantum/hybrid.py` | ✅ Implemented | Generative model via MPS |
 | QuantumInspiredOptimizer | `quantum/hybrid.py` | ✅ Implemented | TN-based optimization |
 | NoiseType | `quantum/error_mitigation.py` | ✅ Implemented | Noise channel types |
 | NoiseModel | `quantum/error_mitigation.py` | ✅ Implemented | Device noise modeling |

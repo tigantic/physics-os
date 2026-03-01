@@ -39,13 +39,13 @@ def propose_category(path: str, text_sig: str) -> str | None:
     p = path_norm(path)
 
     # strong path-based rules
-    if p.startswith("tensornet/core/") or p.startswith("tensornet/mps/") or p.startswith("tensornet/mpo/"):
+    if p.startswith("ontic/core/") or p.startswith("ontic/mps/") or p.startswith("ontic/mpo/"):
         return "core"
-    if p.startswith("tensornet/cfd/"):
+    if p.startswith("ontic/cfd/"):
         return "cfd"
-    if p.startswith("tensornet/genesis/"):
+    if p.startswith("ontic/genesis/"):
         return "genesis"
-    if p.startswith("tensornet/cuda/") or p.startswith("tensornet/gpu/"):
+    if p.startswith("ontic/cuda/") or p.startswith("ontic/gpu/"):
         return "gpu"
     if p.startswith("fluidelite/"):
         return "fluidelite"

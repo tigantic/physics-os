@@ -1,6 +1,6 @@
 ==============================================================================================================
 PHYSICS-OS FORENSIC LOC SWEEP v2 — AUTHORED CODE ONLY
-Root: /home/brad/TiganticLabz/FRONT_VAULT/03_SOURCE/Main_Projects/HyperTensor-VM-main
+Root: /home/brad/TiganticLabz/FRONT_VAULT/03_SOURCE/Main_Projects/physics-os
 ==============================================================================================================
 
 Excluded vendored dirs: clawdbot-main, openzeppelin-contracts, vendor, worldcoin-id, zk_targets
@@ -40,7 +40,7 @@ Directory                          Files  Total Lines       Code  Size MB       
 ──────────────────────────────── ─────── ──────────── ────────── ──────── ───────────────
 lean_yang_mills                    8,639    2,178,423  1,748,618    86.07          Lean 4
 yang_mills_unified_proof           8,094    2,139,658  1,717,776    85.03          Lean 4
-tensornet                          1,082      471,534    378,655    15.05          Python
+ontic                          1,082      471,534    378,655    15.05          Python
 docs                                 404      282,134    215,589     9.71        Markdown
 scripts                              176       91,348     74,215     3.33          Python
 products                             208       88,458     75,910     3.11          Python
@@ -143,7 +143,7 @@ results                                1            9          6     0.00       
 images                                 1            1          1     0.00        Markdown
 
 ──────────────────────────────────────────────────────────────────────────────────────────────────────────────
-SECTION 3: TENSORNET/ MODULE BREAKDOWN
+SECTION 3: ONTIC/ MODULE BREAKDOWN
 ──────────────────────────────────────────────────────────────────────────────────────────────────────────────
 Module                        Files  Total Lines       Code
 ──────────────────────────── ────── ──────────── ──────────
@@ -189,7 +189,7 @@ astro                            14        3,066      2,332
 provenance                        7        3,056      2,432
   ... + 65 more                 293       85,843     68,854
 ──────────────────────────── ────── ──────────── ──────────
-TENSORNET TOTAL                1079      470,067    377,343
+ONTIC TOTAL                1079      470,067    377,343
 
 ──────────────────────────────────────────────────────────────────────────────────────────────────────────────
 SECTION 4: TOP 30 LARGEST AUTHORED FILES
@@ -197,7 +197,7 @@ SECTION 4: TOP 30 LARGEST AUTHORED FILES
   1.  40,000 lines   1089.3 KB  data/shakespeare.txt
   2.  39,315 lines   1164.4 KB  docs/research/Ontic_CFD_Book.md
   3.  23,546 lines    580.5 KB  docs/reports/zksync_halo2_report.md
-  4.  23,176 lines    879.2 KB  docs/api/tensornet/cfd/index.html
+  4.  23,176 lines    879.2 KB  docs/api/ontic/cfd/index.html
   5.  13,285 lines    269.4 KB  docs/reports/fluidelite_report.md
   6.  13,248 lines    399.3 KB  products/fluidelite-zk/foundry/lib/forge-std/src/safeconsole.sol
   7.  13,248 lines    399.3 KB  fluidelite-zk/foundry/lib/forge-std/src/safeconsole.sol
@@ -219,9 +219,9 @@ SECTION 4: TOP 30 LARGEST AUTHORED FILES
  23.   3,882 lines    126.0 KB  fluidelite/FINDINGS.md
  24.   3,828 lines    672.3 KB  sovereign-ui/.svelte-kit/output/client/_app/immutable/chunks/BtCAaDxU.js
  25.   3,655 lines    117.5 KB  sovereign-ui/.svelte-kit/output/server/index.js
- 26.   3,231 lines    120.0 KB  docs/api/tensornet/core/index.html
+ 26.   3,231 lines    120.0 KB  docs/api/ontic/core/index.html
  27.   2,921 lines     81.9 KB  sovereign-ui/.svelte-kit/output/server/chunks/index2.js
- 28.   2,917 lines    105.9 KB  tensornet/zk/fezk_elite.py
+ 28.   2,917 lines    105.9 KB  ontic/zk/fezk_elite.py
  29.   2,917 lines    115.1 KB  docs/architecture/Sovereign_UI.md
  30.   2,728 lines     96.6 KB  tests/test_integration.py
 
@@ -236,7 +236,7 @@ EXECUTIVE SUMMARY — AUTHORED CODE ONLY
   Vendored lines excluded:      4,666,545
   Data/binary files skipped:        6,829
   Other non-source skipped:        29,595
-  tensornet/ modules:                 105
+  ontic/ modules:                 105
   Languages detected:                  19
 
   AUTHORED LINES BY LANGUAGE:

@@ -18,9 +18,9 @@
   },
   
   "deliverables": {
-    "tensornet/fuel/__init__.py": "complete",
-    "tensornet/fuel/s3_fetcher.py": "complete",
-    "tensornet/fuel/tile_compositor.py": "complete",
+    "ontic/fuel/__init__.py": "complete",
+    "ontic/fuel/s3_fetcher.py": "complete",
+    "ontic/fuel/tile_compositor.py": "complete",
     "s3_endpoints_documented": "embedded_in_code"
   },
   

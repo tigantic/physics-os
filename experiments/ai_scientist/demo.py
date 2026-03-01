@@ -7,7 +7,7 @@ Fast demonstration of the full pipeline.
 """
 
 import sys
-sys.path.insert(0, '/home/brad/TiganticLabz/Main_Projects/HyperTensor-VM-main')
+sys.path.insert(0, '/home/brad/TiganticLabz/Main_Projects/physics-os')
 
 import numpy as np
 
@@ -175,7 +175,7 @@ print()
 
 # Export
 import os
-output_dir = "/home/brad/TiganticLabz/Main_Projects/HyperTensor-VM-main/ai_scientist_output"
+output_dir = "/home/brad/TiganticLabz/Main_Projects/physics-os/ai_scientist_output"
 os.makedirs(output_dir, exist_ok=True)
 
 with open(f"{output_dir}/YangMills.lean", 'w') as f:

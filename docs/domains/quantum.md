@@ -1,6 +1,6 @@
 # Quantum Domain Pack
 
-`pip install tensornet[quantum]`
+`pip install ontic-engine[quantum]`
 
 ## Modules
 

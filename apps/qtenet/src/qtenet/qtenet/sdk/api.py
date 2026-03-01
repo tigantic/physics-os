@@ -55,7 +55,7 @@ def query(container: Any, index: Sequence[int]) -> Any:
     Raises:
         NotImplementedError: Facade stub - wire to implementation in application.
     """
-    raise NotImplementedError("Use tensornet.cfd.qtt_eval.qtt_evaluate() directly")
+    raise NotImplementedError("Use ontic.cfd.qtt_eval.qtt_evaluate() directly")
 
 
 def reconstruct(container: Any, **kwargs: Any) -> Any:
@@ -67,4 +67,4 @@ def reconstruct(container: Any, **kwargs: Any) -> Any:
     Raises:
         NotImplementedError: Facade stub - wire to implementation in application.
     """
-    raise NotImplementedError("Use tensornet.cfd.qtt_eval.qtt_to_dense() directly")
+    raise NotImplementedError("Use ontic.cfd.qtt_eval.qtt_to_dense() directly")

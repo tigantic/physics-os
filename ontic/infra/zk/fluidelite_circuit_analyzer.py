@@ -10,7 +10,7 @@ VERSION HISTORY:
 - v1.0: Initial release with basic R1CS parsing and rank analysis
 - v1.1: Enhanced Circom parser with component tracing, CIRCOM_KEYWORDS filter
 - v1.2: rSVD, Interval arithmetic, QTT compression, MPO framework
-- v2.0 (FEZK): FULL TENSORNET INTEGRATION
+- v2.0 (FEZK): FULL ONTIC INTEGRATION
     * Full MPO-MPS contraction for constraint checking in QTT space
     * TCI adaptive sampling for structured constraint matrices
     * CUDA GPU acceleration when available

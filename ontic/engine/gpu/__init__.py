@@ -1,5 +1,5 @@
 """
-TensorNet GPU Module
+Ontic Engine GPU Module
 ====================
 
 OPERATION VALHALLA - Phase 2: THE MUSCLE

@@ -45,7 +45,7 @@ def to_dict(self) -> Dict[str, Any]
 
 Convert to dictionary.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\benchmarks\analysis.py:104](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\benchmarks\analysis.py#L104)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\benchmarks\analysis.py:104](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\benchmarks\analysis.py#L104)*
 
 ### class `EffortLevel`(Enum)
 
@@ -93,7 +93,7 @@ def to_dict(self) -> Dict[str, Any]
 
 Convert to dictionary.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\benchmarks\analysis.py:67](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\benchmarks\analysis.py#L67)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\benchmarks\analysis.py:67](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\benchmarks\analysis.py#L67)*
 
 ### class `PerformanceAnalysis`
 
@@ -128,7 +128,7 @@ def get_top_recommendations(self, n: int = 5) -> List[analysis.OptimizationRecom
 
 Get top N recommendations by priority.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\benchmarks\analysis.py:140](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\benchmarks\analysis.py#L140)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\benchmarks\analysis.py:140](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\benchmarks\analysis.py#L140)*
 
 ##### `summary`
 
@@ -138,7 +138,7 @@ def summary(self) -> str
 
 Generate text summary.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\benchmarks\analysis.py:164](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\benchmarks\analysis.py#L164)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\benchmarks\analysis.py:164](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\benchmarks\analysis.py#L164)*
 
 ##### `to_dict`
 
@@ -148,7 +148,7 @@ def to_dict(self) -> Dict[str, Any]
 
 Convert to dictionary.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\benchmarks\analysis.py:149](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\benchmarks\analysis.py#L149)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\benchmarks\analysis.py:149](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\benchmarks\analysis.py#L149)*
 
 ### class `PerformanceAnalyzer`
 
@@ -164,7 +164,7 @@ def __init__(self)
 
 Initialize analyzer.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\benchmarks\analysis.py:190](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\benchmarks\analysis.py#L190)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\benchmarks\analysis.py:190](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\benchmarks\analysis.py#L190)*
 
 ##### `analyze`
 
@@ -180,7 +180,7 @@ Analyze profile results.
 
 **Returns**: `<class 'analysis.PerformanceAnalysis'>` - PerformanceAnalysis with bottlenecks and recommendations
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\benchmarks\analysis.py:199](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\benchmarks\analysis.py#L199)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\benchmarks\analysis.py:199](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\benchmarks\analysis.py#L199)*
 
 ## Functions
 
@@ -198,7 +198,7 @@ Analyze performance from profile results.
 
 **Returns**: `<class 'analysis.PerformanceAnalysis'>` - PerformanceAnalysis with recommendations
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\benchmarks\analysis.py:430](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\benchmarks\analysis.py#L430)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\benchmarks\analysis.py:430](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\benchmarks\analysis.py#L430)*
 
 ### `identify_bottlenecks`
 
@@ -214,7 +214,7 @@ Identify bottlenecks from profile results.
 
 **Returns**: `typing.List[analysis.BottleneckAnalysis]` - List of identified bottlenecks
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\benchmarks\analysis.py:444](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\benchmarks\analysis.py#L444)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\benchmarks\analysis.py:444](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\benchmarks\analysis.py#L444)*
 
 ### `recommend_optimizations`
 
@@ -231,4 +231,4 @@ Generate optimization recommendations.
 
 **Returns**: `typing.List[analysis.OptimizationRecommendation]` - List of optimization recommendations
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\benchmarks\analysis.py:459](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\benchmarks\analysis.py#L459)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\benchmarks\analysis.py:459](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\benchmarks\analysis.py#L459)*

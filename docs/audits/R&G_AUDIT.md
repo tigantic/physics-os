@@ -118,7 +118,7 @@ Integrating into actual flight systems may surface issues (deterministic memory,
 ~~No public issues or discussions visible. Project may be building features users don't need.~~
 
 **Resolution**:
-- PyPI package built and ready (`tensornet-0.1.0-py3-none-any.whl`)
+- PyPI package built and ready (`ontic-engine-0.1.0-py3-none-any.whl`)
 - CONTRIBUTING.md with clear guidelines
 - GitHub issue templates and discussion categories configured
 - TeNPy comparison script enables validation against established library
@@ -221,8 +221,8 @@ The project is now **audit-complete** and ready for beta release.
   - Chrome trace export with `--save` flag
 
 - [x] **Packaging**: — DONE (2025-12-21)
-  - Wheel build successful: `tensornet-0.1.0-py3-none-any.whl` (576 KB)
-  - Source dist successful: `tensornet-0.1.0.tar.gz` (503 KB)
+  - Wheel build successful: `ontic-engine-0.1.0-py3-none-any.whl` (576 KB)
+  - Source dist successful: `ontic-engine-0.1.0.tar.gz` (503 KB)
   - `twine check` passed for both packages
   - Ready for TestPyPI publish
 

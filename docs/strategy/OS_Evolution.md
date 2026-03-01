@@ -317,7 +317,7 @@ This document catalogs every conceivable high-impact evolution. Items are organi
 | 8.1 | **REST API server** — FastAPI/Actix-web API for simulation-as-a-service | Cloud-native simulation access |
 | 8.2 | **gRPC API** — High-performance binary protocol for solver invocation | Low-latency programmatic access |
 | 8.3 | **GraphQL API** — Flexible query language for simulation results | Frontend-friendly data access |
-| 8.4 | **Python type stubs** — Complete .pyi stubs for entire tensornet package | IDE auto-complete everywhere |
+| 8.4 | **Python type stubs** — Complete .pyi stubs for entire ontic package | IDE auto-complete everywhere |
 | 8.5 | **VS Code extension** — Syntax highlighting for .tpc, problem spec preview, solver launcher | IDE-native physics development |
 | 8.6 | **Jupyter kernel** — Native Physics OS kernel with magic commands | `%simulate`, `%visualize`, `%compare` |
 | 8.7 | **CLI completeness** — Full CLI for every operation (simulate, benchmark, export, verify) | Scriptable physics |

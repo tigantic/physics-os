@@ -1,5 +1,5 @@
 """
-TensorNet Physics Module
+Ontic Engine Physics Module
 ========================
 
 Hypersonic flight physics and trajectory optimization.

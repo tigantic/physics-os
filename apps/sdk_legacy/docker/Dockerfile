@@ -1,4 +1,4 @@
-# HyperTensor Docker Images
+# The Physics OS Docker Images
 #
 # Multi-stage build for optimized production images
 #
@@ -9,9 +9,9 @@
 #   - server: Production API server
 #
 # Usage:
-#   docker build -t hypertensor .
-#   docker build --target cuda -t hypertensor:cuda .
-#   docker build --target jupyter -t hypertensor:jupyter .
+#   docker build -t physics-os .
+#   docker build --target cuda -t physics-os:cuda .
+#   docker build --target jupyter -t physics-os:jupyter .
 
 # =============================================================================
 # BASE IMAGE
@@ -19,11 +19,11 @@
 FROM python:3.11-slim as base
 
 # Labels
-LABEL org.opencontainers.image.title="HyperTensor"
+LABEL org.opencontainers.image.title="The Physics OS"
 LABEL org.opencontainers.image.description="QTT-compressed tensor network library"
 LABEL org.opencontainers.image.version="1.0.0"
 LABEL org.opencontainers.image.vendor="Tigantic Labs"
-LABEL org.opencontainers.image.source="https://github.com/tigantic/HyperTensor"
+LABEL org.opencontainers.image.source="https://github.com/tigantic/physics-os"
 LABEL org.opencontainers.image.licenses="Apache-2.0"
 
 # Environment
@@ -40,23 +40,23 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
 # Create non-root user
-RUN useradd --create-home --shell /bin/bash hypertensor
-USER hypertensor
-WORKDIR /home/hypertensor
+RUN useradd --create-home --shell /bin/bash physos
+USER physos
+WORKDIR /home/physos
 
 # Install Python dependencies
-COPY --chown=hypertensor:hypertensor requirements-lock.txt .
+COPY --chown=physos:physos requirements-lock.txt .
 RUN pip install --user -r requirements-lock.txt
 
-# Install HyperTensor
-COPY --chown=hypertensor:hypertensor . /home/hypertensor/hypertensor
-RUN pip install --user -e /home/hypertensor/hypertensor
+# Install Physics OS
+COPY --chown=physos:physos . /home/physos/physics-os
+RUN pip install --user -e /home/physos/physics-os
 
 # Add user bin to PATH
-ENV PATH="/home/hypertensor/.local/bin:${PATH}"
+ENV PATH="/home/physos/.local/bin:${PATH}"
 
 # Default command
-CMD ["python", "-c", "import tensornet; print(f'HyperTensor v{tensornet.__version__}')"]
+CMD ["python", "-c", "import ontic; print(f'Physics OS v{ontic.__version__}')"]
 
 # =============================================================================
 # CUDA IMAGE
@@ -64,8 +64,8 @@ CMD ["python", "-c", "import tensornet; print(f'HyperTensor v{tensornet.__versio
 FROM nvidia/cuda:11.8-cudnn8-runtime-ubuntu22.04 as cuda
 
 # Labels
-LABEL org.opencontainers.image.title="HyperTensor CUDA"
-LABEL org.opencontainers.image.description="GPU-enabled HyperTensor"
+LABEL org.opencontainers.image.title="Physics OS CUDA"
+LABEL org.opencontainers.image.description="GPU-enabled Physics OS"
 
 # Environment
 ENV PYTHONDONTWRITEBYTECODE=1 \
@@ -88,35 +88,35 @@ RUN ln -sf /usr/bin/python3.11 /usr/bin/python && \
     ln -sf /usr/bin/pip3 /usr/bin/pip
 
 # Create non-root user
-RUN useradd --create-home --shell /bin/bash hypertensor
-USER hypertensor
-WORKDIR /home/hypertensor
+RUN useradd --create-home --shell /bin/bash physos
+USER physos
+WORKDIR /home/physos
 
 # Install PyTorch with CUDA
 RUN pip install --user torch torchvision --index-url https://download.pytorch.org/whl/cu118
 
 # Install dependencies
-COPY --chown=hypertensor:hypertensor requirements-lock.txt .
+COPY --chown=physos:physos requirements-lock.txt .
 RUN pip install --user -r requirements-lock.txt
 
-# Install HyperTensor
-COPY --chown=hypertensor:hypertensor . /home/hypertensor/hypertensor
-RUN pip install --user -e /home/hypertensor/hypertensor
+# Install Physics OS
+COPY --chown=physos:physos . /home/physos/physics-os
+RUN pip install --user -e /home/physos/physics-os
 
 # Add user bin to PATH
-ENV PATH="/home/hypertensor/.local/bin:${PATH}"
+ENV PATH="/home/physos/.local/bin:${PATH}"
 
 # Verify CUDA
 RUN python -c "import torch; print(f'CUDA available: {torch.cuda.is_available()}')"
 
-CMD ["python", "-c", "import tensornet; import torch; print(f'HyperTensor (CUDA: {torch.cuda.is_available()})')"]
+CMD ["python", "-c", "import ontic; import torch; print(f'Physics OS (CUDA: {torch.cuda.is_available()})')"]
 
 # =============================================================================
 # JUPYTER IMAGE
 # =============================================================================
 FROM base as jupyter
 
-USER hypertensor
+USER physos
 
 # Install Jupyter
 RUN pip install --user \
@@ -126,7 +126,7 @@ RUN pip install --user \
     plotly
 
 # Copy notebooks
-COPY --chown=hypertensor:hypertensor notebooks/ /home/hypertensor/notebooks/
+COPY --chown=physos:physos notebooks/ /home/physos/notebooks/
 
 # Expose port
 EXPOSE 8888
@@ -139,7 +139,7 @@ CMD ["jupyter", "lab", "--ip=0.0.0.0", "--port=8888", "--no-browser"]
 # =============================================================================
 FROM base as server
 
-USER hypertensor
+USER physos
 
 # Install server dependencies
 RUN pip install --user \
@@ -148,7 +148,7 @@ RUN pip install --user \
     pyzmq
 
 # Copy server code
-COPY --chown=hypertensor:hypertensor sdk/server/ /home/hypertensor/server/
+COPY --chown=physos:physos sdk/server/ /home/physos/server/
 
 # Expose ports
 EXPOSE 8000  # REST API

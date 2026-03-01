@@ -30,7 +30,7 @@ def L(self) -> 'int'
 
 Number of sites.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\core\mps.py:49](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\core\mps.py#L49)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\core\mps.py:49](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\core\mps.py#L49)*
 
 ##### `chi`
 
@@ -40,7 +40,7 @@ def chi(self) -> 'int'
 
 Maximum bond dimension.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\core\mps.py:59](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\core\mps.py#L59)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\core\mps.py:59](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\core\mps.py#L59)*
 
 ##### `d`
 
@@ -50,7 +50,7 @@ def d(self) -> 'int'
 
 Physical dimension (from first site).
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\core\mps.py:54](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\core\mps.py#L54)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\core\mps.py:54](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\core\mps.py#L54)*
 
 ##### `device`
 
@@ -60,7 +60,7 @@ def device(self) -> 'torch.device'
 
 Device of tensors.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\core\mps.py:71](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\core\mps.py#L71)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\core\mps.py:71](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\core\mps.py#L71)*
 
 ##### `dtype`
 
@@ -70,7 +70,7 @@ def dtype(self) -> 'torch.dtype'
 
 Data type of tensors.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\core\mps.py:66](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\core\mps.py#L66)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\core\mps.py:66](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\core\mps.py#L66)*
 
 #### Methods
 
@@ -86,7 +86,7 @@ Initialize MPS from list of tensors.
 
 - **tensors** (`typing.List[torch.Tensor]`): List of tensors with shape (χ_left, d, χ_right)
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\core\mps.py:39](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\core\mps.py#L39)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\core\mps.py:39](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\core\mps.py#L39)*
 
 ##### `bond_dims`
 
@@ -96,7 +96,7 @@ def bond_dims(self) -> 'List[int]'
 
 Return list of bond dimensions [χ₀, χ₁, ..., χ_{L-1}].
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\core\mps.py:76](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\core\mps.py#L76)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\core\mps.py:76](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\core\mps.py#L76)*
 
 ##### `canonicalize_left_`
 
@@ -111,7 +111,7 @@ The norm is absorbed into the last tensor.
 
 **Returns**: `<class 'mps.MPS'>` - self
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\core\mps.py:218](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\core\mps.py#L218)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\core\mps.py:218](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\core\mps.py#L218)*
 
 ##### `canonicalize_right_`
 
@@ -126,7 +126,7 @@ The norm is absorbed into the first tensor.
 
 **Returns**: `<class 'mps.MPS'>` - self
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\core\mps.py:243](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\core\mps.py#L243)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\core\mps.py:243](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\core\mps.py#L243)*
 
 ##### `canonicalize_to_`
 
@@ -142,7 +142,7 @@ Mixed-canonical form with orthogonality center at site.
 
 **Returns**: `<class 'mps.MPS'>` - self
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\core\mps.py:268](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\core\mps.py#L268)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\core\mps.py:268](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\core\mps.py#L268)*
 
 ##### `copy`
 
@@ -152,7 +152,7 @@ def copy(self) -> 'MPS'
 
 Return deep copy of MPS.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\core\mps.py:188](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\core\mps.py#L188)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\core\mps.py:188](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\core\mps.py#L188)*
 
 ##### `entropy`
 
@@ -170,7 +170,7 @@ S = -Tr(ρ log ρ) where ρ is the reduced density matrix.
 
 **Returns**: `<class 'torch.Tensor'>` - Entanglement entropy
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\core\mps.py:299](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\core\mps.py#L299)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\core\mps.py:299](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\core\mps.py#L299)*
 
 ##### `expectation_local`
 
@@ -187,7 +187,7 @@ Compute ⟨ψ|O_site|ψ⟩ for local operator O.
 
 **Returns**: `<class 'torch.Tensor'>` - Expectation value
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\core\mps.py:332](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\core\mps.py#L332)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\core\mps.py:332](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\core\mps.py#L332)*
 
 ##### `from_tensor`
 
@@ -205,7 +205,7 @@ Convert dense tensor to MPS via successive SVD.
 
 **Returns**: `<class 'mps.MPS'>` - MPS approximation
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\core\mps.py:120](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\core\mps.py#L120)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\core\mps.py:120](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\core\mps.py#L120)*
 
 ##### `norm`
 
@@ -217,7 +217,7 @@ Compute norm ⟨ψ|ψ⟩^{1/2}.
 
 **Returns**: `<class 'torch.Tensor'>` - Scalar tensor with norm
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\core\mps.py:192](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\core\mps.py#L192)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\core\mps.py:192](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\core\mps.py#L192)*
 
 ##### `normalize_`
 
@@ -227,7 +227,7 @@ def normalize_(self) -> 'MPS'
 
 Normalize MPS in-place. Returns self.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\core\mps.py:208](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\core\mps.py#L208)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\core\mps.py:208](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\core\mps.py#L208)*
 
 ##### `random`
 
@@ -248,7 +248,7 @@ Create random MPS with given dimensions.
 
 **Returns**: `<class 'mps.MPS'>` - Random MPS
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\core\mps.py:80](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\core\mps.py#L80)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\core\mps.py:80](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\core\mps.py#L80)*
 
 ##### `to_tensor`
 
@@ -260,7 +260,7 @@ Contract MPS to dense tensor.
 
 **Returns**: `<class 'torch.Tensor'>` - Dense tensor of shape (d, d, ..., d)
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\core\mps.py:169](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\core\mps.py#L169)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\core\mps.py:169](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\core\mps.py#L169)*
 
 ##### `truncate_`
 
@@ -277,4 +277,4 @@ Truncate bond dimension via SVD.
 
 **Returns**: `<class 'mps.MPS'>` - self
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\core\mps.py:366](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\core\mps.py#L366)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\core\mps.py:366](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\core\mps.py#L366)*

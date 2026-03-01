@@ -1307,7 +1307,7 @@ PPO-based training with custom callbacks and multi-agent support.
 | `experiments/benchmarks/benchmarks/` | 3,719 | 1.2% |
 | `tci_llm/` | 2,261 | 0.7% |
 
-### 18.3 Tensornet Subdirectories (Top 20)
+### 18.3 Ontic Subdirectories (Top 20)
 
 | Subdirectory | LOC | Domain |
 |--------------|-----|--------|

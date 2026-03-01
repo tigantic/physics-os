@@ -48,9 +48,9 @@ try:
         is_cuda_available,
     )
     from ontic.core.decompositions import svd_truncated
-    HAS_TENSORNET = True
+    HAS_ONTIC = True
 except ImportError:
-    HAS_TENSORNET = False
+    HAS_ONTIC = False
     print("[QTT-NTT] Warning: ontic not found, using standalone mode")
 
 # Native rSVD for THE RULES compliance
@@ -509,7 +509,7 @@ def apply_twiddle_factors(
     
     # Element-wise multiply (Hadamard product)
     # Use CPU for complex dtype (CUDA kernels only support float32/64)
-    use_cuda = HAS_TENSORNET and not qtt_cores[0].is_complex()
+    use_cuda = HAS_ONTIC and not qtt_cores[0].is_complex()
     if use_cuda:
         return qtt_hadamard_cuda(qtt_cores, twiddle_cores)
     else:
@@ -602,7 +602,7 @@ class QTTNTT:
         for k in range(self.n_bits - 1):
             remainder = remainder.reshape(left_rank * 2, -1)
             
-            if HAS_TENSORNET:
+            if HAS_ONTIC:
                 U, S, Vh, info = svd_truncated(remainder, chi_max=max_rank, return_info=True)
             elif HAS_RSVD and remainder.shape[0] > 4 and remainder.shape[1] > 4:
                 U, S, Vh = rsvd_native(remainder.real if remainder.is_complex() else remainder, k=max_rank)
@@ -640,7 +640,7 @@ class QTTNTT:
             X: NTT of x
         """
         # Use CPU for complex dtype (CUDA kernels only support float32/64)
-        use_cuda = HAS_TENSORNET and not x.is_complex()
+        use_cuda = HAS_ONTIC and not x.is_complex()
         target_device = self.device if use_cuda else torch.device('cpu')
         
         x = x.to(target_device)
@@ -1186,7 +1186,7 @@ class QTTNTT:
                 # SVD truncation
                 mat = core.reshape(r_left * d, r_right)
                 
-                if HAS_TENSORNET:
+                if HAS_ONTIC:
                     U, S, Vh, _ = svd_truncated(mat, chi_max=max_rank, return_info=True)
                 elif HAS_RSVD and mat.shape[0] > 4 and mat.shape[1] > 4:
                     U, S, Vh = rsvd_native(mat.real if mat.is_complex() else mat, k=max_rank)
@@ -1332,7 +1332,7 @@ if __name__ == "__main__":
     # Quick test
     print("QTT-NTT Module Loaded")
     print(f"  CUDA available: {torch.cuda.is_available()}")
-    print(f"  TensorNet available: {HAS_TENSORNET}")
+    print(f"  Ontic Engine available: {HAS_ONTIC}")
     
     # Run benchmark
     benchmark_qtt_ntt([8, 10, 12])

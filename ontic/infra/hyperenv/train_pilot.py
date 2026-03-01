@@ -25,8 +25,8 @@ from datetime import datetime
 from pathlib import Path
 
 # Add ontic to path
-TENSORNET_ROOT = Path(__file__).parent.parent.parent
-sys.path.insert(0, str(TENSORNET_ROOT))
+ONTIC_ROOT = Path(__file__).parent.parent.parent
+sys.path.insert(0, str(ONTIC_ROOT))
 
 
 def train_wingman(

@@ -1,6 +1,6 @@
 # API Reference
 
-This directory contains auto-generated API documentation for the tensornet library.
+This directory contains auto-generated API documentation for the ontic library.
 
 ## Generation
 
@@ -8,7 +8,7 @@ API documentation is generated using Sphinx:
 
 ```bash
 cd docs
-sphinx-apidoc -o api ../tensornet -f
+sphinx-apidoc -o api ../ontic -f
 make html
 ```
 

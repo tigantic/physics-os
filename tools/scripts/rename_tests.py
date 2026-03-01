@@ -16,7 +16,7 @@ from pathlib import Path
 # Mapping of old names to new names following test_<component>_<behavior>_<condition>
 RENAMES = {
     # TestCoreImports
-    "test_import_tensornet": "test_tensornet_import_succeeds_when_installed",
+    "test_import_ontic": "test_tensornet_import_succeeds_when_installed",
     "test_import_mps": "test_mps_import_succeeds_when_installed",
     "test_import_mpo": "test_mpo_import_succeeds_when_installed",
     "test_import_algorithms": "test_algorithms_import_succeeds_when_installed",

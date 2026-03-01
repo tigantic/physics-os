@@ -1,7 +1,7 @@
 {
   "domain": "euler3d",
-  "certificate_path": "/home/brad/TiganticLabz/FRONT_VAULT/03_SOURCE/Main_Projects/HyperTensor-VM-main/artifacts/EULER3D_GAUNTLET.tpc",
-  "trace_path": "/home/brad/TiganticLabz/FRONT_VAULT/03_SOURCE/Main_Projects/HyperTensor-VM-main/traces/euler3d_trace.json",
+  "certificate_path": "/home/brad/TiganticLabz/FRONT_VAULT/03_SOURCE/Main_Projects/physics-os/artifacts/EULER3D_GAUNTLET.tpc",
+  "trace_path": "/home/brad/TiganticLabz/FRONT_VAULT/03_SOURCE/Main_Projects/physics-os/traces/euler3d_trace.json",
   "verified": true,
   "grid": "16x16x16",
   "steps": 1,

@@ -2,14 +2,14 @@
 Repository Integration
 ======================
 
-Bridges FluidElite with existing tensornet infrastructure.
+Bridges FluidElite with existing ontic infrastructure.
 
 Reuses:
-- tensornet.core.profiling: @profile, @memory_profile decorators
-- tensornet.gpu.memory: VRAMManager for GPU memory management
-- tensornet.cuda.qtt_native_ops: CUDA-accelerated QTT operations
-- tensornet.core.decompositions: rSVD, truncated SVD
-- tensornet.algorithms.lanczos: Krylov methods for matrix exponential
+- ontic.core.profiling: @profile, @memory_profile decorators
+- ontic.gpu.memory: VRAMManager for GPU memory management
+- ontic.cuda.qtt_native_ops: CUDA-accelerated QTT operations
+- ontic.core.decompositions: rSVD, truncated SVD
+- ontic.algorithms.lanczos: Krylov methods for matrix exponential
 
 This allows FluidElite to benefit from battle-tested components
 without duplicating code.
@@ -30,7 +30,7 @@ from torch import Tensor
 # Profiling Integration
 # ============================================================================
 
-# Avoid loading full tensornet package (slow due to scipy imports)
+# Avoid loading full ontic package (slow due to scipy imports)
 # Instead, directly import just the profiling module
 PROFILING_AVAILABLE = False
 PROFILING_ENABLED = False
@@ -40,10 +40,10 @@ try:
     import importlib.util
     from pathlib import Path
     
-    # Direct import without triggering tensornet/__init__.py
+    # Direct import without triggering ontic/__init__.py
     profiling_path = Path(__file__).parent.parent.parent / "ontic" / "core" / "profiling.py"
     if profiling_path.exists():
-        spec = importlib.util.spec_from_file_location("tensornet_profiling", profiling_path)
+        spec = importlib.util.spec_from_file_location("ontic_profiling", profiling_path)
         if spec and spec.loader:
             profiling_module = importlib.util.module_from_spec(spec)
             spec.loader.exec_module(profiling_module)
@@ -59,11 +59,11 @@ if not PROFILING_AVAILABLE:
     F = TypeVar("F", bound=Callable)
     
     def profile(func: F) -> F:
-        """No-op profiler when tensornet not available."""
+        """No-op profiler when ontic not available."""
         return func
     
     def memory_profile(func: F) -> F:
-        """No-op memory profiler when tensornet not available."""
+        """No-op memory profiler when ontic not available."""
         return func
 
 
@@ -81,7 +81,7 @@ try:
     
     memory_path = Path(__file__).parent.parent.parent / "ontic" / "gpu" / "memory.py"
     if memory_path.exists():
-        spec = importlib.util.spec_from_file_location("tensornet_memory", memory_path)
+        spec = importlib.util.spec_from_file_location("ontic_memory", memory_path)
         if spec and spec.loader:
             memory_module = importlib.util.module_from_spec(spec)
             spec.loader.exec_module(memory_module)
@@ -122,7 +122,7 @@ try:
     
     qtt_path = Path(__file__).parent.parent.parent / "ontic" / "cuda" / "qtt_native_ops.py"
     if qtt_path.exists():
-        spec = importlib.util.spec_from_file_location("tensornet_qtt_cuda", qtt_path)
+        spec = importlib.util.spec_from_file_location("ontic_qtt_cuda", qtt_path)
         if spec and spec.loader:
             qtt_module = importlib.util.module_from_spec(spec)
             spec.loader.exec_module(qtt_module)
@@ -166,8 +166,8 @@ def mps_inner_product_cuda(a_cores: list[Tensor], b_cores: list[Tensor]) -> floa
 # Advanced Decompositions
 # ============================================================================
 
-TENSORNET_SVD_AVAILABLE = False
-tensornet_svd_truncated = None
+ONTIC_SVD_AVAILABLE = False
+ontic_svd_truncated = None
 
 try:
     import importlib.util
@@ -175,12 +175,12 @@ try:
     
     decomp_path = Path(__file__).parent.parent.parent / "ontic" / "core" / "decompositions.py"
     if decomp_path.exists():
-        spec = importlib.util.spec_from_file_location("tensornet_decomp", decomp_path)
+        spec = importlib.util.spec_from_file_location("ontic_decomp", decomp_path)
         if spec and spec.loader:
             decomp_module = importlib.util.module_from_spec(spec)
             spec.loader.exec_module(decomp_module)
-            tensornet_svd_truncated = decomp_module.svd_truncated
-            TENSORNET_SVD_AVAILABLE = True
+            ontic_svd_truncated = decomp_module.svd_truncated
+            ONTIC_SVD_AVAILABLE = True
 except Exception:
     pass
 
@@ -193,9 +193,9 @@ def svd_truncated_with_fallback(
     use_rsvd: bool | None = None,
 ) -> tuple:
     """
-    Truncated SVD with tensornet integration.
+    Truncated SVD with ontic integration.
     
-    Uses tensornet's optimized implementation if available,
+    Uses ontic's optimized implementation if available,
     falls back to fluidelite's SafeSVD otherwise.
     
     Args:
@@ -208,8 +208,8 @@ def svd_truncated_with_fallback(
     Returns:
         (U, S, Vh) or (U, S, Vh, info)
     """
-    if TENSORNET_SVD_AVAILABLE:
-        return tensornet_svd_truncated(
+    if ONTIC_SVD_AVAILABLE:
+        return ontic_svd_truncated(
             A,
             chi_max=chi_max,
             cutoff=cutoff,
@@ -236,7 +236,7 @@ try:
     
     lanczos_path = Path(__file__).parent.parent.parent / "ontic" / "algorithms" / "lanczos.py"
     if lanczos_path.exists():
-        spec = importlib.util.spec_from_file_location("tensornet_lanczos", lanczos_path)
+        spec = importlib.util.spec_from_file_location("ontic_lanczos", lanczos_path)
         if spec and spec.loader:
             lanczos_module = importlib.util.module_from_spec(spec)
             spec.loader.exec_module(lanczos_module)
@@ -249,7 +249,7 @@ except Exception:
 
 # ============================================================================
 # Benchmarking Utilities (from ontic.benchmarks)
-# Skip this - requires full tensornet import
+# Skip this - requires full ontic import
 # ============================================================================
 
 COMPRESSION_ANALYSIS_AVAILABLE = False
@@ -262,7 +262,7 @@ compression_analysis = None
 
 def get_integration_status() -> dict:
     """
-    Get status of all integrations with tensornet.
+    Get status of all integrations with ontic.
     
     Returns:
         Dictionary with availability flags
@@ -272,7 +272,7 @@ def get_integration_status() -> dict:
         "profiling_enabled": PROFILING_ENABLED,
         "vram_manager": VRAM_MANAGER_AVAILABLE,
         "qtt_cuda": QTT_CUDA_AVAILABLE,
-        "tensornet_svd": TENSORNET_SVD_AVAILABLE,
+        "ontic_svd": ONTIC_SVD_AVAILABLE,
         "lanczos": LANCZOS_AVAILABLE,
         "compression_analysis": COMPRESSION_ANALYSIS_AVAILABLE,
     }
@@ -283,7 +283,7 @@ def print_integration_status():
     status = get_integration_status()
     
     print("="*50)
-    print("FluidElite ↔ TensorNet Integration Status")
+    print("FluidElite ↔ Ontic Engine Integration Status")
     print("="*50)
     
     for name, available in status.items():
@@ -297,9 +297,9 @@ def print_integration_status():
     print(f"Integration: {available_count}/{total} components available")
     
     if available_count == total:
-        print("Full tensornet integration active!")
+        print("Full ontic integration active!")
     elif available_count == 0:
-        print("Running standalone (no tensornet)")
+        print("Running standalone (no ontic)")
     else:
         print("Partial integration - some features available")
 
@@ -325,7 +325,7 @@ __all__ = [
     
     # SVD
     "svd_truncated_with_fallback",
-    "TENSORNET_SVD_AVAILABLE",
+    "ONTIC_SVD_AVAILABLE",
     
     # Lanczos
     "lanczos_expm",

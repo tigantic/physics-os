@@ -5,7 +5,7 @@
 
 ## Executive Summary
 
-FLUIDELITE has been upgraded from **~20% to ~85% utilization** of tensornet's
+FLUIDELITE has been upgraded from **~20% to ~85% utilization** of ontic's
 computational power. Key improvements:
 
 | Metric | v1.1 | v1.2 | Improvement |
@@ -102,7 +102,7 @@ mpos = mpo_ops.constraint_check_mpo(constraint, num_signals)
 
 ## Capability Utilization Summary
 
-| tensornet Module | Before | After | Status |
+| ontic Module | Before | After | Status |
 |-----------------|--------|-------|--------|
 | `torch.svd_lowrank` | ❌ | ✅ | rSVD for >256 dim |
 | `numerics/interval.py` | ⚠️ imported | ✅ used | Rigorous mode |

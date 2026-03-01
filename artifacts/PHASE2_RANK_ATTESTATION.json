@@ -106,7 +106,7 @@
   },
   "fixes_applied": [
     {
-      "file": "tensornet/cfd/ns3d_turbo.py",
+      "file": "ontic/cfd/ns3d_turbo.py",
       "change": "Truncate AFTER each Hadamard product in _compute_rhs()",
       "lines": "732-770",
       "effect": "Memory 133MB \u2192 15MB (9\u00d7 reduction)"

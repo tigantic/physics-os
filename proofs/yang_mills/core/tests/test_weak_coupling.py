@@ -30,7 +30,7 @@ from scipy.sparse.linalg import eigsh
 import time
 from datetime import datetime
 
-sys.path.insert(0, '/home/brad/TiganticLabz/Main_Projects/HyperTensor-VM-main')
+sys.path.insert(0, '/home/brad/TiganticLabz/Main_Projects/physics-os')
 
 from yangmills.hamiltonian import SinglePlaquetteHamiltonian
 from yangmills.gauss import SinglePlaquetteGauss

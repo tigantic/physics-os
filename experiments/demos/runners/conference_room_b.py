@@ -17,8 +17,8 @@ import json
 import sys
 import os
 
-sys.path.insert(0, '/home/brad/TiganticLabz/Main_Projects/HyperTensor-VM-main')
-os.makedirs('/home/brad/TiganticLabz/Main_Projects/HyperTensor-VM-main/results', exist_ok=True)
+sys.path.insert(0, '/home/brad/TiganticLabz/Main_Projects/physics-os')
+os.makedirs('/home/brad/TiganticLabz/Main_Projects/physics-os/results', exist_ok=True)
 
 from ontic.cfd.ns_2d import NS2DSolver, NSState
 
@@ -267,7 +267,7 @@ def run_conference_room_analysis():
     plt.suptitle('Conference Room B - Ventilation CFD Analysis\nClient: James Chen', fontweight='bold')
     plt.tight_layout()
     
-    output_path = '/home/brad/TiganticLabz/Main_Projects/HyperTensor-VM-main/results/conference_room_b.png'
+    output_path = '/home/brad/TiganticLabz/Main_Projects/physics-os/results/conference_room_b.png'
     plt.savefig(output_path, dpi=150, bbox_inches='tight')
     print(f"  Saved: {output_path}")
     
@@ -289,7 +289,7 @@ def run_conference_room_analysis():
         }
     }
     
-    report_path = '/home/brad/TiganticLabz/Main_Projects/HyperTensor-VM-main/results/conference_room_b.json'
+    report_path = '/home/brad/TiganticLabz/Main_Projects/physics-os/results/conference_room_b.json'
     with open(report_path, 'w') as f:
         json.dump(report, f, indent=2)
     print(f"  Saved: {report_path}")

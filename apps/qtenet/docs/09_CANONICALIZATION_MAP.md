@@ -197,7 +197,7 @@ Each entry lists: canonical path + all known alternates.
 **Alternates:**
 
 - `ontic/cuda/qtt_ntt.py` — function L373 (cat=gpu)
-- `tensornet_qtt_ntt.py` — function L139 (cat=qtt-misc)
+- `ontic_qtt_ntt.py` — function L139 (cat=qtt-misc)
 - `archive/rns_qtt_ntt_butterfly_mpo_deprecated.py` — function L542 (cat=archive)
 
 
@@ -398,7 +398,7 @@ Each entry lists: canonical path + all known alternates.
 **Alternates:**
 
 - `ontic/cuda/qtt_ntt.py` — function L1281 (cat=gpu)
-- `tensornet_qtt_ntt.py` — function L538 (cat=qtt-misc)
+- `ontic_qtt_ntt.py` — function L538 (cat=qtt-misc)
 
 
 ### `benchmark_tci_construction` (2 implementations)
@@ -728,7 +728,7 @@ Each entry lists: canonical path + all known alternates.
 **Alternates:**
 
 - `ontic/cuda/qtt_ntt.py` — function L1226 (cat=gpu)
-- `tensornet_qtt_ntt.py` — function L483 (cat=qtt-misc)
+- `ontic_qtt_ntt.py` — function L483 (cat=qtt-misc)
 
 
 ### `qtt_ntt_inverse` (2 implementations)
@@ -738,7 +738,7 @@ Each entry lists: canonical path + all known alternates.
 **Alternates:**
 
 - `ontic/cuda/qtt_ntt.py` — function L1242 (cat=gpu)
-- `tensornet_qtt_ntt.py` — function L499 (cat=qtt-misc)
+- `ontic_qtt_ntt.py` — function L499 (cat=qtt-misc)
 
 
 ### `qtt_poly_multiply` (2 implementations)
@@ -748,7 +748,7 @@ Each entry lists: canonical path + all known alternates.
 **Alternates:**
 
 - `ontic/cuda/qtt_ntt.py` — function L1251 (cat=gpu)
-- `tensornet_qtt_ntt.py` — function L508 (cat=qtt-misc)
+- `ontic_qtt_ntt.py` — function L508 (cat=qtt-misc)
 
 
 ### `qtt_scale_gpu` (2 implementations)
@@ -808,7 +808,7 @@ Each entry lists: canonical path + all known alternates.
 **Alternates:**
 
 - `ontic/cuda/qtt_ntt.py` — class L531 (cat=gpu)
-- `tensornet_qtt_ntt.py` — class L294 (cat=qtt-misc)
+- `ontic_qtt_ntt.py` — class L294 (cat=qtt-misc)
 
 
 ### `QTTResult` (2 implementations)

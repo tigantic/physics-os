@@ -142,7 +142,7 @@ twine upload --repository testpypi dist/*
 
 ```bash
 pip install physics-os==X.Y.Z
-python -c "import tensornet; print(tensornet.__version__)"
+python -c "import ontic; print(ontic.__version__)"
 ```
 
 ### 2. Announce Release

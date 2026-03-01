@@ -1,7 +1,7 @@
 //! Weather Bridge Protocol - Global Eye Phase 1B-5
 //!
 //! Defines the shared memory protocol between Python (producer) and Rust (consumer).
-//! This MUST match exactly with tensornet/sovereign/protocol.py
+//! This MUST match exactly with ontic/sovereign/protocol.py
 //!
 //! # Memory Layout
 //!

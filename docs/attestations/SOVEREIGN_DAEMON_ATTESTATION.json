@@ -88,7 +88,7 @@
     }
   },
   "dependencies": {
-    "regime_detector": "tensornet/neural/regime_detector.py",
+    "regime_detector": "ontic/neural/regime_detector.py",
     "gauntlet_validation": "ade_gauntlet_v2.py (6/6 PASS)",
     "daemon_implementation": "sovereign_daemon.py"
   },

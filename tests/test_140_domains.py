@@ -494,7 +494,7 @@ CAT_XIX = [
                ("ShorCode", "ZeroNoiseExtrapolator", "BitFlipCode"),
                "cat_XIX_qinfo"),
     DomainSpec("XIX.3", "Quantum Algorithms", "ontic.quantum.hybrid",
-               ("VQE", "QAOA", "TensorNetworkBornMachine"),
+               ("VQE", "QAOA", "Ontic EngineworkBornMachine"),
                "cat_XIX_qinfo"),
     DomainSpec("XIX.4", "Quantum Simulation", "ontic.algorithms",
                ("tebd", "tdvp", "TEBDResult", "TDVPResult"),

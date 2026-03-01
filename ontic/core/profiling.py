@@ -16,7 +16,7 @@ Usage:
         ...
 
 Enable profiling by setting environment variable:
-    TENSORNET_PROFILE=1 python script.py
+    ONTIC_PROFILE=1 python script.py
 """
 
 import functools
@@ -30,7 +30,7 @@ from typing import Any, TypeVar
 logger = logging.getLogger(__name__)
 
 # Check if profiling is enabled
-PROFILING_ENABLED = os.environ.get("TENSORNET_PROFILE", "0") == "1"
+PROFILING_ENABLED = os.environ.get("ONTIC_PROFILE", "0") == "1"
 
 F = TypeVar("F", bound=Callable[..., Any])
 
@@ -39,7 +39,7 @@ def profile(func: F) -> F:
     """
     Decorator that profiles function execution time.
 
-    Only active when TENSORNET_PROFILE=1 environment variable is set.
+    Only active when ONTIC_PROFILE=1 environment variable is set.
 
     Args:
         func: Function to profile
@@ -70,7 +70,7 @@ def memory_profile(func: F) -> F:
     """
     Decorator that profiles function memory usage.
 
-    Only active when TENSORNET_PROFILE=1 environment variable is set.
+    Only active when ONTIC_PROFILE=1 environment variable is set.
     Uses tracemalloc to measure peak memory allocation.
 
     Args:
@@ -111,7 +111,7 @@ def profile_block(name: str):
     """
     Context manager for profiling code blocks.
 
-    Only active when TENSORNET_PROFILE=1 environment variable is set.
+    Only active when ONTIC_PROFILE=1 environment variable is set.
 
     Args:
         name: Name for the profiled block

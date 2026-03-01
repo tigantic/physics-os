@@ -373,8 +373,8 @@ def verify_compression(output_file: str, sample_size: int = 1000) -> bool:
 
 def main():
     """Main entry point."""
-    base_dir = "/home/brad/TiganticLabz/Main_Projects/HyperTensor-VM-main/crypto_data"
-    output_file = "/home/brad/TiganticLabz/Main_Projects/HyperTensor-VM-main/crypto_data_compressed.qtt.npz"
+    base_dir = "/home/brad/TiganticLabz/Main_Projects/physics-os/crypto_data"
+    output_file = "/home/brad/TiganticLabz/Main_Projects/physics-os/crypto_data_compressed.qtt.npz"
     
     # Run compression
     stats = compress_all_files(base_dir, output_file)

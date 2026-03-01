@@ -1,5 +1,5 @@
 /**
- * HyperTensor Mesh Types
+ * The Physics OS Mesh Types
  * 
  * Type definitions for computational mesh management.
  */

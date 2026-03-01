@@ -29,7 +29,7 @@ import numpy as np
 import warnings
 warnings.filterwarnings("ignore")
 
-# TensorNet imports
+# Ontic Engine imports
 from ontic.ml.discovery.connectors.coinbase_l2 import (
     CoinbaseL2Connector, L2Snapshot, L2Update, HAS_WEBSOCKETS
 )

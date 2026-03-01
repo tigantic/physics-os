@@ -86,7 +86,7 @@ def to_controls(self) -> Dict[str, float]
 
 Convert to control surface deflections.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\guidance\controller.py:71](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\guidance\controller.py#L71)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\guidance\controller.py:71](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\guidance\controller.py#L71)*
 
 ### class `GuidanceController`
 
@@ -106,12 +106,12 @@ Implements a predictor-corrector guidance scheme with:
 def __init__(self, corridor: controller.CorridorBounds = None, target: controller.WaypointTarget = None, dt: float = 0.01)
 ```
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\guidance\controller.py:290](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\guidance\controller.py#L290)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\guidance\controller.py:290](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\guidance\controller.py#L290)*
 
 ##### `apply_constraint_limiting`
 
 ```python
-def apply_constraint_limiting(self, command: controller.GuidanceCommand, state: tensornet.guidance.trajectory.VehicleState) -> controller.GuidanceCommand
+def apply_constraint_limiting(self, command: controller.GuidanceCommand, state: ontic.guidance.trajectory.VehicleState) -> controller.GuidanceCommand
 ```
 
 Modify command to respect constraints.
@@ -124,52 +124,52 @@ Uses a priority-based approach:
 **Parameters:**
 
 - **command** (`<class 'controller.GuidanceCommand'>`): Nominal guidance command
-- **state** (`<class 'tensornet.guidance.trajectory.VehicleState'>`): Current vehicle state
+- **state** (`<class 'ontic.guidance.trajectory.VehicleState'>`): Current vehicle state
 
 **Returns**: `<class 'controller.GuidanceCommand'>` - Constraint-limited command
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\guidance\controller.py:492](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\guidance\controller.py#L492)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\guidance\controller.py:492](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\guidance\controller.py#L492)*
 
 ##### `compute_guidance`
 
 ```python
-def compute_guidance(self, state: tensornet.guidance.trajectory.VehicleState, target: Optional[controller.WaypointTarget] = None) -> controller.GuidanceCommand
+def compute_guidance(self, state: ontic.guidance.trajectory.VehicleState, target: Optional[controller.WaypointTarget] = None) -> controller.GuidanceCommand
 ```
 
 Main guidance computation loop.
 
 **Parameters:**
 
-- **state** (`<class 'tensornet.guidance.trajectory.VehicleState'>`): Current vehicle state
+- **state** (`<class 'ontic.guidance.trajectory.VehicleState'>`): Current vehicle state
 - **target** (`typing.Optional[controller.WaypointTarget]`): Optional override for target
 
 **Returns**: `<class 'controller.GuidanceCommand'>` - Guidance command
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\guidance\controller.py:565](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\guidance\controller.py#L565)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\guidance\controller.py:565](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\guidance\controller.py#L565)*
 
 ##### `estimate_g_load`
 
 ```python
-def estimate_g_load(self, state: tensornet.guidance.trajectory.VehicleState, atm: tensornet.guidance.trajectory.AtmosphericModel, bank_angle: float, aoa: float) -> float
+def estimate_g_load(self, state: ontic.guidance.trajectory.VehicleState, atm: ontic.guidance.trajectory.AtmosphericModel, bank_angle: float, aoa: float) -> float
 ```
 
 Estimate normal g-load.
 
 **Parameters:**
 
-- **state** (`<class 'tensornet.guidance.trajectory.VehicleState'>`): Vehicle state
-- **atm** (`<class 'tensornet.guidance.trajectory.AtmosphericModel'>`): Atmospheric conditions
+- **state** (`<class 'ontic.guidance.trajectory.VehicleState'>`): Vehicle state
+- **atm** (`<class 'ontic.guidance.trajectory.AtmosphericModel'>`): Atmospheric conditions
 - **bank_angle** (`<class 'float'>`): Bank angle in radians
 - **aoa** (`<class 'float'>`): Angle of attack in radians
 
 **Returns**: `<class 'float'>` - Normal load factor (g's)
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\guidance\controller.py:416](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\guidance\controller.py#L416)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\guidance\controller.py:416](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\guidance\controller.py#L416)*
 
 ##### `estimate_heating`
 
 ```python
-def estimate_heating(self, state: tensornet.guidance.trajectory.VehicleState, atm: tensornet.guidance.trajectory.AtmosphericModel) -> float
+def estimate_heating(self, state: ontic.guidance.trajectory.VehicleState, atm: ontic.guidance.trajectory.AtmosphericModel) -> float
 ```
 
 Estimate stagnation point heat rate.
@@ -178,12 +178,12 @@ Uses Sutton-Graves correlation for convective heating.
 
 **Parameters:**
 
-- **state** (`<class 'tensornet.guidance.trajectory.VehicleState'>`): Vehicle state
-- **atm** (`<class 'tensornet.guidance.trajectory.AtmosphericModel'>`): Atmospheric conditions
+- **state** (`<class 'ontic.guidance.trajectory.VehicleState'>`): Vehicle state
+- **atm** (`<class 'ontic.guidance.trajectory.AtmosphericModel'>`): Atmospheric conditions
 
 **Returns**: `<class 'float'>` - Heat rate in W/cm²
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\guidance\controller.py:382](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\guidance\controller.py#L382)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\guidance\controller.py:382](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\guidance\controller.py#L382)*
 
 ##### `lookup_aerodynamics`
 
@@ -200,25 +200,25 @@ Look up aerodynamic coefficients.
 
 **Returns**: `typing.Tuple[float, float, float]` - (CL, CD, Cm)
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\guidance\controller.py:348](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\guidance\controller.py#L348)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\guidance\controller.py:348](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\guidance\controller.py#L348)*
 
 ##### `predict_trajectory`
 
 ```python
-def predict_trajectory(self, state: tensornet.guidance.trajectory.VehicleState, command: controller.GuidanceCommand, horizon_s: float = 30.0) -> List[tensornet.guidance.trajectory.VehicleState]
+def predict_trajectory(self, state: ontic.guidance.trajectory.VehicleState, command: controller.GuidanceCommand, horizon_s: float = 30.0) -> List[ontic.guidance.trajectory.VehicleState]
 ```
 
 Predict future trajectory with current command.
 
 **Parameters:**
 
-- **state** (`<class 'tensornet.guidance.trajectory.VehicleState'>`): Current state
+- **state** (`<class 'ontic.guidance.trajectory.VehicleState'>`): Current state
 - **command** (`<class 'controller.GuidanceCommand'>`): Command to hold
 - **horizon_s** (`<class 'float'>`): Prediction horizon
 
-**Returns**: `typing.List[tensornet.guidance.trajectory.VehicleState]` - Predicted trajectory
+**Returns**: `typing.List[ontic.guidance.trajectory.VehicleState]` - Predicted trajectory
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\guidance\controller.py:541](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\guidance\controller.py#L541)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\guidance\controller.py:541](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\guidance\controller.py#L541)*
 
 ##### `reset`
 
@@ -228,7 +228,7 @@ def reset(self)
 
 Reset controller state for new trajectory.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\guidance\controller.py:610](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\guidance\controller.py#L610)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\guidance\controller.py:610](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\guidance\controller.py#L610)*
 
 ##### `set_aero_table`
 
@@ -242,22 +242,22 @@ Set aerodynamic lookup table from CFD.
 
 - **table** (`typing.Dict`): Dict with keys (Mach, alpha_deg) -> (CL, CD, Cm)
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\guidance\controller.py:339](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\guidance\controller.py#L339)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\guidance\controller.py:339](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\guidance\controller.py#L339)*
 
 ##### `update_constraints`
 
 ```python
-def update_constraints(self, state: tensornet.guidance.trajectory.VehicleState, command: controller.GuidanceCommand)
+def update_constraints(self, state: ontic.guidance.trajectory.VehicleState, command: controller.GuidanceCommand)
 ```
 
 Update constraint values based on current state.
 
 **Parameters:**
 
-- **state** (`<class 'tensornet.guidance.trajectory.VehicleState'>`): Current vehicle state
+- **state** (`<class 'ontic.guidance.trajectory.VehicleState'>`): Current vehicle state
 - **command** (`<class 'controller.GuidanceCommand'>`): Current guidance command
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\guidance\controller.py:456](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\guidance\controller.py#L456)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\guidance\controller.py:456](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\guidance\controller.py#L456)*
 
 ### class `GuidanceMode`(Enum)
 
@@ -284,7 +284,7 @@ def is_active(self) -> bool
 
 Whether constraint is active (within margin of limit).
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\guidance\controller.py:102](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\guidance\controller.py#L102)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\guidance\controller.py:102](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\guidance\controller.py#L102)*
 
 ##### `relative_margin`
 
@@ -294,7 +294,7 @@ def relative_margin(self) -> float
 
 Relative margin to constraint (1 = at limit, 0 = far from limit).
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\guidance\controller.py:95](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\guidance\controller.py#L95)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\guidance\controller.py:95](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\guidance\controller.py#L95)*
 
 ##### `violation`
 
@@ -304,7 +304,7 @@ def violation(self) -> float
 
 Constraint violation (0 if satisfied, positive if violated).
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\guidance\controller.py:90](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\guidance\controller.py#L90)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\guidance\controller.py:90](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\guidance\controller.py#L90)*
 
 #### Methods
 
@@ -339,7 +339,7 @@ def __init__(self, latitude_rad: float, longitude_rad: float, altitude_m: float 
 ### `bank_angle_guidance`
 
 ```python
-def bank_angle_guidance(current_state: tensornet.guidance.trajectory.VehicleState, target: controller.WaypointTarget, corridor: controller.CorridorBounds, L_over_D: float = 1.5) -> controller.GuidanceCommand
+def bank_angle_guidance(current_state: ontic.guidance.trajectory.VehicleState, target: controller.WaypointTarget, corridor: controller.CorridorBounds, L_over_D: float = 1.5) -> controller.GuidanceCommand
 ```
 
 Bank-to-turn guidance for hypersonic glide vehicles.
@@ -349,38 +349,38 @@ equilibrium glide within thermal and structural constraints.
 
 **Parameters:**
 
-- **current_state** (`<class 'tensornet.guidance.trajectory.VehicleState'>`): Current vehicle state
+- **current_state** (`<class 'ontic.guidance.trajectory.VehicleState'>`): Current vehicle state
 - **target** (`<class 'controller.WaypointTarget'>`): Target waypoint
 - **corridor** (`<class 'controller.CorridorBounds'>`): Constraint corridor
 - **L_over_D** (`<class 'float'>`): Current lift-to-drag ratio
 
 **Returns**: `<class 'controller.GuidanceCommand'>` - GuidanceCommand with bank angle and mode
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\guidance\controller.py:178](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\guidance\controller.py#L178)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\guidance\controller.py:178](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\guidance\controller.py#L178)*
 
 ### `closed_loop_simulation`
 
 ```python
-def closed_loop_simulation(initial_state: tensornet.guidance.trajectory.VehicleState, target: controller.WaypointTarget, duration_s: float = 60.0, dt: float = 0.01) -> Tuple[List[tensornet.guidance.trajectory.VehicleState], List[controller.GuidanceCommand]]
+def closed_loop_simulation(initial_state: ontic.guidance.trajectory.VehicleState, target: controller.WaypointTarget, duration_s: float = 60.0, dt: float = 0.01) -> Tuple[List[ontic.guidance.trajectory.VehicleState], List[controller.GuidanceCommand]]
 ```
 
 Run closed-loop guidance simulation.
 
 **Parameters:**
 
-- **initial_state** (`<class 'tensornet.guidance.trajectory.VehicleState'>`): Initial vehicle state
+- **initial_state** (`<class 'ontic.guidance.trajectory.VehicleState'>`): Initial vehicle state
 - **target** (`<class 'controller.WaypointTarget'>`): Target waypoint
 - **duration_s** (`<class 'float'>`): Simulation duration
 - **dt** (`<class 'float'>`): Time step
 
-**Returns**: `typing.Tuple[typing.List[tensornet.guidance.trajectory.VehicleState], typing.List[controller.GuidanceCommand]]` - (trajectory, commands)
+**Returns**: `typing.Tuple[typing.List[ontic.guidance.trajectory.VehicleState], typing.List[controller.GuidanceCommand]]` - (trajectory, commands)
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\guidance\controller.py:617](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\guidance\controller.py#L617)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\guidance\controller.py:617](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\guidance\controller.py#L617)*
 
 ### `proportional_navigation`
 
 ```python
-def proportional_navigation(vehicle_state: tensornet.guidance.trajectory.VehicleState, target_state: tensornet.guidance.trajectory.VehicleState, nav_ratio: float = 3.0) -> float
+def proportional_navigation(vehicle_state: ontic.guidance.trajectory.VehicleState, target_state: ontic.guidance.trajectory.VehicleState, nav_ratio: float = 3.0) -> float
 ```
 
 Proportional navigation guidance law.
@@ -390,13 +390,13 @@ is nulled by commanding acceleration perpendicular to LOS.
 
 **Parameters:**
 
-- **vehicle_state** (`<class 'tensornet.guidance.trajectory.VehicleState'>`): Current vehicle state
-- **target_state** (`<class 'tensornet.guidance.trajectory.VehicleState'>`): Target state
+- **vehicle_state** (`<class 'ontic.guidance.trajectory.VehicleState'>`): Current vehicle state
+- **target_state** (`<class 'ontic.guidance.trajectory.VehicleState'>`): Target state
 - **nav_ratio** (`<class 'float'>`): Navigation ratio (typically 3-5)
 
 **Returns**: `<class 'float'>` - Commanded lateral acceleration (m/s²)
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\guidance\controller.py:131](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\guidance\controller.py#L131)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\guidance\controller.py:131](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\guidance\controller.py#L131)*
 
 ### `validate_guidance_module`
 
@@ -406,4 +406,4 @@ def validate_guidance_module()
 
 Validate guidance controller module.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\guidance\controller.py:658](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\guidance\controller.py#L658)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\guidance\controller.py:658](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\guidance\controller.py#L658)*

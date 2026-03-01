@@ -1,5 +1,5 @@
 """
-TensorNet Gateway Module
+Ontic Engine Gateway Module
 ========================
 
 OPERATION VALHALLA - Phase 4: THE GATEWAY

@@ -32,7 +32,7 @@ def D(self) -> 'int'
 
 Maximum MPO bond dimension.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\core\mpo.py:56](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\core\mpo.py#L56)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\core\mpo.py:56](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\core\mpo.py#L56)*
 
 ##### `L`
 
@@ -42,7 +42,7 @@ def L(self) -> 'int'
 
 Number of sites.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\core\mpo.py:46](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\core\mpo.py#L46)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\core\mpo.py:46](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\core\mpo.py#L46)*
 
 ##### `d`
 
@@ -52,7 +52,7 @@ def d(self) -> 'int'
 
 Physical dimension.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\core\mpo.py:51](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\core\mpo.py#L51)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\core\mpo.py:51](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\core\mpo.py#L51)*
 
 ##### `device`
 
@@ -62,7 +62,7 @@ def device(self) -> 'torch.device'
 
 Device.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\core\mpo.py:68](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\core\mpo.py#L68)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\core\mpo.py:68](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\core\mpo.py#L68)*
 
 ##### `dtype`
 
@@ -72,7 +72,7 @@ def dtype(self) -> 'torch.dtype'
 
 Data type.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\core\mpo.py:63](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\core\mpo.py#L63)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\core\mpo.py:63](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\core\mpo.py#L63)*
 
 #### Methods
 
@@ -88,7 +88,7 @@ Initialize MPO from list of tensors.
 
 - **tensors** (`typing.List[torch.Tensor]`): List of tensors with shape (D_left, d_out, d_in, D_right)
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\core\mpo.py:37](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\core\mpo.py#L37)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\core\mpo.py:37](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\core\mpo.py#L37)*
 
 ##### `apply`
 
@@ -106,7 +106,7 @@ The result has bond dimension χ * D.
 
 **Returns**: value - New MPS with O applied
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\core\mpo.py:101](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\core\mpo.py#L101)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\core\mpo.py:101](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\core\mpo.py#L101)*
 
 ##### `copy`
 
@@ -116,7 +116,7 @@ def copy(self) -> 'MPO'
 
 Return deep copy.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\core\mpo.py:183](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\core\mpo.py#L183)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\core\mpo.py:183](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\core\mpo.py#L183)*
 
 ##### `expectation`
 
@@ -132,7 +132,7 @@ Compute ⟨ψ|O|ψ⟩.
 
 **Returns**: `<class 'torch.Tensor'>` - Expectation value
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\core\mpo.py:135](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\core\mpo.py#L135)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\core\mpo.py:135](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\core\mpo.py#L135)*
 
 ##### `is_hermitian`
 
@@ -148,7 +148,7 @@ Check if MPO is Hermitian.
 
 **Returns**: `<class 'bool'>` - True if H = H†
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\core\mpo.py:170](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\core\mpo.py#L170)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\core\mpo.py:170](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\core\mpo.py#L170)*
 
 ##### `to_matrix`
 
@@ -160,7 +160,7 @@ Contract MPO to dense matrix.
 
 **Returns**: `<class 'torch.Tensor'>` - Dense matrix of shape (d^L, d^L)
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\core\mpo.py:73](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\core\mpo.py#L73)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\core\mpo.py:73](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\core\mpo.py#L73)*
 
 ## Functions
 
@@ -181,4 +181,4 @@ Result has bond dimension D1 + D2.
 
 **Returns**: `<class 'mpo.MPO'>` - Sum MPO
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\core\mpo.py:191](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\core\mpo.py#L191)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\core\mpo.py:191](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\core\mpo.py#L191)*

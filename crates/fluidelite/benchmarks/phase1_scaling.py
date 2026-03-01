@@ -21,7 +21,7 @@ from typing import List, Optional, Tuple
 import sys
 
 # Add project root to path
-sys.path.insert(0, '/home/brad/TiganticLabz/Main_Projects/HyperTensor-VM-main')
+sys.path.insert(0, '/home/brad/TiganticLabz/Main_Projects/physics-os')
 
 from fluidelite.core import MPS
 from fluidelite.core.elite_ops import patch_mps_cuda

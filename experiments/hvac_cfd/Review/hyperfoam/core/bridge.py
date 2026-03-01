@@ -480,7 +480,7 @@ class QTTSharedMemoryBuffer:
         chi_max: int = 16,
         max_buffer_size: int = 1024 * 1024,  # 1 MB max for QTT cores
     ):
-        # NumPy fallback available - no longer requires tensornet
+        # NumPy fallback available - no longer requires ontic
         
         self.name = name
         self.grid_size = grid_size
@@ -847,7 +847,7 @@ def run_qtt_bridge_test(grid_size: tuple = (32, 32, 32), chi_max: int = 16):
     Test QTT-compressed bridge.
     
     Demonstrates 100-500× bandwidth reduction vs raw voxel transfer.
-    Uses NumPy TT-SVD fallback if tensornet not available.
+    Uses NumPy TT-SVD fallback if ontic not available.
     
     Usage:
         python -c "from hyperfoam.core.bridge import run_qtt_bridge_test; run_qtt_bridge_test()"

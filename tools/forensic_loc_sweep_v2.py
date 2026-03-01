@@ -258,10 +258,10 @@ def main():
         print(f"{d:<32} {stats['files']:>7,} {stats['total']:>12,} {stats['code']:>10,} {mb:>8.2f} {primary:>15}")
 
     # ============================================================
-    # SECTION 3: TENSORNET MODULE BREAKDOWN
+    # SECTION 3: ONTIC MODULE BREAKDOWN
     # ============================================================
     print(f"\n{'─'*110}")
-    print(f"SECTION 3: TENSORNET/ MODULE BREAKDOWN")
+    print(f"SECTION 3: ONTIC/ MODULE BREAKDOWN")
     print(f"{'─'*110}")
     
     tn_modules = {}
@@ -297,7 +297,7 @@ def main():
         print(f"{'  ... + ' + str(len(remaining)) + ' more':<28} {rf:>6} {rt:>12,} {rc:>10,}")
     
     print(f"{'─'*28} {'─'*6} {'─'*12} {'─'*10}")
-    print(f"{'TENSORNET TOTAL':<28} {tn_files:>6} {tn_total:>12,} {tn_code:>10,}")
+    print(f"{'ONTIC TOTAL':<28} {tn_files:>6} {tn_total:>12,} {tn_code:>10,}")
 
     # ============================================================
     # SECTION 4: TOP 30 FILES

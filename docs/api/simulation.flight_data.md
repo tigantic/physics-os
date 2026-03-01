@@ -64,7 +64,7 @@ def duration(self) -> float
 
 Flight duration in seconds.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\simulation\flight_data.py:141](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\simulation\flight_data.py#L141)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\simulation\flight_data.py:141](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\simulation\flight_data.py#L141)*
 
 ##### `sample_rate`
 
@@ -74,7 +74,7 @@ def sample_rate(self) -> float
 
 Average sample rate in Hz.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\simulation\flight_data.py:148](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\simulation\flight_data.py#L148)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\simulation\flight_data.py:148](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\simulation\flight_data.py#L148)*
 
 #### Methods
 
@@ -98,7 +98,7 @@ Extract time series data for a field.
 
 **Returns**: `typing.Tuple[numpy.ndarray, numpy.ndarray]` - (times, values) arrays
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\simulation\flight_data.py:155](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\simulation\flight_data.py#L155)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\simulation\flight_data.py:155](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\simulation\flight_data.py#L155)*
 
 ##### `resample`
 
@@ -108,7 +108,7 @@ def resample(self, target_rate_hz: float) -> 'FlightRecord'
 
 Resample to target rate using linear interpolation.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\simulation\flight_data.py:201](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\simulation\flight_data.py#L201)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\simulation\flight_data.py:201](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\simulation\flight_data.py#L201)*
 
 ##### `trim_to_range`
 
@@ -118,7 +118,7 @@ def trim_to_range(self, t_start: float, t_end: float) -> 'FlightRecord'
 
 Return a new FlightRecord trimmed to time range.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\simulation\flight_data.py:185](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\simulation\flight_data.py#L185)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\simulation\flight_data.py:185](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\simulation\flight_data.py#L185)*
 
 ### class `TelemetryFormat`(Enum)
 
@@ -156,7 +156,7 @@ def from_dict(d: Dict[str, Any]) -> 'TelemetryFrame'
 
 Create from dictionary.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\simulation\flight_data.py:105](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\simulation\flight_data.py#L105)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\simulation\flight_data.py:105](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\simulation\flight_data.py#L105)*
 
 ##### `to_dict`
 
@@ -166,7 +166,7 @@ def to_dict(self) -> Dict[str, Any]
 
 Convert to dictionary.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\simulation\flight_data.py:91](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\simulation\flight_data.py#L91)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\simulation\flight_data.py:91](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\simulation\flight_data.py#L91)*
 
 ### class `TrajectoryReconstruction`
 
@@ -202,7 +202,7 @@ def get_uncertainty(self, time_idx: int) -> numpy.ndarray
 
 Get 1-sigma uncertainty at time index.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\simulation\flight_data.py:419](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\simulation\flight_data.py#L419)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\simulation\flight_data.py:419](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\simulation\flight_data.py#L419)*
 
 ##### `process_frame`
 
@@ -220,7 +220,7 @@ Process a telemetry frame with EKF.
 
 **Returns**: `<class 'numpy.ndarray'>` - Updated state estimate
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\simulation\flight_data.py:324](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\simulation\flight_data.py#L324)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\simulation\flight_data.py:324](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\simulation\flight_data.py#L324)*
 
 ##### `reconstruct`
 
@@ -236,7 +236,7 @@ Reconstruct trajectory from flight record.
 
 **Returns**: `typing.Tuple[numpy.ndarray, numpy.ndarray]` - (times, states) arrays
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\simulation\flight_data.py:378](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\simulation\flight_data.py#L378)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\simulation\flight_data.py:378](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\simulation\flight_data.py#L378)*
 
 ##### `state_transition`
 
@@ -246,7 +246,7 @@ def state_transition(self, x: numpy.ndarray, dt: float) -> numpy.ndarray
 
 State transition function.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\simulation\flight_data.py:309](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\simulation\flight_data.py#L309)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\simulation\flight_data.py:309](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\simulation\flight_data.py#L309)*
 
 ## Functions
 
@@ -265,7 +265,7 @@ Compute reconstruction error metrics.
 
 **Returns**: `typing.Dict[str, float]` - Error metrics
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\simulation\flight_data.py:640](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\simulation\flight_data.py#L640)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\simulation\flight_data.py:640](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\simulation\flight_data.py#L640)*
 
 ### `create_synthetic_flight_record`
 
@@ -283,7 +283,7 @@ Create a synthetic flight record for testing.
 
 **Returns**: `<class 'flight_data.FlightRecord'>` - Synthetic FlightRecord
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\simulation\flight_data.py:701](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\simulation\flight_data.py#L701)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\simulation\flight_data.py:701](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\simulation\flight_data.py#L701)*
 
 ### `parse_telemetry`
 
@@ -300,7 +300,7 @@ Parse telemetry data from various formats.
 
 **Returns**: `<class 'flight_data.FlightRecord'>` - FlightRecord with parsed data
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\simulation\flight_data.py:426](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\simulation\flight_data.py#L426)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\simulation\flight_data.py:426](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\simulation\flight_data.py#L426)*
 
 ### `validate_against_flight`
 
@@ -318,7 +318,7 @@ Validate model predictions against flight data.
 
 **Returns**: `typing.Dict[str, float]` - Dict of validation metrics
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\simulation\flight_data.py:577](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\simulation\flight_data.py#L577)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\simulation\flight_data.py:577](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\simulation\flight_data.py#L577)*
 
 ### `validate_flight_data_module`
 
@@ -328,4 +328,4 @@ def validate_flight_data_module()
 
 Validate flight data module.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\simulation\flight_data.py:744](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\simulation\flight_data.py#L744)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\simulation\flight_data.py:744](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\simulation\flight_data.py#L744)*

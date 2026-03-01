@@ -1,5 +1,5 @@
 """
-TensorNet Cyber Module - Network Attack Visualization
+Ontic Engine Cyber Module - Network Attack Visualization
 
 Phase 10: The Grid Shock
 - Network traffic as fluid flow

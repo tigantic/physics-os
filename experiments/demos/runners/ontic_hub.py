@@ -62,10 +62,10 @@ try:
     from ontic.engine.substrate import Field, SliceSpec
     from ontic.infra.hypervisual import SliceEngine
     from ontic.applied.intent import IntentParser, IntentEngine
-    TENSORNET_AVAILABLE = True
+    ONTIC_AVAILABLE = True
 except ImportError:
-    TENSORNET_AVAILABLE = False
-    print("WARNING: tensornet not fully available. Running in demo mode.")
+    ONTIC_AVAILABLE = False
+    print("WARNING: ontic not fully available. Running in demo mode.")
 
 
 # =============================================================================
@@ -817,8 +817,8 @@ class OnticHub(QMainWindow):
         
     def _start_field_creation(self):
         """Start field creation in background thread."""
-        if not TENSORNET_AVAILABLE:
-            self.status_bar.showMessage("Demo mode - tensornet not available")
+        if not ONTIC_AVAILABLE:
+            self.status_bar.showMessage("Demo mode - ontic not available")
             return
             
         self.status_bar.showMessage("⏳ Creating manifold in background...")
@@ -1067,9 +1067,9 @@ class OnticHub(QMainWindow):
         """Handle slice request from forensic blade - routes to async worker."""
         print(f"[DEBUG] Slice requested: {plane} @ {depth:.0%}")  # DEBUG
         
-        if not TENSORNET_AVAILABLE:
-            print("[DEBUG] TENSORNET_AVAILABLE = False")
-            self.status_bar.showMessage("tensornet not available")
+        if not ONTIC_AVAILABLE:
+            print("[DEBUG] ONTIC_AVAILABLE = False")
+            self.status_bar.showMessage("ontic not available")
             return
             
         if not self.slicer:

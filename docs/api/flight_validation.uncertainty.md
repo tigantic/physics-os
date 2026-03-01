@@ -34,7 +34,7 @@ Initialize GCI calculator.
 - **safety_factor** (`<class 'float'>`): Safety factor for GCI
 - **target_order** (`<class 'float'>`): Target order of accuracy
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\flight_validation\uncertainty.py:432](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\flight_validation\uncertainty.py#L432)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\flight_validation\uncertainty.py:432](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\flight_validation\uncertainty.py#L432)*
 
 ##### `calculate_gci`
 
@@ -52,7 +52,7 @@ Calculate GCI from three grid solutions.
 
 **Returns**: `typing.Dict[str, float]` - Dictionary with GCI metrics
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\flight_validation\uncertainty.py:450](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\flight_validation\uncertainty.py#L450)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\flight_validation\uncertainty.py:450](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\flight_validation\uncertainty.py#L450)*
 
 ### class `MeasurementUncertainty`
 
@@ -85,7 +85,7 @@ def add_component(self, component: uncertainty.UncertaintyComponent)
 
 Add uncertainty component.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\flight_validation\uncertainty.py:97](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\flight_validation\uncertainty.py#L97)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\flight_validation\uncertainty.py:97](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\flight_validation\uncertainty.py#L97)*
 
 ##### `get_interval`
 
@@ -95,7 +95,7 @@ def get_interval(self) -> Tuple[float, float]
 
 Get uncertainty interval.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\flight_validation\uncertainty.py:138](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\flight_validation\uncertainty.py#L138)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\flight_validation\uncertainty.py:138](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\flight_validation\uncertainty.py#L138)*
 
 ##### `to_dict`
 
@@ -105,7 +105,7 @@ def to_dict(self) -> Dict[str, Any]
 
 Convert to dictionary.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\flight_validation\uncertainty.py:125](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\flight_validation\uncertainty.py#L125)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\flight_validation\uncertainty.py:125](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\flight_validation\uncertainty.py#L125)*
 
 ### class `ModelUncertainty`
 
@@ -137,7 +137,7 @@ def to_dict(self) -> Dict[str, Any]
 
 Convert to dictionary.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\flight_validation\uncertainty.py:174](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\flight_validation\uncertainty.py#L174)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\flight_validation\uncertainty.py:174](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\flight_validation\uncertainty.py#L174)*
 
 ### class `UncertaintyBudget`
 
@@ -167,7 +167,7 @@ def add_measurement_uncertainty(self, unc: uncertainty.MeasurementUncertainty)
 
 Add measurement uncertainty.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\flight_validation\uncertainty.py:249](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\flight_validation\uncertainty.py#L249)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\flight_validation\uncertainty.py:249](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\flight_validation\uncertainty.py#L249)*
 
 ##### `add_model_uncertainty`
 
@@ -177,7 +177,7 @@ def add_model_uncertainty(self, unc: uncertainty.ModelUncertainty)
 
 Add model uncertainty.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\flight_validation\uncertainty.py:254](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\flight_validation\uncertainty.py#L254)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\flight_validation\uncertainty.py:254](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\flight_validation\uncertainty.py#L254)*
 
 ##### `get_summary`
 
@@ -187,7 +187,7 @@ def get_summary(self) -> Dict[str, Any]
 
 Get budget summary.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\flight_validation\uncertainty.py:272](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\flight_validation\uncertainty.py#L272)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\flight_validation\uncertainty.py:272](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\flight_validation\uncertainty.py#L272)*
 
 ##### `to_dict`
 
@@ -197,7 +197,7 @@ def to_dict(self) -> Dict[str, Any]
 
 Convert to dictionary.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\flight_validation\uncertainty.py:282](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\flight_validation\uncertainty.py#L282)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\flight_validation\uncertainty.py:282](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\flight_validation\uncertainty.py#L282)*
 
 ### class `UncertaintyComponent`
 
@@ -231,7 +231,7 @@ def to_dict(self) -> Dict[str, Any]
 
 Convert to dictionary.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\flight_validation\uncertainty.py:66](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\flight_validation\uncertainty.py#L66)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\flight_validation\uncertainty.py:66](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\flight_validation\uncertainty.py#L66)*
 
 ### class `UncertaintyPropagation`
 
@@ -251,7 +251,7 @@ Initialize propagation.
 
 - **method** (`<class 'str'>`): Propagation method ("linear", "monte_carlo")
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\flight_validation\uncertainty.py:301](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\flight_validation\uncertainty.py#L301)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\flight_validation\uncertainty.py:301](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\flight_validation\uncertainty.py#L301)*
 
 ##### `propagate`
 
@@ -269,7 +269,7 @@ Propagate uncertainties using configured method.
 
 **Returns**: `typing.Tuple[float, float]` - (output_value, output_uncertainty)
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\flight_validation\uncertainty.py:401](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\flight_validation\uncertainty.py#L401)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\flight_validation\uncertainty.py:401](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\flight_validation\uncertainty.py#L401)*
 
 ##### `propagate_linear`
 
@@ -290,7 +290,7 @@ Uses finite difference to estimate sensitivities.
 
 **Returns**: `typing.Tuple[float, float]` - (output_value, output_uncertainty)
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\flight_validation\uncertainty.py:310](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\flight_validation\uncertainty.py#L310)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\flight_validation\uncertainty.py:310](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\flight_validation\uncertainty.py#L310)*
 
 ##### `propagate_monte_carlo`
 
@@ -310,7 +310,7 @@ Propagate uncertainties using Monte Carlo sampling.
 
 **Returns**: `typing.Tuple[float, float, numpy.ndarray]` - (mean_output, std_output, samples)
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\flight_validation\uncertainty.py:357](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\flight_validation\uncertainty.py#L357)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\flight_validation\uncertainty.py:357](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\flight_validation\uncertainty.py#L357)*
 
 ### class `UncertaintySource`(Enum)
 
@@ -354,7 +354,7 @@ Validation passes if:
 
 where E is comparison error and U_val is validation uncertainty.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\flight_validation\uncertainty.py:222](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\flight_validation\uncertainty.py#L222)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\flight_validation\uncertainty.py:222](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\flight_validation\uncertainty.py#L222)*
 
 ## Functions
 
@@ -375,7 +375,7 @@ Calculate Grid Convergence Index.
 
 **Returns**: `typing.Dict[str, float]` - Dictionary with GCI metrics
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\flight_validation\uncertainty.py:570](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\flight_validation\uncertainty.py#L570)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\flight_validation\uncertainty.py:570](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\flight_validation\uncertainty.py#L570)*
 
 ### `calculate_measurement_uncertainty`
 
@@ -395,4 +395,4 @@ Calculate measurement uncertainty.
 
 **Returns**: `<class 'uncertainty.MeasurementUncertainty'>` - MeasurementUncertainty object
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\flight_validation\uncertainty.py:515](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\flight_validation\uncertainty.py#L515)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\flight_validation\uncertainty.py:515](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\flight_validation\uncertainty.py#L515)*

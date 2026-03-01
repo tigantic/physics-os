@@ -1,6 +1,6 @@
-# Module `tensornet`
+# Module `ontic`
 
-TensorNet: Quantum-Inspired Tensor Networks for Computational Physics ======================================================================
+Ontic Engine: Quantum-Inspired Tensor Networks for Computational Physics ======================================================================
 
 A pure PyTorch implementation of Matrix Product States (MPS) and
 Matrix Product Operators (MPO) for many-body physics and CFD.
@@ -23,27 +23,27 @@ Hamiltonians:
 
 ## Submodules
 
-- [`ontic.adaptive`](#tensornet-adaptive)
-- [`ontic.algorithms`](#tensornet-algorithms)
-- [`ontic.autonomy`](#tensornet-autonomy)
-- [`ontic.benchmarks`](#tensornet-benchmarks)
-- [`ontic.certification`](#tensornet-certification)
-- [`ontic.cfd`](#tensornet-cfd)
-- [`ontic.coordination`](#tensornet-coordination)
-- [`ontic.core`](#tensornet-core)
-- [`ontic.deployment`](#tensornet-deployment)
-- [`ontic.digital_twin`](#tensornet-digital_twin)
-- [`ontic.distributed`](#tensornet-distributed)
-- [`ontic.distributed_tn`](#tensornet-distributed_tn)
-- [`ontic.docs`](#tensornet-docs)
-- [`ontic.flight_validation`](#tensornet-flight_validation)
-- [`ontic.guidance`](#tensornet-guidance)
-- [`ontic.integration`](#tensornet-integration)
-- [`ontic.ml_surrogates`](#tensornet-ml_surrogates)
-- [`ontic.mps`](#tensornet-mps)
-- [`ontic.neural`](#tensornet-neural)
-- [`ontic.quantum`](#tensornet-quantum)
-- [`ontic.realtime`](#tensornet-realtime)
-- [`ontic.simulation`](#tensornet-simulation)
-- [`ontic.site`](#tensornet-site)
-- [`ontic.validation`](#tensornet-validation)
+- [`ontic.adaptive`](#ontic-adaptive)
+- [`ontic.algorithms`](#ontic-algorithms)
+- [`ontic.autonomy`](#ontic-autonomy)
+- [`ontic.benchmarks`](#ontic-benchmarks)
+- [`ontic.certification`](#ontic-certification)
+- [`ontic.cfd`](#ontic-cfd)
+- [`ontic.coordination`](#ontic-coordination)
+- [`ontic.core`](#ontic-core)
+- [`ontic.deployment`](#ontic-deployment)
+- [`ontic.digital_twin`](#ontic-digital_twin)
+- [`ontic.distributed`](#ontic-distributed)
+- [`ontic.distributed_tn`](#ontic-distributed_tn)
+- [`ontic.docs`](#ontic-docs)
+- [`ontic.flight_validation`](#ontic-flight_validation)
+- [`ontic.guidance`](#ontic-guidance)
+- [`ontic.integration`](#ontic-integration)
+- [`ontic.ml_surrogates`](#ontic-ml_surrogates)
+- [`ontic.mps`](#ontic-mps)
+- [`ontic.neural`](#ontic-neural)
+- [`ontic.quantum`](#ontic-quantum)
+- [`ontic.realtime`](#ontic-realtime)
+- [`ontic.simulation`](#ontic-simulation)
+- [`ontic.site`](#ontic-site)
+- [`ontic.validation`](#ontic-validation)

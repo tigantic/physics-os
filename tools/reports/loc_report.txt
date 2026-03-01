@@ -1,6 +1,6 @@
 ==============================================================================================================
 PHYSICS-OS FULL FORENSIC LOC MATRIX
-Root: /home/brad/TiganticLabz/FRONT_VAULT/03_SOURCE/Main_Projects/HyperTensor-VM-main
+Root: /home/brad/TiganticLabz/FRONT_VAULT/03_SOURCE/Main_Projects/physics-os
 ==============================================================================================================
 
 ──────────────────────────────────────────────────────────────────────────────────────────────────────────────
@@ -43,7 +43,7 @@ yang_mills_unified_proof       8,103  1,709,810  2,140,814      85.07           
 vendor                         4,306    723,952    824,039      26.65           TypeScript
 clawdbot-main                  3,551    525,314    593,798      18.32           TypeScript
 docs                             491    269,009    389,950      12.37             Markdown
-tensornet                      1,090    172,095    472,737      15.07               Python
+ontic                      1,090    172,095    472,737      15.07               Python
 data                              14    135,664    146,375       6.35                 JSON
 fluidelite-zk                    270     59,344     81,017       5.48                 Rust
 QTeneT                            98     56,665     66,433       2.05                 JSON
@@ -155,7 +155,7 @@ cache                              1          1          1       0.00           
 images                             1          1          1       0.00             Markdown
 
 ──────────────────────────────────────────────────────────────────────────────────────────────────────────────
-SECTION 3: TENSORNET/ MODULE BREAKDOWN (Python SLOC)
+SECTION 3: ONTIC/ MODULE BREAKDOWN (Python SLOC)
 ──────────────────────────────────────────────────────────────────────────────────────────────────────────────
 Module                        Files   Py SLOC  All SLOC  Total Ln
 ──────────────────────────── ────── ───────── ───────── ─────────
@@ -201,7 +201,7 @@ guidance                          6     1,128     1,128     3,556
 physics                           5       504     1,117     2,200
   ... + 65 more                 300              31,629
 ──────────────────────────── ────── ───────── ─────────
-TENSORNET TOTAL                1087             171,373
+ONTIC TOTAL                1087             171,373
 
 ──────────────────────────────────────────────────────────────────────────────────────────────────────────────
 SECTION 4: DOMAIN CATEGORY ROLLUPS
@@ -280,7 +280,7 @@ Total lines (raw):     14,204,179
 Total SLOC:            11,669,867
 Total size:              643.69 MB
 Skipped (binary/large):  31,802
-tensornet/ modules:         105
+ontic/ modules:         105
 Languages detected:          21
 
 Python SLOC:            392,015  (3.4%)

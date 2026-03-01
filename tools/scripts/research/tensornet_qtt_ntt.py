@@ -40,9 +40,9 @@ try:
         is_cuda_available,
     )
     from ontic.core.decompositions import svd_truncated
-    HAS_TENSORNET = True
+    HAS_ONTIC = True
 except ImportError:
-    HAS_TENSORNET = False
+    HAS_ONTIC = False
     print("[QTT-NTT] Warning: ontic not found, using standalone mode")
 
 
@@ -274,7 +274,7 @@ def apply_twiddle_factors(
         twiddle_cores.append(core)
     
     # Element-wise multiply (Hadamard product)
-    if HAS_TENSORNET:
+    if HAS_ONTIC:
         return qtt_hadamard_cuda(qtt_cores, twiddle_cores)
     else:
         # Fallback
@@ -365,7 +365,7 @@ class QTTNTT:
         for k in range(self.n_bits - 1):
             remainder = remainder.reshape(left_rank * 2, -1)
             
-            if HAS_TENSORNET:
+            if HAS_ONTIC:
                 U, S, Vh, info = svd_truncated(remainder, chi_max=max_rank, return_info=True)
             else:
                 U, S, Vh = torch.linalg.svd(remainder, full_matrices=False)
@@ -408,7 +408,7 @@ class QTTNTT:
         
         for stage in range(self.n_bits):
             # Apply butterfly MPO
-            if HAS_TENSORNET:
+            if HAS_ONTIC:
                 qtt = apply_mpo_cuda(self._butterfly_mpos[stage], qtt)
             else:
                 qtt = self._apply_mpo_cpu(self._butterfly_mpos[stage], qtt)
@@ -447,7 +447,7 @@ class QTTNTT:
                 # SVD truncation
                 mat = core.reshape(r_left * d, r_right)
                 
-                if HAS_TENSORNET:
+                if HAS_ONTIC:
                     U, S, Vh, _ = svd_truncated(mat, chi_max=max_rank, return_info=True)
                 else:
                     U, S, Vh = torch.linalg.svd(mat, full_matrices=False)
@@ -589,7 +589,7 @@ if __name__ == "__main__":
     # Quick test
     print("QTT-NTT Module Loaded")
     print(f"  CUDA available: {torch.cuda.is_available()}")
-    print(f"  TensorNet available: {HAS_TENSORNET}")
+    print(f"  Ontic Engine available: {HAS_ONTIC}")
     
     # Run benchmark
     benchmark_qtt_ntt([8, 10, 12])

@@ -30,7 +30,7 @@ from typing import List, Optional
 import torch
 
 # Add parent to path for imports
-sys.path.insert(0, '/home/brad/TiganticLabz/Main_Projects/HyperTensor-VM-main')
+sys.path.insert(0, '/home/brad/TiganticLabz/Main_Projects/physics-os')
 
 from ontic.genesis.rmt import (
     QTTEnsemble,

@@ -24,7 +24,7 @@ import itertools
 from functools import lru_cache
 import sys
 
-sys.path.insert(0, '/home/brad/TiganticLabz/Main_Projects/HyperTensor-VM-main')
+sys.path.insert(0, '/home/brad/TiganticLabz/Main_Projects/physics-os')
 
 
 @dataclass

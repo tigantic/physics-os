@@ -1,5 +1,5 @@
 """
-TensorNet Emergency Module - Wildfire Prediction
+Ontic Engine Emergency Module - Wildfire Prediction
 
 Phase 14: The Wildfire Prophet
 - Fire-atmosphere coupling

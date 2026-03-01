@@ -15,7 +15,7 @@ import torch
 import numpy as np
 import sys
 
-sys.path.insert(0, '/home/brad/TiganticLabz/Main_Projects/HyperTensor-VM-main')
+sys.path.insert(0, '/home/brad/TiganticLabz/Main_Projects/physics-os')
 
 from yangmills.yangmills_4d_qtt import (
     YM4DConfig, YangMills4DQTT, morton_encode_4d, morton_decode_4d

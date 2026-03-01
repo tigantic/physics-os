@@ -138,10 +138,10 @@
 | Field | Value |
 |-------|-------|
 | **File** | `.github/workflows/ci.yml` L97-115 |
-| **Finding** | The lint job installs `black` and `isort` even though the project exclusively uses `ruff` (confirmed by `.pre-commit-config.yaml` which only configures ruff hooks). It then runs `black --check` and `isort --check-only` against `tensornet tests benchmarks scripts proofs` — but `benchmarks/` and `scripts/` do not exist at the repo root. |
-| **Evidence** | `pip install ruff black isort pre-commit` at L98. `black --check tensornet tests benchmarks scripts proofs` at L107. `isort --check-only tensornet tests benchmarks scripts proofs` at L111. `ls -d benchmarks` → not found. `ls -d scripts` → not found. `.pre-commit-config.yaml` uses only `ruff` + `ruff-format`. |
+| **Finding** | The lint job installs `black` and `isort` even though the project exclusively uses `ruff` (confirmed by `.pre-commit-config.yaml` which only configures ruff hooks). It then runs `black --check` and `isort --check-only` against `ontic tests benchmarks scripts proofs` — but `benchmarks/` and `scripts/` do not exist at the repo root. |
+| **Evidence** | `pip install ruff black isort pre-commit` at L98. `black --check ontic tests benchmarks scripts proofs` at L107. `isort --check-only ontic tests benchmarks scripts proofs` at L111. `ls -d benchmarks` → not found. `ls -d scripts` → not found. `.pre-commit-config.yaml` uses only `ruff` + `ruff-format`. |
 | **Risk** | CI installs unnecessary dependencies. black/isort checks are redundant with ruff and may produce conflicting opinions. Non-existent directory arguments cause misleading exit codes. |
-| **Remediation** | 1. Remove `black isort` from pip install line. 2. Remove the "Check formatting (Black)" and "Check imports (isort)" steps entirely. 3. Update the ruff step targets to `tensornet tests proofs` (removing `benchmarks` and `scripts`). |
+| **Remediation** | 1. Remove `black isort` from pip install line. 2. Remove the "Check formatting (Black)" and "Check imports (isort)" steps entirely. 3. Update the ruff step targets to `ontic tests proofs` (removing `benchmarks` and `scripts`). |
 | **Completed** | 2026-02-27 |
 | **Notes** | Removed black+isort install and steps. Replaced with `ruff check` and `ruff format --check` targeting `ontic physics_os tests proofs`. Removed `continue-on-error: true` from ruff steps (L-09 resolved simultaneously). |
 
@@ -252,9 +252,9 @@
 | Field | Value |
 |-------|-------|
 | **File** | `ontic/py.typed` (missing) |
-| **Finding** | PEP 561 requires a `py.typed` marker file for type checkers to recognize inline type annotations in installed packages. The `tensornet` package has extensive type hints but no marker. |
+| **Finding** | PEP 561 requires a `py.typed` marker file for type checkers to recognize inline type annotations in installed packages. The `ontic` package has extensive type hints but no marker. |
 | **Evidence** | `ls ontic/py.typed` → not found. |
-| **Risk** | Consumers using mypy/pyright won't see tensornet's type information when the package is installed. |
+| **Risk** | Consumers using mypy/pyright won't see ontic's type information when the package is installed. |
 | **Remediation** | Create empty `ontic/py.typed` file. Add `"ontic/py.typed"` to `package-data` in `pyproject.toml` if not auto-discovered. |
 | **Completed** | 2026-02-27 |
 | **Notes** | Created empty `ontic/py.typed` marker file. |

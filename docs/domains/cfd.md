@@ -1,6 +1,6 @@
 # CFD Domain Pack
 
-`pip install tensornet[cfd]`
+`pip install ontic-engine[cfd]`
 
 ## Modules
 

@@ -20,7 +20,7 @@ from scipy import sparse
 from typing import Dict, List, Tuple
 import sys
 
-sys.path.insert(0, '/home/brad/TiganticLabz/Main_Projects/HyperTensor-VM-main')
+sys.path.insert(0, '/home/brad/TiganticLabz/Main_Projects/physics-os')
 
 from yangmills.efficient_subspace import EfficientMultiPlaquetteHamiltonian
 

@@ -91,7 +91,7 @@
   },
 
   "model": {
-    "architecture": "MPS-TensorNetwork",
+    "architecture": "MPS-Ontic Enginework",
     "sites": 12,
     "bond_dimension": 64,
     "physical_dimension": 2,

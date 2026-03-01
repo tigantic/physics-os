@@ -58,7 +58,7 @@ Complete deployment package for target hardware.
 def __init__(self, model_name: str, target: hardware.HardwareSpec, precision: hardware.Precision)
 ```
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\certification\hardware.py:647](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\certification\hardware.py#L647)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\certification\hardware.py:647](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\certification\hardware.py#L647)*
 
 ##### `add_artifact`
 
@@ -68,7 +68,7 @@ def add_artifact(self, artifact: hardware.DeploymentArtifact)
 
 Add artifact to package.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\certification\hardware.py:660](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\certification\hardware.py#L660)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\certification\hardware.py:660](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\certification\hardware.py#L660)*
 
 ##### `generate_manifest`
 
@@ -78,7 +78,7 @@ def generate_manifest(self) -> Dict
 
 Generate deployment manifest.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\certification\hardware.py:664](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\certification\hardware.py#L664)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\certification\hardware.py:664](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\certification\hardware.py#L664)*
 
 ### class `HILTestResult`
 
@@ -118,7 +118,7 @@ reference implementation.
 def __init__(self, target: hardware.HardwareSpec, tolerance: float = 1e-05)
 ```
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\certification\hardware.py:551](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\certification\hardware.py#L551)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\certification\hardware.py:551](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\certification\hardware.py#L551)*
 
 ##### `generate_report`
 
@@ -128,7 +128,7 @@ def generate_report(self) -> Dict
 
 Generate validation report.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\certification\hardware.py:603](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\certification\hardware.py#L603)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\certification\hardware.py:603](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\certification\hardware.py#L603)*
 
 ##### `run_comparison_test`
 
@@ -138,7 +138,7 @@ def run_comparison_test(self, test_id: str, reference_func: Callable, target_fun
 
 Compare reference and target implementations.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\certification\hardware.py:556](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\certification\hardware.py#L556)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\certification\hardware.py:556](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\certification\hardware.py#L556)*
 
 ### class `HardwareSpec`
 
@@ -173,7 +173,7 @@ def estimate_flops(self) -> float
 
 Estimate peak FLOPS.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\certification\hardware.py:90](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\certification\hardware.py#L90)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\certification\hardware.py:90](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\certification\hardware.py#L90)*
 
 ### class `HardwareType`(Enum)
 
@@ -191,7 +191,7 @@ Optimizes memory usage for deployment.
 def __init__(self, target: hardware.HardwareSpec)
 ```
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\certification\hardware.py:297](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\certification\hardware.py#L297)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\certification\hardware.py:297](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\certification\hardware.py#L297)*
 
 ##### `profile_model`
 
@@ -201,7 +201,7 @@ def profile_model(self, model: torch.nn.modules.module.Module, input_shape: Tupl
 
 Profile memory usage of a model.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\certification\hardware.py:301](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\certification\hardware.py#L301)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\certification\hardware.py:301](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\certification\hardware.py#L301)*
 
 ##### `suggest_optimizations`
 
@@ -211,7 +211,7 @@ def suggest_optimizations(self, profile: hardware.MemoryProfile) -> List[str]
 
 Suggest memory optimizations if needed.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\certification\hardware.py:347](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\certification\hardware.py#L347)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\certification\hardware.py:347](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\certification\hardware.py#L347)*
 
 ### class `MemoryProfile`
 
@@ -241,7 +241,7 @@ def fits_in_memory(self, available_mb: int) -> bool
 
 Check if model fits in available memory.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\certification\hardware.py:287](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\certification\hardware.py#L287)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\certification\hardware.py:287](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\certification\hardware.py#L287)*
 
 ### class `ModelQuantizer`
 
@@ -255,7 +255,7 @@ Quantizes tensor network models for efficient deployment.
 def __init__(self, config: hardware.QuantizationConfig)
 ```
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\certification\hardware.py:169](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\certification\hardware.py#L169)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\certification\hardware.py:169](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\certification\hardware.py#L169)*
 
 ##### `calibrate`
 
@@ -265,7 +265,7 @@ def calibrate(self, model: torch.nn.modules.module.Module, calibration_data: tor
 
 Calibrate quantization parameters using sample data.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\certification\hardware.py:174](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\certification\hardware.py#L174)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\certification\hardware.py:174](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\certification\hardware.py#L174)*
 
 ##### `dequantize_tensor`
 
@@ -275,7 +275,7 @@ def dequantize_tensor(self, tensor: torch.Tensor, name: str) -> torch.Tensor
 
 Dequantize a tensor back to FP32.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\certification\hardware.py:257](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\certification\hardware.py#L257)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\certification\hardware.py:257](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\certification\hardware.py#L257)*
 
 ##### `quantize_tensor`
 
@@ -285,7 +285,7 @@ def quantize_tensor(self, tensor: torch.Tensor, name: str) -> torch.Tensor
 
 Quantize a single tensor.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\certification\hardware.py:228](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\certification\hardware.py#L228)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\certification\hardware.py:228](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\certification\hardware.py#L228)*
 
 ### class `Precision`(Enum)
 
@@ -327,7 +327,7 @@ schedulability tests.
 def __init__(self, tasks: List[hardware.TaskSpec])
 ```
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\certification\hardware.py:394](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\certification\hardware.py#L394)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\certification\hardware.py:394](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\certification\hardware.py#L394)*
 
 ##### `check_deadlines`
 
@@ -337,7 +337,7 @@ def check_deadlines(self) -> Dict[str, bool]
 
 Check if all tasks meet their deadlines.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\certification\hardware.py:444](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\certification\hardware.py#L444)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\certification\hardware.py:444](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\certification\hardware.py#L444)*
 
 ##### `is_edf_schedulable`
 
@@ -347,7 +347,7 @@ def is_edf_schedulable(self) -> bool
 
 Check EDF schedulability (necessary and sufficient).
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\certification\hardware.py:410](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\certification\hardware.py#L410)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\certification\hardware.py:410](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\certification\hardware.py#L410)*
 
 ##### `is_rm_schedulable`
 
@@ -357,7 +357,7 @@ def is_rm_schedulable(self) -> bool
 
 Check RM schedulability (sufficient condition).
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\certification\hardware.py:406](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\certification\hardware.py#L406)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\certification\hardware.py:406](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\certification\hardware.py#L406)*
 
 ##### `response_time_analysis`
 
@@ -369,7 +369,7 @@ Compute worst-case response time for each task.
 
 Returns response times in microseconds.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\certification\hardware.py:414](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\certification\hardware.py#L414)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\certification\hardware.py:414](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\certification\hardware.py#L414)*
 
 ##### `rm_bound`
 
@@ -379,7 +379,7 @@ def rm_bound(self) -> float
 
 Rate Monotonic utilization bound.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\certification\hardware.py:401](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\certification\hardware.py#L401)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\certification\hardware.py:401](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\certification\hardware.py#L401)*
 
 ##### `total_utilization`
 
@@ -389,7 +389,7 @@ def total_utilization(self) -> float
 
 Compute total CPU utilization.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\certification\hardware.py:397](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\certification\hardware.py#L397)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\certification\hardware.py:397](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\certification\hardware.py#L397)*
 
 ### class `TaskSpec`
 
@@ -413,7 +413,7 @@ def utilization(self) -> float
 
 Compute task utilization.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\certification\hardware.py:380](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\certification\hardware.py#L380)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\certification\hardware.py:380](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\certification\hardware.py#L380)*
 
 #### Methods
 
@@ -437,7 +437,7 @@ Uses measurement-based approach with statistical analysis.
 def __init__(self, target: hardware.HardwareSpec)
 ```
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\certification\hardware.py:464](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\certification\hardware.py#L464)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\certification\hardware.py:464](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\certification\hardware.py#L464)*
 
 ##### `estimate_flops`
 
@@ -447,7 +447,7 @@ def estimate_flops(self, func: Callable, args: Tuple, expected_flops: int) -> fl
 
 Estimate achieved FLOPS.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\certification\hardware.py:514](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\certification\hardware.py#L514)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\certification\hardware.py:514](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\certification\hardware.py#L514)*
 
 ##### `measure`
 
@@ -459,7 +459,7 @@ Measure execution time statistics.
 
 Returns dict with mean, std, min, max, and estimated WCET.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\certification\hardware.py:468](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\certification\hardware.py#L468)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\certification\hardware.py:468](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\certification\hardware.py#L468)*
 
 ## Functions
 
@@ -480,7 +480,7 @@ End-to-end deployment pipeline.
 
 **Returns**: `<class 'hardware.DeploymentPackage'>` - Deployment package ready for target
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\certification\hardware.py:694](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\certification\hardware.py#L694)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\certification\hardware.py:694](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\certification\hardware.py#L694)*
 
 ### `estimate_inference_time`
 
@@ -490,4 +490,4 @@ def estimate_inference_time(model: torch.nn.modules.module.Module, input_shape: 
 
 Estimate inference time on target hardware.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\certification\hardware.py:736](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\certification\hardware.py#L736)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\certification\hardware.py:736](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\certification\hardware.py#L736)*

@@ -139,8 +139,8 @@ def decompress_qtt(input_file: str, output_file: str = None) -> np.ndarray:
 
 def main():
     """Main entry point."""
-    input_file = "/home/brad/TiganticLabz/Main_Projects/HyperTensor-VM-main/crypto_data_compressed.qtt.npz"
-    output_file = "/home/brad/TiganticLabz/Main_Projects/HyperTensor-VM-main/crypto_data_reconstructed.npy"
+    input_file = "/home/brad/TiganticLabz/Main_Projects/physics-os/crypto_data_compressed.qtt.npz"
+    output_file = "/home/brad/TiganticLabz/Main_Projects/physics-os/crypto_data_reconstructed.npy"
     
     reconstructed = decompress_qtt(input_file, output_file)
     

@@ -13,7 +13,7 @@
 //!
 //! ```bash
 //! # Terminal 1: Start weather stream
-//! python -m tensornet.sovereign.weather_stream
+//! python -m ontic.sovereign.weather_stream
 //!
 //! # Terminal 2: Run visualizer
 //! cargo run -p global_eye
@@ -57,7 +57,7 @@ fn main() -> Result<()> {
         }
     } else {
         println!("  ⊘ Weather bridge not available (will show demo pattern)");
-        println!("    To enable live data: python -m tensornet.sovereign.weather_stream");
+        println!("    To enable live data: python -m ontic.sovereign.weather_stream");
     }
     
     println!();

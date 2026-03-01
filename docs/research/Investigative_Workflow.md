@@ -255,7 +255,7 @@ There are TWO copies of the batched ops:
 1. `qtt_3d_ops/cfd/` — appears to be the source
 2. `ontic/cfd/` — appears to be a copy
 
-Both `ns3d_qtt_native.py` imports from `ontic.cfd.qtt_batched_ops`, so the tensornet copy is what's actually used.
+Both `ns3d_qtt_native.py` imports from `ontic.cfd.qtt_batched_ops`, so the ontic copy is what's actually used.
 
 ---
 

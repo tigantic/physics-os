@@ -1,5 +1,5 @@
 /**
- * HyperTensor Facial Plastics — G5 Report Generation
+ * Ontic Facial Plastics — G5 Report Generation
  *
  * Format selector (html/markdown/json), generate via API,
  * display in sandboxed iframe (HTML) or <pre> (markdown/json),

@@ -19,10 +19,10 @@ Target: 1 GHz, ka = 0.3 -> a ~ 14.3 mm, Q_Chu ~ 40.
 
 Dependencies
 ------------
-- ``tensornet.em.qtt_3d``: 3D QTT operators, solver, geometry
-- ``tensornet.em.qtt_helmholtz``: Core QTT algebra, DMRG solver
-- ``tensornet.em.boundaries``: PMLConfig
-- ``tensornet.em.topology_opt``: Heaviside, density filter, binarisation
+- ``ontic.em.qtt_3d``: 3D QTT operators, solver, geometry
+- ``ontic.em.qtt_helmholtz``: Core QTT algebra, DMRG solver
+- ``ontic.em.boundaries``: PMLConfig
+- ``ontic.em.topology_opt``: Heaviside, density filter, binarisation
 """
 
 from __future__ import annotations
@@ -35,7 +35,7 @@ from typing import Callable, Optional
 import numpy as np
 from numpy.typing import NDArray
 
-from tensornet.em.qtt_helmholtz import (
+from ontic.em.qtt_helmholtz import (
     array_to_tt,
     reconstruct_1d as _reconstruct_flat,
     diag_mpo_from_tt,
@@ -45,8 +45,8 @@ from tensornet.em.qtt_helmholtz import (
     tt_scale_c,
     TTGMRESResult,
 )
-from tensornet.em.boundaries import PMLConfig
-from tensornet.em.qtt_3d import (
+from ontic.em.boundaries import PMLConfig
+from ontic.em.qtt_3d import (
     array_3d_to_tt,
     reconstruct_3d,
     helmholtz_mpo_3d_pml,
@@ -65,7 +65,7 @@ from tensornet.em.qtt_3d import (
     monopole_seed_density,
     spherical_multipole_s11,
 )
-from tensornet.em.topology_opt import (
+from ontic.em.topology_opt import (
     heaviside_projection,
     heaviside_gradient,
     density_filter,

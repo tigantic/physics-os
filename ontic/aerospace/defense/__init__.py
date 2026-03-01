@@ -1,5 +1,5 @@
 """
-TensorNet Defense Module - Hydroacoustic Warfare
+Ontic Engine Defense Module - Hydroacoustic Warfare
 
 Phase 8: The Silent Sub
 - Ocean domain with Munk Sound Speed Profile

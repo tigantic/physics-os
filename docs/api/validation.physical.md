@@ -38,7 +38,7 @@ Initialize analytical validator.
 - **tolerance** (`<class 'float'>`): Maximum acceptable error
 - **error_norm** (`<class 'str'>`): Error norm to use (L1, L2, Linf)
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\physical.py:464](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\physical.py#L464)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\validation\physical.py:464](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\validation\physical.py#L464)*
 
 ##### `compute_analytical_solution`
 
@@ -55,7 +55,7 @@ Compute the analytical solution.
 
 **Returns**: `<class 'torch.Tensor'>` - Analytical solution at given points and time
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\physical.py:479](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\physical.py#L479)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\validation\physical.py:479](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\validation\physical.py#L479)*
 
 ##### `compute_error`
 
@@ -72,7 +72,7 @@ Compute error between numerical and analytical solutions.
 
 **Returns**: `<class 'float'>` - Error in specified norm
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\physical.py:499](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\physical.py#L499)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\validation\physical.py:499](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\validation\physical.py#L499)*
 
 ##### `validate`
 
@@ -91,7 +91,7 @@ Validate numerical solution against analytical.
 
 **Returns**: `<class 'physical.ValidationResult'>` - ValidationResult with comparison outcome
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\physical.py:525](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\physical.py#L525)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\validation\physical.py:525](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\validation\physical.py#L525)*
 
 ### class `BlasiusValidator`(AnalyticalValidator)
 
@@ -116,7 +116,7 @@ Initialize Blasius validator.
 - **nu** (`<class 'float'>`): Kinematic viscosity
 - **tolerance** (`<class 'float'>`): Maximum acceptable error
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\physical.py:792](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\physical.py#L792)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\validation\physical.py:792](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\validation\physical.py#L792)*
 
 ##### `compute_analytical_solution`
 
@@ -134,7 +134,7 @@ Compute Blasius velocity profile.
 
 **Returns**: `<class 'torch.Tensor'>` - Velocity u/U_inf at each (x, y) point
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\physical.py:843](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\physical.py#L843)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\validation\physical.py:843](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\validation\physical.py#L843)*
 
 ### class `ConservationValidator`(ABC)
 
@@ -158,7 +158,7 @@ Initialize conservation validator.
 - **tolerance** (`<class 'float'>`): Tolerance for conservation check
 - **relative** (`<class 'bool'>`): Use relative (True) or absolute (False) tolerance
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\physical.py:185](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\physical.py#L185)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\validation\physical.py:185](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\validation\physical.py#L185)*
 
 ##### `compute_conserved_quantity`
 
@@ -174,7 +174,7 @@ Compute the conserved quantity from the state.
 
 **Returns**: `<class 'float'>` - Value of the conserved quantity
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\physical.py:200](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\physical.py#L200)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\validation\physical.py:200](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\validation\physical.py#L200)*
 
 ##### `validate`
 
@@ -192,7 +192,7 @@ Validate conservation between initial and final states.
 
 **Returns**: `<class 'physical.ValidationResult'>` - ValidationResult with conservation check outcome
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\physical.py:218](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\physical.py#L218)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\validation\physical.py:218](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\validation\physical.py#L218)*
 
 ### class `EnergyConservationTest`(ConservationValidator)
 
@@ -216,7 +216,7 @@ Initialize energy conservation validator.
 - **energy_index** (`<class 'int'>`): Index of energy in state vector (-1 for last)
 - **tolerance** (`<class 'float'>`): Conservation tolerance
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\physical.py:407](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\physical.py#L407)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\validation\physical.py:407](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\validation\physical.py#L407)*
 
 ##### `compute_conserved_quantity`
 
@@ -232,7 +232,7 @@ Compute total energy from state.
 
 **Returns**: `<class 'float'>` - Total energy in domain
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\physical.py:429](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\physical.py#L429)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\validation\physical.py:429](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\validation\physical.py#L429)*
 
 ### class `IsentropicVortexValidator`(AnalyticalValidator)
 
@@ -257,7 +257,7 @@ Initialize isentropic vortex validator.
 - **vortex_strength** (`<class 'float'>`): Vortex circulation parameter
 - **tolerance** (`<class 'float'>`): Maximum acceptable error
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\physical.py:998](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\physical.py#L998)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\validation\physical.py:998](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\validation\physical.py#L998)*
 
 ##### `compute_analytical_solution`
 
@@ -275,7 +275,7 @@ Compute isentropic vortex solution.
 
 **Returns**: `<class 'torch.Tensor'>` - Primitive state (rho, u, v, p) at each point
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\physical.py:1022](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\physical.py#L1022)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\validation\physical.py:1022](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\validation\physical.py#L1022)*
 
 ### class `MassConservationTest`(ConservationValidator)
 
@@ -298,7 +298,7 @@ Initialize mass conservation validator.
 
 - **tolerance** (`<class 'float'>`): Conservation tolerance
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\physical.py:288](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\physical.py#L288)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\validation\physical.py:288](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\validation\physical.py#L288)*
 
 ##### `compute_conserved_quantity`
 
@@ -315,7 +315,7 @@ Compute total mass from density field.
 
 **Returns**: `<class 'float'>` - Total mass in domain
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\physical.py:307](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\physical.py#L307)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\validation\physical.py:307](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\validation\physical.py#L307)*
 
 ### class `MomentumConservationTest`(ConservationValidator)
 
@@ -339,7 +339,7 @@ Initialize momentum conservation validator.
 - **component** (`<class 'int'>`): Momentum component to check (0=x, 1=y, 2=z)
 - **tolerance** (`<class 'float'>`): Conservation tolerance
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\physical.py:347](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\physical.py#L347)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\validation\physical.py:347](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\validation\physical.py#L347)*
 
 ##### `compute_conserved_quantity`
 
@@ -355,7 +355,7 @@ Compute total momentum from state.
 
 **Returns**: `<class 'float'>` - Total momentum component
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\physical.py:369](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\physical.py#L369)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\validation\physical.py:369](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\validation\physical.py#L369)*
 
 ### class `ObliqueShockValidator`(AnalyticalValidator)
 
@@ -379,7 +379,7 @@ Initialize oblique shock validator.
 - **gamma** (`<class 'float'>`): Ratio of specific heats
 - **tolerance** (`<class 'float'>`): Maximum acceptable error
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\physical.py:885](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\physical.py#L885)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\validation\physical.py:885](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\validation\physical.py#L885)*
 
 ##### `compute_analytical_solution`
 
@@ -398,7 +398,7 @@ Compute post-shock state from oblique shock relations.
 
 **Returns**: `<class 'torch.Tensor'>` - Post-shock state (rho2/rho1, p2/p1, M2)
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\physical.py:900](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\physical.py#L900)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\validation\physical.py:900](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\validation\physical.py#L900)*
 
 ##### `compute_shock_angle`
 
@@ -415,7 +415,7 @@ Compute shock angle for given Mach and deflection.
 
 **Returns**: `<class 'float'>` - Shock angle in degrees
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\physical.py:975](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\physical.py#L975)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\validation\physical.py:975](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\validation\physical.py#L975)*
 
 ### class `SodShockValidator`(AnalyticalValidator)
 
@@ -440,7 +440,7 @@ Initialize Sod shock tube validator.
 - **tolerance** (`<class 'float'>`): Maximum L2 error
 - **x_discontinuity** (`<class 'float'>`): Initial discontinuity location
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\physical.py:586](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\physical.py#L586)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\validation\physical.py:586](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\validation\physical.py#L586)*
 
 ##### `compute_analytical_solution`
 
@@ -459,7 +459,7 @@ Uses the exact Riemann solver for the shock tube problem.
 
 **Returns**: `<class 'torch.Tensor'>` - Primitive state (rho, u, p) at each point
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\physical.py:608](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\physical.py#L608)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\validation\physical.py:608](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\validation\physical.py#L608)*
 
 ### class `ValidationReport`
 
@@ -483,7 +483,7 @@ def all_passed(self) -> bool
 
 Check if all tests passed.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\physical.py:111](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\physical.py#L111)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\validation\physical.py:111](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\validation\physical.py#L111)*
 
 ##### `pass_rate`
 
@@ -493,7 +493,7 @@ def pass_rate(self) -> float
 
 Compute pass rate as percentage.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\physical.py:116](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\physical.py#L116)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\validation\physical.py:116](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\validation\physical.py#L116)*
 
 #### Methods
 
@@ -511,7 +511,7 @@ def save(self, filepath: Union[str, pathlib.Path])
 
 Save report to JSON file.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\physical.py:171](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\physical.py#L171)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\validation\physical.py:171](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\validation\physical.py#L171)*
 
 ##### `to_dict`
 
@@ -521,7 +521,7 @@ def to_dict(self) -> Dict
 
 Convert to dictionary for serialization.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\physical.py:161](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\physical.py#L161)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\validation\physical.py:161](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\validation\physical.py#L161)*
 
 ##### `to_markdown`
 
@@ -531,7 +531,7 @@ def to_markdown(self) -> str
 
 Generate markdown report.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\physical.py:123](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\physical.py#L123)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\validation\physical.py:123](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\validation\physical.py#L123)*
 
 ### class `ValidationResult`
 
@@ -567,7 +567,7 @@ def to_dict(self) -> Dict
 
 Convert to dictionary for serialization.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\physical.py:61](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\physical.py#L61)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\validation\physical.py:61](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\validation\physical.py#L61)*
 
 ### class `ValidationSeverity`(Enum)
 
@@ -589,4 +589,4 @@ Run a suite of physical validation tests.
 
 **Returns**: `<class 'physical.ValidationReport'>` - ValidationReport with all results
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\physical.py:1074](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\validation\physical.py#L1074)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\validation\physical.py:1074](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\validation\physical.py#L1074)*

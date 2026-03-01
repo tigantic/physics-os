@@ -1,6 +1,6 @@
 # Fluids Domain Pack
 
-`pip install tensornet[fluids]`
+`pip install ontic-engine[fluids]`
 
 ## Modules
 

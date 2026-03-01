@@ -3,7 +3,7 @@ Matrix Product Operator (MPO)
 =============================
 
 MPO representation for operators on 1D systems (Hamiltonians, time evolution).
-COPIED from tensornet/core/mpo.py with Greek einsum bug FIXED.
+COPIED from ontic/core/mpo.py with Greek einsum bug FIXED.
 
 Tensor convention:
     W[i] : (D_left, d_out, d_in, D_right)

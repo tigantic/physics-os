@@ -78,7 +78,7 @@ COPY requirements.txt ./
 RUN pip install --no-cache-dir --prefix=/install -r requirements.txt
 
 # Copy the QTT solver engine
-COPY tensornet/ /install/lib/python3.12/site-packages/tensornet/
+COPY ontic/ /install/lib/python3.12/site-packages/ontic/
 COPY tpc/ /install/lib/python3.12/site-packages/tpc/
 
 # ─────────────────────────────────────────────────────────────────────────
@@ -119,7 +119,7 @@ COPY --from=rust-builder \
 COPY --from=python-builder /install /usr/local
 
 # Copy solver engine
-COPY tensornet/ /opt/trustless/solver/tensornet/
+COPY ontic/ /opt/trustless/solver/ontic/
 COPY tpc/ /opt/trustless/tpc/
 
 # Copy deployment configuration and scripts

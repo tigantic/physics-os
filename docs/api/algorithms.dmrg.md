@@ -75,7 +75,7 @@ Run 2-site DMRG to find the ground state.
 
 **Returns**: `<class 'dmrg.DMRGResult'>` - DMRGResult with ground state MPS and diagnostics
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\algorithms\dmrg.py:470](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\algorithms\dmrg.py#L470)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\algorithms\dmrg.py:470](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\algorithms\dmrg.py#L470)*
 
 ### `dmrg_sweep`
 
@@ -97,4 +97,4 @@ Perform one DMRG sweep.
 
 **Returns**: `typing.Tuple[float, float, float]` - (energy, max_entropy, max_truncation_error)
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\algorithms\dmrg.py:347](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\algorithms\dmrg.py#L347)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\algorithms\dmrg.py:347](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\algorithms\dmrg.py#L347)*

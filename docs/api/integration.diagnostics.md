@@ -42,7 +42,7 @@ def capture(name: str, **variables) -> 'DebugContext'
 
 Capture current context.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\diagnostics.py:649](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\diagnostics.py#L649)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\integration\diagnostics.py:649](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\integration\diagnostics.py#L649)*
 
 ##### `to_dict`
 
@@ -52,7 +52,7 @@ def to_dict(self) -> Dict[str, Any]
 
 Convert to dictionary.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\diagnostics.py:658](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\diagnostics.py#L658)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\integration\diagnostics.py:658](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\integration\diagnostics.py#L658)*
 
 ### class `DiagnosticsReport`
 
@@ -82,7 +82,7 @@ def to_dict(self) -> Dict[str, Any]
 
 Convert to dictionary.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\diagnostics.py:527](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\diagnostics.py#L527)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\integration\diagnostics.py:527](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\integration\diagnostics.py#L527)*
 
 ##### `to_markdown`
 
@@ -92,7 +92,7 @@ def to_markdown(self) -> str
 
 Generate markdown report.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\diagnostics.py:537](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\diagnostics.py#L537)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\integration\diagnostics.py:537](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\integration\diagnostics.py#L537)*
 
 ### class `GPUInfo`
 
@@ -118,7 +118,7 @@ def memory_utilization(self) -> float
 
 Memory utilization percentage.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\diagnostics.py:50](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\diagnostics.py#L50)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\integration\diagnostics.py:50](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\integration\diagnostics.py#L50)*
 
 #### Methods
 
@@ -136,7 +136,7 @@ def to_dict(self) -> Dict[str, Any]
 
 Convert to dictionary.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\diagnostics.py:57](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\diagnostics.py#L57)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\integration\diagnostics.py:57](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\integration\diagnostics.py#L57)*
 
 ### class `HealthCheck`
 
@@ -159,7 +159,7 @@ Initialize health check.
 - **description** (`<class 'str'>`): Check description
 - **timeout** (`<class 'float'>`): Check timeout in seconds
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\diagnostics.py:272](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\diagnostics.py#L272)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\integration\diagnostics.py:272](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\integration\diagnostics.py#L272)*
 
 ##### `run`
 
@@ -171,7 +171,7 @@ Run the health check.
 
 **Returns**: `<class 'diagnostics.HealthCheckResult'>` - HealthCheckResult with status
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\diagnostics.py:293](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\diagnostics.py#L293)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\integration\diagnostics.py:293](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\integration\diagnostics.py#L293)*
 
 ### class `HealthCheckResult`
 
@@ -201,7 +201,7 @@ def to_dict(self) -> Dict[str, Any]
 
 Convert to dictionary.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\diagnostics.py:256](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\diagnostics.py#L256)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\integration\diagnostics.py:256](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\integration\diagnostics.py#L256)*
 
 ### class `HealthStatus`(Enum)
 
@@ -235,7 +235,7 @@ def to_dict(self) -> Dict[str, Any]
 
 Convert to dictionary.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\diagnostics.py:89](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\diagnostics.py#L89)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\integration\diagnostics.py:89](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\integration\diagnostics.py#L89)*
 
 ### class `Profiler`
 
@@ -251,7 +251,7 @@ def __init__(self)
 
 Initialize profiler.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\diagnostics.py:673](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\diagnostics.py#L673)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\integration\diagnostics.py:673](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\integration\diagnostics.py#L673)*
 
 ##### `profile`
 
@@ -273,7 +273,7 @@ def report(self) -> str
 
 Generate profiling report.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\diagnostics.py:723](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\diagnostics.py#L723)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\integration\diagnostics.py:723](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\integration\diagnostics.py#L723)*
 
 ##### `start`
 
@@ -283,7 +283,7 @@ def start(self, name: str)
 
 Start timing a section.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\diagnostics.py:679](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\diagnostics.py#L679)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\integration\diagnostics.py:679](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\integration\diagnostics.py#L679)*
 
 ##### `stop`
 
@@ -293,7 +293,7 @@ def stop(self, name: str) -> float
 
 Stop timing a section.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\diagnostics.py:684](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\diagnostics.py#L684)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\integration\diagnostics.py:684](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\integration\diagnostics.py#L684)*
 
 ##### `summary`
 
@@ -303,7 +303,7 @@ def summary(self) -> Dict[str, Dict[str, float]]
 
 Get profiling summary.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\diagnostics.py:708](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\diagnostics.py#L708)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\integration\diagnostics.py:708](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\integration\diagnostics.py#L708)*
 
 ### class `SystemHealthMonitor`
 
@@ -319,7 +319,7 @@ def overall_status(self) -> diagnostics.HealthStatus
 
 Get overall system health status.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\diagnostics.py:475](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\diagnostics.py#L475)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\integration\diagnostics.py:475](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\integration\diagnostics.py#L475)*
 
 #### Methods
 
@@ -331,7 +331,7 @@ def __init__(self)
 
 Initialize health monitor.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\diagnostics.py:334](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\diagnostics.py#L334)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\integration\diagnostics.py:334](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\integration\diagnostics.py#L334)*
 
 ##### `register`
 
@@ -341,7 +341,7 @@ def register(self, check: diagnostics.HealthCheck)
 
 Register a health check.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\diagnostics.py:450](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\diagnostics.py#L450)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\integration\diagnostics.py:450](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\integration\diagnostics.py#L450)*
 
 ##### `run_all`
 
@@ -351,7 +351,7 @@ def run_all(self) -> Dict[str, diagnostics.HealthCheckResult]
 
 Run all health checks.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\diagnostics.py:466](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\diagnostics.py#L466)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\integration\diagnostics.py:466](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\integration\diagnostics.py#L466)*
 
 ##### `run_check`
 
@@ -361,7 +361,7 @@ def run_check(self, name: str) -> Optional[diagnostics.HealthCheckResult]
 
 Run a specific health check.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\diagnostics.py:454](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\diagnostics.py#L454)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\integration\diagnostics.py:454](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\integration\diagnostics.py#L454)*
 
 ##### `summary`
 
@@ -371,7 +371,7 @@ def summary(self) -> str
 
 Generate health summary.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\diagnostics.py:493](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\diagnostics.py#L493)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\integration\diagnostics.py:493](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\integration\diagnostics.py#L493)*
 
 ### class `SystemInfo`
 
@@ -405,7 +405,7 @@ def summary(self) -> str
 
 Generate a summary string.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\diagnostics.py:140](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\diagnostics.py#L140)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\integration\diagnostics.py:140](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\integration\diagnostics.py#L140)*
 
 ##### `to_dict`
 
@@ -415,7 +415,7 @@ def to_dict(self) -> Dict[str, Any]
 
 Convert to dictionary.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\diagnostics.py:126](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\diagnostics.py#L126)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\integration\diagnostics.py:126](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\integration\diagnostics.py#L126)*
 
 ### class `TracingSpan`
 
@@ -442,7 +442,7 @@ def duration(self) -> Optional[float]
 
 Get span duration.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\diagnostics.py:784](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\diagnostics.py#L784)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\integration\diagnostics.py:784](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\integration\diagnostics.py#L784)*
 
 #### Methods
 
@@ -460,7 +460,7 @@ def finish(self)
 
 Finish the span.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\diagnostics.py:768](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\diagnostics.py#L768)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\integration\diagnostics.py:768](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\integration\diagnostics.py#L768)*
 
 ##### `log`
 
@@ -470,7 +470,7 @@ def log(self, event: str, **data)
 
 Add a log entry.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\diagnostics.py:772](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\diagnostics.py#L772)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\integration\diagnostics.py:772](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\integration\diagnostics.py#L772)*
 
 ##### `tag`
 
@@ -480,7 +480,7 @@ def tag(self, key: str, value: str)
 
 Add a tag.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\diagnostics.py:780](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\diagnostics.py#L780)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\integration\diagnostics.py:780](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\integration\diagnostics.py#L780)*
 
 ##### `to_dict`
 
@@ -490,7 +490,7 @@ def to_dict(self) -> Dict[str, Any]
 
 Convert to dictionary.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\diagnostics.py:791](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\diagnostics.py#L791)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\integration\diagnostics.py:791](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\integration\diagnostics.py#L791)*
 
 ## Functions
 
@@ -504,7 +504,7 @@ Quick health check.
 
 **Returns**: `<class 'bool'>` - True if system is healthy
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\diagnostics.py:616](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\diagnostics.py#L616)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\integration\diagnostics.py:616](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\integration\diagnostics.py#L616)*
 
 ### `get_system_info`
 
@@ -516,7 +516,7 @@ Gather complete system information.
 
 **Returns**: `<class 'diagnostics.SystemInfo'>` - SystemInfo with current system state
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\diagnostics.py:157](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\diagnostics.py#L157)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\integration\diagnostics.py:157](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\integration\diagnostics.py#L157)*
 
 ### `run_diagnostics`
 
@@ -528,4 +528,4 @@ Run full system diagnostics.
 
 **Returns**: `<class 'diagnostics.DiagnosticsReport'>` - DiagnosticsReport with results
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\diagnostics.py:580](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\diagnostics.py#L580)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\integration\diagnostics.py:580](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\integration\diagnostics.py#L580)*

@@ -45,7 +45,7 @@ from typing import List, Tuple, Optional, Dict
 import sys
 
 # Add path
-sys.path.insert(0, '/home/brad/TiganticLabz/Main_Projects/HyperTensor-VM-main')
+sys.path.insert(0, '/home/brad/TiganticLabz/Main_Projects/physics-os')
 
 from ontic.cfd.nd_shift_mpo import make_nd_shift_mpo, apply_nd_shift_mpo, NDShiftConfig
 from ontic.cfd.pure_qtt_ops import QTTState, dense_to_qtt, qtt_to_dense, qtt_add

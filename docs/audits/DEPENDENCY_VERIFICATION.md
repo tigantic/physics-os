@@ -21,7 +21,7 @@ This repository is hosted on the WSL filesystem at:
 │  │  Python Environment (venv/conda)                     │   │
 │  │  • PyTorch 2.0+ (CUDA 11.8+)                        │   │
 │  │  • NumPy, SciPy, TensorLy                           │   │
-│  │  • TensorNet (sovereign modules)                    │   │
+│  │  • Ontic Engine (sovereign modules)                    │   │
 │  │  • QTT compression, CFD solvers                     │   │
 │  └─────────────────────────────────────────────────────┘   │
 │                          ↓ RAM Bridge                       │
@@ -219,9 +219,9 @@ CUDA memory: 16.0 GB
 ✓ Core dependencies imported successfully
 ```
 
-### 2.4 TensorNet Package Installation
+### 2.4 Ontic Engine Package Installation
 
-The `tensornet` package must be installed in editable mode:
+The `ontic` package must be installed in editable mode:
 
 ```bash
 cd /home/brad/TiganticLabz/Main_Projects/Project\ The Ontic Engine
@@ -234,7 +234,7 @@ python3 -c "
 from ontic.sovereign.bridge_writer import TensorBridgeWriter
 from ontic.sovereign.qtt_slice_extractor import QTTSliceExtractor
 from ontic.sovereign.realtime_tensor_stream import RealtimeTensorStream
-print('✓ TensorNet sovereign modules imported successfully')
+print('✓ Ontic Engine sovereign modules imported successfully')
 "
 ```
 
@@ -567,7 +567,7 @@ mount | grep shm
     "python.defaultInterpreterPath": "/home/brad/TiganticLabz/Main_Projects/The Physics OS/venv/bin/python",
     "python.analysis.extraPaths": [
         "${workspaceFolder}",
-        "${workspaceFolder}/tensornet"
+        "${workspaceFolder}/ontic"
     ],
     "terminal.integrated.defaultProfile.windows": "PowerShell",
     "terminal.integrated.env.linux": {
@@ -796,13 +796,13 @@ else:
 "
 echo ""
 
-# Check TensorNet
-echo "[6/10] TensorNet Package..."
+# Check Ontic Engine
+echo "[6/10] Ontic Engine Package..."
 python3 -c "
 from ontic.sovereign.bridge_writer import TensorBridgeWriter
 from ontic.sovereign.qtt_slice_extractor import QTTSliceExtractor
 from ontic.sovereign.realtime_tensor_stream import RealtimeTensorStream
-print('✓ TensorNet modules import successfully')
+print('✓ Ontic Engine modules import successfully')
 "
 echo ""
 

@@ -58,7 +58,7 @@ from numpy.typing import NDArray
 from scipy import sparse
 from scipy.sparse.linalg import spsolve
 
-# ── TensorNet QTT stack ──
+# ── Ontic Engine QTT stack ──
 from ontic.qtt.sparse_direct import tt_round, tt_matvec
 from ontic.qtt.eigensolvers import (
     tt_inner, tt_norm, tt_axpy, tt_scale, tt_add,

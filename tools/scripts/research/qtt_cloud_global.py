@@ -399,7 +399,7 @@ def main():
               f"({predicted_ratio:.0f}x compression)")
     
     # Save compressed result
-    output_path = '/home/brad/TiganticLabz/Main_Projects/HyperTensor-VM-main/real_data/goes18_cloud.qtt.npz'
+    output_path = '/home/brad/TiganticLabz/Main_Projects/physics-os/real_data/goes18_cloud.qtt.npz'
     cores_np = [c.cpu().numpy() for c in qtt.cores]
     np.savez_compressed(
         output_path,

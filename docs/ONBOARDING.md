@@ -35,7 +35,7 @@ pip install -e ".[dev]"
 pytest tests/test_mps.py -v
 
 # Import the library
-python -c "import tensornet; print(f'Version: {tensornet.__version__}')"
+python -c "import ontic; print(f'Version: {ontic.__version__}')"
 ```
 
 ---
@@ -116,7 +116,7 @@ pytest tests/ -v --ignore=tests/integration
 pytest tests/test_dmrg.py -v
 
 # Run tests with coverage
-pytest tests/ --cov=tensornet --cov-report=html
+pytest tests/ --cov=ontic --cov-report=html
 
 # Run only fast tests
 make test-fast

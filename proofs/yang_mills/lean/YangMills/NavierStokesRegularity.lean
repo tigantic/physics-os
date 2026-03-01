@@ -5,7 +5,7 @@
 ║                                                                              ║
 ║  Generated: 2026-01-16T02:53:30.692187
 ║                                                                              ║
-║  SOLVER: tensornet/cfd/ns_3d.py (VALIDATED)                                  ║
+║  SOLVER: ontic/cfd/ns_3d.py (VALIDATED)                                  ║
 ║    - Spectral discretization with Chorin-Temam projection                    ║
 ║    - RK4 time stepping with projection at each stage                         ║
 ║    - Gate: decay rate error < 5%, max|∇·u| < 10⁻⁶                            ║

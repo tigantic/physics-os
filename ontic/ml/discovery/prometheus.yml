@@ -1,4 +1,4 @@
-# Prometheus configuration for TensorNet Discovery
+# Prometheus configuration for Ontic Engine Discovery
 
 global:
   scrape_interval: 15s
@@ -17,15 +17,15 @@ scrape_configs:
     static_configs:
       - targets: ["localhost:9090"]
 
-  # TensorNet Discovery API
-  - job_name: "tensornet-discovery"
+  # Ontic Engine Discovery API
+  - job_name: "ontic-discovery"
     static_configs:
       - targets: ["discovery-api:8000"]
     metrics_path: /metrics
     scrape_interval: 10s
 
   # Discovery workers
-  - job_name: "tensornet-workers"
+  - job_name: "ontic-workers"
     static_configs:
       - targets: ["discovery-worker:8001"]
     metrics_path: /metrics

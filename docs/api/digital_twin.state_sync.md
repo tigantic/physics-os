@@ -37,7 +37,7 @@ extrapolation, and analysis purposes.
 def __init__(self, max_size: int = 1000)
 ```
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\state_sync.py:232](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\state_sync.py#L232)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\digital_twin\state_sync.py:232](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\digital_twin\state_sync.py#L232)*
 
 ##### `clear`
 
@@ -47,7 +47,7 @@ def clear(self)
 
 Clear buffer.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\state_sync.py:277](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\state_sync.py#L277)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\digital_twin\state_sync.py:277](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\digital_twin\state_sync.py#L277)*
 
 ##### `get_at_time`
 
@@ -57,7 +57,7 @@ def get_at_time(self, t: float) -> Optional[state_sync.StateVector]
 
 Get state closest to time t.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\state_sync.py:250](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\state_sync.py#L250)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\digital_twin\state_sync.py:250](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\digital_twin\state_sync.py#L250)*
 
 ##### `get_latest`
 
@@ -67,7 +67,7 @@ def get_latest(self, n: int = 1) -> List[state_sync.StateVector]
 
 Get n most recent states.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\state_sync.py:242](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\state_sync.py#L242)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\digital_twin\state_sync.py:242](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\digital_twin\state_sync.py#L242)*
 
 ##### `get_range`
 
@@ -77,7 +77,7 @@ def get_range(self, t_start: float, t_end: float) -> List[state_sync.StateVector
 
 Get states in time range.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\state_sync.py:271](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\state_sync.py#L271)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\digital_twin\state_sync.py:271](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\digital_twin\state_sync.py#L271)*
 
 ##### `push`
 
@@ -87,7 +87,7 @@ def push(self, state: state_sync.StateVector)
 
 Add state to buffer.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\state_sync.py:237](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\state_sync.py#L237)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\digital_twin\state_sync.py:237](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\digital_twin\state_sync.py#L237)*
 
 ### class `StateSync`
 
@@ -104,7 +104,7 @@ and automatic correction between physical and digital systems.
 def __init__(self, config: state_sync.SyncConfig)
 ```
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\state_sync.py:528](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\state_sync.py#L528)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\digital_twin\state_sync.py:528](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\digital_twin\state_sync.py#L528)*
 
 ##### `get_statistics`
 
@@ -114,7 +114,7 @@ def get_statistics(self) -> Dict[str, Any]
 
 Get synchronization statistics.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\state_sync.py:754](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\state_sync.py#L754)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\digital_twin\state_sync.py:754](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\digital_twin\state_sync.py#L754)*
 
 ##### `get_synchronized_state`
 
@@ -132,7 +132,7 @@ Combines physical and digital states with appropriate weighting.
 
 **Returns**: `typing.Optional[state_sync.StateVector]` - Best state estimate
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\state_sync.py:600](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\state_sync.py#L600)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\digital_twin\state_sync.py:600](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\digital_twin\state_sync.py#L600)*
 
 ##### `push_digital_state`
 
@@ -146,7 +146,7 @@ Push new digital state (from simulation).
 
 - **state** (`<class 'state_sync.StateVector'>`): Current digital twin state
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\state_sync.py:590](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\state_sync.py#L590)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\digital_twin\state_sync.py:590](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\digital_twin\state_sync.py#L590)*
 
 ##### `push_physical_state`
 
@@ -160,7 +160,7 @@ Push new physical state (from vehicle/HIL).
 
 - **state** (`<class 'state_sync.StateVector'>`): Current physical vehicle state
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\state_sync.py:576](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\state_sync.py#L576)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\digital_twin\state_sync.py:576](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\digital_twin\state_sync.py#L576)*
 
 ##### `start`
 
@@ -170,7 +170,7 @@ def start(self, mode: state_sync.SyncMode = <SyncMode.REAL_TIME: 1>)
 
 Start synchronization process.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\state_sync.py:556](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\state_sync.py#L556)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\digital_twin\state_sync.py:556](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\digital_twin\state_sync.py#L556)*
 
 ##### `stop`
 
@@ -180,7 +180,7 @@ def stop(self)
 
 Stop synchronization.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\state_sync.py:569](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\state_sync.py#L569)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\digital_twin\state_sync.py:569](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\digital_twin\state_sync.py#L569)*
 
 ### class `StateSynchronizer`
 
@@ -198,7 +198,7 @@ def is_synced(self) -> bool
 
 Check if currently synchronized.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\state_sync.py:803](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\state_sync.py#L803)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\digital_twin\state_sync.py:803](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\digital_twin\state_sync.py#L803)*
 
 #### Methods
 
@@ -208,7 +208,7 @@ Check if currently synchronized.
 def __init__(self, sync_rate: float = 100.0)
 ```
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\state_sync.py:779](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\state_sync.py#L779)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\digital_twin\state_sync.py:779](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\digital_twin\state_sync.py#L779)*
 
 ##### `connect`
 
@@ -218,7 +218,7 @@ def connect(self, mode: state_sync.SyncMode = <SyncMode.REAL_TIME: 1>)
 
 Connect and start synchronization.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\state_sync.py:783](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\state_sync.py#L783)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\digital_twin\state_sync.py:783](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\digital_twin\state_sync.py#L783)*
 
 ##### `disconnect`
 
@@ -228,7 +228,7 @@ def disconnect(self)
 
 Disconnect and stop synchronization.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\state_sync.py:787](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\state_sync.py#L787)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\digital_twin\state_sync.py:787](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\digital_twin\state_sync.py#L787)*
 
 ##### `get_state`
 
@@ -238,7 +238,7 @@ def get_state(self, t: Optional[float] = None) -> Optional[state_sync.StateVecto
 
 Get synchronized state.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\state_sync.py:799](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\state_sync.py#L799)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\digital_twin\state_sync.py:799](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\digital_twin\state_sync.py#L799)*
 
 ##### `update_digital`
 
@@ -248,7 +248,7 @@ def update_digital(self, state: state_sync.StateVector)
 
 Update with digital state.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\state_sync.py:795](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\state_sync.py#L795)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\digital_twin\state_sync.py:795](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\digital_twin\state_sync.py#L795)*
 
 ##### `update_physical`
 
@@ -258,7 +258,7 @@ def update_physical(self, state: state_sync.StateVector)
 
 Update with physical state.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\state_sync.py:791](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\state_sync.py#L791)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\digital_twin\state_sync.py:791](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\digital_twin\state_sync.py#L791)*
 
 ### class `StateVector`
 
@@ -301,7 +301,7 @@ def copy(self) -> 'StateVector'
 
 Create deep copy.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\state_sync.py:173](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\state_sync.py#L173)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\digital_twin\state_sync.py:173](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\digital_twin\state_sync.py#L173)*
 
 ##### `from_vector`
 
@@ -311,7 +311,7 @@ def from_vector(vector: numpy.ndarray, timestamp: float, n_control: int = 3, n_t
 
 Reconstruct from flat vector.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\state_sync.py:128](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\state_sync.py#L128)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\digital_twin\state_sync.py:128](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\digital_twin\state_sync.py#L128)*
 
 ##### `to_vector`
 
@@ -321,7 +321,7 @@ def to_vector(self) -> numpy.ndarray
 
 Convert to flat state vector.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\state_sync.py:110](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\state_sync.py#L110)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\digital_twin\state_sync.py:110](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\digital_twin\state_sync.py#L110)*
 
 ### class `SyncConfig`
 
@@ -372,7 +372,7 @@ Compute divergence metrics between physical and digital states.
 
 **Returns**: `typing.Dict[str, float]` - Dictionary of divergence metrics for each state component
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\state_sync.py:473](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\state_sync.py#L473)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\digital_twin\state_sync.py:473](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\digital_twin\state_sync.py#L473)*
 
 ### `extrapolate_state`
 
@@ -392,7 +392,7 @@ Uses polynomial extrapolation based on recent state history.
 
 **Returns**: `<class 'state_sync.StateVector'>` - Extrapolated state at time t
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\state_sync.py:358](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\state_sync.py#L358)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\digital_twin\state_sync.py:358](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\digital_twin\state_sync.py#L358)*
 
 ### `interpolate_state`
 
@@ -413,7 +413,7 @@ SLERP for quaternions, and linear for other quantities.
 
 **Returns**: `<class 'state_sync.StateVector'>` - Interpolated state at time t
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\state_sync.py:287](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\state_sync.py#L287)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\digital_twin\state_sync.py:287](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\digital_twin\state_sync.py#L287)*
 
 ### `test_state_sync`
 
@@ -423,4 +423,4 @@ def test_state_sync()
 
 Test state synchronization module.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\state_sync.py:809](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\state_sync.py#L809)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\digital_twin\state_sync.py:809](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\digital_twin\state_sync.py#L809)*

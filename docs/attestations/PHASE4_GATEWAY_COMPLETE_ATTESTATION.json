@@ -17,18 +17,18 @@
   },
   
   "deliverables": {
-    "tensornet/gateway/photonic_discipline.py": "complete",
-    "tensornet/gateway/modular_grid.py": "complete",
-    "tensornet/gateway/onion_renderer.py": "complete",
-    "tensornet/gateway/renderer.py": "complete (ModernGL framework)",
-    "tensornet/gateway/orbital_command.py": "complete (full integration)",
-    "tensornet/gateway/shaders/valhalla_common.glsl": "complete",
-    "tensornet/gateway/shaders/geological.vert": "complete",
-    "tensornet/gateway/shaders/geological.frag": "complete",
-    "tensornet/gateway/shaders/tensor_field.vert": "complete",
-    "tensornet/gateway/shaders/tensor_field.frag": "complete",
-    "tensornet/gateway/shaders/geometry_grid.vert": "complete",
-    "tensornet/gateway/shaders/geometry_grid.frag": "complete"
+    "ontic/gateway/photonic_discipline.py": "complete",
+    "ontic/gateway/modular_grid.py": "complete",
+    "ontic/gateway/onion_renderer.py": "complete",
+    "ontic/gateway/renderer.py": "complete (ModernGL framework)",
+    "ontic/gateway/orbital_command.py": "complete (full integration)",
+    "ontic/gateway/shaders/valhalla_common.glsl": "complete",
+    "ontic/gateway/shaders/geological.vert": "complete",
+    "ontic/gateway/shaders/geological.frag": "complete",
+    "ontic/gateway/shaders/tensor_field.vert": "complete",
+    "ontic/gateway/shaders/tensor_field.frag": "complete",
+    "ontic/gateway/shaders/geometry_grid.vert": "complete",
+    "ontic/gateway/shaders/geometry_grid.frag": "complete"
   },
   
   "performance_benchmarks": {

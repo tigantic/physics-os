@@ -21,7 +21,7 @@ Exit Criteria (Challenge II specification)
   * MD confirms binding pose within 2.0 Å RMSD of physics prediction
   * ΔG_bind < −8 kcal/mol
 
-Engine: The Ontic Engine tensornet.life_sci.md (AMBER FF, PME, Nosé-Hoover)
+Engine: The Ontic Engine ontic.life_sci.md (AMBER FF, PME, Nosé-Hoover)
 Cross-validation: OpenMM 8.4 with AMBER14
 
 Author: Bradly Biron Baker Adams | Tigantic Holdings LLC
@@ -1366,7 +1366,7 @@ def generate_attestation(result: SimulationResult,
             "overall_PASS": result.overall_pass,
         },
         "engine": {
-            "md": "The Ontic Engine tensornet.life_sci.md",
+            "md": "The Ontic Engine ontic.life_sci.md",
             "force_field": "AMBER-like LJ + Coulomb + GAFF",
             "thermostat": "Nosé-Hoover (τ = 0.5 ps)",
             "integrator": "Velocity Verlet (dt = 2 fs)",
@@ -1529,7 +1529,7 @@ def generate_report(result: SimulationResult,
     buf.append("| Charges (protein) | AMBER ff14SB templates |")
     buf.append("| Charges (ligand) | RDKit Gasteiger |")
     buf.append("| Minimization | Steepest descent |")
-    buf.append("| Platform | The Ontic Engine tensornet.life_sci.md |")
+    buf.append("| Platform | The Ontic Engine ontic.life_sci.md |")
     buf.append("")
     buf.append("---")
     buf.append("")

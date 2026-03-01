@@ -1,3 +1,3 @@
 """
-tensornet.cfd - QTT-Native Computational Fluid Dynamics
+ontic.cfd - QTT-Native Computational Fluid Dynamics
 """

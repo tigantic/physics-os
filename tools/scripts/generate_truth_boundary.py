@@ -156,14 +156,14 @@ def analyze_module(
 
 def generate_report(project_root: Path) -> Dict[str, Any]:
     """Generate the truth boundary report."""
-    tensornet_dir = project_root / "ontic"
+    ontic_dir = project_root / "ontic"
     tests_dir = project_root / "tests"
     docs_dir = project_root / "docs"
 
     modules = []
 
     # Scan all Python files in ontic
-    for py_file in tensornet_dir.rglob("*.py"):
+    for py_file in ontic_dir.rglob("*.py"):
         if py_file.name.startswith("_") and py_file.name != "__init__.py":
             continue
         if "__pycache__" in str(py_file):

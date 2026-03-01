@@ -1,5 +1,5 @@
 /**
- * HyperTensor Facial Plastics — G7 Timeline / Audit Trail
+ * Ontic Facial Plastics — G7 Timeline / Audit Trail
  *
  * Vertical event timeline from API.getTimeline().
  * Expandable event details, simulation scrubber.

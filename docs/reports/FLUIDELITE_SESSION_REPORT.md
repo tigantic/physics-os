@@ -14,7 +14,7 @@ This session applied the FLUIDELITE QTT Rank Analyzer to 6 major ZK protocols. T
 
 **Key Limitation Identified**: The lightweight Circom parser does not trace constraints through component instantiations, leading to false positives where signals constrained via `<==` to component outputs appear unconstrained.
 
-**v1.2 Upgrade (Session 3)**: Integrated tensornet's full QTT capabilities for 10-60x performance improvement on large circuits.
+**v1.2 Upgrade (Session 3)**: Integrated ontic's full QTT capabilities for 10-60x performance improvement on large circuits.
 
 **v1.3 Upgrade (Session 4)**: GPU pipeline optimization achieving 1 billion× compression on 10M×10M matrices.
 
@@ -293,7 +293,7 @@ Notable: Parser flagged `for` as an unconstrained signal - this is a loop variab
 
 ### Capability Gap Analysis
 
-Prior to v1.2, FLUIDELITE was using only **~20%** of tensornet's computational power:
+Prior to v1.2, FLUIDELITE was using only **~20%** of ontic's computational power:
 - Used basic `np.linalg.svd()` instead of rSVD
 - Imported `Interval` class but used plain integers
 - No QTT compression for large circuits
@@ -348,7 +348,7 @@ ALL TESTS PASSED - FLUIDELITE v1.2 OPERATIONAL
 
 ### Current Capability Utilization: ~85%
 
-| tensornet Module | Status |
+| ontic Module | Status |
 |-----------------|--------|
 | `torch.svd_lowrank` | ✅ Used for >256 dim |
 | `numerics/interval.py` | ✅ Rigorous mode |
@@ -489,7 +489,7 @@ The streaming/factored approach means we never materialize the full matrix - onl
 
 ### Current Capability Utilization: ~95%
 
-| tensornet Module | Status |
+| ontic Module | Status |
 |-----------------|--------|
 | `torch.svd_lowrank` | ✅ GPU-accelerated rSVD |
 | `numerics/interval.py` | ✅ Rigorous mode |

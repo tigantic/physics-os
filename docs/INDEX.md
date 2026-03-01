@@ -93,7 +93,7 @@ System design, topology, and technical specifications.
 
 ### API Reference (`docs/api/`)
 
-Auto-generated module documentation for all `tensornet` and `ontic` submodules. See [api/README.md](api/README.md).
+Auto-generated module documentation for all `ontic` and `ontic` submodules. See [api/README.md](api/README.md).
 
 ### Attestations (`docs/attestations/`)
 

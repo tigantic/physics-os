@@ -1,4 +1,4 @@
-# TensorNet Discovery Engine
+# Ontic Engine Discovery Engine
 # Production-ready container image
 
 FROM python:3.11-slim-bookworm AS base
@@ -19,8 +19,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
 # Create non-root user
-RUN groupadd --gid 1000 tensornet \
-    && useradd --uid 1000 --gid tensornet --shell /bin/bash --create-home tensornet
+RUN groupadd --gid 1000 physos \
+    && useradd --uid 1000 --gid physos --shell /bin/bash --create-home physos
 
 WORKDIR /app
 
@@ -43,25 +43,25 @@ RUN pip install --no-cache-dir \
     ipython
 
 # Copy source
-COPY --chown=tensornet:tensornet . .
+COPY --chown=physos:physos . .
 
-USER tensornet
+USER physos
 
-CMD ["python", "-m", "tensornet.discovery", "serve", "--port", "8000"]
+CMD ["python", "-m", "ontic.discovery", "serve", "--port", "8000"]
 
 # -------------------------------------------------------------------
 # Production stage
 FROM base AS production
 
 # Copy only necessary files
-COPY --chown=tensornet:tensornet tensornet/ ./tensornet/
-COPY --chown=tensornet:tensornet proofs/ ./proofs/
-COPY --chown=tensornet:tensornet pyproject.toml ./
+COPY --chown=physos:physos ontic/ ./ontic/
+COPY --chown=physos:physos proofs/ ./proofs/
+COPY --chown=physos:physos pyproject.toml ./
 
 # Set ownership
-RUN chown -R tensornet:tensornet /app
+RUN chown -R physos:physos /app
 
-USER tensornet
+USER physos
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
@@ -71,7 +71,7 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
 EXPOSE 8000
 
 # Default command
-CMD ["python", "-m", "tensornet.discovery", "serve", "--port", "8000"]
+CMD ["python", "-m", "ontic.discovery", "serve", "--port", "8000"]
 
 # -------------------------------------------------------------------
 # Minimal stage for edge deployment
@@ -88,11 +88,11 @@ WORKDIR /app
 COPY requirements-minimal.txt ./
 RUN pip install --no-cache-dir -r requirements-minimal.txt
 
-COPY --chown=1000:1000 tensornet/ ./tensornet/
+COPY --chown=1000:1000 ontic/ ./ontic/
 
-RUN adduser -D -u 1000 tensornet
-USER tensornet
+RUN adduser -D -u 1000 physos
+USER physos
 
 EXPOSE 8000
 
-CMD ["python", "-m", "tensornet.discovery", "serve", "--port", "8000"]
+CMD ["python", "-m", "ontic.discovery", "serve", "--port", "8000"]

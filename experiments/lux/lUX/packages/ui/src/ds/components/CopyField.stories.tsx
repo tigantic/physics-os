@@ -52,7 +52,7 @@ export const LongHash: Story = {
 export const URL: Story = {
   args: {
     label: "Endpoint",
-    value: "https://hypertensor.example.com/api/v1/attestations/verify",
+    value: "https://physics-os.example.com/api/v1/attestations/verify",
   },
 };
 

@@ -25,7 +25,7 @@ from collections import defaultdict
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
-TENSORNET_ROOT = REPO_ROOT / "ontic"
+ONTIC_ROOT = REPO_ROOT / "ontic"
 
 # ── Domain group classification ──────────────────────────────────────────
 # Mirrors the Phase 5 migration groups.
@@ -161,11 +161,11 @@ def build_dependency_graph(
     deps: dict[str, set[str]] = defaultdict(set)
     all_modules: set[str] = set()
 
-    for py_file in TENSORNET_ROOT.rglob("*.py"):
+    for py_file in ONTIC_ROOT.rglob("*.py"):
         if "__pycache__" in str(py_file):
             continue
         # Determine the top-level submodule
-        rel = py_file.relative_to(TENSORNET_ROOT)
+        rel = py_file.relative_to(ONTIC_ROOT)
         parts = rel.parts
         if len(parts) == 1:
             # Root-level file (e.g. __init__.py, benchmark_runner.py)

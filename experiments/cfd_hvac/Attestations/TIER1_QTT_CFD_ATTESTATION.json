@@ -13,9 +13,9 @@
     "component": "NS2D_QTT_Native",
     "version": "1.0.0",
     "source_files": [
-      "tensornet/cfd/ns2d_qtt_native.py",
-      "tensornet/cfd/pure_qtt_ops.py",
-      "tensornet/cfd/nd_shift_mpo.py"
+      "ontic/cfd/ns2d_qtt_native.py",
+      "ontic/cfd/pure_qtt_ops.py",
+      "ontic/cfd/nd_shift_mpo.py"
     ],
     "formulation": "Vorticity-Streamfunction 2D Navier-Stokes",
     "representation": "Quantum Tensor Train (QTT)"

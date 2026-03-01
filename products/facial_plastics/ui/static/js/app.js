@@ -1,5 +1,5 @@
 /**
- * HyperTensor Facial Plastics — Application Bootstrap
+ * Ontic Facial Plastics — Application Bootstrap
  *
  * Initializes all modules, loads contract/config, sets initial
  * mode, wires up mode transitions and global event handlers.
@@ -105,7 +105,7 @@ const App = (() => {
     const body = document.createElement("div");
     body.innerHTML = `
       <p style="color:var(--text-secondary);font-size:var(--font-size-sm);margin-bottom:var(--space-3);">
-        Enter your API key to connect to the HyperTensor Facial Plastics platform.
+        Enter your API key to connect to the Ontic Facial Plastics platform.
       </p>
       <div class="modal-field">
         <label for="auth-key-input">API Key</label>

@@ -33,7 +33,7 @@ print(f"[Gate 8] Device: {DEVICE}")
 if torch.cuda.is_available():
     print(f"[Gate 8] GPU: {torch.cuda.get_device_name(0)}")
 
-sys.path.insert(0, '/home/brad/TiganticLabz/Main_Projects/HyperTensor-VM-main')
+sys.path.insert(0, '/home/brad/TiganticLabz/Main_Projects/physics-os')
 
 
 # =============================================================================

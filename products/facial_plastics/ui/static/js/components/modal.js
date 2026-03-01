@@ -1,5 +1,5 @@
 /**
- * HyperTensor Facial Plastics — Modal Dialog Manager
+ * Ontic Facial Plastics — Modal Dialog Manager
  *
  * Focus trap, Escape to close, backdrop click, confirm/cancel.
  */

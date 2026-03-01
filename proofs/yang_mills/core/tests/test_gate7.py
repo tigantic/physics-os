@@ -36,7 +36,7 @@ if torch.cuda.is_available():
     print(f"[Gate 7] GPU: {torch.cuda.get_device_name(0)}")
 
 # Import modules
-sys.path.insert(0, '/home/brad/TiganticLabz/Main_Projects/HyperTensor-VM-main')
+sys.path.insert(0, '/home/brad/TiganticLabz/Main_Projects/physics-os')
 
 from yangmills.hamiltonian import SinglePlaquetteHamiltonian
 from yangmills.gauss import SinglePlaquetteGauss
@@ -459,7 +459,7 @@ def test_proof_certificate(results: GateResults):
     }
     
     # Save certificate
-    cert_path = "/home/brad/TiganticLabz/Main_Projects/HyperTensor-VM-main/YM_PROOF_CERTIFICATE.json"
+    cert_path = "/home/brad/TiganticLabz/Main_Projects/physics-os/YM_PROOF_CERTIFICATE.json"
     with open(cert_path, 'w') as f:
         json.dump(certificate, f, indent=2)
     

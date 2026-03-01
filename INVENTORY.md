@@ -12,7 +12,7 @@
 | § | Section | Scope |
 |---|---------|-------|
 | 1 | [The Civilization Stack](#1-the-civilization-stack) | 20 grand R&D projects + validation gauntlets |
-| 2 | [TensorNet Core Library](#2-tensornet-core-library) | 16 physics modules, ~492K LOC, ~1,192 files |
+| 2 | [Ontic Engine Core Library](#2-ontic-core-library) | 16 physics modules, ~492K LOC, ~1,192 files |
 | 3 | [Applications](#3-applications) | 15 deployed apps in `apps/` |
 | 4 | [Products](#4-products) | Shippable products in `products/` |
 | 5 | [Experiments](#5-experiments) | Frontier physics, demos, research |
@@ -93,7 +93,7 @@ The oncology drug candidate has the deepest validation suite (6 dedicated files,
 
 ---
 
-## 2. TensorNet Core Library
+## 2. Ontic Engine Core Library
 
 `ontic/` — **1,192 files, ~492K LOC** — the physics engine of The Physics OS-VM.
 
@@ -339,7 +339,7 @@ scientific discovery pipelines with API, connectors, and production hardening.
 | `sovereign/` | Sovereign compute infrastructure |
 | `zk/` | Zero-knowledge proof infrastructure |
 
-### 2.16 Additional TensorNet Modules
+### 2.16 Additional Ontic Engine Modules
 
 | Module | Description |
 |--------|-------------|
@@ -1059,7 +1059,7 @@ from the canonical location.
 ## Cross-Reference: Physics Domain Coverage
 
 The 168 physics taxonomy nodes in `apps/ledger/nodes/*.yaml` map across the
-TensorNet modules as follows:
+Ontic Engine modules as follows:
 
 | TPC Tier | Domain Count | Primary Module |
 |----------|-------------|----------------|

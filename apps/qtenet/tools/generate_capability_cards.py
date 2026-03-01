@@ -55,7 +55,7 @@ def score(rec: dict) -> int:
     if p.startswith("archive/") or p.startswith("_archived"):
         s -= 250
 
-    if p.startswith("tensornet/"):
+    if p.startswith("ontic/"):
         s += 40
     if p.startswith("fluidelite/"):
         s += 25
@@ -104,7 +104,7 @@ def cap_defs() -> list[Capability]:
             id="core-types",
             title="Core Types: QTTTensor / TT cores / MPS / MPO",
             target_namespace="qtenet.core",
-            include=[R(r"^tensornet/(core|mps|mpo)/"), R(r"^fluidelite/core/")],
+            include=[R(r"^ontic/(core|mps|mpo)/"), R(r"^fluidelite/core/")],
             include_text=[R(r"mps|mpo|tt|qtt")],
             exclude=[R(r"test"), R(r"bench"), R(r"demo")],
             notes="Canonical tensor network types and containers. This is the foundation layer.",
@@ -123,7 +123,7 @@ def cap_defs() -> list[Capability]:
             id="decomposition-rounding",
             title="Decomposition & Rounding: TT-SVD / truncation / rank control",
             target_namespace="qtenet.core.decomposition",
-            include=[R(r"decomp|truncate|round|svd"), R(r"^tensornet/core/")],
+            include=[R(r"decomp|truncate|round|svd"), R(r"^ontic/core/")],
             include_text=[R(r"tt-?svd|round|truncate|max_rank|eps")],
             exclude=[R(r"archive"), R(r"_archived")],
             notes="Choose one canonical decomposition/rounding stack, then wrap everything else behind it.",
@@ -160,7 +160,7 @@ def cap_defs() -> list[Capability]:
             id="operators",
             title="Operators Library (MPO builders)",
             target_namespace="qtenet.operators",
-            include=[R(r"^tensornet/cfd/"), R(r"shift|roll|hadamard|walsh|spectral|laplac|grad|div|advec|diffus|poisson")],
+            include=[R(r"^ontic/cfd/"), R(r"shift|roll|hadamard|walsh|spectral|laplac|grad|div|advec|diffus|poisson")],
             include_text=[R(r"operator|mpo|shift|roll|laplac|gradient|diverg|hadamard|walsh")],
             exclude=[R(r"demo"), R(r"benchmark")],
             notes="Versioned operator builders returning MPO + metadata.",
@@ -179,7 +179,7 @@ def cap_defs() -> list[Capability]:
             id="solvers",
             title="Solvers: Euler/NS/PDE pipelines (IMEX/TDVP)",
             target_namespace="qtenet.solvers",
-            include=[R(r"^tensornet/cfd/"), R(r"euler|navier|imex|tdvp|riemann")],
+            include=[R(r"^ontic/cfd/"), R(r"euler|navier|imex|tdvp|riemann")],
             include_text=[R(r"euler|navier|stokes|imex|tdvp|weno|riemann")],
             exclude=[R(r"test"), R(r"benchmark")],
             notes="End-to-end solver layer. Enterprise contract: reproducibility + rank control + diagnostics.",
@@ -198,7 +198,7 @@ def cap_defs() -> list[Capability]:
             id="genesis",
             title="Genesis Primitives (OT/SGW/RMT/Tropical/RKHS/PH/GA)",
             target_namespace="qtenet.genesis",
-            include=[R(r"^tensornet/genesis/")],
+            include=[R(r"^ontic/genesis/")],
             include_text=[R(r"sinkhorn|wasserstein|wavelet|wigner|tropical|rkhs|kernel|homology|clifford|multivector")],
             exclude=[],
             notes="Seven meta-primitives as product modules.",
@@ -217,7 +217,7 @@ def cap_defs() -> list[Capability]:
             id="gpu",
             title="GPU Acceleration: CUDA/Triton kernels and dispatch",
             target_namespace="qtenet.gpu",
-            include=[R(r"^tensornet/cuda/"), R(r"^tensornet/gpu/"), R(r"triton")],
+            include=[R(r"^ontic/cuda/"), R(r"^ontic/gpu/"), R(r"triton")],
             include_text=[R(r"cuda|triton|kernel|gpu")],
             exclude=[R(r"test")],
             notes="Compute kernels, autotuning, GPU point-eval and apply operations.",

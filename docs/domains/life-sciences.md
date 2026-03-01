@@ -1,6 +1,6 @@
 # Life Sciences
 
-These modules are included in the core `tensornet` package.
+These modules are included in the core `ontic` package.
 
 ## Modules
 

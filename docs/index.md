@@ -15,13 +15,13 @@ a Rust performance substrate.
 
 ```bash
 # Core
-pip install tensornet
+pip install ontic-engine
 
 # With CFD domain pack
-pip install tensornet[cfd]
+pip install ontic-engine[cfd]
 
 # With all domain packs + dev tools
-pip install tensornet[all]
+pip install ontic-engine[all]
 ```
 
 ## Quick Start
@@ -41,7 +41,7 @@ The Physics OS is a **monorepo** with three tiers:
 
 | Tier | Package | Language | Purpose |
 |------|---------|----------|---------|
-| 1 | `tensornet` | Python | Physics engine — MPS, MPO, QTT, DMRG, TEBD, CFD |
+| 1 | `ontic` | Python | Physics engine — MPS, MPO, QTT, DMRG, TEBD, CFD |
 | 2 | `ontic` | Python | Licensed execution fabric — API, SDK, MCP, billing |
 | 3 | `crates/*` | Rust | Performance substrate — GPU kernels, ZK proofs, IPC |
 
@@ -50,9 +50,9 @@ The Physics OS is a **monorepo** with three tiers:
 Install only the physics you need:
 
 ```bash
-pip install tensornet[cfd]        # Euler, Navier-Stokes, LES
-pip install tensornet[quantum]    # QM, QFT, condensed matter
-pip install tensornet[fluids]     # Multiphase, free-surface, FSI
-pip install tensornet[aerospace]  # Flight dynamics, guidance
-pip install tensornet[physics-all]  # Everything
+pip install ontic-engine[cfd]        # Euler, Navier-Stokes, LES
+pip install ontic-engine[quantum]    # QM, QFT, condensed matter
+pip install ontic-engine[fluids]     # Multiphase, free-surface, FSI
+pip install ontic-engine[aerospace]  # Flight dynamics, guidance
+pip install ontic-engine[physics-all]  # Everything
 ```

@@ -1,5 +1,5 @@
 {
-  "certificate": "/home/brad/TiganticLabz/FRONT_VAULT/03_SOURCE/Main_Projects/HyperTensor-VM-main/artifacts/VLASOV_5D_CERTIFICATE.tpc",
+  "certificate": "/home/brad/TiganticLabz/FRONT_VAULT/03_SOURCE/Main_Projects/physics-os/artifacts/VLASOV_5D_CERTIFICATE.tpc",
   "certificate_size_bytes": 30223,
   "simulation": {
     "problem": "Two-Stream Instability 5D",
@@ -177,12 +177,12 @@
     "gpu": "NVIDIA GeForce RTX 5070 Laptop GPU"
   },
   "trace": {
-    "trace_path": "/home/brad/TiganticLabz/FRONT_VAULT/03_SOURCE/Main_Projects/HyperTensor-VM-main/artifacts/vlasov_5d_computation.trc",
+    "trace_path": "/home/brad/TiganticLabz/FRONT_VAULT/03_SOURCE/Main_Projects/physics-os/artifacts/vlasov_5d_computation.trc",
     "trace_hash": "d14346f488f48b600bfb1759eda3caf93ff894e4911c7db36e3d87852e313ace",
     "trace_entries": 1
   },
   "stark_witness": {
-    "witness_path": "/home/brad/TiganticLabz/FRONT_VAULT/03_SOURCE/Main_Projects/HyperTensor-VM-main/artifacts/vlasov_5d_witness.json",
+    "witness_path": "/home/brad/TiganticLabz/FRONT_VAULT/03_SOURCE/Main_Projects/physics-os/artifacts/vlasov_5d_witness.json",
     "n_witness_steps": 101
   }
 }

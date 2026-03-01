@@ -15,9 +15,9 @@
   
   "holy_grail_application": {
     "infrastructure_used": [
-      "tensornet/cfd/nd_shift_mpo.py - N-dimensional shift MPO",
-      "tensornet/cfd/qtt_tdvp.py - O(log N) time evolution",
-      "tensornet/cfd/pure_qtt_ops.py - QTT state operations",
+      "ontic/cfd/nd_shift_mpo.py - N-dimensional shift MPO",
+      "ontic/cfd/qtt_tdvp.py - O(log N) time evolution",
+      "ontic/cfd/pure_qtt_ops.py - QTT state operations",
       "yangmills/lattice.py - 4D lattice geometry"
     ],
     "complexity": {

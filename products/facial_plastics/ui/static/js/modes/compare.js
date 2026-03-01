@@ -1,5 +1,5 @@
 /**
- * HyperTensor Facial Plastics — G8 Plan & Case Comparison
+ * Ontic Facial Plastics — G8 Plan & Case Comparison
  *
  * Dual-slot plan comparison with delta highlights.
  * Case comparison with mesh-diff table.

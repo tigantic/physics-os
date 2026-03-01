@@ -1,5 +1,5 @@
 /**
- * HyperTensor Facial Plastics — Toast Notification System
+ * Ontic Facial Plastics — Toast Notification System
  *
  * Queue-based, auto-dismiss, 4 severity levels.
  * Max 5 visible at once. Click to dismiss.

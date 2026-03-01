@@ -202,7 +202,7 @@ The tensor network infrastructure is ready. The next phase requires genuine spat
 
 ### Test Command
 ```bash
-cd /home/brad/TiganticLabz/Main_Projects/HyperTensor-VM-main
+cd /home/brad/TiganticLabz/Main_Projects/physics-os
 source .venv/bin/activate
 python yangmills/tests/test_tensor_network.py
 ```

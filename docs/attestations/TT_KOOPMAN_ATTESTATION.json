@@ -54,7 +54,7 @@
     "enables": "Real-time turbulence prediction for hypersonic design"
   },
   "implementation": {
-    "module": "tensornet/cfd/koopman_tt.py",
+    "module": "ontic/cfd/koopman_tt.py",
     "key_classes": [
       "TTKoopman",
       "ExtendedDMD",

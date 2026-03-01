@@ -34,7 +34,7 @@ def conserved_to_primitive(U: torch.Tensor, gamma: float = 1.4) -> Tuple[torch.T
 
 Convert conserved (ρ, ρu, E) to primitive (ρ, u, p).
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\godunov.py:65](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\godunov.py#L65)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\cfd\godunov.py:65](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\cfd\godunov.py#L65)*
 
 ### `euler_flux`
 
@@ -46,7 +46,7 @@ Physical flux for 1D Euler equations.
 
 F = [ρu, ρu² + p, (E + p)u]ᵀ
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\godunov.py:80](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\godunov.py#L80)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\cfd\godunov.py:80](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\cfd\godunov.py#L80)*
 
 ### `exact_riemann`
 
@@ -70,7 +70,7 @@ then constructs the full solution.
 
 **Returns**: `typing.Tuple[torch.Tensor, torch.Tensor, torch.Tensor]` - (rho, u, p) sampled at x coordinates
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\godunov.py:385](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\godunov.py#L385)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\cfd\godunov.py:385](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\cfd\godunov.py#L385)*
 
 ### `hll_flux`
 
@@ -87,7 +87,7 @@ Wave speed estimates (Davis):
     S_L = min(u_L - a_L, u_R - a_R)
     S_R = max(u_L + a_L, u_R + a_R)
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\godunov.py:248](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\godunov.py#L248)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\cfd\godunov.py:248](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\cfd\godunov.py#L248)*
 
 ### `hllc_flux`
 
@@ -102,7 +102,7 @@ giving exact resolution of isolated contact waves.
 
 Three-wave structure: S_L | S_* | S_R
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\godunov.py:301](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\godunov.py#L301)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\cfd\godunov.py:301](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\cfd\godunov.py#L301)*
 
 ### `primitive_to_conserved`
 
@@ -112,7 +112,7 @@ def primitive_to_conserved(rho: torch.Tensor, u: torch.Tensor, p: torch.Tensor, 
 
 Convert primitive (ρ, u, p) to conserved (ρ, ρu, E).
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\godunov.py:53](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\godunov.py#L53)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\cfd\godunov.py:53](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\cfd\godunov.py#L53)*
 
 ### `roe_flux`
 
@@ -153,4 +153,4 @@ F = roe_flux(U_L, U_R)
 print(f"Flux shape: {F.shape}")
 ```
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\godunov.py:100](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\godunov.py#L100)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\cfd\godunov.py:100](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\cfd\godunov.py#L100)*

@@ -406,7 +406,7 @@ All version numbers are synchronized via `tools/sync_versions.py`, which validat
 | **Release** | v4.0.1 | Git tag (v4.0.0 baseline: `569ff1da`) | Infrastructure-hardened baseline |
 | **Platform** | V3.0.0 | `README.md` badge | Overall The Physics OS version |
 | **Platform Substrate API** | V2.0.0 | `ontic/platform/__init__.py` | Platform module API version |
-| **Package (tensornet)** | 40.0.1 | `physics_os.__version__` | Physics engine package version |
+| **Package (ontic)** | 40.0.1 | `physics_os.__version__` | Physics engine package version |
 | **Package (physics_os)** | 40.0.1 | `physics_os.__version__` | Runtime Access Layer package version |
 | **Runtime Version** | 1.0.0 | `physics_os.RUNTIME_VERSION` | Execution engine compatibility version |
 | **API Version** | 2.0.0 | `physics_os.API_VERSION` | API contract schema version |
@@ -1080,7 +1080,7 @@ Client                    API                     Runtime                    VM
 
 ### §16.2 Python Modules (105+ in `ontic/`)
 
-See [§14.2](#142-python-breakdown--tensornet-modules) for the full breakdown.
+See [§14.2](#142-python-breakdown--ontic-modules) for the full breakdown.
 
 ### §16.3 Rust Workspace (19 Members)
 
@@ -1356,7 +1356,7 @@ Outputs Mermaid flowcharts, DOT graphs, or SVG images. The 16 module groups and 
 
 #### PEP 561 Type Marker
 
-`ontic/py.typed` enables downstream consumers to use `tensornet` type stubs with mypy, pyright, and other type checkers without `--ignore-missing-imports`.
+`ontic/py.typed` enables downstream consumers to use `ontic` type stubs with mypy, pyright, and other type checkers without `--ignore-missing-imports`.
 
 #### Pre-Commit Hooks
 
@@ -1448,11 +1448,11 @@ Every PR requires review from the owning team. 289 path-to-owner mappings ensure
 16 optional dependency groups in `pyproject.toml` enable domain-specific installation:
 
 ```bash
-pip install tensornet[cfd]              # CFD dependencies only
-pip install tensornet[quantum,plasma]   # Quantum + Plasma
-pip install tensornet[physics-all]      # All physics domains
-pip install tensornet[dev,docs]         # Development + documentation tooling
-pip install tensornet[all]              # Everything
+pip install ontic-engine[cfd]              # CFD dependencies only
+pip install ontic-engine[quantum,plasma]   # Quantum + Plasma
+pip install ontic-engine[physics-all]      # All physics domains
+pip install ontic-engine[dev,docs]         # Development + documentation tooling
+pip install ontic-engine[all]              # Everything
 ```
 
 | Extra | Dependencies | Use Case |
@@ -1804,7 +1804,7 @@ physics-os-main/
 │   └── the_compressor/             #   Tensor compression product
 ├── proofs/                         # Formal proofs (Lean 4, conservation, Yang-Mills)
 ├── tests/                          # Test suites
-│   ├── test_integration.py         #   173 integration tests (TensorNet)
+│   ├── test_integration.py         #   173 integration tests (Ontic Engine)
 │   └── test_ontic.py         #   35 tests (Runtime Access Layer)
 ├── tools/                          # Build scripts, utilities, infrastructure
 │   ├── dep_graph.py                #   Dependency graph visualizer (16 nodes, 34 edges)
@@ -2036,7 +2036,7 @@ See [`CHANGELOG.md`](CHANGELOG.md) for complete history.
 | Release Tag | v4.0.1 | Latest release | Hardened baseline |
 | Platform | V3.0.0 | `README.md` badge | Overall system version |
 | Substrate API | V2.0.0 | `ontic/platform/__init__.py` | Platform module API |
-| Package (tensornet) | 40.0.1 | `ontic/__init__.py` | Physics engine package |
+| Package (ontic) | 40.0.1 | `ontic/__init__.py` | Physics engine package |
 | Package (physics_os) | 40.0.1 | `physics_os/__init__.py` | Runtime Access Layer package |
 | Runtime Version | 1.0.0 | `physics_os.RUNTIME_VERSION` | Execution engine compatibility |
 | API Version | 2.0.0 | `physics_os.API_VERSION` | API contract schema |

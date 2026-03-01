@@ -45,7 +45,7 @@ def to_dict(self) -> Dict[str, Any]
 
 Convert to dictionary.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\site\generator.py:207](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\site\generator.py#L207)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\site\generator.py:207](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\site\generator.py#L207)*
 
 ### class `MarkdownRenderer`
 
@@ -61,7 +61,7 @@ def __init__(self, config: generator.SiteConfig)
 
 Initialize renderer.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\site\generator.py:223](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\site\generator.py#L223)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\site\generator.py:223](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\site\generator.py#L223)*
 
 ##### `render`
 
@@ -74,7 +74,7 @@ Render markdown to HTML.
 This is a simplified renderer. In production, use a full
 markdown library like mistune or markdown-it.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\site\generator.py:227](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\site\generator.py#L227)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\site\generator.py:227](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\site\generator.py#L227)*
 
 ### class `NavItem`
 
@@ -104,7 +104,7 @@ def to_dict(self) -> Dict[str, Any]
 
 Convert to dictionary.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\site\generator.py:42](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\site\generator.py#L42)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\site\generator.py:42](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\site\generator.py#L42)*
 
 ### class `Navigation`
 
@@ -131,7 +131,7 @@ def add_item(self, item: generator.NavItem, parent_path: Optional[str] = None)
 
 Add navigation item.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\site\generator.py:59](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\site\generator.py#L59)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\site\generator.py:59](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\site\generator.py#L59)*
 
 ##### `to_dict`
 
@@ -141,7 +141,7 @@ def to_dict(self) -> Dict[str, Any]
 
 Convert to dictionary.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\site\generator.py:81](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\site\generator.py#L81)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\site\generator.py:81](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\site\generator.py#L81)*
 
 ### class `Page`
 
@@ -173,7 +173,7 @@ def to_dict(self) -> Dict[str, Any]
 
 Convert to dictionary.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\site\generator.py:128](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\site\generator.py#L128)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\site\generator.py:128](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\site\generator.py#L128)*
 
 ### class `PageType`(Enum)
 
@@ -199,7 +199,7 @@ Initialize site builder.
 
 - **config** (`typing.Optional[generator.SiteConfig]`): Site configuration
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\site\generator.py:469](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\site\generator.py#L469)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\site\generator.py:469](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\site\generator.py#L469)*
 
 ##### `add_page`
 
@@ -209,7 +209,7 @@ def add_page(self, page: generator.Page)
 
 Add page to site.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\site\generator.py:483](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\site\generator.py#L483)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\site\generator.py:483](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\site\generator.py#L483)*
 
 ##### `add_pages_from_directory`
 
@@ -223,7 +223,7 @@ Add pages from markdown files in directory.
 
 - **directory** (`typing.Union[str, pathlib.Path]`): Path to directory with markdown files
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\site\generator.py:487](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\site\generator.py#L487)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\site\generator.py:487](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\site\generator.py#L487)*
 
 ##### `build`
 
@@ -235,7 +235,7 @@ Build the static site.
 
 **Returns**: `<class 'generator.BuildResult'>` - BuildResult with build statistics
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\site\generator.py:615](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\site\generator.py#L615)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\site\generator.py:615](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\site\generator.py#L615)*
 
 ##### `build_navigation`
 
@@ -245,7 +245,7 @@ def build_navigation(self)
 
 Build navigation from pages.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\site\generator.py:536](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\site\generator.py#L536)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\site\generator.py:536](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\site\generator.py#L536)*
 
 ### class `SiteConfig`
 
@@ -289,7 +289,7 @@ def to_dict(self) -> Dict[str, Any]
 
 Convert to dictionary.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\site\generator.py:172](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\site\generator.py#L172)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\site\generator.py:172](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\site\generator.py#L172)*
 
 ### class `TemplateEngine`
 
@@ -305,7 +305,7 @@ def __init__(self)
 
 Initialize template engine.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\site\generator.py:353](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\site\generator.py#L353)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\site\generator.py:353](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\site\generator.py#L353)*
 
 ##### `add_template`
 
@@ -315,7 +315,7 @@ def add_template(self, name: str, content: str)
 
 Add custom template.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\site\generator.py:457](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\site\generator.py#L457)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\site\generator.py:457](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\site\generator.py#L457)*
 
 ##### `render`
 
@@ -325,7 +325,7 @@ def render(self, template_name: str, context: Dict[str, Any]) -> str
 
 Render template with context.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\site\generator.py:428](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\site\generator.py#L428)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\site\generator.py:428](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\site\generator.py#L428)*
 
 ## Functions
 
@@ -345,7 +345,7 @@ Build static documentation site.
 
 **Returns**: `<class 'generator.BuildResult'>` - BuildResult with build statistics
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\site\generator.py:871](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\site\generator.py#L871)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\site\generator.py:871](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\site\generator.py#L871)*
 
 ### `serve_site`
 
@@ -361,4 +361,4 @@ Serve static site locally for preview.
 - **port** (`<class 'int'>`): Port to serve on
 - **host** (`<class 'str'>`): Host to bind to
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\site\generator.py:901](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\site\generator.py#L901)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\site\generator.py:901](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\site\generator.py#L901)*

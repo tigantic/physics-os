@@ -29,7 +29,7 @@ from datetime import datetime
 
 # Use Ontic CFD modules
 import sys
-sys.path.insert(0, '/home/brad/TiganticLabz/Main_Projects/HyperTensor-VM-main')
+sys.path.insert(0, '/home/brad/TiganticLabz/Main_Projects/physics-os')
 
 
 @dataclass
@@ -496,7 +496,7 @@ def run_analysis():
                  fontsize=12, fontweight='bold')
     plt.tight_layout()
     
-    output_path = '/home/brad/TiganticLabz/Main_Projects/HyperTensor-VM-main/results/conference_room_b_analysis.png'
+    output_path = '/home/brad/TiganticLabz/Main_Projects/physics-os/results/conference_room_b_analysis.png'
     plt.savefig(output_path, dpi=150, bbox_inches='tight')
     print(f"  Saved: {output_path}")
     
@@ -541,7 +541,7 @@ def run_analysis():
         ]
     }
     
-    report_path = '/home/brad/TiganticLabz/Main_Projects/HyperTensor-VM-main/results/conference_room_b_report.json'
+    report_path = '/home/brad/TiganticLabz/Main_Projects/physics-os/results/conference_room_b_report.json'
     with open(report_path, 'w') as f:
         json.dump(report, f, indent=2)
     print(f"  Saved: {report_path}")
@@ -558,5 +558,5 @@ def run_analysis():
 
 if __name__ == "__main__":
     import os
-    os.makedirs('/home/brad/TiganticLabz/Main_Projects/HyperTensor-VM-main/results', exist_ok=True)
+    os.makedirs('/home/brad/TiganticLabz/Main_Projects/physics-os/results', exist_ok=True)
     report = run_analysis()

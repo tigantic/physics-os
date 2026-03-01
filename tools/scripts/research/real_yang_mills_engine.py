@@ -358,7 +358,7 @@ class KogutSusskindHamiltonian:
 # DMRG-STYLE TENSOR NETWORK SOLVER
 # ═══════════════════════════════════════════════════════════════════════════════
 
-class TensorNetworkSolver:
+class Ontic EngineworkSolver:
     """
     DMRG-inspired tensor network solver for larger systems.
     

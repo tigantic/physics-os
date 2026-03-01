@@ -36,7 +36,7 @@ detect off-nominal behavior across multiple channels.
 def __init__(self, config: health_monitor.HealthConfig)
 ```
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\health_monitor.py:415](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\health_monitor.py#L415)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\digital_twin\health_monitor.py:415](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\digital_twin\health_monitor.py#L415)*
 
 ##### `check`
 
@@ -52,7 +52,7 @@ Check measurements for anomalies.
 
 **Returns**: `typing.Dict[str, typing.Any]` - Anomaly detection result
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\health_monitor.py:433](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\health_monitor.py#L433)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\digital_twin\health_monitor.py:433](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\digital_twin\health_monitor.py#L433)*
 
 ##### `reset_baseline`
 
@@ -62,7 +62,7 @@ def reset_baseline(self)
 
 Reset baseline (e.g., after system change).
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\health_monitor.py:510](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\health_monitor.py#L510)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\digital_twin\health_monitor.py:510](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\digital_twin\health_monitor.py#L510)*
 
 ### class `AnomalyType`(Enum)
 
@@ -115,7 +115,7 @@ and performs anomaly detection across multiple subsystems.
 def __init__(self, config: health_monitor.HealthConfig)
 ```
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\health_monitor.py:136](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\health_monitor.py#L136)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\digital_twin\health_monitor.py:136](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\digital_twin\health_monitor.py#L136)*
 
 ##### `get_summary`
 
@@ -125,7 +125,7 @@ def get_summary(self) -> Dict[str, Any]
 
 Get summary of current health state.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\health_monitor.py:305](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\health_monitor.py#L305)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\digital_twin\health_monitor.py:305](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\digital_twin\health_monitor.py#L305)*
 
 ##### `update`
 
@@ -145,7 +145,7 @@ Update health state with new measurements.
 
 **Returns**: `<class 'health_monitor.HealthState'>` - Updated health state
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\health_monitor.py:166](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\health_monitor.py#L166)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\digital_twin\health_monitor.py:166](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\digital_twin\health_monitor.py#L166)*
 
 ### class `HealthState`
 
@@ -182,7 +182,7 @@ def to_dict(self) -> Dict[str, Any]
 
 Convert to dictionary.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\health_monitor.py:111](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\health_monitor.py#L111)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\digital_twin\health_monitor.py:111](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\digital_twin\health_monitor.py#L111)*
 
 ### class `HealthStatus`(Enum)
 
@@ -203,7 +203,7 @@ and monitors for structural anomalies.
 def __init__(self, config: health_monitor.HealthConfig)
 ```
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\health_monitor.py:328](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\health_monitor.py#L328)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\digital_twin\health_monitor.py:328](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\digital_twin\health_monitor.py#L328)*
 
 ##### `reset`
 
@@ -213,7 +213,7 @@ def reset(self)
 
 Reset damage tracking (e.g., after repair).
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\health_monitor.py:354](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\health_monitor.py#L354)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\digital_twin\health_monitor.py:354](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\digital_twin\health_monitor.py#L354)*
 
 ##### `update`
 
@@ -223,7 +223,7 @@ def update(self, loads: numpy.ndarray)
 
 Update with new load measurements.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\health_monitor.py:340](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\health_monitor.py#L340)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\digital_twin\health_monitor.py:340](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\digital_twin\health_monitor.py#L340)*
 
 ### class `ThermalHealth`
 
@@ -240,7 +240,7 @@ estimates TPS degradation.
 def __init__(self, config: health_monitor.HealthConfig)
 ```
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\health_monitor.py:369](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\health_monitor.py#L369)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\digital_twin\health_monitor.py:369](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\digital_twin\health_monitor.py#L369)*
 
 ##### `update`
 
@@ -250,7 +250,7 @@ def update(self, temperatures: numpy.ndarray)
 
 Update with new temperature measurements.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\health_monitor.py:382](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\health_monitor.py#L382)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\digital_twin\health_monitor.py:382](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\digital_twin\health_monitor.py#L382)*
 
 ## Functions
 
@@ -270,7 +270,7 @@ Compute damage index from load history using Miner's rule.
 
 **Returns**: `<class 'float'>` - Cumulative damage index (0-1)
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\health_monitor.py:519](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\health_monitor.py#L519)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\digital_twin\health_monitor.py:519](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\digital_twin\health_monitor.py#L519)*
 
 ### `estimate_thermal_margin`
 
@@ -288,7 +288,7 @@ Estimate thermal margin from temperature distribution.
 
 **Returns**: `<class 'float'>` - Thermal margin (0-1, 0=at limit)
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\health_monitor.py:544](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\health_monitor.py#L544)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\digital_twin\health_monitor.py:544](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\digital_twin\health_monitor.py#L544)*
 
 ### `test_health_monitor`
 
@@ -298,4 +298,4 @@ def test_health_monitor()
 
 Test health monitoring module.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\health_monitor.py:565](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\digital_twin\health_monitor.py#L565)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\digital_twin\health_monitor.py:565](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\digital_twin\health_monitor.py#L565)*

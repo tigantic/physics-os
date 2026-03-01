@@ -32,7 +32,7 @@ if [ "$BLOCK" == "FAILED" ]; then
 fi
 echo "    ✅ Anvil running at block $BLOCK"
 
-cd /home/brad/TiganticLabz/Main_Projects/HyperTensor-VM-main
+cd /home/brad/TiganticLabz/Main_Projects/physics-os
 
 # Deploy VulnerableVault
 echo ""

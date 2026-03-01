@@ -5,7 +5,7 @@
 ║                                                                              ║
 ║  Generated: 2026-02-18                                                       ║
 ║                                                                              ║
-║  SOLVER: tensornet.cfd.euler_3d.Euler3D (VALIDATED)                          ║
+║  SOLVER: ontic.cfd.euler_3d.Euler3D (VALIDATED)                          ║
 ║    - 3D compressible Euler equations (inviscid):                             ║
 ║        ∂ρ/∂t + ∇·(ρu) = 0                        (mass)                     ║
 ║        ∂(ρu)/∂t + ∇·(ρu⊗u + pI) = 0             (momentum)                ║

@@ -35,7 +35,7 @@ import torch
 import time
 import sys
 
-sys.path.insert(0, '/home/brad/TiganticLabz/Main_Projects/HyperTensor-VM-main')
+sys.path.insert(0, '/home/brad/TiganticLabz/Main_Projects/physics-os')
 
 from ontic.cfd.nd_shift_mpo import make_nd_shift_mpo
 from ontic.cfd.pure_qtt_ops import QTTState, dense_to_qtt, qtt_to_dense, qtt_add

@@ -1,5 +1,5 @@
 {
-  "repo": "/home/brad/TiganticLabz/Main_Projects/HyperTensor-VM-main",
+  "repo": "/home/brad/TiganticLabz/Main_Projects/physics-os",
   "n_records": 857,
   "records": [
     {
@@ -240,9 +240,9 @@
       "symbols": [
         {
           "kind": "function",
-          "name": "run_tensornet",
+          "name": "run_ontic",
           "lineno": 36,
-          "doc1": "Run tensornet DMRG, return (energy, time)."
+          "doc1": "Run ontic DMRG, return (energy, time)."
         },
         {
           "kind": "function",
@@ -466,7 +466,7 @@
       ]
     },
     {
-      "path": "tensornet/cfd/FluidElite.md",
+      "path": "ontic/cfd/FluidElite.md",
       "lang": "md",
       "category": "cfd",
       "keywords": [
@@ -475,7 +475,7 @@
       "symbols": null
     },
     {
-      "path": "tensornet/cfd/FluidVision.md",
+      "path": "ontic/cfd/FluidVision.md",
       "lang": "md",
       "category": "cfd",
       "keywords": [
@@ -484,7 +484,7 @@
       "symbols": null
     },
     {
-      "path": "tensornet/cfd/adaptive_tt.py",
+      "path": "ontic/cfd/adaptive_tt.py",
       "lang": "py",
       "category": "cfd",
       "keywords": [
@@ -543,7 +543,7 @@
       ]
     },
     {
-      "path": "tensornet/cfd/comfort_metrics.py",
+      "path": "ontic/cfd/comfort_metrics.py",
       "lang": "py",
       "category": "cfd",
       "keywords": [
@@ -619,7 +619,7 @@
       ]
     },
     {
-      "path": "tensornet/cfd/euler2d_native.py",
+      "path": "ontic/cfd/euler2d_native.py",
       "lang": "py",
       "category": "cfd",
       "keywords": [
@@ -657,7 +657,7 @@
       ]
     },
     {
-      "path": "tensornet/cfd/euler2d_strang.py",
+      "path": "ontic/cfd/euler2d_strang.py",
       "lang": "py",
       "category": "cfd",
       "keywords": [
@@ -694,7 +694,7 @@
       ]
     },
     {
-      "path": "tensornet/cfd/euler_1d.py",
+      "path": "ontic/cfd/euler_1d.py",
       "lang": "py",
       "category": "cfd",
       "keywords": [
@@ -754,7 +754,7 @@
       ]
     },
     {
-      "path": "tensornet/cfd/euler_nd_native.py",
+      "path": "ontic/cfd/euler_nd_native.py",
       "lang": "py",
       "category": "cfd",
       "keywords": [
@@ -793,7 +793,7 @@
       ]
     },
     {
-      "path": "tensornet/cfd/fast_euler_2d.py",
+      "path": "ontic/cfd/fast_euler_2d.py",
       "lang": "py",
       "category": "cfd",
       "keywords": [
@@ -832,7 +832,7 @@
       ]
     },
     {
-      "path": "tensornet/cfd/fast_euler_3d.py",
+      "path": "ontic/cfd/fast_euler_3d.py",
       "lang": "py",
       "category": "cfd",
       "keywords": [
@@ -899,7 +899,7 @@
       ]
     },
     {
-      "path": "tensornet/cfd/fast_vlasov_5d.py",
+      "path": "ontic/cfd/fast_vlasov_5d.py",
       "lang": "py",
       "category": "cfd",
       "keywords": [
@@ -960,7 +960,7 @@
       ]
     },
     {
-      "path": "tensornet/cfd/flux_2d_tci.py",
+      "path": "ontic/cfd/flux_2d_tci.py",
       "lang": "py",
       "category": "cfd",
       "keywords": [
@@ -1009,7 +1009,7 @@
       ]
     },
     {
-      "path": "tensornet/cfd/flux_batch.py",
+      "path": "ontic/cfd/flux_batch.py",
       "lang": "py",
       "category": "cfd",
       "keywords": [
@@ -1038,7 +1038,7 @@
       ]
     },
     {
-      "path": "tensornet/cfd/kelvin_helmholtz.py",
+      "path": "ontic/cfd/kelvin_helmholtz.py",
       "lang": "py",
       "category": "cfd",
       "keywords": [
@@ -1086,7 +1086,7 @@
       ]
     },
     {
-      "path": "tensornet/cfd/koopman_tt.py",
+      "path": "ontic/cfd/koopman_tt.py",
       "lang": "py",
       "category": "cfd",
       "keywords": [
@@ -1243,7 +1243,7 @@
       ]
     },
     {
-      "path": "tensornet/cfd/local_flux_native.py",
+      "path": "ontic/cfd/local_flux_native.py",
       "lang": "py",
       "category": "cfd",
       "keywords": [
@@ -1311,7 +1311,7 @@
       ]
     },
     {
-      "path": "tensornet/cfd/nd_shift_mpo.py",
+      "path": "ontic/cfd/nd_shift_mpo.py",
       "lang": "py",
       "category": "cfd",
       "keywords": [
@@ -1426,7 +1426,7 @@
       ]
     },
     {
-      "path": "tensornet/cfd/ns2d_qtt_native.py",
+      "path": "ontic/cfd/ns2d_qtt_native.py",
       "lang": "py",
       "category": "cfd",
       "keywords": [
@@ -1493,7 +1493,7 @@
       ]
     },
     {
-      "path": "tensornet/cfd/pure_qtt_ops.py",
+      "path": "ontic/cfd/pure_qtt_ops.py",
       "lang": "py",
       "category": "cfd",
       "keywords": [
@@ -1670,7 +1670,7 @@
       ]
     },
     {
-      "path": "tensornet/cfd/qtt.py",
+      "path": "ontic/cfd/qtt.py",
       "lang": "py",
       "category": "cfd",
       "keywords": [
@@ -1745,7 +1745,7 @@
       ]
     },
     {
-      "path": "tensornet/cfd/qtt_2d.py",
+      "path": "ontic/cfd/qtt_2d.py",
       "lang": "py",
       "category": "cfd",
       "keywords": [
@@ -1873,7 +1873,7 @@
       ]
     },
     {
-      "path": "tensornet/cfd/qtt_2d_shift.py",
+      "path": "ontic/cfd/qtt_2d_shift.py",
       "lang": "py",
       "category": "cfd",
       "keywords": [
@@ -1928,7 +1928,7 @@
       ]
     },
     {
-      "path": "tensornet/cfd/qtt_2d_shift_native.py",
+      "path": "ontic/cfd/qtt_2d_shift_native.py",
       "lang": "py",
       "category": "cfd",
       "keywords": [
@@ -1989,7 +1989,7 @@
       ]
     },
     {
-      "path": "tensornet/cfd/qtt_cfd.py",
+      "path": "ontic/cfd/qtt_cfd.py",
       "lang": "py",
       "category": "cfd",
       "keywords": [
@@ -2027,7 +2027,7 @@
       ]
     },
     {
-      "path": "tensornet/cfd/qtt_checkpoint_stream.py",
+      "path": "ontic/cfd/qtt_checkpoint_stream.py",
       "lang": "py",
       "category": "cfd",
       "keywords": [
@@ -2079,7 +2079,7 @@
       ]
     },
     {
-      "path": "tensornet/cfd/qtt_eval.py",
+      "path": "ontic/cfd/qtt_eval.py",
       "lang": "py",
       "category": "cfd",
       "keywords": [
@@ -2158,7 +2158,7 @@
       ]
     },
     {
-      "path": "tensornet/cfd/qtt_hadamard.py",
+      "path": "ontic/cfd/qtt_hadamard.py",
       "lang": "py",
       "category": "cfd",
       "keywords": [
@@ -2222,7 +2222,7 @@
       ]
     },
     {
-      "path": "tensornet/cfd/qtt_imex.py",
+      "path": "ontic/cfd/qtt_imex.py",
       "lang": "py",
       "category": "cfd",
       "keywords": [
@@ -2268,7 +2268,7 @@
       ]
     },
     {
-      "path": "tensornet/cfd/qtt_multiscale.py",
+      "path": "ontic/cfd/qtt_multiscale.py",
       "lang": "py",
       "category": "cfd",
       "keywords": [
@@ -2321,7 +2321,7 @@
       ]
     },
     {
-      "path": "tensornet/cfd/qtt_reciprocal.py",
+      "path": "ontic/cfd/qtt_reciprocal.py",
       "lang": "py",
       "category": "cfd",
       "keywords": [
@@ -2373,7 +2373,7 @@
       ]
     },
     {
-      "path": "tensornet/cfd/qtt_regularity.py",
+      "path": "ontic/cfd/qtt_regularity.py",
       "lang": "py",
       "category": "cfd",
       "keywords": [
@@ -2443,7 +2443,7 @@
       ]
     },
     {
-      "path": "tensornet/cfd/qtt_shift_stable.py",
+      "path": "ontic/cfd/qtt_shift_stable.py",
       "lang": "py",
       "category": "cfd",
       "keywords": [
@@ -2509,7 +2509,7 @@
       ]
     },
     {
-      "path": "tensornet/cfd/qtt_spectral.py",
+      "path": "ontic/cfd/qtt_spectral.py",
       "lang": "py",
       "category": "cfd",
       "keywords": [
@@ -2593,7 +2593,7 @@
       ]
     },
     {
-      "path": "tensornet/cfd/qtt_streaming.py",
+      "path": "ontic/cfd/qtt_streaming.py",
       "lang": "py",
       "category": "cfd",
       "keywords": [
@@ -2618,7 +2618,7 @@
       ]
     },
     {
-      "path": "tensornet/cfd/qtt_tci.py",
+      "path": "ontic/cfd/qtt_tci.py",
       "lang": "py",
       "category": "cfd",
       "keywords": [
@@ -2721,7 +2721,7 @@
       ]
     },
     {
-      "path": "tensornet/cfd/qtt_tci_gpu.py",
+      "path": "ontic/cfd/qtt_tci_gpu.py",
       "lang": "py",
       "category": "cfd",
       "keywords": [
@@ -2756,7 +2756,7 @@
       ]
     },
     {
-      "path": "tensornet/cfd/qtt_tdvp.py",
+      "path": "ontic/cfd/qtt_tdvp.py",
       "lang": "py",
       "category": "cfd",
       "keywords": [
@@ -2813,7 +2813,7 @@
       ]
     },
     {
-      "path": "tensornet/cfd/qtt_triton_kernels.py",
+      "path": "ontic/cfd/qtt_triton_kernels.py",
       "lang": "py",
       "category": "cfd",
       "keywords": [
@@ -2999,7 +2999,7 @@
       ]
     },
     {
-      "path": "tensornet/cfd/qtt_triton_kernels_v2.py",
+      "path": "ontic/cfd/qtt_triton_kernels_v2.py",
       "lang": "py",
       "category": "cfd",
       "keywords": [
@@ -3296,7 +3296,7 @@
       ]
     },
     {
-      "path": "tensornet/cfd/qtt_triton_ops.py",
+      "path": "ontic/cfd/qtt_triton_ops.py",
       "lang": "py",
       "category": "cfd",
       "keywords": [
@@ -3484,7 +3484,7 @@
       ]
     },
     {
-      "path": "tensornet/cfd/singularity_hunter.py",
+      "path": "ontic/cfd/singularity_hunter.py",
       "lang": "py",
       "category": "cfd",
       "keywords": [
@@ -3536,7 +3536,7 @@
       ]
     },
     {
-      "path": "tensornet/cfd/stabilized_refine.py",
+      "path": "ontic/cfd/stabilized_refine.py",
       "lang": "py",
       "category": "cfd",
       "keywords": [
@@ -3589,7 +3589,7 @@
       ]
     },
     {
-      "path": "tensornet/cfd/tci_benchmark_suite.py",
+      "path": "ontic/cfd/tci_benchmark_suite.py",
       "lang": "py",
       "category": "cfd",
       "keywords": [
@@ -3624,7 +3624,7 @@
       ]
     },
     {
-      "path": "tensornet/cfd/tci_flux.py",
+      "path": "ontic/cfd/tci_flux.py",
       "lang": "py",
       "category": "cfd",
       "keywords": [
@@ -3696,7 +3696,7 @@
       ]
     },
     {
-      "path": "tensornet/cfd/tci_true.py",
+      "path": "ontic/cfd/tci_true.py",
       "lang": "py",
       "category": "cfd",
       "keywords": [
@@ -3773,7 +3773,7 @@
       ]
     },
     {
-      "path": "tensornet/cfd/thermal_qtt.py",
+      "path": "ontic/cfd/thermal_qtt.py",
       "lang": "py",
       "category": "cfd",
       "keywords": [
@@ -3825,7 +3825,7 @@
       ]
     },
     {
-      "path": "tensornet/cfd/tt_cfd.py",
+      "path": "ontic/cfd/tt_cfd.py",
       "lang": "py",
       "category": "cfd",
       "keywords": [
@@ -3913,7 +3913,7 @@
       ]
     },
     {
-      "path": "tensornet/cfd/tt_poisson.py",
+      "path": "ontic/cfd/tt_poisson.py",
       "lang": "py",
       "category": "cfd",
       "keywords": [
@@ -4117,7 +4117,7 @@
       ]
     },
     {
-      "path": "tensornet/cfd/weno_native_tt.py",
+      "path": "ontic/cfd/weno_native_tt.py",
       "lang": "py",
       "category": "cfd",
       "keywords": [
@@ -4244,7 +4244,7 @@
       ]
     },
     {
-      "path": "tensornet/cfd/weno_tt.py",
+      "path": "ontic/cfd/weno_tt.py",
       "lang": "py",
       "category": "cfd",
       "keywords": [
@@ -5595,7 +5595,7 @@
       ]
     },
     {
-      "path": "tensornet/core/__init__.py",
+      "path": "ontic/core/__init__.py",
       "lang": "py",
       "category": "core",
       "keywords": [
@@ -5607,7 +5607,7 @@
       "symbols": []
     },
     {
-      "path": "tensornet/core/decompositions.py",
+      "path": "ontic/core/decompositions.py",
       "lang": "py",
       "category": "core",
       "keywords": [
@@ -5641,7 +5641,7 @@
       ]
     },
     {
-      "path": "tensornet/core/dense_guard.py",
+      "path": "ontic/core/dense_guard.py",
       "lang": "py",
       "category": "core",
       "keywords": [],
@@ -5685,7 +5685,7 @@
       ]
     },
     {
-      "path": "tensornet/core/determinism.py",
+      "path": "ontic/core/determinism.py",
       "lang": "py",
       "category": "core",
       "keywords": [
@@ -5731,7 +5731,7 @@
       ]
     },
     {
-      "path": "tensornet/core/gpu.py",
+      "path": "ontic/core/gpu.py",
       "lang": "py",
       "category": "core",
       "keywords": [
@@ -5826,7 +5826,7 @@
       ]
     },
     {
-      "path": "tensornet/core/mpo.py",
+      "path": "ontic/core/mpo.py",
       "lang": "py",
       "category": "core",
       "keywords": [
@@ -5851,7 +5851,7 @@
       ]
     },
     {
-      "path": "tensornet/core/mps.py",
+      "path": "ontic/core/mps.py",
       "lang": "py",
       "category": "core",
       "keywords": [
@@ -5868,7 +5868,7 @@
       ]
     },
     {
-      "path": "tensornet/core/phase_deferred.py",
+      "path": "ontic/core/phase_deferred.py",
       "lang": "py",
       "category": "core",
       "keywords": [],
@@ -5930,7 +5930,7 @@
       ]
     },
     {
-      "path": "tensornet/core/profiling.py",
+      "path": "ontic/core/profiling.py",
       "lang": "py",
       "category": "core",
       "keywords": [],
@@ -5962,7 +5962,7 @@
       ]
     },
     {
-      "path": "tensornet/core/states.py",
+      "path": "ontic/core/states.py",
       "lang": "py",
       "category": "core",
       "keywords": [
@@ -6015,7 +6015,7 @@
       ]
     },
     {
-      "path": "tensornet/mpo/__init__.py",
+      "path": "ontic/mpo/__init__.py",
       "lang": "py",
       "category": "core",
       "keywords": [
@@ -6025,7 +6025,7 @@
       "symbols": []
     },
     {
-      "path": "tensornet/mpo/atmospheric_solver.py",
+      "path": "ontic/mpo/atmospheric_solver.py",
       "lang": "py",
       "category": "core",
       "keywords": [
@@ -6042,7 +6042,7 @@
       ]
     },
     {
-      "path": "tensornet/mpo/laplacian_cuda.py",
+      "path": "ontic/mpo/laplacian_cuda.py",
       "lang": "py",
       "category": "core",
       "keywords": [
@@ -6077,7 +6077,7 @@
       ]
     },
     {
-      "path": "tensornet/mpo/operators.py",
+      "path": "ontic/mpo/operators.py",
       "lang": "py",
       "category": "core",
       "keywords": [
@@ -6107,7 +6107,7 @@
       ]
     },
     {
-      "path": "tensornet/mps/__init__.py",
+      "path": "ontic/mps/__init__.py",
       "lang": "py",
       "category": "core",
       "keywords": [
@@ -6117,7 +6117,7 @@
       "symbols": []
     },
     {
-      "path": "tensornet/mps/hamiltonians.py",
+      "path": "ontic/mps/hamiltonians.py",
       "lang": "py",
       "category": "core",
       "keywords": [
@@ -10501,13 +10501,13 @@
           "kind": "function",
           "name": "svd_truncated_with_fallback",
           "lineno": 188,
-          "doc1": "Truncated SVD with tensornet integration."
+          "doc1": "Truncated SVD with ontic integration."
         },
         {
           "kind": "function",
           "name": "get_integration_status",
           "lineno": 263,
-          "doc1": "Get status of all integrations with tensornet."
+          "doc1": "Get status of all integrations with ontic."
         },
         {
           "kind": "function",
@@ -10790,7 +10790,7 @@
       ]
     },
     {
-      "path": "tensornet/genesis/ga/README.md",
+      "path": "ontic/genesis/ga/README.md",
       "lang": "md",
       "category": "genesis",
       "keywords": [
@@ -10799,7 +10799,7 @@
       "symbols": null
     },
     {
-      "path": "tensornet/genesis/ot/README.md",
+      "path": "ontic/genesis/ot/README.md",
       "lang": "md",
       "category": "genesis",
       "keywords": [
@@ -10808,7 +10808,7 @@
       "symbols": null
     },
     {
-      "path": "tensornet/genesis/rkhs/README.md",
+      "path": "ontic/genesis/rkhs/README.md",
       "lang": "md",
       "category": "genesis",
       "keywords": [
@@ -10817,7 +10817,7 @@
       "symbols": null
     },
     {
-      "path": "tensornet/genesis/rmt/README.md",
+      "path": "ontic/genesis/rmt/README.md",
       "lang": "md",
       "category": "genesis",
       "keywords": [
@@ -10826,7 +10826,7 @@
       "symbols": null
     },
     {
-      "path": "tensornet/genesis/sgw/README.md",
+      "path": "ontic/genesis/sgw/README.md",
       "lang": "md",
       "category": "genesis",
       "keywords": [
@@ -10835,7 +10835,7 @@
       "symbols": null
     },
     {
-      "path": "tensornet/genesis/topology/README.md",
+      "path": "ontic/genesis/topology/README.md",
       "lang": "md",
       "category": "genesis",
       "keywords": [
@@ -10844,7 +10844,7 @@
       "symbols": null
     },
     {
-      "path": "tensornet/genesis/tropical/README.md",
+      "path": "ontic/genesis/tropical/README.md",
       "lang": "md",
       "category": "genesis",
       "keywords": [
@@ -10853,7 +10853,7 @@
       "symbols": null
     },
     {
-      "path": "tensornet/genesis/__init__.py",
+      "path": "ontic/genesis/__init__.py",
       "lang": "py",
       "category": "genesis",
       "keywords": [
@@ -10863,14 +10863,14 @@
       "symbols": []
     },
     {
-      "path": "tensornet/genesis/benchmarks/__init__.py",
+      "path": "ontic/genesis/benchmarks/__init__.py",
       "lang": "py",
       "category": "genesis",
       "keywords": [],
       "symbols": []
     },
     {
-      "path": "tensornet/genesis/benchmarks/massacre.py",
+      "path": "ontic/genesis/benchmarks/massacre.py",
       "lang": "py",
       "category": "genesis",
       "keywords": [
@@ -10952,7 +10952,7 @@
       ]
     },
     {
-      "path": "tensornet/genesis/core/__init__.py",
+      "path": "ontic/genesis/core/__init__.py",
       "lang": "py",
       "category": "genesis",
       "keywords": [
@@ -10961,7 +10961,7 @@
       "symbols": []
     },
     {
-      "path": "tensornet/genesis/core/exceptions.py",
+      "path": "ontic/genesis/core/exceptions.py",
       "lang": "py",
       "category": "genesis",
       "keywords": [
@@ -11073,7 +11073,7 @@
       ]
     },
     {
-      "path": "tensornet/genesis/core/logging.py",
+      "path": "ontic/genesis/core/logging.py",
       "lang": "py",
       "category": "genesis",
       "keywords": [],
@@ -11123,7 +11123,7 @@
       ]
     },
     {
-      "path": "tensornet/genesis/core/profiling.py",
+      "path": "ontic/genesis/core/profiling.py",
       "lang": "py",
       "category": "genesis",
       "keywords": [],
@@ -11215,7 +11215,7 @@
       ]
     },
     {
-      "path": "tensornet/genesis/core/rsvd.py",
+      "path": "ontic/genesis/core/rsvd.py",
       "lang": "py",
       "category": "genesis",
       "keywords": [
@@ -11244,7 +11244,7 @@
       ]
     },
     {
-      "path": "tensornet/genesis/core/triton_ops.py",
+      "path": "ontic/genesis/core/triton_ops.py",
       "lang": "py",
       "category": "genesis",
       "keywords": [
@@ -11326,7 +11326,7 @@
       ]
     },
     {
-      "path": "tensornet/genesis/core/validation.py",
+      "path": "ontic/genesis/core/validation.py",
       "lang": "py",
       "category": "genesis",
       "keywords": [
@@ -11396,7 +11396,7 @@
       ]
     },
     {
-      "path": "tensornet/genesis/demos/gpu_qtt_compress.py",
+      "path": "ontic/genesis/demos/gpu_qtt_compress.py",
       "lang": "py",
       "category": "genesis",
       "keywords": [
@@ -11472,7 +11472,7 @@
       ]
     },
     {
-      "path": "tensornet/genesis/demos/gpu_qtt_proper.py",
+      "path": "ontic/genesis/demos/gpu_qtt_proper.py",
       "lang": "py",
       "category": "genesis",
       "keywords": [
@@ -11513,7 +11513,7 @@
       ]
     },
     {
-      "path": "tensornet/genesis/demos/hierarchical_qtt_compress.py",
+      "path": "ontic/genesis/demos/hierarchical_qtt_compress.py",
       "lang": "py",
       "category": "genesis",
       "keywords": [
@@ -11578,7 +11578,7 @@
       ]
     },
     {
-      "path": "tensornet/genesis/demos/noaa_petabyte_compression.py",
+      "path": "ontic/genesis/demos/noaa_petabyte_compression.py",
       "lang": "py",
       "category": "genesis",
       "keywords": [
@@ -11637,7 +11637,7 @@
       ]
     },
     {
-      "path": "tensornet/genesis/demos/rsvd_qtt_compress.py",
+      "path": "ontic/genesis/demos/rsvd_qtt_compress.py",
       "lang": "py",
       "category": "genesis",
       "keywords": [
@@ -11713,7 +11713,7 @@
       ]
     },
     {
-      "path": "tensornet/genesis/demos/stream_compress_1tb.py",
+      "path": "ontic/genesis/demos/stream_compress_1tb.py",
       "lang": "py",
       "category": "genesis",
       "keywords": [
@@ -11803,7 +11803,7 @@
       ]
     },
     {
-      "path": "tensornet/genesis/demos/triton_qtt.py",
+      "path": "ontic/genesis/demos/triton_qtt.py",
       "lang": "py",
       "category": "genesis",
       "keywords": [
@@ -11880,14 +11880,14 @@
       ]
     },
     {
-      "path": "tensornet/genesis/fusion/__init__.py",
+      "path": "ontic/genesis/fusion/__init__.py",
       "lang": "py",
       "category": "genesis",
       "keywords": [],
       "symbols": []
     },
     {
-      "path": "tensornet/genesis/fusion/genesis_fusion_demo.py",
+      "path": "ontic/genesis/fusion/genesis_fusion_demo.py",
       "lang": "py",
       "category": "genesis",
       "keywords": [
@@ -11976,7 +11976,7 @@
       ]
     },
     {
-      "path": "tensornet/genesis/fusion/geometric_types_pipeline.py",
+      "path": "ontic/genesis/fusion/geometric_types_pipeline.py",
       "lang": "py",
       "category": "genesis",
       "keywords": [],
@@ -12056,7 +12056,7 @@
       ]
     },
     {
-      "path": "tensornet/genesis/ga/__init__.py",
+      "path": "ontic/genesis/ga/__init__.py",
       "lang": "py",
       "category": "genesis",
       "keywords": [
@@ -12065,7 +12065,7 @@
       "symbols": []
     },
     {
-      "path": "tensornet/genesis/ga/cga.py",
+      "path": "ontic/genesis/ga/cga.py",
       "lang": "py",
       "category": "genesis",
       "keywords": [],
@@ -12175,7 +12175,7 @@
       ]
     },
     {
-      "path": "tensornet/genesis/ga/multivector.py",
+      "path": "ontic/genesis/ga/multivector.py",
       "lang": "py",
       "category": "genesis",
       "keywords": [],
@@ -12225,7 +12225,7 @@
       ]
     },
     {
-      "path": "tensornet/genesis/ga/operations.py",
+      "path": "ontic/genesis/ga/operations.py",
       "lang": "py",
       "category": "genesis",
       "keywords": [],
@@ -12335,7 +12335,7 @@
       ]
     },
     {
-      "path": "tensornet/genesis/ga/products.py",
+      "path": "ontic/genesis/ga/products.py",
       "lang": "py",
       "category": "genesis",
       "keywords": [],
@@ -12409,7 +12409,7 @@
       ]
     },
     {
-      "path": "tensornet/genesis/ga/qtt_ga_gauntlet.py",
+      "path": "ontic/genesis/ga/qtt_ga_gauntlet.py",
       "lang": "py",
       "category": "genesis",
       "keywords": [
@@ -12486,7 +12486,7 @@
       ]
     },
     {
-      "path": "tensornet/genesis/ga/qtt_multivector.py",
+      "path": "ontic/genesis/ga/qtt_multivector.py",
       "lang": "py",
       "category": "genesis",
       "keywords": [
@@ -12540,7 +12540,7 @@
       ]
     },
     {
-      "path": "tensornet/genesis/ga/rotors.py",
+      "path": "ontic/genesis/ga/rotors.py",
       "lang": "py",
       "category": "genesis",
       "keywords": [],
@@ -12620,7 +12620,7 @@
       ]
     },
     {
-      "path": "tensornet/genesis/ot/__init__.py",
+      "path": "ontic/genesis/ot/__init__.py",
       "lang": "py",
       "category": "genesis",
       "keywords": [
@@ -12632,7 +12632,7 @@
       "symbols": []
     },
     {
-      "path": "tensornet/genesis/ot/barycenters.py",
+      "path": "ontic/genesis/ot/barycenters.py",
       "lang": "py",
       "category": "genesis",
       "keywords": [
@@ -12714,7 +12714,7 @@
       ]
     },
     {
-      "path": "tensornet/genesis/ot/cost_matrices.py",
+      "path": "ontic/genesis/ot/cost_matrices.py",
       "lang": "py",
       "category": "genesis",
       "keywords": [
@@ -12766,7 +12766,7 @@
       ]
     },
     {
-      "path": "tensornet/genesis/ot/distributions.py",
+      "path": "ontic/genesis/ot/distributions.py",
       "lang": "py",
       "category": "genesis",
       "keywords": [
@@ -12793,7 +12793,7 @@
       ]
     },
     {
-      "path": "tensornet/genesis/ot/qtt_ot_gauntlet.py",
+      "path": "ontic/genesis/ot/qtt_ot_gauntlet.py",
       "lang": "py",
       "category": "genesis",
       "keywords": [
@@ -12834,7 +12834,7 @@
       ]
     },
     {
-      "path": "tensornet/genesis/ot/sinkhorn_qtt.py",
+      "path": "ontic/genesis/ot/sinkhorn_qtt.py",
       "lang": "py",
       "category": "genesis",
       "keywords": [
@@ -12867,7 +12867,7 @@
       ]
     },
     {
-      "path": "tensornet/genesis/ot/transport_plan.py",
+      "path": "ontic/genesis/ot/transport_plan.py",
       "lang": "py",
       "category": "genesis",
       "keywords": [
@@ -12921,7 +12921,7 @@
       ]
     },
     {
-      "path": "tensornet/genesis/ot/wasserstein.py",
+      "path": "ontic/genesis/ot/wasserstein.py",
       "lang": "py",
       "category": "genesis",
       "keywords": [
@@ -12982,7 +12982,7 @@
       ]
     },
     {
-      "path": "tensornet/genesis/rkhs/__init__.py",
+      "path": "ontic/genesis/rkhs/__init__.py",
       "lang": "py",
       "category": "genesis",
       "keywords": [
@@ -12992,7 +12992,7 @@
       "symbols": []
     },
     {
-      "path": "tensornet/genesis/rkhs/gp.py",
+      "path": "ontic/genesis/rkhs/gp.py",
       "lang": "py",
       "category": "genesis",
       "keywords": [
@@ -13044,7 +13044,7 @@
       ]
     },
     {
-      "path": "tensornet/genesis/rkhs/kernel_matrix.py",
+      "path": "ontic/genesis/rkhs/kernel_matrix.py",
       "lang": "py",
       "category": "genesis",
       "keywords": [
@@ -13095,7 +13095,7 @@
       ]
     },
     {
-      "path": "tensornet/genesis/rkhs/kernels.py",
+      "path": "ontic/genesis/rkhs/kernels.py",
       "lang": "py",
       "category": "genesis",
       "keywords": [
@@ -13171,7 +13171,7 @@
       ]
     },
     {
-      "path": "tensornet/genesis/rkhs/mmd.py",
+      "path": "ontic/genesis/rkhs/mmd.py",
       "lang": "py",
       "category": "genesis",
       "keywords": [
@@ -13275,7 +13275,7 @@
       ]
     },
     {
-      "path": "tensornet/genesis/rkhs/qtt_rkhs_gauntlet.py",
+      "path": "ontic/genesis/rkhs/qtt_rkhs_gauntlet.py",
       "lang": "py",
       "category": "genesis",
       "keywords": [
@@ -13303,7 +13303,7 @@
       ]
     },
     {
-      "path": "tensornet/genesis/rkhs/ridge.py",
+      "path": "ontic/genesis/rkhs/ridge.py",
       "lang": "py",
       "category": "genesis",
       "keywords": [
@@ -13367,7 +13367,7 @@
       ]
     },
     {
-      "path": "tensornet/genesis/rmt/__init__.py",
+      "path": "ontic/genesis/rmt/__init__.py",
       "lang": "py",
       "category": "genesis",
       "keywords": [
@@ -13377,7 +13377,7 @@
       "symbols": []
     },
     {
-      "path": "tensornet/genesis/rmt/ensembles.py",
+      "path": "ontic/genesis/rmt/ensembles.py",
       "lang": "py",
       "category": "genesis",
       "keywords": [
@@ -13420,7 +13420,7 @@
       ]
     },
     {
-      "path": "tensornet/genesis/rmt/free_probability.py",
+      "path": "ontic/genesis/rmt/free_probability.py",
       "lang": "py",
       "category": "genesis",
       "keywords": [
@@ -13472,7 +13472,7 @@
       ]
     },
     {
-      "path": "tensornet/genesis/rmt/qtt_rmt_gauntlet.py",
+      "path": "ontic/genesis/rmt/qtt_rmt_gauntlet.py",
       "lang": "py",
       "category": "genesis",
       "keywords": [
@@ -13507,7 +13507,7 @@
       ]
     },
     {
-      "path": "tensornet/genesis/rmt/resolvent.py",
+      "path": "ontic/genesis/rmt/resolvent.py",
       "lang": "py",
       "category": "genesis",
       "keywords": [
@@ -13542,7 +13542,7 @@
       ]
     },
     {
-      "path": "tensornet/genesis/rmt/spectral_density.py",
+      "path": "ontic/genesis/rmt/spectral_density.py",
       "lang": "py",
       "category": "genesis",
       "keywords": [
@@ -13582,7 +13582,7 @@
       ]
     },
     {
-      "path": "tensornet/genesis/rmt/universality.py",
+      "path": "ontic/genesis/rmt/universality.py",
       "lang": "py",
       "category": "genesis",
       "keywords": [
@@ -13634,7 +13634,7 @@
       ]
     },
     {
-      "path": "tensornet/genesis/sgw/__init__.py",
+      "path": "ontic/genesis/sgw/__init__.py",
       "lang": "py",
       "category": "genesis",
       "keywords": [
@@ -13645,7 +13645,7 @@
       "symbols": []
     },
     {
-      "path": "tensornet/genesis/sgw/chebyshev.py",
+      "path": "ontic/genesis/sgw/chebyshev.py",
       "lang": "py",
       "category": "genesis",
       "keywords": [
@@ -13697,7 +13697,7 @@
       ]
     },
     {
-      "path": "tensornet/genesis/sgw/filters.py",
+      "path": "ontic/genesis/sgw/filters.py",
       "lang": "py",
       "category": "genesis",
       "keywords": [],
@@ -13777,7 +13777,7 @@
       ]
     },
     {
-      "path": "tensornet/genesis/sgw/graph_signals.py",
+      "path": "ontic/genesis/sgw/graph_signals.py",
       "lang": "py",
       "category": "genesis",
       "keywords": [
@@ -13796,7 +13796,7 @@
       ]
     },
     {
-      "path": "tensornet/genesis/sgw/laplacian.py",
+      "path": "ontic/genesis/sgw/laplacian.py",
       "lang": "py",
       "category": "genesis",
       "keywords": [
@@ -13834,7 +13834,7 @@
       ]
     },
     {
-      "path": "tensornet/genesis/sgw/qtt_sgw_gauntlet.py",
+      "path": "ontic/genesis/sgw/qtt_sgw_gauntlet.py",
       "lang": "py",
       "category": "genesis",
       "keywords": [
@@ -13869,7 +13869,7 @@
       ]
     },
     {
-      "path": "tensornet/genesis/sgw/wavelets.py",
+      "path": "ontic/genesis/sgw/wavelets.py",
       "lang": "py",
       "category": "genesis",
       "keywords": [
@@ -13921,7 +13921,7 @@
       ]
     },
     {
-      "path": "tensornet/genesis/topology/__init__.py",
+      "path": "ontic/genesis/topology/__init__.py",
       "lang": "py",
       "category": "genesis",
       "keywords": [
@@ -13931,7 +13931,7 @@
       "symbols": []
     },
     {
-      "path": "tensornet/genesis/topology/boundary.py",
+      "path": "ontic/genesis/topology/boundary.py",
       "lang": "py",
       "category": "genesis",
       "keywords": [
@@ -13984,7 +13984,7 @@
       ]
     },
     {
-      "path": "tensornet/genesis/topology/distances.py",
+      "path": "ontic/genesis/topology/distances.py",
       "lang": "py",
       "category": "genesis",
       "keywords": [],
@@ -14064,7 +14064,7 @@
       ]
     },
     {
-      "path": "tensornet/genesis/topology/persistence.py",
+      "path": "ontic/genesis/topology/persistence.py",
       "lang": "py",
       "category": "genesis",
       "keywords": [],
@@ -14120,7 +14120,7 @@
       ]
     },
     {
-      "path": "tensornet/genesis/topology/qtt_native.py",
+      "path": "ontic/genesis/topology/qtt_native.py",
       "lang": "py",
       "category": "genesis",
       "keywords": [
@@ -14197,7 +14197,7 @@
       ]
     },
     {
-      "path": "tensornet/genesis/topology/qtt_ph_gauntlet.py",
+      "path": "ontic/genesis/topology/qtt_ph_gauntlet.py",
       "lang": "py",
       "category": "genesis",
       "keywords": [
@@ -14225,7 +14225,7 @@
       ]
     },
     {
-      "path": "tensornet/genesis/topology/simplicial.py",
+      "path": "ontic/genesis/topology/simplicial.py",
       "lang": "py",
       "category": "genesis",
       "keywords": [],
@@ -14269,7 +14269,7 @@
       ]
     },
     {
-      "path": "tensornet/genesis/tropical/__init__.py",
+      "path": "ontic/genesis/tropical/__init__.py",
       "lang": "py",
       "category": "genesis",
       "keywords": [
@@ -14279,7 +14279,7 @@
       "symbols": []
     },
     {
-      "path": "tensornet/genesis/tropical/convexity.py",
+      "path": "ontic/genesis/tropical/convexity.py",
       "lang": "py",
       "category": "genesis",
       "keywords": [
@@ -14343,7 +14343,7 @@
       ]
     },
     {
-      "path": "tensornet/genesis/tropical/matrix.py",
+      "path": "ontic/genesis/tropical/matrix.py",
       "lang": "py",
       "category": "genesis",
       "keywords": [
@@ -14408,7 +14408,7 @@
       ]
     },
     {
-      "path": "tensornet/genesis/tropical/optimization.py",
+      "path": "ontic/genesis/tropical/optimization.py",
       "lang": "py",
       "category": "genesis",
       "keywords": [
@@ -14466,7 +14466,7 @@
       ]
     },
     {
-      "path": "tensornet/genesis/tropical/qtt_native.py",
+      "path": "ontic/genesis/tropical/qtt_native.py",
       "lang": "py",
       "category": "genesis",
       "keywords": [
@@ -14528,7 +14528,7 @@
       ]
     },
     {
-      "path": "tensornet/genesis/tropical/qtt_tropical_gauntlet.py",
+      "path": "ontic/genesis/tropical/qtt_tropical_gauntlet.py",
       "lang": "py",
       "category": "genesis",
       "keywords": [
@@ -14562,7 +14562,7 @@
       ]
     },
     {
-      "path": "tensornet/genesis/tropical/semiring.py",
+      "path": "ontic/genesis/tropical/semiring.py",
       "lang": "py",
       "category": "genesis",
       "keywords": [
@@ -14644,7 +14644,7 @@
       ]
     },
     {
-      "path": "tensornet/genesis/tropical/shortest_path.py",
+      "path": "ontic/genesis/tropical/shortest_path.py",
       "lang": "py",
       "category": "genesis",
       "keywords": [
@@ -14732,7 +14732,7 @@
       ]
     },
     {
-      "path": "tensornet/cuda/qtt_eval_gpu.py",
+      "path": "ontic/cuda/qtt_eval_gpu.py",
       "lang": "py",
       "category": "gpu",
       "keywords": [
@@ -14754,7 +14754,7 @@
       ]
     },
     {
-      "path": "tensornet/cuda/qtt_native_ops.py",
+      "path": "ontic/cuda/qtt_native_ops.py",
       "lang": "py",
       "category": "gpu",
       "keywords": [
@@ -14861,7 +14861,7 @@
       ]
     },
     {
-      "path": "tensornet/cuda/qtt_ntt.py",
+      "path": "ontic/cuda/qtt_ntt.py",
       "lang": "py",
       "category": "gpu",
       "keywords": [
@@ -14943,7 +14943,7 @@
       ]
     },
     {
-      "path": "tensornet/cuda/setup.py",
+      "path": "ontic/cuda/setup.py",
       "lang": "py",
       "category": "gpu",
       "keywords": [
@@ -14959,7 +14959,7 @@
       ]
     },
     {
-      "path": "tensornet/cuda/test_qtt_cuda.py",
+      "path": "ontic/cuda/test_qtt_cuda.py",
       "lang": "py",
       "category": "gpu",
       "keywords": [
@@ -15005,7 +15005,7 @@
       ]
     },
     {
-      "path": "tensornet/gpu/kernel_autotune_cache.py",
+      "path": "ontic/gpu/kernel_autotune_cache.py",
       "lang": "py",
       "category": "gpu",
       "keywords": [
@@ -16284,7 +16284,7 @@
       "symbols": null
     },
     {
-      "path": "docs/api/OtherCFD/tensornet.cfd.md",
+      "path": "docs/api/OtherCFD/ontic.cfd.md",
       "lang": "md",
       "category": "other",
       "keywords": [
@@ -16293,7 +16293,7 @@
       "symbols": null
     },
     {
-      "path": "docs/api/tensornet.cfd.md",
+      "path": "docs/api/ontic.cfd.md",
       "lang": "md",
       "category": "other",
       "keywords": [
@@ -16761,7 +16761,7 @@
       "symbols": null
     },
     {
-      "path": "tensornet/exploit/CHANGELOG.md",
+      "path": "ontic/exploit/CHANGELOG.md",
       "lang": "md",
       "category": "other",
       "keywords": [
@@ -16770,7 +16770,7 @@
       "symbols": null
     },
     {
-      "path": "tensornet/exploit/EXECUTION_LOG.md",
+      "path": "ontic/exploit/EXECUTION_LOG.md",
       "lang": "md",
       "category": "other",
       "keywords": [
@@ -16779,7 +16779,7 @@
       "symbols": null
     },
     {
-      "path": "tensornet/exploit/FINDINGS.md",
+      "path": "ontic/exploit/FINDINGS.md",
       "lang": "md",
       "category": "other",
       "keywords": [
@@ -16788,7 +16788,7 @@
       "symbols": null
     },
     {
-      "path": "tensornet/exploit/README.md",
+      "path": "ontic/exploit/README.md",
       "lang": "md",
       "category": "other",
       "keywords": [
@@ -20243,7 +20243,7 @@
         },
         {
           "kind": "class",
-          "name": "TensorNetworkSolver",
+          "name": "Ontic EngineworkSolver",
           "lineno": 361,
           "doc1": "DMRG-inspired tensor network solver for larger systems."
         },
@@ -20374,7 +20374,7 @@
           "kind": "function",
           "name": "check_imports",
           "lineno": 21,
-          "doc1": "Check if all tensornet modules can be imported."
+          "doc1": "Check if all ontic modules can be imported."
         },
         {
           "kind": "function",
@@ -21261,7 +21261,7 @@
       ]
     },
     {
-      "path": "tensornet/__init__.py",
+      "path": "ontic/__init__.py",
       "lang": "py",
       "category": "other",
       "keywords": [
@@ -21275,7 +21275,7 @@
       "symbols": []
     },
     {
-      "path": "tensornet/adaptive/bond_optimizer.py",
+      "path": "ontic/adaptive/bond_optimizer.py",
       "lang": "py",
       "category": "other",
       "keywords": [
@@ -21345,7 +21345,7 @@
       ]
     },
     {
-      "path": "tensornet/adaptive/compression.py",
+      "path": "ontic/adaptive/compression.py",
       "lang": "py",
       "category": "other",
       "keywords": [
@@ -21409,7 +21409,7 @@
       ]
     },
     {
-      "path": "tensornet/adaptive/entanglement.py",
+      "path": "ontic/adaptive/entanglement.py",
       "lang": "py",
       "category": "other",
       "keywords": [
@@ -21479,7 +21479,7 @@
       ]
     },
     {
-      "path": "tensornet/algorithms/dmrg.py",
+      "path": "ontic/algorithms/dmrg.py",
       "lang": "py",
       "category": "other",
       "keywords": [
@@ -21540,7 +21540,7 @@
       ]
     },
     {
-      "path": "tensornet/algorithms/fermionic.py",
+      "path": "ontic/algorithms/fermionic.py",
       "lang": "py",
       "category": "other",
       "keywords": [
@@ -21583,7 +21583,7 @@
       ]
     },
     {
-      "path": "tensornet/algorithms/tdvp.py",
+      "path": "ontic/algorithms/tdvp.py",
       "lang": "py",
       "category": "other",
       "keywords": [
@@ -21650,7 +21650,7 @@
       ]
     },
     {
-      "path": "tensornet/algorithms/tebd.py",
+      "path": "ontic/algorithms/tebd.py",
       "lang": "py",
       "category": "other",
       "keywords": [
@@ -21716,7 +21716,7 @@
       ]
     },
     {
-      "path": "tensornet/autonomy/mission_planner.py",
+      "path": "ontic/autonomy/mission_planner.py",
       "lang": "py",
       "category": "other",
       "keywords": [
@@ -21780,7 +21780,7 @@
       ]
     },
     {
-      "path": "tensornet/benchmarks/profile_bottlenecks.py",
+      "path": "ontic/benchmarks/profile_bottlenecks.py",
       "lang": "py",
       "category": "other",
       "keywords": [
@@ -21852,7 +21852,7 @@
       ]
     },
     {
-      "path": "tensornet/deployment/tensorrt_export.py",
+      "path": "ontic/deployment/tensorrt_export.py",
       "lang": "py",
       "category": "other",
       "keywords": [
@@ -21940,7 +21940,7 @@
       ]
     },
     {
-      "path": "tensornet/discovery/__main__.py",
+      "path": "ontic/discovery/__main__.py",
       "lang": "py",
       "category": "other",
       "keywords": [
@@ -21986,7 +21986,7 @@
       ]
     },
     {
-      "path": "tensornet/discovery/api/gpu.py",
+      "path": "ontic/discovery/api/gpu.py",
       "lang": "py",
       "category": "other",
       "keywords": [
@@ -22044,7 +22044,7 @@
       ]
     },
     {
-      "path": "tensornet/discovery/api/server.py",
+      "path": "ontic/discovery/api/server.py",
       "lang": "py",
       "category": "other",
       "keywords": [
@@ -22090,7 +22090,7 @@
       ]
     },
     {
-      "path": "tensornet/discovery/connectors/fusion.py",
+      "path": "ontic/discovery/connectors/fusion.py",
       "lang": "py",
       "category": "other",
       "keywords": [
@@ -22142,7 +22142,7 @@
       ]
     },
     {
-      "path": "tensornet/discovery/engine_v2.py",
+      "path": "ontic/discovery/engine_v2.py",
       "lang": "py",
       "category": "other",
       "keywords": [
@@ -22176,7 +22176,7 @@
       ]
     },
     {
-      "path": "tensornet/discovery/ingest/markets.py",
+      "path": "ontic/discovery/ingest/markets.py",
       "lang": "py",
       "category": "other",
       "keywords": [
@@ -22240,7 +22240,7 @@
       ]
     },
     {
-      "path": "tensornet/discovery/ingest/molecular.py",
+      "path": "ontic/discovery/ingest/molecular.py",
       "lang": "py",
       "category": "other",
       "keywords": [
@@ -22298,7 +22298,7 @@
       ]
     },
     {
-      "path": "tensornet/discovery/ingest/plasma.py",
+      "path": "ontic/discovery/ingest/plasma.py",
       "lang": "py",
       "category": "other",
       "keywords": [
@@ -22338,7 +22338,7 @@
       ]
     },
     {
-      "path": "tensornet/discovery/pipelines/markets_pipeline.py",
+      "path": "ontic/discovery/pipelines/markets_pipeline.py",
       "lang": "py",
       "category": "other",
       "keywords": [
@@ -22372,7 +22372,7 @@
       ]
     },
     {
-      "path": "tensornet/discovery/pipelines/molecular_pipeline.py",
+      "path": "ontic/discovery/pipelines/molecular_pipeline.py",
       "lang": "py",
       "category": "other",
       "keywords": [
@@ -22400,7 +22400,7 @@
       ]
     },
     {
-      "path": "tensornet/discovery/primitives/__init__.py",
+      "path": "ontic/discovery/primitives/__init__.py",
       "lang": "py",
       "category": "other",
       "keywords": [
@@ -22409,7 +22409,7 @@
       "symbols": []
     },
     {
-      "path": "tensornet/discovery/primitives/geometric_algebra.py",
+      "path": "ontic/discovery/primitives/geometric_algebra.py",
       "lang": "py",
       "category": "other",
       "keywords": [
@@ -22425,7 +22425,7 @@
       ]
     },
     {
-      "path": "tensornet/discovery/primitives/kernel.py",
+      "path": "ontic/discovery/primitives/kernel.py",
       "lang": "py",
       "category": "other",
       "keywords": [
@@ -22441,7 +22441,7 @@
       ]
     },
     {
-      "path": "tensornet/discovery/primitives/optimal_transport.py",
+      "path": "ontic/discovery/primitives/optimal_transport.py",
       "lang": "py",
       "category": "other",
       "keywords": [
@@ -22457,7 +22457,7 @@
       ]
     },
     {
-      "path": "tensornet/discovery/primitives/random_matrix.py",
+      "path": "ontic/discovery/primitives/random_matrix.py",
       "lang": "py",
       "category": "other",
       "keywords": [
@@ -22473,7 +22473,7 @@
       ]
     },
     {
-      "path": "tensornet/discovery/primitives/spectral_wavelets.py",
+      "path": "ontic/discovery/primitives/spectral_wavelets.py",
       "lang": "py",
       "category": "other",
       "keywords": [
@@ -22489,7 +22489,7 @@
       ]
     },
     {
-      "path": "tensornet/discovery/primitives/topology.py",
+      "path": "ontic/discovery/primitives/topology.py",
       "lang": "py",
       "category": "other",
       "keywords": [
@@ -22505,7 +22505,7 @@
       ]
     },
     {
-      "path": "tensornet/discovery/protocol.py",
+      "path": "ontic/discovery/protocol.py",
       "lang": "py",
       "category": "other",
       "keywords": [
@@ -22551,7 +22551,7 @@
       ]
     },
     {
-      "path": "tensornet/distributed_tn/__init__.py",
+      "path": "ontic/distributed_tn/__init__.py",
       "lang": "py",
       "category": "other",
       "keywords": [
@@ -22560,7 +22560,7 @@
       "symbols": []
     },
     {
-      "path": "tensornet/distributed_tn/distributed_dmrg.py",
+      "path": "ontic/distributed_tn/distributed_dmrg.py",
       "lang": "py",
       "category": "other",
       "keywords": [
@@ -22613,7 +22613,7 @@
       ]
     },
     {
-      "path": "tensornet/distributed_tn/mps_operations.py",
+      "path": "ontic/distributed_tn/mps_operations.py",
       "lang": "py",
       "category": "other",
       "keywords": [
@@ -22666,7 +22666,7 @@
       ]
     },
     {
-      "path": "tensornet/distributed_tn/parallel_tebd.py",
+      "path": "ontic/distributed_tn/parallel_tebd.py",
       "lang": "py",
       "category": "other",
       "keywords": [
@@ -22718,7 +22718,7 @@
       ]
     },
     {
-      "path": "tensornet/docs/user_guides.py",
+      "path": "ontic/docs/user_guides.py",
       "lang": "py",
       "category": "other",
       "keywords": [
@@ -22793,7 +22793,7 @@
       ]
     },
     {
-      "path": "tensornet/exploit/__init__.py",
+      "path": "ontic/exploit/__init__.py",
       "lang": "py",
       "category": "other",
       "keywords": [
@@ -22803,7 +22803,7 @@
       "symbols": []
     },
     {
-      "path": "tensornet/exploit/bounty_api.py",
+      "path": "ontic/exploit/bounty_api.py",
       "lang": "py",
       "category": "other",
       "keywords": [
@@ -22862,7 +22862,7 @@
       ]
     },
     {
-      "path": "tensornet/exploit/bounty_reporter.py",
+      "path": "ontic/exploit/bounty_reporter.py",
       "lang": "py",
       "category": "other",
       "keywords": [
@@ -22914,7 +22914,7 @@
       ]
     },
     {
-      "path": "tensornet/exploit/constants.py",
+      "path": "ontic/exploit/constants.py",
       "lang": "py",
       "category": "other",
       "keywords": [
@@ -22925,7 +22925,7 @@
       "symbols": []
     },
     {
-      "path": "tensornet/exploit/euler_v2_hunt.py",
+      "path": "ontic/exploit/euler_v2_hunt.py",
       "lang": "py",
       "category": "other",
       "keywords": [
@@ -22972,7 +22972,7 @@
       ]
     },
     {
-      "path": "tensornet/exploit/evm_oracle.py",
+      "path": "ontic/exploit/evm_oracle.py",
       "lang": "py",
       "category": "other",
       "keywords": [
@@ -23018,7 +23018,7 @@
       ]
     },
     {
-      "path": "tensornet/exploit/exploit_hunter.py",
+      "path": "ontic/exploit/exploit_hunter.py",
       "lang": "py",
       "category": "other",
       "keywords": [
@@ -23060,7 +23060,7 @@
       ]
     },
     {
-      "path": "tensornet/exploit/guided_sampling.py",
+      "path": "ontic/exploit/guided_sampling.py",
       "lang": "py",
       "category": "other",
       "keywords": [
@@ -23094,7 +23094,7 @@
       ]
     },
     {
-      "path": "tensornet/exploit/historical_validator.py",
+      "path": "ontic/exploit/historical_validator.py",
       "lang": "py",
       "category": "other",
       "keywords": [
@@ -23128,7 +23128,7 @@
       ]
     },
     {
-      "path": "tensornet/exploit/hypergrid.py",
+      "path": "ontic/exploit/hypergrid.py",
       "lang": "py",
       "category": "other",
       "keywords": [
@@ -23240,7 +23240,7 @@
       ]
     },
     {
-      "path": "tensornet/exploit/invariant_hunter.py",
+      "path": "ontic/exploit/invariant_hunter.py",
       "lang": "py",
       "category": "other",
       "keywords": [
@@ -23292,7 +23292,7 @@
       ]
     },
     {
-      "path": "tensornet/exploit/invariants.py",
+      "path": "ontic/exploit/invariants.py",
       "lang": "py",
       "category": "other",
       "keywords": [
@@ -23398,7 +23398,7 @@
       ]
     },
     {
-      "path": "tensornet/exploit/mainnet_targets.py",
+      "path": "ontic/exploit/mainnet_targets.py",
       "lang": "py",
       "category": "other",
       "keywords": [
@@ -23438,7 +23438,7 @@
       ]
     },
     {
-      "path": "tensornet/exploit/morpho_blue_hunt.py",
+      "path": "ontic/exploit/morpho_blue_hunt.py",
       "lang": "py",
       "category": "other",
       "keywords": [
@@ -23503,7 +23503,7 @@
       ]
     },
     {
-      "path": "tensornet/exploit/real_evm.py",
+      "path": "ontic/exploit/real_evm.py",
       "lang": "py",
       "category": "other",
       "keywords": [
@@ -23543,7 +23543,7 @@
       ]
     },
     {
-      "path": "tensornet/exploit/state_encoder.py",
+      "path": "ontic/exploit/state_encoder.py",
       "lang": "py",
       "category": "other",
       "keywords": [
@@ -23629,7 +23629,7 @@
       ]
     },
     {
-      "path": "tensornet/exploit/toy_contracts.py",
+      "path": "ontic/exploit/toy_contracts.py",
       "lang": "py",
       "category": "other",
       "keywords": [
@@ -23699,7 +23699,7 @@
       ]
     },
     {
-      "path": "tensornet/exploit/tx_space.py",
+      "path": "ontic/exploit/tx_space.py",
       "lang": "py",
       "category": "other",
       "keywords": [
@@ -23789,7 +23789,7 @@
       ]
     },
     {
-      "path": "tensornet/fieldops/__init__.py",
+      "path": "ontic/fieldops/__init__.py",
       "lang": "py",
       "category": "other",
       "keywords": [
@@ -23798,7 +23798,7 @@
       "symbols": []
     },
     {
-      "path": "tensornet/fieldops/operators.py",
+      "path": "ontic/fieldops/operators.py",
       "lang": "py",
       "category": "other",
       "keywords": [
@@ -23952,7 +23952,7 @@
       ]
     },
     {
-      "path": "tensornet/fieldos/field.py",
+      "path": "ontic/fieldos/field.py",
       "lang": "py",
       "category": "other",
       "keywords": [
@@ -23980,7 +23980,7 @@
       ]
     },
     {
-      "path": "tensornet/fieldos/kernel.py",
+      "path": "ontic/fieldos/kernel.py",
       "lang": "py",
       "category": "other",
       "keywords": [
@@ -24038,7 +24038,7 @@
       ]
     },
     {
-      "path": "tensornet/fusion/__init__.py",
+      "path": "ontic/fusion/__init__.py",
       "lang": "py",
       "category": "other",
       "keywords": [
@@ -24047,7 +24047,7 @@
       "symbols": []
     },
     {
-      "path": "tensornet/gateway/onion_renderer.py",
+      "path": "ontic/gateway/onion_renderer.py",
       "lang": "py",
       "category": "other",
       "keywords": [
@@ -24087,7 +24087,7 @@
       ]
     },
     {
-      "path": "tensornet/gateway/orbital_command.py",
+      "path": "ontic/gateway/orbital_command.py",
       "lang": "py",
       "category": "other",
       "keywords": [
@@ -24118,7 +24118,7 @@
       ]
     },
     {
-      "path": "tensornet/hw/verilog_elite_analyzer.py",
+      "path": "ontic/hw/verilog_elite_analyzer.py",
       "lang": "py",
       "category": "other",
       "keywords": [
@@ -24176,7 +24176,7 @@
       ]
     },
     {
-      "path": "tensornet/hypersim/env.py",
+      "path": "ontic/hypersim/env.py",
       "lang": "py",
       "category": "other",
       "keywords": [
@@ -24210,7 +24210,7 @@
       ]
     },
     {
-      "path": "tensornet/hypersim/rewards.py",
+      "path": "ontic/hypersim/rewards.py",
       "lang": "py",
       "category": "other",
       "keywords": [
@@ -24292,7 +24292,7 @@
       ]
     },
     {
-      "path": "tensornet/hypersim/spaces.py",
+      "path": "ontic/hypersim/spaces.py",
       "lang": "py",
       "category": "other",
       "keywords": [
@@ -24362,7 +24362,7 @@
       ]
     },
     {
-      "path": "tensornet/hypervisual/__init__.py",
+      "path": "ontic/hypervisual/__init__.py",
       "lang": "py",
       "category": "other",
       "keywords": [
@@ -24371,7 +24371,7 @@
       "symbols": []
     },
     {
-      "path": "tensornet/hypervisual/renderer.py",
+      "path": "ontic/hypervisual/renderer.py",
       "lang": "py",
       "category": "other",
       "keywords": [
@@ -24423,7 +24423,7 @@
       ]
     },
     {
-      "path": "tensornet/hypervisual/slicer.py",
+      "path": "ontic/hypervisual/slicer.py",
       "lang": "py",
       "category": "other",
       "keywords": [
@@ -24463,7 +24463,7 @@
       ]
     },
     {
-      "path": "tensornet/hypervisual/slicing_core.py",
+      "path": "ontic/hypervisual/slicing_core.py",
       "lang": "py",
       "category": "other",
       "keywords": [
@@ -24497,7 +24497,7 @@
       ]
     },
     {
-      "path": "tensornet/neural/entanglement_gnn.py",
+      "path": "ontic/neural/entanglement_gnn.py",
       "lang": "py",
       "category": "other",
       "keywords": [
@@ -24567,7 +24567,7 @@
       ]
     },
     {
-      "path": "tensornet/neural/genesis_optimizer.py",
+      "path": "ontic/neural/genesis_optimizer.py",
       "lang": "py",
       "category": "other",
       "keywords": [
@@ -24621,7 +24621,7 @@
       ]
     },
     {
-      "path": "tensornet/physics/trajectory_optimizer.py",
+      "path": "ontic/physics/trajectory_optimizer.py",
       "lang": "py",
       "category": "other",
       "keywords": [
@@ -24685,7 +24685,7 @@
       ]
     },
     {
-      "path": "tensornet/provenance/commit.py",
+      "path": "ontic/provenance/commit.py",
       "lang": "py",
       "category": "other",
       "keywords": [
@@ -24713,7 +24713,7 @@
       ]
     },
     {
-      "path": "tensornet/quantum/__init__.py",
+      "path": "ontic/quantum/__init__.py",
       "lang": "py",
       "category": "other",
       "keywords": [
@@ -24729,7 +24729,7 @@
       ]
     },
     {
-      "path": "tensornet/quantum/hybrid.py",
+      "path": "ontic/quantum/hybrid.py",
       "lang": "py",
       "category": "other",
       "keywords": [
@@ -24801,7 +24801,7 @@
         },
         {
           "kind": "class",
-          "name": "TensorNetworkBornMachine",
+          "name": "Ontic EngineworkBornMachine",
           "lineno": 895,
           "doc1": "Generative model using tensor network as quantum-inspired ansatz."
         },
@@ -24826,7 +24826,7 @@
       ]
     },
     {
-      "path": "tensornet/realtime/inference_engine.py",
+      "path": "ontic/realtime/inference_engine.py",
       "lang": "py",
       "category": "other",
       "keywords": [
@@ -24890,7 +24890,7 @@
       ]
     },
     {
-      "path": "tensornet/site/themes.py",
+      "path": "ontic/site/themes.py",
       "lang": "py",
       "category": "other",
       "keywords": [
@@ -24961,7 +24961,7 @@
       ]
     },
     {
-      "path": "tensornet/sovereign/__init__.py",
+      "path": "ontic/sovereign/__init__.py",
       "lang": "py",
       "category": "other",
       "keywords": [
@@ -24970,7 +24970,7 @@
       "symbols": []
     },
     {
-      "path": "tensornet/sovereign/heatmap_generator.py",
+      "path": "ontic/sovereign/heatmap_generator.py",
       "lang": "py",
       "category": "other",
       "keywords": [
@@ -24994,7 +24994,7 @@
       ]
     },
     {
-      "path": "tensornet/sovereign/realtime_tensor_stream.py",
+      "path": "ontic/sovereign/realtime_tensor_stream.py",
       "lang": "py",
       "category": "other",
       "keywords": [
@@ -25016,7 +25016,7 @@
       ]
     },
     {
-      "path": "tensornet/substrate/__init__.py",
+      "path": "ontic/substrate/__init__.py",
       "lang": "py",
       "category": "other",
       "keywords": [
@@ -25025,7 +25025,7 @@
       "symbols": []
     },
     {
-      "path": "tensornet/substrate/bounded.py",
+      "path": "ontic/substrate/bounded.py",
       "lang": "py",
       "category": "other",
       "keywords": [
@@ -25071,7 +25071,7 @@
       ]
     },
     {
-      "path": "tensornet/substrate/bundle.py",
+      "path": "ontic/substrate/bundle.py",
       "lang": "py",
       "category": "other",
       "keywords": [
@@ -25105,7 +25105,7 @@
       ]
     },
     {
-      "path": "tensornet/substrate/field.py",
+      "path": "ontic/substrate/field.py",
       "lang": "py",
       "category": "other",
       "keywords": [
@@ -25140,7 +25140,7 @@
       ]
     },
     {
-      "path": "tensornet/substrate/morton_ops.py",
+      "path": "ontic/substrate/morton_ops.py",
       "lang": "py",
       "category": "other",
       "keywords": [
@@ -25223,7 +25223,7 @@
       ]
     },
     {
-      "path": "tensornet/substrate/stats.py",
+      "path": "ontic/substrate/stats.py",
       "lang": "py",
       "category": "other",
       "keywords": [
@@ -25251,7 +25251,7 @@
       ]
     },
     {
-      "path": "tensornet/types/__init__.py",
+      "path": "ontic/types/__init__.py",
       "lang": "py",
       "category": "other",
       "keywords": [
@@ -25263,7 +25263,7 @@
       "symbols": []
     },
     {
-      "path": "tensornet/types/fields.py",
+      "path": "ontic/types/fields.py",
       "lang": "py",
       "category": "other",
       "keywords": [
@@ -25333,7 +25333,7 @@
       ]
     },
     {
-      "path": "tensornet/types/genesis_integration.py",
+      "path": "ontic/types/genesis_integration.py",
       "lang": "py",
       "category": "other",
       "keywords": [
@@ -25399,7 +25399,7 @@
       ]
     },
     {
-      "path": "tensornet/visualization/__init__.py",
+      "path": "ontic/visualization/__init__.py",
       "lang": "py",
       "category": "other",
       "keywords": [
@@ -25408,7 +25408,7 @@
       "symbols": []
     },
     {
-      "path": "tensornet/visualization/benchmark_render_gpu.py",
+      "path": "ontic/visualization/benchmark_render_gpu.py",
       "lang": "py",
       "category": "other",
       "keywords": [
@@ -25436,7 +25436,7 @@
       ]
     },
     {
-      "path": "tensornet/visualization/tensor_slicer.py",
+      "path": "ontic/visualization/tensor_slicer.py",
       "lang": "py",
       "category": "other",
       "keywords": [
@@ -25563,7 +25563,7 @@
       ]
     },
     {
-      "path": "tensornet/zk/fezk_elite.py",
+      "path": "ontic/zk/fezk_elite.py",
       "lang": "py",
       "category": "other",
       "keywords": [
@@ -25676,7 +25676,7 @@
       ]
     },
     {
-      "path": "tensornet/zk/fluidelite_circuit_analyzer.py",
+      "path": "ontic/zk/fluidelite_circuit_analyzer.py",
       "lang": "py",
       "category": "other",
       "keywords": [
@@ -25783,7 +25783,7 @@
       ]
     },
     {
-      "path": "tensornet/zk/halo2_constraint_extractor.py",
+      "path": "ontic/zk/halo2_constraint_extractor.py",
       "lang": "py",
       "category": "other",
       "keywords": [
@@ -25823,7 +25823,7 @@
       ]
     },
     {
-      "path": "tensornet/zk/polygon_security_report.py",
+      "path": "ontic/zk/polygon_security_report.py",
       "lang": "py",
       "category": "other",
       "keywords": [
@@ -28595,7 +28595,7 @@
       "symbols": [
         {
           "kind": "class",
-          "name": "TestTensorNetworkBasics",
+          "name": "TestOntic EngineworkBasics",
           "lineno": 39,
           "doc1": "Test basic tensor network infrastructure."
         },
@@ -30510,7 +30510,7 @@
       ]
     },
     {
-      "path": "tensornet/exploit/compound_v3_qtt_hunt.py",
+      "path": "ontic/exploit/compound_v3_qtt_hunt.py",
       "lang": "py",
       "category": "qtt-misc",
       "keywords": [
@@ -30569,7 +30569,7 @@
       ]
     },
     {
-      "path": "tensornet/fusion/qtt_screening.py",
+      "path": "ontic/fusion/qtt_screening.py",
       "lang": "py",
       "category": "qtt-misc",
       "keywords": [
@@ -30634,7 +30634,7 @@
       ]
     },
     {
-      "path": "tensornet/fusion/qtt_superionic.py",
+      "path": "ontic/fusion/qtt_superionic.py",
       "lang": "py",
       "category": "qtt-misc",
       "keywords": [
@@ -30663,7 +30663,7 @@
       ]
     },
     {
-      "path": "tensornet/neural/differentiable_qtt.py",
+      "path": "ontic/neural/differentiable_qtt.py",
       "lang": "py",
       "category": "qtt-misc",
       "keywords": [
@@ -30724,7 +30724,7 @@
       ]
     },
     {
-      "path": "tensornet/quantum/cpu_qtt_evaluator.py",
+      "path": "ontic/quantum/cpu_qtt_evaluator.py",
       "lang": "py",
       "category": "qtt-misc",
       "keywords": [
@@ -30777,7 +30777,7 @@
       ]
     },
     {
-      "path": "tensornet/quantum/hybrid_qtt_renderer.py",
+      "path": "ontic/quantum/hybrid_qtt_renderer.py",
       "lang": "py",
       "category": "qtt-misc",
       "keywords": [
@@ -30806,7 +30806,7 @@
       ]
     },
     {
-      "path": "tensornet/quantum/qtt_glsl_bridge.py",
+      "path": "ontic/quantum/qtt_glsl_bridge.py",
       "lang": "py",
       "category": "qtt-misc",
       "keywords": [
@@ -30853,7 +30853,7 @@
       ]
     },
     {
-      "path": "tensornet/quantum/qtt_torch_renderer.py",
+      "path": "ontic/quantum/qtt_torch_renderer.py",
       "lang": "py",
       "category": "qtt-misc",
       "keywords": [
@@ -30882,7 +30882,7 @@
       ]
     },
     {
-      "path": "tensornet/sovereign/implicit_qtt_renderer.py",
+      "path": "ontic/sovereign/implicit_qtt_renderer.py",
       "lang": "py",
       "category": "qtt-misc",
       "keywords": [
@@ -30917,7 +30917,7 @@
       ]
     },
     {
-      "path": "tensornet/sovereign/qtt_bridge_streamer.py",
+      "path": "ontic/sovereign/qtt_bridge_streamer.py",
       "lang": "py",
       "category": "qtt-misc",
       "keywords": [
@@ -30939,7 +30939,7 @@
       ]
     },
     {
-      "path": "tensornet/sovereign/qtt_slice_extractor.py",
+      "path": "ontic/sovereign/qtt_slice_extractor.py",
       "lang": "py",
       "category": "qtt-misc",
       "keywords": [
@@ -30968,7 +30968,7 @@
       ]
     },
     {
-      "path": "tensornet_qtt_ntt.py",
+      "path": "ontic_qtt_ntt.py",
       "lang": "py",
       "category": "qtt-misc",
       "keywords": [

@@ -3,7 +3,7 @@
 Tier 1 Nielsen Benchmark — Validation Run
 ==========================================
 
-Uses the existing tensornet.hvac.nielsen module to run the benchmark
+Uses the existing ontic.hvac.nielsen module to run the benchmark
 against Aalborg experimental data.
 
 Target: <10% normalized RMS error

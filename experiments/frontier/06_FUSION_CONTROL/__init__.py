@@ -8,7 +8,7 @@ from .disruption_predictor import (
     DisruptionType,
     PlasmaState,
     PredictorConfig,
-    TensorNetworkStateEstimator,
+    Ontic EngineworkStateEstimator,
     create_stable_plasma,
     create_density_limit_scenario,
     create_locked_mode_scenario,
@@ -36,7 +36,7 @@ __all__ = [
     'DisruptionType',
     'PlasmaState',
     'PredictorConfig',
-    'TensorNetworkStateEstimator',
+    'Ontic EngineworkStateEstimator',
     # Scenarios
     'create_stable_plasma',
     'create_density_limit_scenario',

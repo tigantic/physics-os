@@ -42,7 +42,7 @@ import torch
 from torch import Tensor
 
 # Import from existing ontic infrastructure
-sys.path.insert(0, '/home/brad/TiganticLabz/Main_Projects/HyperTensor-VM-main')
+sys.path.insert(0, '/home/brad/TiganticLabz/Main_Projects/physics-os')
 
 try:
     from ontic.core.gpu import get_device, GPUConfig, DeviceType, to_device
@@ -51,9 +51,9 @@ try:
     from ontic.algorithms.lanczos import lanczos_ground_state, LanczosResult
     from ontic.algorithms.dmrg import dmrg_ground_state, DMRGResult
     from ontic.genesis.core.triton_ops import rsvd_native
-    HAS_TENSORNET = True
+    HAS_ONTIC = True
 except ImportError:
-    HAS_TENSORNET = False
+    HAS_ONTIC = False
     rsvd_native = None
     print("Warning: ontic not available, using standalone CUDA implementation")
 
@@ -573,7 +573,7 @@ def lanczos_ground_state_cuda(
         v0_dense = v0.to_dense().to(device)
     
     # Run Lanczos on GPU
-    if HAS_TENSORNET:
+    if HAS_ONTIC:
         result = lanczos_ground_state(
             matvec, v0_dense, num_iter=num_iter, tol=tol
         )

@@ -88,13 +88,13 @@
   
   "verification_artifacts": {
     "files": [
-      "tensornet/cfd/ns3d_native.py",
-      "tensornet/cfd/qtt_native_ops.py",
-      "tensornet/cfd/analytical_qtt.py"
+      "ontic/cfd/ns3d_native.py",
+      "ontic/cfd/qtt_native_ops.py",
+      "ontic/cfd/analytical_qtt.py"
     ],
     "test_commands": [
       "python3 -c 'from ontic.cfd.ns3d_native import taylor_green_analytical; u, o = taylor_green_analytical(10)'",
-      "python3 tensornet/cfd/analytical_qtt.py"
+      "python3 ontic/cfd/analytical_qtt.py"
     ]
   },
   

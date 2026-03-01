@@ -29,7 +29,7 @@ __version__ = "3.0.0"
 
 # Re-export the canonical implementation from experiments/pwa_engine/core.py.
 # When installed standalone (pip install -e pwa_engine/), the parent repo
-# must be on PYTHONPATH or the package must be installed alongside tensornet.
+# must be on PYTHONPATH or the package must be installed alongside ontic.
 # For standalone distribution, copy core.py into this package.
 import importlib
 import sys

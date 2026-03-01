@@ -19,10 +19,10 @@ Also tests with:
 - Lossy PML-like medium (complex ε): absorbing BC
 
 Uses existing infrastructure:
-- tensornet.vm.operators.laplacian_mpo_1d   — Laplacian MPO
-- tensornet.vm.operators.identity_mpo       — Identity MPO
-- tensornet.vm.operators.mpo_add/mpo_scale  — MPO algebra
-- tensornet.vm.gpu_tensor._tt_svd_1d        — QTT compression
+- ontic.vm.operators.laplacian_mpo_1d   — Laplacian MPO
+- ontic.vm.operators.identity_mpo       — Identity MPO
+- ontic.vm.operators.mpo_add/mpo_scale  — MPO algebra
+- ontic.vm.gpu_tensor._tt_svd_1d        — QTT compression
 
 Copyright (c) 2026 Tigantic Holdings LLC. All Rights Reserved.
 """

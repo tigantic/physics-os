@@ -19,8 +19,8 @@ import sys
 import os
 import time
 
-sys.path.insert(0, '/home/brad/TiganticLabz/Main_Projects/HyperTensor-VM-main')
-os.makedirs('/home/brad/TiganticLabz/Main_Projects/HyperTensor-VM-main/results', exist_ok=True)
+sys.path.insert(0, '/home/brad/TiganticLabz/Main_Projects/physics-os')
+os.makedirs('/home/brad/TiganticLabz/Main_Projects/physics-os/results', exist_ok=True)
 
 from ontic.cfd.euler2d_native import (
     Euler2D_Native, 
@@ -296,7 +296,7 @@ def run_conference_room_qtt():
     plt.suptitle('Conference Room B - QTT-Accelerated Ventilation CFD\nClient: James Chen', fontweight='bold')
     plt.tight_layout()
     
-    output_path = '/home/brad/TiganticLabz/Main_Projects/HyperTensor-VM-main/results/conference_room_b_qtt.png'
+    output_path = '/home/brad/TiganticLabz/Main_Projects/physics-os/results/conference_room_b_qtt.png'
     plt.savefig(output_path, dpi=150, bbox_inches='tight')
     print(f"  Saved: {output_path}")
     
@@ -321,7 +321,7 @@ def run_conference_room_qtt():
         }
     }
     
-    report_path = '/home/brad/TiganticLabz/Main_Projects/HyperTensor-VM-main/results/conference_room_b_qtt.json'
+    report_path = '/home/brad/TiganticLabz/Main_Projects/physics-os/results/conference_room_b_qtt.json'
     with open(report_path, 'w') as f:
         json.dump(report, f, indent=2)
     print(f"  Saved: {report_path}")

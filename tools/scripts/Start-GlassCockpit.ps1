@@ -26,7 +26,7 @@ if (-not (Test-Path $glassCockpitPath)) {
 Set-Location $glassCockpitPath
 
 Write-Host "═══════════════════════════════════════════════" -ForegroundColor Cyan
-Write-Host " HyperTensor Glass Cockpit - Phase 0 Launcher" -ForegroundColor White
+Write-Host " The Physics OS Glass Cockpit - Phase 0 Launcher" -ForegroundColor White
 Write-Host "═══════════════════════════════════════════════" -ForegroundColor Cyan
 Write-Host ""
 

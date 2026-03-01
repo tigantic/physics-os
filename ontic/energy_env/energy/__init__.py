@@ -1,5 +1,5 @@
 """
-TensorNet Energy Module - Wind Farm Physics & Optimization
+Ontic Engine Energy Module - Wind Farm Physics & Optimization
 
 Phase 5: Commercial Energy Simulation
 Target Market: Offshore Wind Developers (Orsted, Shell Energy)

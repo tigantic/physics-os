@@ -19,7 +19,7 @@ import torch
 sys.path.insert(
     0, "/home/brad/TiganticLabz/Main_Projects/Project The Ontic Engine/ontic/cuda"
 )
-import tensornet_cuda
+import ontic_cuda
 
 
 def python_advect_2d(
@@ -100,7 +100,7 @@ def test_correctness_2d(tolerance: float = 1e-5) -> bool:
 
         # Run both implementations
         result_python = python_advect_2d(density, velocity, dt)
-        result_cuda = tensornet_cuda.advect_2d(density, velocity, dt)
+        result_cuda = ontic_cuda.advect_2d(density, velocity, dt)
 
         # Compare
         diff = torch.abs(result_python - result_cuda)
@@ -150,7 +150,7 @@ def test_correctness_velocity_2d(tolerance: float = 1e-5) -> bool:
     result_python[1] = python_advect_2d(velocity[1], velocity, dt)
 
     # CUDA kernel
-    result_cuda = tensornet_cuda.advect_velocity_2d(velocity, dt)
+    result_cuda = ontic_cuda.advect_velocity_2d(velocity, dt)
 
     # Compare
     diff = torch.abs(result_python - result_cuda)
@@ -187,7 +187,7 @@ def test_performance():
 
         # Warmup
         for _ in range(10):
-            _ = tensornet_cuda.advect_2d(density, velocity, dt)
+            _ = ontic_cuda.advect_2d(density, velocity, dt)
             _ = python_advect_2d(density, velocity, dt)
         torch.cuda.synchronize()
 
@@ -196,7 +196,7 @@ def test_performance():
         torch.cuda.synchronize()
         start = time.perf_counter()
         for _ in range(iterations):
-            _ = tensornet_cuda.advect_2d(density, velocity, dt)
+            _ = ontic_cuda.advect_2d(density, velocity, dt)
         torch.cuda.synchronize()
         cuda_time = (time.perf_counter() - start) / iterations * 1000
 
@@ -231,7 +231,7 @@ def test_edge_cases():
     # at boundaries, we may get small differences (interpolation with 0.0 + 0.0*x)
     density = torch.rand((size, size), dtype=torch.float32, device=device)
     velocity = torch.zeros((2, size, size), dtype=torch.float32, device=device)
-    result = tensornet_cuda.advect_2d(density, velocity, 0.1)
+    result = ontic_cuda.advect_2d(density, velocity, 0.1)
 
     diff = torch.abs(density - result).max().item()
     # Allow small numerical tolerance for float32
@@ -243,7 +243,7 @@ def test_edge_cases():
     velocity_large = (
         torch.ones((2, size, size), dtype=torch.float32, device=device) * 1000.0
     )
-    result_large = tensornet_cuda.advect_2d(density, velocity_large, 1.0)
+    result_large = ontic_cuda.advect_2d(density, velocity_large, 1.0)
 
     # Should not crash, values should be within input range
     valid = result_large.min() >= 0 and result_large.max() <= 1
@@ -253,7 +253,7 @@ def test_edge_cases():
     velocity_neg = (
         torch.ones((2, size, size), dtype=torch.float32, device=device) * -1000.0
     )
-    result_neg = tensornet_cuda.advect_2d(density, velocity_neg, 1.0)
+    result_neg = ontic_cuda.advect_2d(density, velocity_neg, 1.0)
     valid_neg = result_neg.min() >= 0 and result_neg.max() <= 1
     print(f"  Negative velocity clamping: {'[PASS]' if valid_neg else '[FAIL]'}")
 

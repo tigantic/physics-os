@@ -62,7 +62,7 @@ The Physics OS/
 ## 💻 Technology Stack
 
 ### Core Languages
-- **Python 3.11+**: Primary implementation (tensornet library)
+- **Python 3.11+**: Primary implementation (ontic library)
 - **Rust 1.70+**: Glass Cockpit visualizer, performance-critical paths
 - **CUDA**: GPU kernels for tensor operations
 
@@ -199,7 +199,7 @@ All physics code MUST have:
 ### Naming Conventions
 ```python
 # Classes: PascalCase
-class TensorNetwork:
+class Ontic Enginework:
 
 # Functions/methods: snake_case  
 def compute_ground_state():
@@ -280,7 +280,7 @@ dtype=torch.float64
 
 ### 4. Import Cycles
 - Run `python tools/scripts/check_import_cycles.py` before committing
-- Avoid circular imports between tensornet submodules
+- Avoid circular imports between ontic submodules
 
 ### 5. File Naming
 - When saving files, avoid double extensions (`.png.png`)
@@ -363,7 +363,7 @@ find . -name "*:Zone.Identifier" -delete
 
 ### Architecture
 ```
-Python (tensornet)          Rust (glass-cockpit)
+Python (ontic)          Rust (glass-cockpit)
       │                            │
       │  Shared Memory (12MB)      │
       └──────────────────────────►│
@@ -426,7 +426,7 @@ cd glass-cockpit && cargo run --release --bin phase3
 1. ☐ Read this document completely
 2. ☐ Skim [CONSTITUTION.md](../governance/CONSTITUTION.md) for code standards
 3. ☐ Review [ONTIC_VV_FRAMEWORK.md](ONTIC_VV_FRAMEWORK.md) for V&V requirements
-4. ☐ Understand the tensornet module structure (`ls ontic/`)
+4. ☐ Understand the ontic module structure (`ls ontic/`)
 5. ☐ Run tests to verify environment: `pytest tests/ -x -v --tb=short`
 6. ☐ Check current git status: `git log --oneline -10`
 7. ☐ Review recent changes: `git diff HEAD~5 --stat`

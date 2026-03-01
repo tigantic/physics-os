@@ -9,7 +9,7 @@ def context_hash(context: bytes) -> int:
     return int(hashlib.sha256(context).hexdigest()[:16], 16)
 
 # Load model to get lookup table
-model_path = Path("/home/brad/TiganticLabz/Main_Projects/HyperTensor-VM-main/fluidelite/data/fluidelite_hybrid.bin")
+model_path = Path("/home/brad/TiganticLabz/Main_Projects/physics-os/fluidelite/data/fluidelite_hybrid.bin")
 
 with open(model_path, 'rb') as f:
     magic = f.read(4)
@@ -33,7 +33,7 @@ with open(model_path, 'rb') as f:
         lookup[h] = v
 
 # Load training data and check some contexts
-train_path = Path("/home/brad/TiganticLabz/Main_Projects/HyperTensor-VM-main/fluidelite/data/wikitext2_train.txt")
+train_path = Path("/home/brad/TiganticLabz/Main_Projects/physics-os/fluidelite/data/wikitext2_train.txt")
 data = train_path.read_bytes()
 
 print(f"\nTraining data: {len(data):,} bytes")

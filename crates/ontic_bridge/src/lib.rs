@@ -1,7 +1,7 @@
 //! HyperBridge: RAM Bridge IPC Protocol for Python ↔ Rust Tensor Streaming
 //!
 //! This crate provides zero-copy shared memory communication between:
-//! - **Python (TensorNet)**: Physics simulation, QTT compression, heatmap generation
+//! - **Python (Ontic Engine)**: Physics simulation, QTT compression, heatmap generation
 //! - **Rust (Glass Cockpit/Global Eye)**: Real-time visualization at 60+ FPS
 //!
 //! # Protocol Overview

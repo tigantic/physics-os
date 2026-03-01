@@ -228,7 +228,7 @@ fn shift_mpo_impl(num_sites: usize, dir: ShiftDirection) -> MPO {
 /// (S⁺, S⁻, I) is individually verified against dense matrices.
 ///
 /// # Reference
-/// Port of `tensornet/cfd/pure_qtt_ops.py:laplacian_mpo()`
+/// Port of `ontic/cfd/pure_qtt_ops.py:laplacian_mpo()`
 ///
 /// # Panics
 /// Panics if `num_sites < 2` or `dx` is zero.

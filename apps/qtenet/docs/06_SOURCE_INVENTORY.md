@@ -840,7 +840,7 @@ Generated from: `qtt_repo_index.json`
 - `py` ontic/sovereign/implicit_qtt_renderer.py
 - `py` ontic/sovereign/qtt_bridge_streamer.py
 - `py` ontic/sovereign/qtt_slice_extractor.py
-- `py` tensornet_qtt_ntt.py
+- `py` ontic_qtt_ntt.py
 - `py` tests/experiments/benchmarks/benchmarks/qtt_comprehensive_benchmark.py
 - `py` tests/experiments/benchmarks/benchmarks/qtt_full_pipeline_benchmark.py
 - `py` tests/experiments/benchmarks/benchmarks/qtt_native_benchmark.py

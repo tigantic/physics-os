@@ -545,7 +545,7 @@ class DNATensorTrain:
 
 
 @dataclass
-class GenomeTensorNetwork:
+class GenomeOntic Enginework:
     """
     Full genome representation using hierarchical tensor network.
     
@@ -569,7 +569,7 @@ class GenomeTensorNetwork:
         fasta_path: str,
         max_rank: int = 16,
         max_length: Optional[int] = None,
-    ) -> 'GenomeTensorNetwork':
+    ) -> 'GenomeOntic Enginework':
         """
         Load genome from FASTA file.
         
@@ -579,7 +579,7 @@ class GenomeTensorNetwork:
             max_length: Maximum sequence length per chromosome (for testing).
             
         Returns:
-            GenomeTensorNetwork.
+            GenomeOntic Enginework.
         """
         chromosomes = {}
         current_chrom = None

@@ -135,12 +135,12 @@ def generate_cyclonedx_sbom(
 
 def generate_cbom(project_root: Path) -> Dict[str, Any]:
     """Generate Code Bill of Materials."""
-    tensornet_dir = project_root / "ontic"
+    ontic_dir = project_root / "ontic"
 
     modules = []
     total_lines = 0
 
-    for py_file in tensornet_dir.rglob("*.py"):
+    for py_file in ontic_dir.rglob("*.py"):
         if "__pycache__" in str(py_file):
             continue
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """
-Compare tensornet DMRG against TeNPy.
+Compare ontic DMRG against TeNPy.
 
 Usage:
     python3 experiments/benchmarks/benchmarks/compare_tenpy.py [--save]
@@ -18,7 +18,7 @@ import torch
 try:
     from ontic import MPS, dmrg, heisenberg_mpo
 except ImportError:
-    print("tensornet not installed")
+    print("ontic not installed")
     sys.exit(1)
 
 try:
@@ -33,8 +33,8 @@ except ImportError:
     print("TeNPy not installed, skipping comparison")
 
 
-def run_tensornet(L: int, chi: int) -> tuple[float, float]:
-    """Run tensornet DMRG, return (energy, time)."""
+def run_ontic(L: int, chi: int) -> tuple[float, float]:
+    """Run ontic DMRG, return (energy, time)."""
     torch.manual_seed(42)
     H = heisenberg_mpo(L=L, J=1.0, h=0.0)
     psi = MPS.random(L=L, d=2, chi=chi)
@@ -90,15 +90,15 @@ def main():
     results = []
 
     print("=" * 70)
-    print("TENSORNET vs TENPY COMPARISON")
+    print("ONTIC vs TENPY COMPARISON")
     print("=" * 70)
     print(
-        f"{'L':>4} {'χ':>4} {'TensorNet E':>14} {'TeNPy E':>14} {'Diff':>12} {'TN time':>8} {'TP time':>8}"
+        f"{'L':>4} {'χ':>4} {'Ontic Engine E':>14} {'TeNPy E':>14} {'Diff':>12} {'TN time':>8} {'TP time':>8}"
     )
     print("-" * 70)
 
     for L, chi in systems:
-        tn_E, tn_time = run_tensornet(L, chi)
+        tn_E, tn_time = run_ontic(L, chi)
         tp_E, tp_time = run_tenpy(L, chi) if HAS_TENPY else (None, None)
 
         if tp_E is not None:
@@ -115,10 +115,10 @@ def main():
             {
                 "L": L,
                 "chi": chi,
-                "tensornet_E": tn_E,
+                "ontic_E": tn_E,
                 "tenpy_E": tp_E,
                 "diff": abs(tn_E - tp_E) if tp_E else None,
-                "tensornet_time": tn_time,
+                "ontic_time": tn_time,
                 "tenpy_time": tp_time,
             }
         )
@@ -129,7 +129,7 @@ def main():
         Path("results").mkdir(exist_ok=True)
         output = {
             "timestamp": datetime.now().isoformat(),
-            "tensornet_version": "0.1.0",
+            "ontic_version": "0.1.0",
             "tenpy_version": tenpy.__version__ if HAS_TENPY else None,
             "results": results,
         }

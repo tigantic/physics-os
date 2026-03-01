@@ -37,7 +37,7 @@ Raw line count (includes blanks/comments — true SLOC requires `cloc`/`tokei`).
 
 | Language | Files | Lines (Raw) | Purpose |
 |----------|-------|-------------|---------|
-| **Python (Production)** | 304 | **145,278** | TensorNet physics engine |
+| **Python (Production)** | 304 | **145,278** | Ontic Engine physics engine |
 | **Python (Tests)** | 54 | **28,782** | Test suite |
 | **Rust** | 100 | **118,657** | Glass Cockpit frontend |
 | **Rust (Tests)** | — | **82,248** | Rust test modules |
@@ -229,7 +229,7 @@ Full:   111,030 / (269,610 + 111,030) × 100 = 29.2%
 #### E2E/System Tests (0 tests — 0%)
 
 - ❌ Full stack user flow simulation
-- ❌ Glass Cockpit → TensorNet → GPU pipeline
+- ❌ Glass Cockpit → Ontic Engine → GPU pipeline
 - ❌ Deployment/configuration validation
 - 🎯 **Gap to address in future sprints**
 
@@ -409,7 +409,7 @@ Pass Rate: 100% of executed tests
 | Action | Priority | Impact |
 |--------|----------|--------|
 | Run `pytest-cov` for actual coverage numbers | P0 | Baseline |
-| Add E2E smoke test (Cockpit→TensorNet→GPU) | P1 | High |
+| Add E2E smoke test (Cockpit→Ontic Engine→GPU) | P1 | High |
 | Refactor 10 highest-CC functions | P2 | Medium |
 
 ### Short-Term (Q1 2026)

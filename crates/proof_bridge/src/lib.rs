@@ -1,6 +1,6 @@
 //! Proof Bridge — Python Trace → ZK Proof Pipeline
 //!
-//! Reads computation traces from the Python `tensornet.core.trace` module
+//! Reads computation traces from the Python `ontic.core.trace` module
 //! and generates inputs suitable for the `fluidelite-zk` proof system.
 //!
 //! # Architecture

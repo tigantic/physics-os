@@ -1,4 +1,4 @@
-# TensorNet Discovery Engine - Docker Compose
+# Ontic Engine Discovery Engine - Docker Compose
 # Production deployment configuration
 
 version: "3.9"
@@ -11,16 +11,16 @@ services:
       dockerfile: ontic/discovery/Dockerfile
       target: production
     image: ontic/discovery:1.8.0
-    container_name: tensornet-discovery-api
+    container_name: ontic-discovery-api
     restart: unless-stopped
     ports:
       - "8000:8000"
     environment:
-      - TENSORNET_ENV=production
-      - TENSORNET_LOG_LEVEL=INFO
-      - TENSORNET_METRICS_ENABLED=true
-      - TENSORNET_MAX_WORKERS=4
-      - TENSORNET_RATE_LIMIT=100
+      - ONTIC_ENV=production
+      - ONTIC_LOG_LEVEL=INFO
+      - ONTIC_METRICS_ENABLED=true
+      - ONTIC_MAX_WORKERS=4
+      - ONTIC_RATE_LIMIT=100
     volumes:
       - discovery-data:/app/data
       - discovery-cache:/app/cache
@@ -39,7 +39,7 @@ services:
           cpus: "0.5"
           memory: 512M
     networks:
-      - tensornet
+      - ontic
 
   # Worker nodes for distributed computation
   discovery-worker:
@@ -49,11 +49,11 @@ services:
       target: production
     image: ontic/discovery:1.8.0
     restart: unless-stopped
-    command: ["python", "-m", "tensornet.discovery", "worker", "--coordinator", "discovery-api:8000"]
+    command: ["python", "-m", "ontic.discovery", "worker", "--coordinator", "discovery-api:8000"]
     environment:
-      - TENSORNET_ENV=production
-      - TENSORNET_WORKER_ID=${HOSTNAME:-worker}
-      - TENSORNET_COORDINATOR_URL=http://discovery-api:8000
+      - ONTIC_ENV=production
+      - ONTIC_WORKER_ID=${HOSTNAME:-worker}
+      - ONTIC_COORDINATOR_URL=http://discovery-api:8000
     deploy:
       mode: replicated
       replicas: 2
@@ -65,12 +65,12 @@ services:
       discovery-api:
         condition: service_healthy
     networks:
-      - tensornet
+      - ontic
 
   # Redis for caching and pub/sub
   redis:
     image: redis:7-alpine
-    container_name: tensornet-redis
+    container_name: ontic-redis
     restart: unless-stopped
     command: redis-server --appendonly yes --maxmemory 256mb --maxmemory-policy allkeys-lru
     volumes:
@@ -86,12 +86,12 @@ services:
           cpus: "0.5"
           memory: 512M
     networks:
-      - tensornet
+      - ontic
 
   # Prometheus for metrics
   prometheus:
     image: prom/prometheus:v2.47.0
-    container_name: tensornet-prometheus
+    container_name: ontic-prometheus
     restart: unless-stopped
     ports:
       - "9090:9090"
@@ -114,18 +114,18 @@ services:
           cpus: "0.5"
           memory: 512M
     networks:
-      - tensornet
+      - ontic
 
   # Grafana for dashboards
   grafana:
     image: grafana/grafana:10.1.0
-    container_name: tensornet-grafana
+    container_name: ontic-grafana
     restart: unless-stopped
     ports:
       - "3000:3000"
     environment:
       - GF_SECURITY_ADMIN_USER=admin
-      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD:-tensornet}
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD:-ontic}
       - GF_USERS_ALLOW_SIGN_UP=false
     volumes:
       - grafana-data:/var/lib/grafana
@@ -138,12 +138,12 @@ services:
           cpus: "0.5"
           memory: 256M
     networks:
-      - tensornet
+      - ontic
 
   # Nginx reverse proxy
   nginx:
     image: nginx:alpine
-    container_name: tensornet-nginx
+    container_name: ontic-nginx
     restart: unless-stopped
     ports:
       - "80:80"
@@ -160,7 +160,7 @@ services:
           cpus: "0.25"
           memory: 128M
     networks:
-      - tensornet
+      - ontic
 
 volumes:
   discovery-data:
@@ -175,7 +175,7 @@ volumes:
     driver: local
 
 networks:
-  tensornet:
+  ontic:
     driver: bridge
     ipam:
       config:

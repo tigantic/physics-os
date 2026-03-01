@@ -1,5 +1,5 @@
 /**
- * HyperTensor Facial Plastics — Status Bar
+ * Ontic Facial Plastics — Status Bar
  *
  * Polls /health every 30s, /metrics every 60s.
  * Shows version, request/error counters, auth status.
@@ -68,7 +68,7 @@ const StatusBar = (() => {
 
     _el.innerHTML = `
       <div class="status-group">
-        <span class="status-item">HyperTensor FP v${_esc(version)}</span>
+        <span class="status-item">The Physics OS FP v${_esc(version)}</span>
         <span class="status-item"><span class="status-dot ${connected ? "ok" : "err"}"></span> ${connected ? "Connected" : "Disconnected"}</span>
       </div>
       <div class="status-group">

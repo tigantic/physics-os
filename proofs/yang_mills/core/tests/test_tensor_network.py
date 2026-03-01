@@ -36,7 +36,7 @@ from yangmills.tensor_network import (
 )
 
 
-class TestTensorNetworkBasics:
+class TestOntic EngineworkBasics:
     """Test basic tensor network infrastructure."""
     
     def test_mps_creation(self):
@@ -292,7 +292,7 @@ def run_all_tests():
     
     # Basic tests
     print("\n[1/5] Testing MPS/MPO basics...")
-    test = TestTensorNetworkBasics()
+    test = TestOntic EngineworkBasics()
     test.test_mps_creation()
     test.test_mps_canonicalization()
     test.test_mps_entanglement_entropy()

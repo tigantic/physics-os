@@ -69,7 +69,7 @@ Compute LES grid/filter scale from mesh spacing.
 
 **Returns**: `<class 'torch.Tensor'>` - Grid scale Δ
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\hybrid_les.py:78](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\hybrid_les.py#L78)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\cfd\hybrid_les.py:78](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\cfd\hybrid_les.py#L78)*
 
 ### `compute_hybrid_viscosity`
 
@@ -92,7 +92,7 @@ In LES regions: use Smagorinsky-like model
 
 **Returns**: `<class 'torch.Tensor'>` - Turbulent/SGS viscosity
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\hybrid_les.py:344](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\hybrid_les.py#L344)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\cfd\hybrid_les.py:344](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\cfd\hybrid_les.py#L344)*
 
 ### `compute_r_d`
 
@@ -117,7 +117,7 @@ resolved turbulence (r_d << 1).
 
 **Returns**: `<class 'torch.Tensor'>` - r_d parameter field
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\hybrid_les.py:155](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\hybrid_les.py#L155)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\cfd\hybrid_les.py:155](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\cfd\hybrid_les.py#L155)*
 
 ### `compute_wall_distance_scale`
 
@@ -136,7 +136,7 @@ l_RANS = κ * d_wall (for SA-type models)
 
 **Returns**: `<class 'torch.Tensor'>` - RANS length scale
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\hybrid_les.py:112](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\hybrid_les.py#L112)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\cfd\hybrid_les.py:112](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\cfd\hybrid_les.py#L112)*
 
 ### `ddes_delay_function`
 
@@ -157,7 +157,7 @@ When f_d ≈ 1 (r_d small), LES mode can activate.
 
 **Returns**: `<class 'torch.Tensor'>` - Delay function f_d
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\hybrid_les.py:186](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\hybrid_les.py#L186)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\cfd\hybrid_les.py:186](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\cfd\hybrid_les.py#L186)*
 
 ### `ddes_length_scale`
 
@@ -178,7 +178,7 @@ l_DDES = l_RANS - f_d * max(0, l_RANS - C_DES * Δ)
 
 **Returns**: `<class 'torch.Tensor'>` - DDES hybrid length scale
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\hybrid_les.py:209](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\hybrid_les.py#L209)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\cfd\hybrid_les.py:209](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\cfd\hybrid_les.py#L209)*
 
 ### `des_length_scale`
 
@@ -200,7 +200,7 @@ When Δ is smaller (in separated regions), LES mode activates.
 
 **Returns**: `<class 'torch.Tensor'>` - Hybrid length scale
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\hybrid_les.py:131](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\hybrid_les.py#L131)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\cfd\hybrid_les.py:131](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\cfd\hybrid_les.py#L131)*
 
 ### `estimate_rans_les_ratio`
 
@@ -216,7 +216,7 @@ Compute statistics on RANS vs LES content.
 
 **Returns**: `typing.Dict[str, float]` - Dict with RANS/LES percentages
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\hybrid_les.py:460](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\hybrid_les.py#L460)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\cfd\hybrid_les.py:460](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\cfd\hybrid_les.py#L460)*
 
 ### `iddes_blending_function`
 
@@ -234,7 +234,7 @@ IDDES blending functions for RANS-LES interface.
 
 **Returns**: `typing.Tuple[torch.Tensor, torch.Tensor, torch.Tensor]` - (f_e, f_b, alpha) - Elevation, blending, and alpha functions
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\hybrid_les.py:233](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\hybrid_les.py#L233)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\cfd\hybrid_les.py:233](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\cfd\hybrid_les.py#L233)*
 
 ### `iddes_length_scale`
 
@@ -259,7 +259,7 @@ l_IDDES = (1 - alpha) * l_RANS + alpha * C_DES * Δ
 
 **Returns**: `<class 'torch.Tensor'>` - IDDES hybrid length scale
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\hybrid_les.py:270](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\hybrid_les.py#L270)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\cfd\hybrid_les.py:270](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\cfd\hybrid_les.py#L270)*
 
 ### `run_hybrid_les`
 
@@ -281,7 +281,7 @@ Main driver for hybrid RANS-LES computation.
 
 **Returns**: `<class 'hybrid_les.HybridLESState'>` - HybridLESState with computed quantities
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\hybrid_les.py:374](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\hybrid_les.py#L374)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\cfd\hybrid_les.py:374](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\cfd\hybrid_les.py#L374)*
 
 ### `sas_length_scale`
 
@@ -306,7 +306,7 @@ L_t = √k / (c_μ^0.25 ω)  (turbulent length scale)
 
 **Returns**: `<class 'torch.Tensor'>` - SAS length scale
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\hybrid_les.py:307](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\hybrid_les.py#L307)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\cfd\hybrid_les.py:307](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\cfd\hybrid_les.py#L307)*
 
 ### `validate_hybrid_les`
 
@@ -316,4 +316,4 @@ def validate_hybrid_les()
 
 Run validation tests for hybrid RANS-LES models.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\hybrid_les.py:481](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\hybrid_les.py#L481)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\cfd\hybrid_les.py:481](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\cfd\hybrid_les.py#L481)*

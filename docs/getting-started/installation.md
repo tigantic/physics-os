@@ -4,12 +4,12 @@
 
 ```bash
 # Core engine only
-pip install tensornet
+pip install ontic-engine
 
 # With domain packs
-pip install tensornet[cfd]
-pip install tensornet[quantum]
-pip install tensornet[all]
+pip install ontic-engine[cfd]
+pip install ontic-engine[quantum]
+pip install ontic-engine[all]
 ```
 
 ## Development Setup
@@ -42,5 +42,5 @@ cargo clippy --workspace
 
 ```python
 import ontic
-print(tensornet.__version__)
+print(ontic.__version__)
 ```

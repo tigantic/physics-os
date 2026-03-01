@@ -165,7 +165,7 @@ assurance.
 
 To implement a future enhancement:
 
-1. Check the relevant tensornet module for existing infrastructure
+1. Check the relevant ontic module for existing infrastructure
 2. Create feature branch: `feature/fluidelite-<enhancement>`
 3. Implement with tests in `tests/zk/`
 4. Update this document and FLUIDELITE_SESSION_REPORT.md

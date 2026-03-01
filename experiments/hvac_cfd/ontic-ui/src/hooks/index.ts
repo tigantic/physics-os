@@ -1,5 +1,5 @@
 /**
- * HyperTensor Hooks - Central Export
+ * The Physics OS Hooks - Central Export
  * 
  * Custom React hooks for UI logic, data fetching, and state management.
  */

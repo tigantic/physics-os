@@ -4,7 +4,7 @@
 
 **Codename:** Hummingbird  
 **Date:** 2026-01-05  
-**Framework:** Physics OS TensorNet  
+**Framework:** Physics OS Ontic Engine  
 
 ---
 

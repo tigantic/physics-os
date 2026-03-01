@@ -4,7 +4,7 @@
 ╠══════════════════════════════════════════════════════════════════════════════╣
 ║                                                                              ║
 ║  Generated: 2026-01-16T02:31:21.953634
-║  Method: tensornet DMRG with MPO Hamiltonian                                 ║
+║  Method: ontic DMRG with MPO Hamiltonian                                 ║
 ║  Bound type: Arb interval arithmetic (256-bit)
 ║                                                                              ║
 ║  THE AXIOMS BELOW ARE JUSTIFIED BY:                                          ║

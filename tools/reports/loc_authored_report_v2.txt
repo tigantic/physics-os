@@ -1,6 +1,6 @@
 ==============================================================================================================
 PHYSICS-OS FORENSIC LOC SWEEP v2 — AUTHORED CODE ONLY
-Root: /home/brad/TiganticLabz/FRONT_VAULT/03_SOURCE/Main_Projects/HyperTensor-VM-main
+Root: /home/brad/TiganticLabz/FRONT_VAULT/03_SOURCE/Main_Projects/physics-os
 ==============================================================================================================
 
 Excluded vendored dirs: clawdbot-main, forge-std, openzeppelin-contracts, packages, vendor, worldcoin-id, zk_targets
@@ -38,7 +38,7 @@ SECTION 2: AUTHORED CODE — DIRECTORY BREAKDOWN
 ──────────────────────────────────────────────────────────────────────────────────────────────────────────────
 Directory                          Files  Total Lines       Code  Size MB         Primary
 ──────────────────────────────── ─────── ──────────── ────────── ──────── ───────────────
-tensornet                          1,082      471,534    378,655    15.05          Python
+ontic                          1,082      471,534    378,655    15.05          Python
 docs                                 404      282,134    215,589     9.71        Markdown
 scripts                              176       91,348     74,215     3.33          Python
 products                             148       60,454     51,057     2.12          Python
@@ -143,7 +143,7 @@ results                                1            9          6     0.00       
 images                                 1            1          1     0.00        Markdown
 
 ──────────────────────────────────────────────────────────────────────────────────────────────────────────────
-SECTION 3: TENSORNET/ MODULE BREAKDOWN
+SECTION 3: ONTIC/ MODULE BREAKDOWN
 ──────────────────────────────────────────────────────────────────────────────────────────────────────────────
 Module                        Files  Total Lines       Code
 ──────────────────────────── ────── ──────────── ──────────
@@ -189,7 +189,7 @@ astro                            14        3,066      2,332
 provenance                        7        3,056      2,432
   ... + 65 more                 293       85,843     68,854
 ──────────────────────────── ────── ──────────── ──────────
-TENSORNET TOTAL                1079      470,067    377,343
+ONTIC TOTAL                1079      470,067    377,343
 
 ──────────────────────────────────────────────────────────────────────────────────────────────────────────────
 SECTION 4: TOP 30 LARGEST AUTHORED FILES
@@ -197,7 +197,7 @@ SECTION 4: TOP 30 LARGEST AUTHORED FILES
   1.  40,000 lines   1089.3 KB  data/shakespeare.txt
   2.  39,315 lines   1164.4 KB  docs/research/Ontic_CFD_Book.md
   3.  23,546 lines    580.5 KB  docs/reports/zksync_halo2_report.md
-  4.  23,176 lines    879.2 KB  docs/api/tensornet/cfd/index.html
+  4.  23,176 lines    879.2 KB  docs/api/ontic/cfd/index.html
   5.  13,285 lines    269.4 KB  docs/reports/fluidelite_report.md
   6.  10,142 lines    338.2 KB  lUX/lUX/pnpm-lock.yaml
   7.   7,248 lines   1261.7 KB  fluidelite/data/wikitext2_test.txt
@@ -210,19 +210,19 @@ SECTION 4: TOP 30 LARGEST AUTHORED FILES
  14.   3,882 lines    126.0 KB  fluidelite/FINDINGS.md
  15.   3,828 lines    672.3 KB  sovereign-ui/.svelte-kit/output/client/_app/immutable/chunks/BtCAaDxU.js
  16.   3,655 lines    117.5 KB  sovereign-ui/.svelte-kit/output/server/index.js
- 17.   3,231 lines    120.0 KB  docs/api/tensornet/core/index.html
+ 17.   3,231 lines    120.0 KB  docs/api/ontic/core/index.html
  18.   2,921 lines     81.9 KB  sovereign-ui/.svelte-kit/output/server/chunks/index2.js
- 19.   2,917 lines    105.9 KB  tensornet/zk/fezk_elite.py
+ 19.   2,917 lines    105.9 KB  ontic/zk/fezk_elite.py
  20.   2,917 lines    115.1 KB  docs/architecture/Sovereign_UI.md
  21.   2,728 lines     96.6 KB  tests/test_integration.py
  22.   2,534 lines     89.1 KB  data/sovereign-preview.html
  23.   2,377 lines     91.7 KB  scripts/gauntlets/tig011a_multimechanism.py
  24.   2,366 lines     74.5 KB  sovereign-ui/pnpm-lock.yaml
  25.   2,299 lines     86.3 KB  experiments/pwa_engine/core.py
- 26.   2,295 lines     83.5 KB  tensornet/zk/fluidelite_circuit_analyzer.py
- 27.   2,260 lines     72.6 KB  tensornet/cfd/qtt_triton_kernels_v2.py
+ 26.   2,295 lines     83.5 KB  ontic/zk/fluidelite_circuit_analyzer.py
+ 27.   2,260 lines     72.6 KB  ontic/cfd/qtt_triton_kernels_v2.py
  28.   2,210 lines     79.6 KB  products/facial_plastics/plan/compiler.py
- 29.   2,210 lines     83.4 KB  tensornet/visualization/tensor_slicer.py
+ 29.   2,210 lines     83.4 KB  ontic/visualization/tensor_slicer.py
  30.   2,190 lines     80.6 KB  fluidelite-zk/src/bin/fluid_ingest.rs
 
 ==============================================================================================================
@@ -236,7 +236,7 @@ EXECUTIVE SUMMARY — AUTHORED CODE ONLY
   Vendored lines excluded:      9,081,707
   Data/binary files skipped:        6,829
   Other non-source skipped:        29,592
-  tensornet/ modules:                 105
+  ontic/ modules:                 105
   Languages detected:                  19
 
   AUTHORED LINES BY LANGUAGE:

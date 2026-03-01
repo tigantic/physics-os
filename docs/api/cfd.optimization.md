@@ -47,7 +47,7 @@ where N_i are B-spline basis functions and P_i are control points.
 def __init__(self, n_control_points: int, degree: int = 3, n_eval_points: int = 100)
 ```
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\optimization.py:126](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\optimization.py#L126)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\cfd\optimization.py:126](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\cfd\optimization.py#L126)*
 
 ##### `evaluate`
 
@@ -63,7 +63,7 @@ Evaluate B-spline curve from control points.
 
 **Returns**: `<class 'torch.Tensor'>` - Curve coordinates (n_eval, 2)
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\optimization.py:186](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\optimization.py#L186)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\cfd\optimization.py:186](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\cfd\optimization.py#L186)*
 
 ##### `gradient`
 
@@ -75,7 +75,7 @@ Compute dX/dα.
 
 **Returns**: `<class 'torch.Tensor'>` - Jacobian (n_eval * 2, n_control * 2)
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\optimization.py:204](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\optimization.py#L204)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\cfd\optimization.py:204](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\cfd\optimization.py#L204)*
 
 ### class `ConstraintSpec`
 
@@ -127,7 +127,7 @@ box_origin: (x0, y0) of FFD box
     n_control: (ni, nj) number of control points
     surface_coords: (N, 2) original surface coordinates
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\optimization.py:239](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\optimization.py#L239)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\cfd\optimization.py:239](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\cfd\optimization.py#L239)*
 
 ##### `evaluate`
 
@@ -143,7 +143,7 @@ Apply FFD deformation.
 
 **Returns**: `<class 'torch.Tensor'>` - Deformed surface (N, 2)
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\optimization.py:283](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\optimization.py#L283)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\cfd\optimization.py:283](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\cfd\optimization.py#L283)*
 
 ##### `gradient`
 
@@ -155,7 +155,7 @@ Compute dX/dα (sensitivity to control point movements).
 
 **Returns**: `<class 'torch.Tensor'>` - Jacobian (N * 2, ni * nj * 2)
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\optimization.py:313](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\optimization.py#L313)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\cfd\optimization.py:313](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\cfd\optimization.py#L313)*
 
 ### class `GeometryParameterization`
 
@@ -171,7 +171,7 @@ Maps design variables α to surface mesh coordinates X.
 def __init__(self, n_design_vars: int)
 ```
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\optimization.py:105](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\optimization.py#L105)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\cfd\optimization.py:105](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\cfd\optimization.py#L105)*
 
 ##### `evaluate`
 
@@ -181,7 +181,7 @@ def evaluate(self, alpha: torch.Tensor) -> torch.Tensor
 
 Map design variables to surface coordinates.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\optimization.py:108](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\optimization.py#L108)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\cfd\optimization.py:108](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\cfd\optimization.py#L108)*
 
 ##### `gradient`
 
@@ -191,7 +191,7 @@ def gradient(self, alpha: torch.Tensor) -> torch.Tensor
 
 Compute dX/dα (Jacobian).
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\optimization.py:112](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\optimization.py#L112)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\cfd\optimization.py:112](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\cfd\optimization.py#L112)*
 
 ### class `OptimizationConfig`
 
@@ -272,7 +272,7 @@ parameterization: Geometry parameterization object
     objective: Function(flow_state) -> scalar objective
     config: Optimization configuration
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\optimization.py:357](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\optimization.py#L357)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\cfd\optimization.py:357](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\cfd\optimization.py#L357)*
 
 ##### `add_constraint`
 
@@ -282,7 +282,7 @@ def add_constraint(self, constraint: optimization.ConstraintSpec)
 
 Add a design constraint.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\optimization.py:382](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\optimization.py#L382)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\cfd\optimization.py:382](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\cfd\optimization.py#L382)*
 
 ##### `evaluate_objective`
 
@@ -294,7 +294,7 @@ Evaluate objective and gradient.
 
 **Returns**: `typing.Tuple[float, torch.Tensor]` - (J, dJ/dα)
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\optimization.py:386](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\optimization.py#L386)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\cfd\optimization.py:386](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\cfd\optimization.py#L386)*
 
 ##### `optimize`
 
@@ -304,7 +304,7 @@ def optimize(self, alpha0: torch.Tensor) -> optimization.OptimizationResult
 
 Run optimization with configured algorithm.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\optimization.py:576](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\optimization.py#L576)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\cfd\optimization.py:576](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\cfd\optimization.py#L576)*
 
 ##### `optimize_lbfgs`
 
@@ -316,7 +316,7 @@ Run L-BFGS optimization.
 
 Uses PyTorch's built-in LBFGS optimizer.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\optimization.py:511](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\optimization.py#L511)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\cfd\optimization.py:511](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\cfd\optimization.py#L511)*
 
 ##### `optimize_steepest_descent`
 
@@ -326,7 +326,7 @@ def optimize_steepest_descent(self, alpha0: torch.Tensor) -> optimization.Optimi
 
 Run steepest descent optimization.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\optimization.py:460](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\optimization.py#L460)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\cfd\optimization.py:460](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\cfd\optimization.py#L460)*
 
 ## Functions
 
@@ -349,7 +349,7 @@ pressure drag at hypersonic conditions.
 
 **Returns**: `typing.Tuple[optimization.BSplineParameterization, torch.Tensor]` - (parameterization, initial_design)
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\optimization.py:588](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\optimization.py#L588)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\cfd\optimization.py:588](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\cfd\optimization.py#L588)*
 
 ### `validate_optimization`
 
@@ -359,4 +359,4 @@ def validate_optimization()
 
 Run validation tests for optimization module.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\optimization.py:623](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\optimization.py#L623)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\cfd\optimization.py:623](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\cfd\optimization.py#L623)*

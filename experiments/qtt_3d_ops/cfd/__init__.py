@@ -1,3 +1,3 @@
 """
-tensornet.cfd - QTT-based CFD operations
+ontic.cfd - QTT-based CFD operations
 """

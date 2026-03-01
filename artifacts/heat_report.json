@@ -1,7 +1,7 @@
 {
   "domain": "heat",
-  "certificate_path": "/home/brad/TiganticLabz/FRONT_VAULT/03_SOURCE/Main_Projects/HyperTensor-VM-main/artifacts/HEAT_GAUNTLET.tpc",
-  "trace_path": "/home/brad/TiganticLabz/FRONT_VAULT/03_SOURCE/Main_Projects/HyperTensor-VM-main/traces/heat_trace.json",
+  "certificate_path": "/home/brad/TiganticLabz/FRONT_VAULT/03_SOURCE/Main_Projects/physics-os/artifacts/HEAT_GAUNTLET.tpc",
+  "trace_path": "/home/brad/TiganticLabz/FRONT_VAULT/03_SOURCE/Main_Projects/physics-os/traces/heat_trace.json",
   "verified": true,
   "grid": "32x32",
   "steps": 50,

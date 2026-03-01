@@ -64,7 +64,7 @@ that can be traced and exported.
 def __init__(self, grid_shape: Tuple[int, ...], n_vars: int = 4, gamma: float = 1.4)
 ```
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\deployment\tensorrt_export.py:105](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\deployment\tensorrt_export.py#L105)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\deployment\tensorrt_export.py:105](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\deployment\tensorrt_export.py#L105)*
 
 ##### `forward`
 
@@ -80,7 +80,7 @@ Compute one Euler time step.
 
 **Returns**: `<class 'torch.Tensor'>` - Updated state after one time step
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\deployment\tensorrt_export.py:120](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\deployment\tensorrt_export.py#L120)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\deployment\tensorrt_export.py:120](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\deployment\tensorrt_export.py#L120)*
 
 ### class `ExportConfig`
 
@@ -158,7 +158,7 @@ Args:
 
 cores: List of TT cores [G_1, G_2, ..., G_d]
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\deployment\tensorrt_export.py:175](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\deployment\tensorrt_export.py#L175)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\deployment\tensorrt_export.py:175](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\deployment\tensorrt_export.py#L175)*
 
 ##### `forward`
 
@@ -174,7 +174,7 @@ Contract TT with input vector.
 
 **Returns**: `<class 'torch.Tensor'>` - Output vector (batch, output_dim)
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\deployment\tensorrt_export.py:186](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\deployment\tensorrt_export.py#L186)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\deployment\tensorrt_export.py:186](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\deployment\tensorrt_export.py#L186)*
 
 ### class `TensorRTExporter`
 
@@ -188,7 +188,7 @@ High-level interface for exporting models to TensorRT.
 def __init__(self, config: tensorrt_export.ExportConfig = None)
 ```
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\deployment\tensorrt_export.py:483](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\deployment\tensorrt_export.py#L483)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\deployment\tensorrt_export.py:483](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\deployment\tensorrt_export.py#L483)*
 
 ##### `export`
 
@@ -207,7 +207,7 @@ Export a model to ONNX and optionally TensorRT.
 
 **Returns**: `<class 'tensorrt_export.ExportResult'>` - ExportResult with paths and metadata
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\deployment\tensorrt_export.py:487](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\deployment\tensorrt_export.py#L487)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\deployment\tensorrt_export.py:487](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\deployment\tensorrt_export.py#L487)*
 
 ##### `export_cfd_solver`
 
@@ -224,7 +224,7 @@ Export CFD inference module for embedded deployment.
 
 **Returns**: `<class 'tensorrt_export.ExportResult'>` - ExportResult for the CFD solver
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\deployment\tensorrt_export.py:552](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\deployment\tensorrt_export.py#L552)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\deployment\tensorrt_export.py:552](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\deployment\tensorrt_export.py#L552)*
 
 ## Functions
 
@@ -246,7 +246,7 @@ Benchmark inference latency and throughput.
 
 **Returns**: `<class 'tensorrt_export.BenchmarkResult'>` - BenchmarkResult with timing information
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\deployment\tensorrt_export.py:394](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\deployment\tensorrt_export.py#L394)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\deployment\tensorrt_export.py:394](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\deployment\tensorrt_export.py#L394)*
 
 ### `export_to_onnx`
 
@@ -265,7 +265,7 @@ Export PyTorch model to ONNX format.
 
 **Returns**: `<class 'pathlib.Path'>` - Path to exported ONNX file
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\deployment\tensorrt_export.py:213](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\deployment\tensorrt_export.py#L213)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\deployment\tensorrt_export.py:213](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\deployment\tensorrt_export.py#L213)*
 
 ### `optimize_for_tensorrt`
 
@@ -283,7 +283,7 @@ Optimize ONNX model for TensorRT inference.
 
 **Returns**: `<class 'pathlib.Path'>` - Path to TensorRT engine file
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\deployment\tensorrt_export.py:265](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\deployment\tensorrt_export.py#L265)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\deployment\tensorrt_export.py:265](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\deployment\tensorrt_export.py#L265)*
 
 ### `validate_exported_model`
 
@@ -301,7 +301,7 @@ Validate exported model against original PyTorch model.
 
 **Returns**: `typing.Tuple[bool, float]` - (validation_passed, max_error)
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\deployment\tensorrt_export.py:342](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\deployment\tensorrt_export.py#L342)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\deployment\tensorrt_export.py:342](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\deployment\tensorrt_export.py#L342)*
 
 ### `validate_tensorrt_export`
 
@@ -311,4 +311,4 @@ def validate_tensorrt_export()
 
 Run validation tests for TensorRT export.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\deployment\tensorrt_export.py:575](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\deployment\tensorrt_export.py#L575)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\deployment\tensorrt_export.py:575](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\deployment\tensorrt_export.py#L575)*

@@ -1,5 +1,5 @@
 /**
- * HyperTensor Facial Plastics — Inspector Drawer
+ * Ontic Facial Plastics — Inspector Drawer
  *
  * Bottom panel for JSON tree, raw text, diff views.
  * Toggle with Ctrl+J. Resizable via drag.

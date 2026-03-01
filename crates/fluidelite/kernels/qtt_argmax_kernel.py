@@ -364,7 +364,7 @@ def run_benchmark():
     import numpy as np
     import sys
     
-    sys.path.insert(0, '/home/brad/TiganticLabz/Main_Projects/HyperTensor-VM-main')
+    sys.path.insert(0, '/home/brad/TiganticLabz/Main_Projects/physics-os')
     
     from collections import defaultdict
     from ontic.cfd.qtt_tci import qtt_from_function_dense
@@ -375,7 +375,7 @@ def run_benchmark():
     print(f"Triton available: {HAS_TRITON}")
     
     # Load training data
-    with open('/home/brad/TiganticLabz/Main_Projects/HyperTensor-VM-main/CONSTITUTION.md', 'r') as f:
+    with open('/home/brad/TiganticLabz/Main_Projects/physics-os/CONSTITUTION.md', 'r') as f:
         text = f.read()
     
     bytes_data = list(text.encode('utf-8'))

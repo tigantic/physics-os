@@ -1,5 +1,5 @@
 """
-TensorNet Financial Module - Liquidity Weather System
+Ontic Engine Financial Module - Liquidity Weather System
 
 Phase 6: Real-Time Order Book Physics
 =====================================

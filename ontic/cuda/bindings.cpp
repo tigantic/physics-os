@@ -20,7 +20,7 @@ torch::Tensor launch_advect_3d(torch::Tensor density, torch::Tensor velocity, fl
 
 PYBIND11_MODULE(TORCH_EXTENSION_NAME, m) {
     m.doc() = R"pbdoc(
-        TensorNet CUDA Extension
+        Ontic Engine CUDA Extension
         ========================
         
         High-performance CUDA kernels for tensor network CFD operations.
@@ -48,10 +48,10 @@ PYBIND11_MODULE(TORCH_EXTENSION_NAME, m) {
                 Tensor: Advected density field [H, W]
                 
             Example:
-                >>> import tensornet_cuda
+                >>> import ontic_cuda
                 >>> density = torch.rand(512, 512, device='cuda', dtype=torch.float32)
                 >>> velocity = torch.rand(2, 512, 512, device='cuda', dtype=torch.float32)
-                >>> result = tensornet_cuda.advect_2d(density, velocity, 0.01)
+                >>> result = ontic_cuda.advect_2d(density, velocity, 0.01)
         )pbdoc",
         py::arg("density"),
         py::arg("velocity"),

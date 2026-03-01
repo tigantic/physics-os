@@ -25,7 +25,7 @@ SCENES=(
     "S02_TheProblem"
     "S03_Architecture"
     "S04_PhasePipeline"
-    "S05_TensorNetwork"
+    "S05_Ontic Enginework"
     "S06_ZKProofFlow"
     "S07_AttestationChain"
     "S08_LeanProof"

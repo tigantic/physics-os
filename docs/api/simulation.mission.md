@@ -147,7 +147,7 @@ aerodynamic models for complete mission simulation.
 def __init__(self, config: mission.MissionConfig = None, uncertainty: mission.UncertaintyModel = None)
 ```
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\simulation\mission.py:237](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\simulation\mission.py#L237)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\simulation\mission.py:237](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\simulation\mission.py#L237)*
 
 ##### `run`
 
@@ -163,7 +163,7 @@ Run a single mission simulation.
 
 **Returns**: `<class 'mission.MissionResult'>` - MissionResult with outcome and metrics
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\simulation\mission.py:350](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\simulation\mission.py#L350)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\simulation\mission.py:350](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\simulation\mission.py#L350)*
 
 ### class `MonteCarloConfig`
 
@@ -223,7 +223,7 @@ def sample(self) -> Dict[str, float]
 
 Generate a sample of uncertainty factors.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\simulation\mission.py:158](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\simulation\mission.py#L158)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\simulation\mission.py:158](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\simulation\mission.py#L158)*
 
 ## Functions
 
@@ -241,7 +241,7 @@ Analyze dispersion from Monte Carlo results.
 
 **Returns**: `typing.Dict[str, typing.Any]` - Dispersion analysis metrics
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\simulation\mission.py:575](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\simulation\mission.py#L575)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\simulation\mission.py:575](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\simulation\mission.py#L575)*
 
 ### `compute_sensitivity`
 
@@ -261,7 +261,7 @@ Uses one-at-a-time (OAT) sensitivity analysis.
 
 **Returns**: `typing.Dict[str, float]` - Dict of factor -> sensitivity index
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\simulation\mission.py:650](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\simulation\mission.py#L650)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\simulation\mission.py:650](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\simulation\mission.py#L650)*
 
 ### `run_monte_carlo`
 
@@ -279,7 +279,7 @@ Run Monte Carlo simulation.
 
 **Returns**: `typing.List[mission.MissionResult]` - List of MissionResult for all runs
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\simulation\mission.py:535](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\simulation\mission.py#L535)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\simulation\mission.py:535](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\simulation\mission.py#L535)*
 
 ### `validate_mission_module`
 
@@ -289,4 +289,4 @@ def validate_mission_module()
 
 Validate mission simulation module.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\simulation\mission.py:701](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\simulation\mission.py#L701)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\simulation\mission.py:701](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\simulation\mission.py#L701)*

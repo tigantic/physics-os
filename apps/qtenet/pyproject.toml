@@ -15,7 +15,7 @@ keywords = ["QTT", "tensor-train", "PyTorch", "tensor-networks", "PyTenNet", "QT
 dependencies = [
   "numpy>=1.24",
   "torch>=2.0",
-  "physics-os",  # provides tensornet (parent package)
+  "physics-os",  # provides ontic (parent package)
 ]
 
 [project.optional-dependencies]

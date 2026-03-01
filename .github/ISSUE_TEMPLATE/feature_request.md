@@ -26,7 +26,7 @@ assignees: ''
 
 ```python
 # Show how you would use this feature (pseudocode is fine)
-import tensornet
+import ontic
 
 # Example usage of proposed feature
 ```

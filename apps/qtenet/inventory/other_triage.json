@@ -31,7 +31,7 @@
         "n_symbols": 29
       },
       {
-        "path": "tensornet/exploit/state_encoder.py",
+        "path": "ontic/exploit/state_encoder.py",
         "lang": "py",
         "score": 130,
         "proposed_category": "core",
@@ -45,7 +45,7 @@
         "n_symbols": 12
       },
       {
-        "path": "tensornet/zk/fluidelite_circuit_analyzer.py",
+        "path": "ontic/zk/fluidelite_circuit_analyzer.py",
         "lang": "py",
         "score": 125,
         "proposed_category": "tci",
@@ -62,7 +62,7 @@
         "n_symbols": 15
       },
       {
-        "path": "tensornet/docs/user_guides.py",
+        "path": "ontic/docs/user_guides.py",
         "lang": "py",
         "score": 120,
         "proposed_category": "core",
@@ -128,7 +128,7 @@
         "n_symbols": 7
       },
       {
-        "path": "tensornet/visualization/tensor_slicer.py",
+        "path": "ontic/visualization/tensor_slicer.py",
         "lang": "py",
         "score": 105,
         "proposed_category": "gpu",
@@ -166,7 +166,7 @@
         "n_symbols": 15
       },
       {
-        "path": "tensornet/types/genesis_integration.py",
+        "path": "ontic/types/genesis_integration.py",
         "lang": "py",
         "score": 90,
         "proposed_category": "core",
@@ -192,7 +192,7 @@
         "n_symbols": null
       },
       {
-        "path": "tensornet/benchmarks/profile_bottlenecks.py",
+        "path": "ontic/benchmarks/profile_bottlenecks.py",
         "lang": "py",
         "score": 80,
         "proposed_category": "cfd",
@@ -204,7 +204,7 @@
         "n_symbols": 10
       },
       {
-        "path": "tensornet/types/__init__.py",
+        "path": "ontic/types/__init__.py",
         "lang": "py",
         "score": 80,
         "proposed_category": "core",
@@ -232,7 +232,7 @@
         "n_symbols": null
       },
       {
-        "path": "tensornet/exploit/__init__.py",
+        "path": "ontic/exploit/__init__.py",
         "lang": "py",
         "score": 75,
         "proposed_category": "tci",
@@ -243,7 +243,7 @@
         "n_symbols": 0
       },
       {
-        "path": "tensornet/exploit/bounty_api.py",
+        "path": "ontic/exploit/bounty_api.py",
         "lang": "py",
         "score": 75,
         "proposed_category": "tci",
@@ -254,7 +254,7 @@
         "n_symbols": 8
       },
       {
-        "path": "tensornet/exploit/constants.py",
+        "path": "ontic/exploit/constants.py",
         "lang": "py",
         "score": 75,
         "proposed_category": "tci",
@@ -266,7 +266,7 @@
         "n_symbols": 0
       },
       {
-        "path": "tensornet/exploit/euler_v2_hunt.py",
+        "path": "ontic/exploit/euler_v2_hunt.py",
         "lang": "py",
         "score": 75,
         "proposed_category": "tci",
@@ -277,7 +277,7 @@
         "n_symbols": 6
       },
       {
-        "path": "tensornet/exploit/exploit_hunter.py",
+        "path": "ontic/exploit/exploit_hunter.py",
         "lang": "py",
         "score": 75,
         "proposed_category": "tci",
@@ -289,7 +289,7 @@
         "n_symbols": 5
       },
       {
-        "path": "tensornet/exploit/morpho_blue_hunt.py",
+        "path": "ontic/exploit/morpho_blue_hunt.py",
         "lang": "py",
         "score": 75,
         "proposed_category": "tci",
@@ -300,7 +300,7 @@
         "n_symbols": 9
       },
       {
-        "path": "tensornet/exploit/tx_space.py",
+        "path": "ontic/exploit/tx_space.py",
         "lang": "py",
         "score": 75,
         "proposed_category": "tci",
@@ -312,7 +312,7 @@
         "n_symbols": 13
       },
       {
-        "path": "tensornet/substrate/morton_ops.py",
+        "path": "ontic/substrate/morton_ops.py",
         "lang": "py",
         "score": 75,
         "proposed_category": "core",
@@ -536,7 +536,7 @@
         "n_symbols": 2
       },
       {
-        "path": "tensornet/__init__.py",
+        "path": "ontic/__init__.py",
         "lang": "py",
         "score": 65,
         "proposed_category": "core",
@@ -551,7 +551,7 @@
         "n_symbols": 0
       },
       {
-        "path": "tensornet/gateway/orbital_command.py",
+        "path": "ontic/gateway/orbital_command.py",
         "lang": "py",
         "score": 65,
         "proposed_category": "core",
@@ -564,7 +564,7 @@
         "n_symbols": 3
       },
       {
-        "path": "tensornet/neural/genesis_optimizer.py",
+        "path": "ontic/neural/genesis_optimizer.py",
         "lang": "py",
         "score": 65,
         "proposed_category": "core",
@@ -576,7 +576,7 @@
         "n_symbols": 7
       },
       {
-        "path": "tensornet/sovereign/heatmap_generator.py",
+        "path": "ontic/sovereign/heatmap_generator.py",
         "lang": "py",
         "score": 65,
         "proposed_category": "gpu",
@@ -588,7 +588,7 @@
         "n_symbols": 2
       },
       {
-        "path": "tensornet/substrate/field.py",
+        "path": "ontic/substrate/field.py",
         "lang": "py",
         "score": 65,
         "proposed_category": "core",
@@ -800,7 +800,7 @@
         "n_symbols": 15
       },
       {
-        "path": "tensornet/exploit/invariant_hunter.py",
+        "path": "ontic/exploit/invariant_hunter.py",
         "lang": "py",
         "score": 60,
         "proposed_category": "core",
@@ -1230,7 +1230,7 @@
         "n_symbols": 11
       },
       {
-        "path": "tensornet/discovery/__main__.py",
+        "path": "ontic/discovery/__main__.py",
         "lang": "py",
         "score": 40,
         "proposed_category": null,
@@ -1240,7 +1240,7 @@
         "n_symbols": 6
       },
       {
-        "path": "tensornet/discovery/api/gpu.py",
+        "path": "ontic/discovery/api/gpu.py",
         "lang": "py",
         "score": 40,
         "proposed_category": null,
@@ -1250,7 +1250,7 @@
         "n_symbols": 8
       },
       {
-        "path": "tensornet/discovery/api/server.py",
+        "path": "ontic/discovery/api/server.py",
         "lang": "py",
         "score": 40,
         "proposed_category": null,
@@ -1260,7 +1260,7 @@
         "n_symbols": 6
       },
       {
-        "path": "tensornet/discovery/engine_v2.py",
+        "path": "ontic/discovery/engine_v2.py",
         "lang": "py",
         "score": 40,
         "proposed_category": null,
@@ -1270,7 +1270,7 @@
         "n_symbols": 4
       },
       {
-        "path": "tensornet/discovery/ingest/markets.py",
+        "path": "ontic/discovery/ingest/markets.py",
         "lang": "py",
         "score": 40,
         "proposed_category": null,
@@ -1280,7 +1280,7 @@
         "n_symbols": 9
       },
       {
-        "path": "tensornet/discovery/ingest/molecular.py",
+        "path": "ontic/discovery/ingest/molecular.py",
         "lang": "py",
         "score": 40,
         "proposed_category": null,
@@ -1290,7 +1290,7 @@
         "n_symbols": 8
       },
       {
-        "path": "tensornet/discovery/ingest/plasma.py",
+        "path": "ontic/discovery/ingest/plasma.py",
         "lang": "py",
         "score": 40,
         "proposed_category": null,
@@ -1300,7 +1300,7 @@
         "n_symbols": 5
       },
       {
-        "path": "tensornet/discovery/pipelines/markets_pipeline.py",
+        "path": "ontic/discovery/pipelines/markets_pipeline.py",
         "lang": "py",
         "score": 40,
         "proposed_category": null,
@@ -1310,7 +1310,7 @@
         "n_symbols": 4
       },
       {
-        "path": "tensornet/discovery/pipelines/molecular_pipeline.py",
+        "path": "ontic/discovery/pipelines/molecular_pipeline.py",
         "lang": "py",
         "score": 40,
         "proposed_category": null,
@@ -1320,7 +1320,7 @@
         "n_symbols": 3
       },
       {
-        "path": "tensornet/discovery/primitives/__init__.py",
+        "path": "ontic/discovery/primitives/__init__.py",
         "lang": "py",
         "score": 40,
         "proposed_category": null,
@@ -1330,7 +1330,7 @@
         "n_symbols": 0
       },
       {
-        "path": "tensornet/discovery/primitives/geometric_algebra.py",
+        "path": "ontic/discovery/primitives/geometric_algebra.py",
         "lang": "py",
         "score": 40,
         "proposed_category": null,
@@ -1340,7 +1340,7 @@
         "n_symbols": 1
       },
       {
-        "path": "tensornet/discovery/primitives/kernel.py",
+        "path": "ontic/discovery/primitives/kernel.py",
         "lang": "py",
         "score": 40,
         "proposed_category": "gpu",
@@ -1350,7 +1350,7 @@
         "n_symbols": 1
       },
       {
-        "path": "tensornet/discovery/primitives/optimal_transport.py",
+        "path": "ontic/discovery/primitives/optimal_transport.py",
         "lang": "py",
         "score": 40,
         "proposed_category": null,
@@ -1360,7 +1360,7 @@
         "n_symbols": 1
       },
       {
-        "path": "tensornet/discovery/primitives/random_matrix.py",
+        "path": "ontic/discovery/primitives/random_matrix.py",
         "lang": "py",
         "score": 40,
         "proposed_category": null,
@@ -1370,7 +1370,7 @@
         "n_symbols": 1
       },
       {
-        "path": "tensornet/discovery/primitives/spectral_wavelets.py",
+        "path": "ontic/discovery/primitives/spectral_wavelets.py",
         "lang": "py",
         "score": 40,
         "proposed_category": "genesis",
@@ -1380,7 +1380,7 @@
         "n_symbols": 1
       },
       {
-        "path": "tensornet/discovery/primitives/topology.py",
+        "path": "ontic/discovery/primitives/topology.py",
         "lang": "py",
         "score": 40,
         "proposed_category": null,
@@ -1390,7 +1390,7 @@
         "n_symbols": 1
       },
       {
-        "path": "tensornet/discovery/protocol.py",
+        "path": "ontic/discovery/protocol.py",
         "lang": "py",
         "score": 40,
         "proposed_category": null,
@@ -1400,7 +1400,7 @@
         "n_symbols": 6
       },
       {
-        "path": "tensornet/exploit/bounty_reporter.py",
+        "path": "ontic/exploit/bounty_reporter.py",
         "lang": "py",
         "score": 40,
         "proposed_category": null,
@@ -1410,7 +1410,7 @@
         "n_symbols": 7
       },
       {
-        "path": "tensornet/exploit/evm_oracle.py",
+        "path": "ontic/exploit/evm_oracle.py",
         "lang": "py",
         "score": 40,
         "proposed_category": null,
@@ -1420,7 +1420,7 @@
         "n_symbols": 6
       },
       {
-        "path": "tensornet/exploit/guided_sampling.py",
+        "path": "ontic/exploit/guided_sampling.py",
         "lang": "py",
         "score": 40,
         "proposed_category": null,
@@ -1430,7 +1430,7 @@
         "n_symbols": 4
       },
       {
-        "path": "tensornet/exploit/historical_validator.py",
+        "path": "ontic/exploit/historical_validator.py",
         "lang": "py",
         "score": 40,
         "proposed_category": null,
@@ -1440,7 +1440,7 @@
         "n_symbols": 4
       },
       {
-        "path": "tensornet/exploit/hypergrid.py",
+        "path": "ontic/exploit/hypergrid.py",
         "lang": "py",
         "score": 40,
         "proposed_category": "core",
@@ -1450,7 +1450,7 @@
         "n_symbols": 17
       },
       {
-        "path": "tensornet/exploit/invariants.py",
+        "path": "ontic/exploit/invariants.py",
         "lang": "py",
         "score": 40,
         "proposed_category": "core",
@@ -1460,7 +1460,7 @@
         "n_symbols": 16
       },
       {
-        "path": "tensornet/exploit/mainnet_targets.py",
+        "path": "ontic/exploit/mainnet_targets.py",
         "lang": "py",
         "score": 40,
         "proposed_category": null,
@@ -1470,7 +1470,7 @@
         "n_symbols": 5
       },
       {
-        "path": "tensornet/exploit/real_evm.py",
+        "path": "ontic/exploit/real_evm.py",
         "lang": "py",
         "score": 40,
         "proposed_category": null,
@@ -1480,7 +1480,7 @@
         "n_symbols": 5
       },
       {
-        "path": "tensornet/exploit/toy_contracts.py",
+        "path": "ontic/exploit/toy_contracts.py",
         "lang": "py",
         "score": 40,
         "proposed_category": null,
@@ -1490,7 +1490,7 @@
         "n_symbols": 10
       },
       {
-        "path": "tensornet/fieldops/__init__.py",
+        "path": "ontic/fieldops/__init__.py",
         "lang": "py",
         "score": 40,
         "proposed_category": null,
@@ -1500,7 +1500,7 @@
         "n_symbols": 0
       },
       {
-        "path": "tensornet/fieldops/operators.py",
+        "path": "ontic/fieldops/operators.py",
         "lang": "py",
         "score": 40,
         "proposed_category": "cfd",
@@ -1510,7 +1510,7 @@
         "n_symbols": 24
       },
       {
-        "path": "tensornet/fieldos/kernel.py",
+        "path": "ontic/fieldos/kernel.py",
         "lang": "py",
         "score": 40,
         "proposed_category": "gpu",
@@ -1520,7 +1520,7 @@
         "n_symbols": 8
       },
       {
-        "path": "tensornet/fusion/__init__.py",
+        "path": "ontic/fusion/__init__.py",
         "lang": "py",
         "score": 40,
         "proposed_category": null,
@@ -1530,7 +1530,7 @@
         "n_symbols": 0
       },
       {
-        "path": "tensornet/gateway/onion_renderer.py",
+        "path": "ontic/gateway/onion_renderer.py",
         "lang": "py",
         "score": 40,
         "proposed_category": null,
@@ -1540,7 +1540,7 @@
         "n_symbols": 5
       },
       {
-        "path": "tensornet/hw/verilog_elite_analyzer.py",
+        "path": "ontic/hw/verilog_elite_analyzer.py",
         "lang": "py",
         "score": 40,
         "proposed_category": null,
@@ -1550,7 +1550,7 @@
         "n_symbols": 8
       },
       {
-        "path": "tensornet/hypersim/env.py",
+        "path": "ontic/hypersim/env.py",
         "lang": "py",
         "score": 40,
         "proposed_category": null,
@@ -1560,7 +1560,7 @@
         "n_symbols": 4
       },
       {
-        "path": "tensornet/hypersim/rewards.py",
+        "path": "ontic/hypersim/rewards.py",
         "lang": "py",
         "score": 40,
         "proposed_category": "core",
@@ -1570,7 +1570,7 @@
         "n_symbols": 12
       },
       {
-        "path": "tensornet/hypersim/spaces.py",
+        "path": "ontic/hypersim/spaces.py",
         "lang": "py",
         "score": 40,
         "proposed_category": null,
@@ -1580,7 +1580,7 @@
         "n_symbols": 10
       },
       {
-        "path": "tensornet/hypervisual/__init__.py",
+        "path": "ontic/hypervisual/__init__.py",
         "lang": "py",
         "score": 40,
         "proposed_category": null,
@@ -1590,7 +1590,7 @@
         "n_symbols": 0
       },
       {
-        "path": "tensornet/hypervisual/renderer.py",
+        "path": "ontic/hypervisual/renderer.py",
         "lang": "py",
         "score": 40,
         "proposed_category": null,
@@ -1600,7 +1600,7 @@
         "n_symbols": 7
       },
       {
-        "path": "tensornet/hypervisual/slicer.py",
+        "path": "ontic/hypervisual/slicer.py",
         "lang": "py",
         "score": 40,
         "proposed_category": null,
@@ -1610,7 +1610,7 @@
         "n_symbols": 5
       },
       {
-        "path": "tensornet/hypervisual/slicing_core.py",
+        "path": "ontic/hypervisual/slicing_core.py",
         "lang": "py",
         "score": 40,
         "proposed_category": null,
@@ -1620,7 +1620,7 @@
         "n_symbols": 4
       },
       {
-        "path": "tensornet/provenance/commit.py",
+        "path": "ontic/provenance/commit.py",
         "lang": "py",
         "score": 40,
         "proposed_category": null,
@@ -1630,7 +1630,7 @@
         "n_symbols": 3
       },
       {
-        "path": "tensornet/quantum/__init__.py",
+        "path": "ontic/quantum/__init__.py",
         "lang": "py",
         "score": 40,
         "proposed_category": null,
@@ -1640,7 +1640,7 @@
         "n_symbols": 1
       },
       {
-        "path": "tensornet/sovereign/__init__.py",
+        "path": "ontic/sovereign/__init__.py",
         "lang": "py",
         "score": 40,
         "proposed_category": null,
@@ -1650,7 +1650,7 @@
         "n_symbols": 0
       },
       {
-        "path": "tensornet/sovereign/realtime_tensor_stream.py",
+        "path": "ontic/sovereign/realtime_tensor_stream.py",
         "lang": "py",
         "score": 40,
         "proposed_category": null,
@@ -1660,7 +1660,7 @@
         "n_symbols": 2
       },
       {
-        "path": "tensornet/substrate/__init__.py",
+        "path": "ontic/substrate/__init__.py",
         "lang": "py",
         "score": 40,
         "proposed_category": null,
@@ -1670,7 +1670,7 @@
         "n_symbols": 0
       },
       {
-        "path": "tensornet/substrate/bundle.py",
+        "path": "ontic/substrate/bundle.py",
         "lang": "py",
         "score": 40,
         "proposed_category": null,
@@ -1680,7 +1680,7 @@
         "n_symbols": 4
       },
       {
-        "path": "tensornet/substrate/stats.py",
+        "path": "ontic/substrate/stats.py",
         "lang": "py",
         "score": 40,
         "proposed_category": "gpu",
@@ -1690,7 +1690,7 @@
         "n_symbols": 3
       },
       {
-        "path": "tensornet/types/fields.py",
+        "path": "ontic/types/fields.py",
         "lang": "py",
         "score": 40,
         "proposed_category": null,
@@ -1700,7 +1700,7 @@
         "n_symbols": 10
       },
       {
-        "path": "tensornet/visualization/benchmark_render_gpu.py",
+        "path": "ontic/visualization/benchmark_render_gpu.py",
         "lang": "py",
         "score": 40,
         "proposed_category": null,
@@ -1710,7 +1710,7 @@
         "n_symbols": 3
       },
       {
-        "path": "tensornet/zk/fezk_elite.py",
+        "path": "ontic/zk/fezk_elite.py",
         "lang": "py",
         "score": 40,
         "proposed_category": null,
@@ -1721,7 +1721,7 @@
         "n_symbols": 17
       },
       {
-        "path": "tensornet/zk/halo2_constraint_extractor.py",
+        "path": "ontic/zk/halo2_constraint_extractor.py",
         "lang": "py",
         "score": 40,
         "proposed_category": null,
@@ -1731,7 +1731,7 @@
         "n_symbols": 5
       },
       {
-        "path": "tensornet/zk/polygon_security_report.py",
+        "path": "ontic/zk/polygon_security_report.py",
         "lang": "py",
         "score": 40,
         "proposed_category": null,
@@ -2874,7 +2874,7 @@
       "n_symbols": 29
     },
     {
-      "path": "tensornet/exploit/state_encoder.py",
+      "path": "ontic/exploit/state_encoder.py",
       "lang": "py",
       "score": 130,
       "proposed_category": "core",
@@ -2888,7 +2888,7 @@
       "n_symbols": 12
     },
     {
-      "path": "tensornet/zk/fluidelite_circuit_analyzer.py",
+      "path": "ontic/zk/fluidelite_circuit_analyzer.py",
       "lang": "py",
       "score": 125,
       "proposed_category": "tci",
@@ -2905,7 +2905,7 @@
       "n_symbols": 15
     },
     {
-      "path": "tensornet/docs/user_guides.py",
+      "path": "ontic/docs/user_guides.py",
       "lang": "py",
       "score": 120,
       "proposed_category": "core",
@@ -2971,7 +2971,7 @@
       "n_symbols": 7
     },
     {
-      "path": "tensornet/visualization/tensor_slicer.py",
+      "path": "ontic/visualization/tensor_slicer.py",
       "lang": "py",
       "score": 105,
       "proposed_category": "gpu",
@@ -3009,7 +3009,7 @@
       "n_symbols": 15
     },
     {
-      "path": "tensornet/types/genesis_integration.py",
+      "path": "ontic/types/genesis_integration.py",
       "lang": "py",
       "score": 90,
       "proposed_category": "core",
@@ -3035,7 +3035,7 @@
       "n_symbols": null
     },
     {
-      "path": "tensornet/benchmarks/profile_bottlenecks.py",
+      "path": "ontic/benchmarks/profile_bottlenecks.py",
       "lang": "py",
       "score": 80,
       "proposed_category": "cfd",
@@ -3047,7 +3047,7 @@
       "n_symbols": 10
     },
     {
-      "path": "tensornet/types/__init__.py",
+      "path": "ontic/types/__init__.py",
       "lang": "py",
       "score": 80,
       "proposed_category": "core",
@@ -3075,7 +3075,7 @@
       "n_symbols": null
     },
     {
-      "path": "tensornet/exploit/__init__.py",
+      "path": "ontic/exploit/__init__.py",
       "lang": "py",
       "score": 75,
       "proposed_category": "tci",
@@ -3086,7 +3086,7 @@
       "n_symbols": 0
     },
     {
-      "path": "tensornet/exploit/bounty_api.py",
+      "path": "ontic/exploit/bounty_api.py",
       "lang": "py",
       "score": 75,
       "proposed_category": "tci",
@@ -3097,7 +3097,7 @@
       "n_symbols": 8
     },
     {
-      "path": "tensornet/exploit/constants.py",
+      "path": "ontic/exploit/constants.py",
       "lang": "py",
       "score": 75,
       "proposed_category": "tci",
@@ -3109,7 +3109,7 @@
       "n_symbols": 0
     },
     {
-      "path": "tensornet/exploit/euler_v2_hunt.py",
+      "path": "ontic/exploit/euler_v2_hunt.py",
       "lang": "py",
       "score": 75,
       "proposed_category": "tci",
@@ -3120,7 +3120,7 @@
       "n_symbols": 6
     },
     {
-      "path": "tensornet/exploit/exploit_hunter.py",
+      "path": "ontic/exploit/exploit_hunter.py",
       "lang": "py",
       "score": 75,
       "proposed_category": "tci",
@@ -3132,7 +3132,7 @@
       "n_symbols": 5
     },
     {
-      "path": "tensornet/exploit/morpho_blue_hunt.py",
+      "path": "ontic/exploit/morpho_blue_hunt.py",
       "lang": "py",
       "score": 75,
       "proposed_category": "tci",
@@ -3143,7 +3143,7 @@
       "n_symbols": 9
     },
     {
-      "path": "tensornet/exploit/tx_space.py",
+      "path": "ontic/exploit/tx_space.py",
       "lang": "py",
       "score": 75,
       "proposed_category": "tci",
@@ -3155,7 +3155,7 @@
       "n_symbols": 13
     },
     {
-      "path": "tensornet/substrate/morton_ops.py",
+      "path": "ontic/substrate/morton_ops.py",
       "lang": "py",
       "score": 75,
       "proposed_category": "core",
@@ -3379,7 +3379,7 @@
       "n_symbols": 2
     },
     {
-      "path": "tensornet/__init__.py",
+      "path": "ontic/__init__.py",
       "lang": "py",
       "score": 65,
       "proposed_category": "core",
@@ -3394,7 +3394,7 @@
       "n_symbols": 0
     },
     {
-      "path": "tensornet/gateway/orbital_command.py",
+      "path": "ontic/gateway/orbital_command.py",
       "lang": "py",
       "score": 65,
       "proposed_category": "core",
@@ -3407,7 +3407,7 @@
       "n_symbols": 3
     },
     {
-      "path": "tensornet/neural/genesis_optimizer.py",
+      "path": "ontic/neural/genesis_optimizer.py",
       "lang": "py",
       "score": 65,
       "proposed_category": "core",
@@ -3419,7 +3419,7 @@
       "n_symbols": 7
     },
     {
-      "path": "tensornet/sovereign/heatmap_generator.py",
+      "path": "ontic/sovereign/heatmap_generator.py",
       "lang": "py",
       "score": 65,
       "proposed_category": "gpu",
@@ -3431,7 +3431,7 @@
       "n_symbols": 2
     },
     {
-      "path": "tensornet/substrate/field.py",
+      "path": "ontic/substrate/field.py",
       "lang": "py",
       "score": 65,
       "proposed_category": "core",
@@ -3643,7 +3643,7 @@
       "n_symbols": 15
     },
     {
-      "path": "tensornet/exploit/invariant_hunter.py",
+      "path": "ontic/exploit/invariant_hunter.py",
       "lang": "py",
       "score": 60,
       "proposed_category": "core",
@@ -3653,7 +3653,7 @@
       "n_symbols": 7
     },
     {
-      "path": "tensornet/substrate/bounded.py",
+      "path": "ontic/substrate/bounded.py",
       "lang": "py",
       "score": 60,
       "proposed_category": null,
@@ -4081,7 +4081,7 @@
       "n_symbols": 11
     },
     {
-      "path": "tensornet/discovery/__main__.py",
+      "path": "ontic/discovery/__main__.py",
       "lang": "py",
       "score": 40,
       "proposed_category": null,
@@ -4091,7 +4091,7 @@
       "n_symbols": 6
     },
     {
-      "path": "tensornet/discovery/api/gpu.py",
+      "path": "ontic/discovery/api/gpu.py",
       "lang": "py",
       "score": 40,
       "proposed_category": null,
@@ -4101,7 +4101,7 @@
       "n_symbols": 8
     },
     {
-      "path": "tensornet/discovery/api/server.py",
+      "path": "ontic/discovery/api/server.py",
       "lang": "py",
       "score": 40,
       "proposed_category": null,
@@ -4111,7 +4111,7 @@
       "n_symbols": 6
     },
     {
-      "path": "tensornet/discovery/engine_v2.py",
+      "path": "ontic/discovery/engine_v2.py",
       "lang": "py",
       "score": 40,
       "proposed_category": null,
@@ -4121,7 +4121,7 @@
       "n_symbols": 4
     },
     {
-      "path": "tensornet/discovery/ingest/markets.py",
+      "path": "ontic/discovery/ingest/markets.py",
       "lang": "py",
       "score": 40,
       "proposed_category": null,
@@ -4131,7 +4131,7 @@
       "n_symbols": 9
     },
     {
-      "path": "tensornet/discovery/ingest/molecular.py",
+      "path": "ontic/discovery/ingest/molecular.py",
       "lang": "py",
       "score": 40,
       "proposed_category": null,
@@ -4141,7 +4141,7 @@
       "n_symbols": 8
     },
     {
-      "path": "tensornet/discovery/ingest/plasma.py",
+      "path": "ontic/discovery/ingest/plasma.py",
       "lang": "py",
       "score": 40,
       "proposed_category": null,
@@ -4151,7 +4151,7 @@
       "n_symbols": 5
     },
     {
-      "path": "tensornet/discovery/pipelines/markets_pipeline.py",
+      "path": "ontic/discovery/pipelines/markets_pipeline.py",
       "lang": "py",
       "score": 40,
       "proposed_category": null,
@@ -4161,7 +4161,7 @@
       "n_symbols": 4
     },
     {
-      "path": "tensornet/discovery/pipelines/molecular_pipeline.py",
+      "path": "ontic/discovery/pipelines/molecular_pipeline.py",
       "lang": "py",
       "score": 40,
       "proposed_category": null,
@@ -4171,7 +4171,7 @@
       "n_symbols": 3
     },
     {
-      "path": "tensornet/discovery/primitives/__init__.py",
+      "path": "ontic/discovery/primitives/__init__.py",
       "lang": "py",
       "score": 40,
       "proposed_category": null,
@@ -4181,7 +4181,7 @@
       "n_symbols": 0
     },
     {
-      "path": "tensornet/discovery/primitives/geometric_algebra.py",
+      "path": "ontic/discovery/primitives/geometric_algebra.py",
       "lang": "py",
       "score": 40,
       "proposed_category": null,
@@ -4191,7 +4191,7 @@
       "n_symbols": 1
     },
     {
-      "path": "tensornet/discovery/primitives/kernel.py",
+      "path": "ontic/discovery/primitives/kernel.py",
       "lang": "py",
       "score": 40,
       "proposed_category": "gpu",
@@ -4201,7 +4201,7 @@
       "n_symbols": 1
     },
     {
-      "path": "tensornet/discovery/primitives/optimal_transport.py",
+      "path": "ontic/discovery/primitives/optimal_transport.py",
       "lang": "py",
       "score": 40,
       "proposed_category": null,
@@ -4211,7 +4211,7 @@
       "n_symbols": 1
     },
     {
-      "path": "tensornet/discovery/primitives/random_matrix.py",
+      "path": "ontic/discovery/primitives/random_matrix.py",
       "lang": "py",
       "score": 40,
       "proposed_category": null,
@@ -4221,7 +4221,7 @@
       "n_symbols": 1
     },
     {
-      "path": "tensornet/discovery/primitives/spectral_wavelets.py",
+      "path": "ontic/discovery/primitives/spectral_wavelets.py",
       "lang": "py",
       "score": 40,
       "proposed_category": "genesis",
@@ -4231,7 +4231,7 @@
       "n_symbols": 1
     },
     {
-      "path": "tensornet/discovery/primitives/topology.py",
+      "path": "ontic/discovery/primitives/topology.py",
       "lang": "py",
       "score": 40,
       "proposed_category": null,
@@ -4241,7 +4241,7 @@
       "n_symbols": 1
     },
     {
-      "path": "tensornet/discovery/protocol.py",
+      "path": "ontic/discovery/protocol.py",
       "lang": "py",
       "score": 40,
       "proposed_category": null,
@@ -4251,7 +4251,7 @@
       "n_symbols": 6
     },
     {
-      "path": "tensornet/exploit/bounty_reporter.py",
+      "path": "ontic/exploit/bounty_reporter.py",
       "lang": "py",
       "score": 40,
       "proposed_category": null,
@@ -4261,7 +4261,7 @@
       "n_symbols": 7
     },
     {
-      "path": "tensornet/exploit/evm_oracle.py",
+      "path": "ontic/exploit/evm_oracle.py",
       "lang": "py",
       "score": 40,
       "proposed_category": null,
@@ -4271,7 +4271,7 @@
       "n_symbols": 6
     },
     {
-      "path": "tensornet/exploit/guided_sampling.py",
+      "path": "ontic/exploit/guided_sampling.py",
       "lang": "py",
       "score": 40,
       "proposed_category": null,
@@ -4281,7 +4281,7 @@
       "n_symbols": 4
     },
     {
-      "path": "tensornet/exploit/historical_validator.py",
+      "path": "ontic/exploit/historical_validator.py",
       "lang": "py",
       "score": 40,
       "proposed_category": null,
@@ -4291,7 +4291,7 @@
       "n_symbols": 4
     },
     {
-      "path": "tensornet/exploit/hypergrid.py",
+      "path": "ontic/exploit/hypergrid.py",
       "lang": "py",
       "score": 40,
       "proposed_category": "core",
@@ -4301,7 +4301,7 @@
       "n_symbols": 17
     },
     {
-      "path": "tensornet/exploit/invariants.py",
+      "path": "ontic/exploit/invariants.py",
       "lang": "py",
       "score": 40,
       "proposed_category": "core",
@@ -4311,7 +4311,7 @@
       "n_symbols": 16
     },
     {
-      "path": "tensornet/exploit/mainnet_targets.py",
+      "path": "ontic/exploit/mainnet_targets.py",
       "lang": "py",
       "score": 40,
       "proposed_category": null,
@@ -4321,7 +4321,7 @@
       "n_symbols": 5
     },
     {
-      "path": "tensornet/exploit/real_evm.py",
+      "path": "ontic/exploit/real_evm.py",
       "lang": "py",
       "score": 40,
       "proposed_category": null,
@@ -4331,7 +4331,7 @@
       "n_symbols": 5
     },
     {
-      "path": "tensornet/exploit/toy_contracts.py",
+      "path": "ontic/exploit/toy_contracts.py",
       "lang": "py",
       "score": 40,
       "proposed_category": null,
@@ -4341,7 +4341,7 @@
       "n_symbols": 10
     },
     {
-      "path": "tensornet/fieldops/__init__.py",
+      "path": "ontic/fieldops/__init__.py",
       "lang": "py",
       "score": 40,
       "proposed_category": null,
@@ -4351,7 +4351,7 @@
       "n_symbols": 0
     },
     {
-      "path": "tensornet/fieldops/operators.py",
+      "path": "ontic/fieldops/operators.py",
       "lang": "py",
       "score": 40,
       "proposed_category": "cfd",
@@ -4361,7 +4361,7 @@
       "n_symbols": 24
     },
     {
-      "path": "tensornet/fieldos/kernel.py",
+      "path": "ontic/fieldos/kernel.py",
       "lang": "py",
       "score": 40,
       "proposed_category": "gpu",
@@ -4371,7 +4371,7 @@
       "n_symbols": 8
     },
     {
-      "path": "tensornet/fusion/__init__.py",
+      "path": "ontic/fusion/__init__.py",
       "lang": "py",
       "score": 40,
       "proposed_category": null,
@@ -4381,7 +4381,7 @@
       "n_symbols": 0
     },
     {
-      "path": "tensornet/gateway/onion_renderer.py",
+      "path": "ontic/gateway/onion_renderer.py",
       "lang": "py",
       "score": 40,
       "proposed_category": null,
@@ -4391,7 +4391,7 @@
       "n_symbols": 5
     },
     {
-      "path": "tensornet/hw/verilog_elite_analyzer.py",
+      "path": "ontic/hw/verilog_elite_analyzer.py",
       "lang": "py",
       "score": 40,
       "proposed_category": null,
@@ -4401,7 +4401,7 @@
       "n_symbols": 8
     },
     {
-      "path": "tensornet/hypersim/env.py",
+      "path": "ontic/hypersim/env.py",
       "lang": "py",
       "score": 40,
       "proposed_category": null,
@@ -4411,7 +4411,7 @@
       "n_symbols": 4
     },
     {
-      "path": "tensornet/hypersim/rewards.py",
+      "path": "ontic/hypersim/rewards.py",
       "lang": "py",
       "score": 40,
       "proposed_category": "core",
@@ -4421,7 +4421,7 @@
       "n_symbols": 12
     },
     {
-      "path": "tensornet/hypersim/spaces.py",
+      "path": "ontic/hypersim/spaces.py",
       "lang": "py",
       "score": 40,
       "proposed_category": null,
@@ -4431,7 +4431,7 @@
       "n_symbols": 10
     },
     {
-      "path": "tensornet/hypervisual/__init__.py",
+      "path": "ontic/hypervisual/__init__.py",
       "lang": "py",
       "score": 40,
       "proposed_category": null,
@@ -4441,7 +4441,7 @@
       "n_symbols": 0
     },
     {
-      "path": "tensornet/hypervisual/renderer.py",
+      "path": "ontic/hypervisual/renderer.py",
       "lang": "py",
       "score": 40,
       "proposed_category": null,
@@ -4451,7 +4451,7 @@
       "n_symbols": 7
     },
     {
-      "path": "tensornet/hypervisual/slicer.py",
+      "path": "ontic/hypervisual/slicer.py",
       "lang": "py",
       "score": 40,
       "proposed_category": null,
@@ -4461,7 +4461,7 @@
       "n_symbols": 5
     },
     {
-      "path": "tensornet/hypervisual/slicing_core.py",
+      "path": "ontic/hypervisual/slicing_core.py",
       "lang": "py",
       "score": 40,
       "proposed_category": null,
@@ -4471,7 +4471,7 @@
       "n_symbols": 4
     },
     {
-      "path": "tensornet/provenance/commit.py",
+      "path": "ontic/provenance/commit.py",
       "lang": "py",
       "score": 40,
       "proposed_category": null,
@@ -4481,7 +4481,7 @@
       "n_symbols": 3
     },
     {
-      "path": "tensornet/quantum/__init__.py",
+      "path": "ontic/quantum/__init__.py",
       "lang": "py",
       "score": 40,
       "proposed_category": null,
@@ -4491,7 +4491,7 @@
       "n_symbols": 1
     },
     {
-      "path": "tensornet/sovereign/__init__.py",
+      "path": "ontic/sovereign/__init__.py",
       "lang": "py",
       "score": 40,
       "proposed_category": null,
@@ -4501,7 +4501,7 @@
       "n_symbols": 0
     },
     {
-      "path": "tensornet/sovereign/realtime_tensor_stream.py",
+      "path": "ontic/sovereign/realtime_tensor_stream.py",
       "lang": "py",
       "score": 40,
       "proposed_category": null,
@@ -4511,7 +4511,7 @@
       "n_symbols": 2
     },
     {
-      "path": "tensornet/substrate/__init__.py",
+      "path": "ontic/substrate/__init__.py",
       "lang": "py",
       "score": 40,
       "proposed_category": null,
@@ -4521,7 +4521,7 @@
       "n_symbols": 0
     },
     {
-      "path": "tensornet/substrate/bundle.py",
+      "path": "ontic/substrate/bundle.py",
       "lang": "py",
       "score": 40,
       "proposed_category": null,
@@ -4531,7 +4531,7 @@
       "n_symbols": 4
     },
     {
-      "path": "tensornet/substrate/stats.py",
+      "path": "ontic/substrate/stats.py",
       "lang": "py",
       "score": 40,
       "proposed_category": "gpu",
@@ -4541,7 +4541,7 @@
       "n_symbols": 3
     },
     {
-      "path": "tensornet/types/fields.py",
+      "path": "ontic/types/fields.py",
       "lang": "py",
       "score": 40,
       "proposed_category": null,
@@ -4551,7 +4551,7 @@
       "n_symbols": 10
     },
     {
-      "path": "tensornet/visualization/benchmark_render_gpu.py",
+      "path": "ontic/visualization/benchmark_render_gpu.py",
       "lang": "py",
       "score": 40,
       "proposed_category": null,
@@ -4561,7 +4561,7 @@
       "n_symbols": 3
     },
     {
-      "path": "tensornet/zk/fezk_elite.py",
+      "path": "ontic/zk/fezk_elite.py",
       "lang": "py",
       "score": 40,
       "proposed_category": null,
@@ -4572,7 +4572,7 @@
       "n_symbols": 17
     },
     {
-      "path": "tensornet/zk/halo2_constraint_extractor.py",
+      "path": "ontic/zk/halo2_constraint_extractor.py",
       "lang": "py",
       "score": 40,
       "proposed_category": null,
@@ -4582,7 +4582,7 @@
       "n_symbols": 5
     },
     {
-      "path": "tensornet/zk/polygon_security_report.py",
+      "path": "ontic/zk/polygon_security_report.py",
       "lang": "py",
       "score": 40,
       "proposed_category": null,
@@ -5997,7 +5997,7 @@
       "n_symbols": null
     },
     {
-      "path": "docs/api/OtherCFD/tensornet.cfd.md",
+      "path": "docs/api/OtherCFD/ontic.cfd.md",
       "lang": "md",
       "score": 25,
       "proposed_category": null,
@@ -6007,7 +6007,7 @@
       "n_symbols": null
     },
     {
-      "path": "docs/api/tensornet.cfd.md",
+      "path": "docs/api/ontic.cfd.md",
       "lang": "md",
       "score": 25,
       "proposed_category": null,
@@ -6537,7 +6537,7 @@
       "n_symbols": null
     },
     {
-      "path": "tensornet/adaptive/compression.py",
+      "path": "ontic/adaptive/compression.py",
       "lang": "py",
       "score": 25,
       "proposed_category": "tci",
@@ -6547,7 +6547,7 @@
       "n_symbols": 9
     },
     {
-      "path": "tensornet/exploit/CHANGELOG.md",
+      "path": "ontic/exploit/CHANGELOG.md",
       "lang": "md",
       "score": 25,
       "proposed_category": null,
@@ -6557,7 +6557,7 @@
       "n_symbols": null
     },
     {
-      "path": "tensornet/exploit/EXECUTION_LOG.md",
+      "path": "ontic/exploit/EXECUTION_LOG.md",
       "lang": "md",
       "score": 25,
       "proposed_category": null,
@@ -6567,7 +6567,7 @@
       "n_symbols": null
     },
     {
-      "path": "tensornet/exploit/FINDINGS.md",
+      "path": "ontic/exploit/FINDINGS.md",
       "lang": "md",
       "score": 25,
       "proposed_category": null,
@@ -6577,7 +6577,7 @@
       "n_symbols": null
     },
     {
-      "path": "tensornet/exploit/README.md",
+      "path": "ontic/exploit/README.md",
       "lang": "md",
       "score": 25,
       "proposed_category": null,
@@ -6927,7 +6927,7 @@
       "n_symbols": 13
     },
     {
-      "path": "tensornet/adaptive/bond_optimizer.py",
+      "path": "ontic/adaptive/bond_optimizer.py",
       "lang": "py",
       "score": 15,
       "proposed_category": "core",
@@ -6937,7 +6937,7 @@
       "n_symbols": 10
     },
     {
-      "path": "tensornet/adaptive/entanglement.py",
+      "path": "ontic/adaptive/entanglement.py",
       "lang": "py",
       "score": 15,
       "proposed_category": "core",
@@ -6947,7 +6947,7 @@
       "n_symbols": 10
     },
     {
-      "path": "tensornet/algorithms/dmrg.py",
+      "path": "ontic/algorithms/dmrg.py",
       "lang": "py",
       "score": 15,
       "proposed_category": "core",
@@ -6960,7 +6960,7 @@
       "n_symbols": 8
     },
     {
-      "path": "tensornet/algorithms/fermionic.py",
+      "path": "ontic/algorithms/fermionic.py",
       "lang": "py",
       "score": 15,
       "proposed_category": "core",
@@ -6973,7 +6973,7 @@
       "n_symbols": 5
     },
     {
-      "path": "tensornet/algorithms/tdvp.py",
+      "path": "ontic/algorithms/tdvp.py",
       "lang": "py",
       "score": 15,
       "proposed_category": "core",
@@ -6986,7 +6986,7 @@
       "n_symbols": 9
     },
     {
-      "path": "tensornet/algorithms/tebd.py",
+      "path": "ontic/algorithms/tebd.py",
       "lang": "py",
       "score": 15,
       "proposed_category": "core",
@@ -6998,7 +6998,7 @@
       "n_symbols": 9
     },
     {
-      "path": "tensornet/autonomy/mission_planner.py",
+      "path": "ontic/autonomy/mission_planner.py",
       "lang": "py",
       "score": 15,
       "proposed_category": "core",
@@ -7008,7 +7008,7 @@
       "n_symbols": 9
     },
     {
-      "path": "tensornet/deployment/tensorrt_export.py",
+      "path": "ontic/deployment/tensorrt_export.py",
       "lang": "py",
       "score": 15,
       "proposed_category": "core",
@@ -7018,7 +7018,7 @@
       "n_symbols": 13
     },
     {
-      "path": "tensornet/discovery/connectors/fusion.py",
+      "path": "ontic/discovery/connectors/fusion.py",
       "lang": "py",
       "score": 15,
       "proposed_category": "core",
@@ -7028,7 +7028,7 @@
       "n_symbols": 7
     },
     {
-      "path": "tensornet/distributed_tn/__init__.py",
+      "path": "ontic/distributed_tn/__init__.py",
       "lang": "py",
       "score": 15,
       "proposed_category": "core",
@@ -7038,7 +7038,7 @@
       "n_symbols": 0
     },
     {
-      "path": "tensornet/distributed_tn/distributed_dmrg.py",
+      "path": "ontic/distributed_tn/distributed_dmrg.py",
       "lang": "py",
       "score": 15,
       "proposed_category": "core",
@@ -7049,7 +7049,7 @@
       "n_symbols": 7
     },
     {
-      "path": "tensornet/distributed_tn/mps_operations.py",
+      "path": "ontic/distributed_tn/mps_operations.py",
       "lang": "py",
       "score": 15,
       "proposed_category": "core",
@@ -7060,7 +7060,7 @@
       "n_symbols": 7
     },
     {
-      "path": "tensornet/distributed_tn/parallel_tebd.py",
+      "path": "ontic/distributed_tn/parallel_tebd.py",
       "lang": "py",
       "score": 15,
       "proposed_category": "core",
@@ -7070,7 +7070,7 @@
       "n_symbols": 7
     },
     {
-      "path": "tensornet/fieldos/field.py",
+      "path": "ontic/fieldos/field.py",
       "lang": "py",
       "score": 15,
       "proposed_category": "core",
@@ -7080,7 +7080,7 @@
       "n_symbols": 3
     },
     {
-      "path": "tensornet/neural/entanglement_gnn.py",
+      "path": "ontic/neural/entanglement_gnn.py",
       "lang": "py",
       "score": 15,
       "proposed_category": "core",
@@ -7090,7 +7090,7 @@
       "n_symbols": 10
     },
     {
-      "path": "tensornet/physics/trajectory_optimizer.py",
+      "path": "ontic/physics/trajectory_optimizer.py",
       "lang": "py",
       "score": 15,
       "proposed_category": "core",
@@ -7100,7 +7100,7 @@
       "n_symbols": 9
     },
     {
-      "path": "tensornet/quantum/hybrid.py",
+      "path": "ontic/quantum/hybrid.py",
       "lang": "py",
       "score": 15,
       "proposed_category": "core",
@@ -7113,7 +7113,7 @@
       "n_symbols": 14
     },
     {
-      "path": "tensornet/realtime/inference_engine.py",
+      "path": "ontic/realtime/inference_engine.py",
       "lang": "py",
       "score": 15,
       "proposed_category": "core",
@@ -7123,7 +7123,7 @@
       "n_symbols": 9
     },
     {
-      "path": "tensornet/site/themes.py",
+      "path": "ontic/site/themes.py",
       "lang": "py",
       "score": 15,
       "proposed_category": "core",
@@ -7134,7 +7134,7 @@
       "n_symbols": 10
     },
     {
-      "path": "tensornet/visualization/__init__.py",
+      "path": "ontic/visualization/__init__.py",
       "lang": "py",
       "score": 15,
       "proposed_category": "core",

@@ -1,12 +1,12 @@
-# HyperTensor Drug Physics Engine
+# The Physics OS Drug Physics Engine
 # KRAS G12D Multi-Mechanism Binding Simulation
 #
-# Build: docker build -t hypertensor/drug-physics .
-# Run:   docker run --gpus all hypertensor/drug-physics
+# Build: docker build -t physics-os/drug-physics .
+# Run:   docker run --gpus all physics-os/drug-physics
 
 FROM nvidia/cuda:12.1-runtime-ubuntu22.04
 
-LABEL maintainer="HyperTensor Team"
+LABEL maintainer="The Physics OS Team"
 LABEL description="Drug Physics Engine for KRAS G12D inhibitor design"
 LABEL version="1.0.0"
 

@@ -34,11 +34,11 @@ ARG BUILD_COMMIT_SHA=unknown
 ARG BUILD_DATE
 
 LABEL org.opencontainers.image.title="lUX Proof Viewer" \
-      org.opencontainers.image.description="Forensic inspection interface for HyperTensor TPC proof certificates" \
+      org.opencontainers.image.description="Forensic inspection interface for The Physics OS TPC proof certificates" \
       org.opencontainers.image.version="${BUILD_VERSION}" \
       org.opencontainers.image.revision="${BUILD_COMMIT_SHA}" \
       org.opencontainers.image.created="${BUILD_DATE}" \
-      org.opencontainers.image.source="https://github.com/tigantic/HyperTensor-VM" \
+      org.opencontainers.image.source="https://github.com/tigantic/physics-os" \
       org.opencontainers.image.licenses="MIT"
 
 RUN addgroup --system --gid 1001 nodejs && \

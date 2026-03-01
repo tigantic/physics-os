@@ -68,7 +68,7 @@ PY_SRC = ontic physics_os tests proofs
 .DEFAULT_GOAL := help
 
 help:
-	@echo "HyperTensor Monorepo Makefile"
+	@echo "Physics OS Monorepo Makefile"
 	@echo "================================"
 	@echo ""
 	@echo "Quality Gates:"

@@ -43,7 +43,7 @@ from typing import Any
 import torch
 from torch import Tensor
 
-# Import from upstream tensornet
+# Import from upstream ontic
 from ontic.cfd.qtt_tci import (
     qtt_from_function_tci_python as _tci_python,
     qtt_from_function_dense as _tci_dense,

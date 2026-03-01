@@ -43,7 +43,7 @@
 
 | Language | Files | Lines | Purpose |
 |----------|-------|-------|---------|
-| **Python** | 308+ | **269,553** | Backend: TensorNet physics, QTT, CFD, RL, Energy, Finance, Urban, Medical, Racing, Ballistics, Fire, Agri |
+| **Python** | 308+ | **269,553** | Backend: Ontic Engine physics, QTT, CFD, RL, Energy, Finance, Urban, Medical, Racing, Ballistics, Fire, Agri |
 | **Rust** | 73 | **120,851** | Frontend: Glass Cockpit, RAM bridge, TCI, swarm rendering |
 | **WGSL** | 17 | 4,096 | GPU shaders: colormaps, vector fields, particles, text |
 | **CUDA** | 5 | 1,558 | High-performance: QTT eval, Laplacian, pressure, GEMM |
@@ -54,7 +54,7 @@
 
 ## Components
 
-### Backend: TensorNet (Python)
+### Backend: Ontic Engine (Python)
 
 | Module | Files | Description |
 |--------|-------|-------------|

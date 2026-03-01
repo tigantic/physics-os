@@ -1,6 +1,6 @@
 # ML Domain Pack
 
-`pip install tensornet[ml]`
+`pip install ontic-engine[ml]`
 
 ## Modules
 

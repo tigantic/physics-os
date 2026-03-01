@@ -148,7 +148,7 @@ pytest tests/ -v
 pytest tests/integration/test_flagship_pipeline.py -v
 
 # With coverage
-pytest tests/ --cov=tensornet --cov-report=html
+pytest tests/ --cov=ontic --cov-report=html
 ```
 
 ---

@@ -45,7 +45,7 @@ class LOCStats:
     python_dirs: dict[str, DirStats] = field(default_factory=dict)
     rust_crates: dict[str, DirStats] = field(default_factory=dict)
     lean_files_detail: dict[str, int] = field(default_factory=dict)
-    tensornet_modules: dict[str, DirStats] = field(default_factory=dict)
+    ontic_modules: dict[str, DirStats] = field(default_factory=dict)
     
     gauntlet_count: int = 0
     demo_count: int = 0
@@ -137,14 +137,14 @@ def scan_directory(
     return total_files, total_loc, dict(dir_stats)
 
 
-def scan_tensornet_modules(tensornet_path: Path) -> dict[str, DirStats]:
+def scan_ontic_modules(ontic_path: Path) -> dict[str, DirStats]:
     """Scan ontic submodules."""
     modules: dict[str, DirStats] = {}
     
-    if not tensornet_path.exists():
+    if not ontic_path.exists():
         return modules
     
-    for subdir in sorted(tensornet_path.iterdir()):
+    for subdir in sorted(ontic_path.iterdir()):
         if subdir.is_dir() and not subdir.name.startswith("_"):
             files = list(subdir.rglob("*.py"))
             loc = sum(count_lines(f) for f in files)
@@ -233,9 +233,9 @@ def collect_stats(root: Path) -> LOCStats:
     stats.total_loc = stats.python_loc + stats.rust_loc + stats.lean_loc
     
     # ontic modules
-    tensornet_path = root / "ontic"
-    if tensornet_path.exists():
-        stats.tensornet_modules = scan_tensornet_modules(tensornet_path)
+    ontic_path = root / "ontic"
+    if ontic_path.exists():
+        stats.ontic_modules = scan_ontic_modules(ontic_path)
     
     # Artifacts
     (
@@ -386,7 +386,7 @@ def generate_catalog_json(root: Path, stats: LOCStats) -> dict:
             },
         ],
         "modules": {
-            "ontic": stats.tensornet_modules,
+            "ontic": stats.ontic_modules,
             "rust_crates": stats.rust_crates,
         },
         "applications": {

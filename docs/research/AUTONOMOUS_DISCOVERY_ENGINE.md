@@ -336,7 +336,7 @@ Input Data (any domain)
 | Create `DiscoveryPipeline` orchestrator | ✅ | Claude | Done |
 | Unit tests for each wrapper | ✅ | Claude | Done |
 
-**Deliverable:** `python -m tensornet.discovery.pipeline --test` runs all 7 primitives in sequence.  
+**Deliverable:** `python -m ontic.discovery.pipeline --test` runs all 7 primitives in sequence.  
 **Status:** ✅ All 7 QTT-native primitives integrated into discovery engine.
 
 ---
@@ -1019,15 +1019,15 @@ This enables CFD-style analysis: "pressure" (order imbalance), "turbulence" (vol
 **CLI Usage:**
 ```bash
 # Historical event analysis
-python -m tensornet.discovery live --mode historical --event flash-crash-2010
-python -m tensornet.discovery live --mode historical --event gme-2021
-python -m tensornet.discovery live --mode historical --event lehman-2008
+python -m ontic.discovery live --mode historical --event flash-crash-2010
+python -m ontic.discovery live --mode historical --event gme-2021
+python -m ontic.discovery live --mode historical --event lehman-2008
 
 # Replay mode (through streaming pipeline)
-python -m tensornet.discovery live --mode replay --event flash-crash-2010
+python -m ontic.discovery live --mode replay --event flash-crash-2010
 
 # Real-time streaming (simulated)
-python -m tensornet.discovery live --mode stream --duration 30
+python -m ontic.discovery live --mode stream --duration 30
 ```
 
 **Test Results:**
@@ -1113,16 +1113,16 @@ python -m tensornet.discovery live --mode stream --duration 30
 **CLI Usage:**
 ```bash
 # Start API server
-python -m tensornet.discovery serve --port 8000
+python -m ontic.discovery serve --port 8000
 
 # With GPU disabled
-python -m tensornet.discovery serve --port 8000 --no-gpu
+python -m ontic.discovery serve --port 8000 --no-gpu
 
 # With distributed mode
-python -m tensornet.discovery serve --port 8000 --distributed
+python -m ontic.discovery serve --port 8000 --distributed
 
 # Debug mode
-python -m tensornet.discovery serve --port 8000 --debug
+python -m ontic.discovery serve --port 8000 --debug
 ```
 
 **API Examples:**
@@ -1554,7 +1554,7 @@ The following NotImplementedError stubs were **fully implemented** during the Ph
 | `quantum/hybrid.py` | 466 | Fallback for unknown gate types | ✅ Correct guard |
 | `quantum/hybrid.py` | 648 | Fallback for unknown ansatz types | ✅ Correct guard |
 
-> **Note:** The `zk_targets/opentitan/` directory contains 16+ NotImplementedError instances which are part of the **upstream OpenTitan** codebase (external dependency) and are not TensorNet code.
+> **Note:** The `zk_targets/opentitan/` directory contains 16+ NotImplementedError instances which are part of the **upstream OpenTitan** codebase (external dependency) and are not Ontic Engine code.
 
 ### ✅ Placeholder Returns — RESOLVED (Phase 10)
 
@@ -1679,7 +1679,7 @@ This is **by design** for testing and validation. Production use requires:
 
 ## Validation Criteria
 
-### TensorNet Core Module Validation (January 25, 2026)
+### Ontic Engine Core Module Validation (January 25, 2026)
 
 All core modules validated on real data with **12/12 tests passing**:
 

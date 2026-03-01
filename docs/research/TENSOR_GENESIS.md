@@ -108,7 +108,7 @@ This document establishes the constitutional framework for extending QTT into se
 
 **Section 3.3 — Backward Compatibility**
 
-> Genesis primitives SHALL NOT break existing tensornet functionality. All changes to `ontic/core/` require explicit approval.
+> Genesis primitives SHALL NOT break existing ontic functionality. All changes to `ontic/core/` require explicit approval.
 
 ---
 

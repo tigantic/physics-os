@@ -75,10 +75,10 @@
     }
   ],
   "files": {
-    "solver": "tensornet/cfd/ns2d_qtt_native.py",
+    "solver": "ontic/cfd/ns2d_qtt_native.py",
     "dependencies": [
-      "tensornet/cfd/nd_shift_mpo.py",
-      "tensornet/cfd/pure_qtt_ops.py"
+      "ontic/cfd/nd_shift_mpo.py",
+      "ontic/cfd/pure_qtt_ops.py"
     ]
   },
   "framework": "Ontic QTT-Native CFD",

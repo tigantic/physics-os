@@ -12,7 +12,7 @@ Outputs
 Heuristics
 - Prefer non-archive over archive
 - Prefer core/genesis/cfd/fluidelite/sdk categories over demos/benchmarks/qtt-misc/other
-- Prefer tensornet/ and fluidelite/ over root scripts
+- Prefer ontic/ and fluidelite/ over root scripts
 - Within matches, prefer shorter path depth (often indicates library module vs demo)
 
 This is a *productization* artifact: it does not claim semantic equivalence.
@@ -66,7 +66,7 @@ def score_record(rec: dict) -> int:
         score -= 200
 
     # Prefer package-like locations
-    if p.startswith("tensornet/"):
+    if p.startswith("ontic/"):
         score += 50
     if p.startswith("fluidelite/"):
         score += 35
@@ -159,7 +159,7 @@ def main():
     out.append("Rules are heuristic and *meant to be edited*. The goal is a clean, enterprise API boundary, not perfect semantic proof.\n")
 
     out.append("## Scoring heuristics (current)\n")
-    out.append("Preference order (high → low): `tensornet/core` / `tensornet/genesis` / `tci` / `tensornet/cfd` / `fluidelite` / `sdk` / `compressor` (separate product) / demos & benchmarks / archived.\n")
+    out.append("Preference order (high → low): `ontic/core` / `ontic/genesis` / `tci` / `ontic/cfd` / `fluidelite` / `sdk` / `compressor` (separate product) / demos & benchmarks / archived.\n")
 
     out.append("## Symbol-level canonical picks\n")
     out.append("Each entry lists: canonical path + all known alternates.\n")

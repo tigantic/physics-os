@@ -178,8 +178,8 @@
     }
   },
   "files_created": [
-    "tensornet/cfd/qtt_turbo.py - Core operations with AdaptiveRankController",
-    "tensornet/cfd/ns3d_turbo.py - Turbo NS solver with adaptive rank integration"
+    "ontic/cfd/qtt_turbo.py - Core operations with AdaptiveRankController",
+    "ontic/cfd/ns3d_turbo.py - Turbo NS solver with adaptive rank integration"
   ],
   "key_findings": {
     "rank_follows_physics": "For smooth solutions, adaptive rank compresses to mean_rank ~5. For complex physics, it uses more rank where needed.",

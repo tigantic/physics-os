@@ -1,5 +1,5 @@
 /**
- * HyperTensor Custom Hooks - CFD Operations
+ * The Physics OS Custom Hooks - CFD Operations
  * 
  * React Query hooks for data fetching and mutation.
  */

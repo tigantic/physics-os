@@ -1,5 +1,5 @@
 /**
- * HyperTensor Facial Plastics — Context Sidebar
+ * Ontic Facial Plastics — Context Sidebar
  *
  * Case metadata, twin status, quick actions.
  * Updates reactively when selectedCase changes.

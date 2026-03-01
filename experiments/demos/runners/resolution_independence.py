@@ -153,7 +153,7 @@ def tt_svd(
     
     where each A_k has shape (χ_{k-1}, d_k, χ_k).
     
-    This is a wrapper around tensornet.cfd.qtt.tt_svd for API compatibility.
+    This is a wrapper around ontic.cfd.qtt.tt_svd for API compatibility.
     See the library module for the canonical implementation.
     """
     # Use library implementation (normalize=False to match original behavior)

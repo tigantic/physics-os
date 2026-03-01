@@ -1,5 +1,5 @@
 /**
- * HyperTensor Facial Plastics — G4 What-If Explorer
+ * Ontic Facial Plastics — G4 What-If Explorer
  *
  * Parameter override editor with baseline labels.
  * Side-by-side diff of baseline vs modified results.

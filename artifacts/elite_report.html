@@ -2,13 +2,13 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>HyperTensor QTT Engine — ELITE Benchmark Report</title>
+<title>Ontic QTT Engine — ELITE Benchmark Report</title>
 <style>
 @page {
     size: letter;
     margin: 0.9in 0.85in 1.0in 0.85in;
     @bottom-center {
-        content: "HyperTensor QTT Engine — Tigantic Holdings LLC — Confidential";
+        content: "Ontic QTT Engine — Tigantic Holdings LLC — Confidential";
         font-size: 7.5pt;
         color: #888;
         font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
@@ -345,7 +345,7 @@ pre code {
 
 <div class="cover">
     <div class="brand-bar"></div>
-    <h1>HyperTensor QTT Engine</h1>
+    <h1>Ontic QTT Engine</h1>
     <div class="subtitle">Quantized Tensor Train Navier-Stokes Solver</div>
     <div class="subtitle" style="color: var(--green); font-size: 12pt; margin-top: -1em;">
         Multi-Resolution Benchmark vs Dense CFD — ELITE Engineering Report
@@ -375,7 +375,7 @@ pre code {
     <div class="toc-item"><span class="toc-num">3</span><span class="toc-title">The Solution: QTT-Native Navier-Stokes</span></div>
     <div class="toc-item"><span class="toc-num">4</span><span class="toc-title">Benchmark Configuration</span></div>
     <div class="toc-item"><span class="toc-num">5</span><span class="toc-title">Results: Multi-Resolution Gauntlet</span></div>
-    <div class="toc-item"><span class="toc-num">6</span><span class="toc-title">Head-to-Head: HyperTensor vs NVIDIA</span></div>
+    <div class="toc-item"><span class="toc-num">6</span><span class="toc-title">Head-to-Head: Physics OS vs NVIDIA</span></div>
     <div class="toc-item"><span class="toc-num">7</span><span class="toc-title">Physics Validation</span></div>
     <div class="toc-item"><span class="toc-num">8</span><span class="toc-title">Executive Physics Certificate</span></div>
     <div class="toc-item"><span class="toc-num">9</span><span class="toc-title">Scaling Projections</span></div>
@@ -390,7 +390,7 @@ pre code {
 <div class="page-break"></div>
 <h1>1. Executive Summary</h1>
 
-<p>HyperTensor's Quantized Tensor Train (QTT) Navier-Stokes engine replaces dense CFD entirely.
+<p>Ontic's Quantized Tensor Train (QTT) Navier-Stokes engine replaces dense CFD entirely.
 Instead of solving on a mesh and storing N³ arrays, the solver operates natively in compressed
 tensor-train format with <strong>O(r² log N)</strong> storage and compute — logarithmic in grid size.</p>
 
@@ -477,7 +477,7 @@ consumes <strong>46.7 GB</strong> of storage for surface-only data.</p>
 
 <h1>3. The Solution: QTT-Native Navier-Stokes</h1>
 
-<p>HyperTensor's QTT-NS solver operates entirely in compressed tensor-train format.
+<p>Ontic's QTT-NS solver operates entirely in compressed tensor-train format.
 The 3D velocity field is represented as a sequence of small matrices (TT cores), with
 storage <strong>O(r² · 3 · n_bits)</strong> — logarithmic in grid size, not cubic.</p>
 
@@ -621,7 +621,7 @@ aerodynamics benchmark, identical to the geometry in NVIDIA's PhysicsNeMo datase
 </div>
 
 <div class="page-break"></div>
-<h1>6. Head-to-Head: HyperTensor vs NVIDIA</h1>
+<h1>6. Head-to-Head: Physics OS vs NVIDIA</h1>
 
 <div class="stat-row">
     <div class="stat-card">
@@ -642,7 +642,7 @@ aerodynamics benchmark, identical to the geometry in NVIDIA's PhysicsNeMo datase
 </div>
 
 <table>
-    <tr><th>Metric</th><th>NVIDIA PhysicsNeMo</th><th>HyperTensor QTT</th><th class="num">Advantage</th></tr>
+    <tr><th>Metric</th><th>NVIDIA PhysicsNeMo</th><th>Ontic QTT</th><th class="num">Advantage</th></tr>
     <tr><td>Storage per sample</td><td>11.5 MB (VTP surface)</td>
         <td class="highlight-cell">101.2 KB (full volume)</td><td class="num">111×</td></tr>
     <tr><td>Data content</td><td>11 surface fields only</td>
@@ -1098,7 +1098,7 @@ all attest to an identical, untampered computation.</p>
 
 <h2>A.3 Reproducibility</h2>
 <pre><code># Full gauntlet (128³ + 256³ + 512³ + 4096³)
-cd HyperTensor-VM-main
+cd physics-os
 PYTHONPATH="$PWD:$PYTHONPATH" python3 scripts/gauntlet_vs_nvidia.py \
     --resolutions 128,256,512 --max-rank 48 --cfl 0.08
 PYTHONPATH="$PWD:$PYTHONPATH" python3 scripts/gauntlet_vs_nvidia.py \
@@ -1123,7 +1123,7 @@ PYTHONPATH="$PWD:$PYTHONPATH" python3 scripts/generate_elite_report.py</code></p
     <tr><td>ahmed_ib_results/4096/trustless_certificate.json</td><td>4096³ Ed25519 certificate</td></tr>
     <tr><td>ahmed_ib_results/spectrum_data.json</td><td>Energy spectrum analysis</td></tr>
     <tr><td>ahmed_ib_results/ahmed_body_spectrum.png</td><td>3-panel spectrum figure</td></tr>
-    <tr><td>artifacts/HyperTensor_QTT_ELITE_Report.pdf</td><td>This report</td></tr>
+    <tr><td>artifacts/Ontic_QTT_ELITE_Report.pdf</td><td>This report</td></tr>
 </table>
 
 <div class="page-break"></div>
@@ -1177,7 +1177,7 @@ is computed via QTT subtraction.</p>
 
 <div style="text-align: center; margin-top: 2em; color: var(--gray-3); font-size: 9pt;">
     <p><strong>Report HTR-2026-004-GAUNTLET-ELITE</strong></p>
-    <p>HyperTensor QTT Engine v2.0.0 — Ed25519 Signed, RK2, Trustless Physics</p>
+    <p>Ontic QTT Engine v2.0.0 — Ed25519 Signed, RK2, Trustless Physics</p>
     <p>Tigantic Holdings LLC — February 23, 2026</p>
     <p style="margin-top: 1em; font-style: italic; color: var(--brand);">
         "Dense CFD is dead. QTT is the future."

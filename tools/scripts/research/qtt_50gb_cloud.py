@@ -526,7 +526,7 @@ def main():
     qtt, metadata = compressor.compress_3d(brick, max_rank=MAX_RANK, eps=EPS)
     
     # Save result
-    output_path = '/home/brad/TiganticLabz/Main_Projects/HyperTensor-VM-main/real_data/goes18_50gb.qtt.npz'
+    output_path = '/home/brad/TiganticLabz/Main_Projects/physics-os/real_data/goes18_50gb.qtt.npz'
     compressor.save(qtt, metadata, output_path)
     
     # Cleanup

@@ -25,7 +25,7 @@ from typing import Tuple, List, Dict, Optional
 from dataclasses import dataclass
 import sys
 
-sys.path.insert(0, '/home/brad/TiganticLabz/Main_Projects/HyperTensor-VM-main')
+sys.path.insert(0, '/home/brad/TiganticLabz/Main_Projects/physics-os')
 
 from yangmills.operators import TruncatedHilbertSpace, ElectricFieldOperator
 from yangmills.gauss import SinglePlaquetteGauss

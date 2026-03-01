@@ -1,6 +1,6 @@
 """Nonlinear FEM for facial soft tissue mechanics.
 
-Wraps the Ontic Engine tensornet continuum mechanics engine
+Wraps the Ontic Engine ontic continuum mechanics engine
 with tissue-specific constitutive models, boundary condition
 application from the plan compiler, and multi-step load
 control for large-deformation quasi-static analysis.

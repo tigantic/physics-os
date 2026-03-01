@@ -163,7 +163,7 @@ python ontic/docs/api_reference.py
 4. **Verify installation**
    ```bash
    pytest tests/ -v --collect-only  # Should list all tests
-   python -c "import tensornet; print(tensornet.__version__)"
+   python -c "import ontic; print(ontic.__version__)"
    ```
 
 ### Development Tools
@@ -186,7 +186,7 @@ The project uses the following development tools (pinned in `requirements-dev.tx
 pytest tests/ -v
 
 # Run with coverage
-pytest tests/ --cov=tensornet --cov-report=html
+pytest tests/ --cov=ontic --cov-report=html
 
 # Run only unit tests (fast)
 pytest tests/ -v -m unit
@@ -241,7 +241,7 @@ We maintain lockfiles for reproducible builds:
 
 | Package | Lockfile | Update Command |
 |---------|----------|----------------|
-| tensornet (root) | `requirements-lock.txt` | `pip freeze > requirements-lock.txt` |
+| ontic (root) | `requirements-lock.txt` | `pip freeze > requirements-lock.txt` |
 | qtt-sdk | `sdk/qtt-sdk/requirements-lock.txt` | `cd sdk/qtt-sdk && pip freeze > requirements-lock.txt` |
 
 ### Updating Lockfiles

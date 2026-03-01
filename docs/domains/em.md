@@ -1,6 +1,6 @@
 # Electromagnetics Domain Pack
 
-`pip install tensornet[em]`
+`pip install ontic-engine[em]`
 
 ## Modules
 

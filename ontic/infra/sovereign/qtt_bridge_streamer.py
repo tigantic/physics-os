@@ -40,7 +40,7 @@ class QTTBridgeStreamer:
         colormap: "plasma" or "viridis"
     """
 
-    MAGIC = b"TNSR"  # TensorNet Sovereign RGBA
+    MAGIC = b"TNSR"  # Ontic Engine Sovereign RGBA
     VERSION = 1  # Protocol version - must match Rust reader
 
     def __init__(

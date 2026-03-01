@@ -37,7 +37,7 @@ class GrayscaleBridgeWriter:
         - Data: width × height bytes (grayscale intensity)
     """
 
-    MAGIC = b"TNSG"  # TensorNet Sovereign Grayscale
+    MAGIC = b"TNSG"  # Ontic Engine Sovereign Grayscale
     VERSION = 2
 
     def __init__(

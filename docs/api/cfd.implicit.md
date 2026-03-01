@@ -39,7 +39,7 @@ Uses embedded BDF-1/BDF-2 for error estimation.
 def __init__(self, config: implicit.ImplicitConfig = None, rtol: float = 0.0001, atol: float = 1e-10)
 ```
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\implicit.py:343](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\implicit.py#L343)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\cfd\implicit.py:343](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\cfd\implicit.py#L343)*
 
 ##### `integrate`
 
@@ -57,7 +57,7 @@ Integrate with adaptive substepping.
 
 **Returns**: `typing.Tuple[torch.Tensor, float, int]` - Tuple of (y_new, actual_dt, n_substeps)
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\implicit.py:353](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\implicit.py#L353)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\cfd\implicit.py:353](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\cfd\implicit.py#L353)*
 
 ### class `ChemistryIntegrator`
 
@@ -100,7 +100,7 @@ Residual: F(Y) = Y - Y^n - dt * ω(Y, T) / ρ = 0
 
 **Returns**: `typing.Tuple[torch.Tensor, implicit.SolverStatus]` - Tuple of (Y_new, status)
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\implicit.py:193](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\implicit.py#L193)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\cfd\implicit.py:193](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\cfd\implicit.py#L193)*
 
 ### class `ImplicitConfig`
 
@@ -174,7 +174,7 @@ y^{n+1} = y^n + dt * f(t^{n+1}, y^{n+1})
 
 **Returns**: `<class 'float'>` - y at t0 + dt
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\implicit.py:246](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\implicit.py#L246)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\cfd\implicit.py:246](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\cfd\implicit.py#L246)*
 
 ### `bdf2_scalar`
 
@@ -198,7 +198,7 @@ y^{n+2} = (4/3) y^{n+1} - (1/3) y^n + (2/3) dt * f(t^{n+2}, y^{n+2})
 
 **Returns**: `<class 'float'>` - y at t1 + dt
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\implicit.py:290](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\implicit.py#L290)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\cfd\implicit.py:290](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\cfd\implicit.py#L290)*
 
 ### `newton_solve`
 
@@ -219,7 +219,7 @@ Newton iteration: x_{n+1} = x_n - J^{-1} F(x_n)
 
 **Returns**: `<class 'implicit.NewtonResult'>` - NewtonResult with solution and status
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\implicit.py:67](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\implicit.py#L67)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\cfd\implicit.py:67](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\cfd\implicit.py#L67)*
 
 ### `numerical_jacobian`
 
@@ -239,7 +239,7 @@ J_ij = d F_i / d x_j ≈ (F_i(x + eps*e_j) - F_i(x)) / eps
 
 **Returns**: `<class 'torch.Tensor'>` - Jacobian matrix [m, n]
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\implicit.py:149](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\implicit.py#L149)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\cfd\implicit.py:149](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\cfd\implicit.py#L149)*
 
 ### `validate_implicit`
 
@@ -249,4 +249,4 @@ def validate_implicit()
 
 Run validation tests for implicit integrator.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\implicit.py:428](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\implicit.py#L428)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\cfd\implicit.py:428](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\cfd\implicit.py#L428)*

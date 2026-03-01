@@ -68,8 +68,8 @@
   },
   "implementation": {
     "modules_created": [
-      "tensornet/fusion/qtt_screening.py",
-      "tensornet/fusion/qtt_superionic.py"
+      "ontic/fusion/qtt_screening.py",
+      "ontic/fusion/qtt_superionic.py"
     ],
     "tests_added": "tests/test_marrs_fusion.py::TestQTTCompression, TestQTTSuperionic",
     "framework": "The Ontic Engine"

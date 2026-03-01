@@ -32,25 +32,25 @@
   },
   "code_changes": [
     {
-      "file": "tensornet/cfd/ns3d_turbo.py",
+      "file": "ontic/cfd/ns3d_turbo.py",
       "change": "Default poisson_iterations changed from 3 to 0",
       "reason": "Jacobi solver diverges at any iteration count > 0",
       "lines": "257-263"
     },
     {
-      "file": "tensornet/cfd/ns3d_turbo.py",
+      "file": "ontic/cfd/ns3d_turbo.py",
       "change": "Default max_rank changed from 64 to 16",
       "reason": "rank=16 sufficient for physics, 4\u00d7 memory reduction",
       "lines": "265-272"
     },
     {
-      "file": "tensornet/cfd/ns3d_turbo.py",
+      "file": "ontic/cfd/ns3d_turbo.py",
       "change": "Default rank_cap changed from 128 to 64",
       "reason": "rank=16 sufficient, lower cap prevents runaway",
       "lines": "272"
     },
     {
-      "file": "tensornet/cfd/ns3d_turbo.py",
+      "file": "ontic/cfd/ns3d_turbo.py",
       "change": "Truncate after each Hadamard in _compute_rhs()",
       "reason": "Prevents r\u00b2 rank explosion causing OOM",
       "lines": "750-770"

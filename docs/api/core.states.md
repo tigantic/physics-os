@@ -26,7 +26,7 @@ Create |↓↓...↓⟩ state.
 
 **Returns**: `<class 'ontic.core.mps.MPS'>` - All-down product state
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\core\states.py:138](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\core\states.py#L138)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\core\states.py:138](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\core\states.py#L138)*
 
 ### `all_up_mps`
 
@@ -44,7 +44,7 @@ Create |↑↑...↑⟩ state.
 
 **Returns**: `<class 'ontic.core.mps.MPS'>` - All-up product state
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\core\states.py:118](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\core\states.py#L118)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\core\states.py:118](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\core\states.py#L118)*
 
 ### `domain_wall_mps`
 
@@ -63,7 +63,7 @@ Create domain wall state: |↑↑...↑↓↓...↓⟩
 
 **Returns**: `<class 'ontic.core.mps.MPS'>` - Domain wall product state
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\core\states.py:180](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\core\states.py#L180)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\core\states.py:180](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\core\states.py#L180)*
 
 ### `ghz_mps`
 
@@ -83,7 +83,7 @@ This is a maximally entangled state with S = ln(2) at every bond.
 
 **Returns**: `<class 'ontic.core.mps.MPS'>` - MPS representation of GHZ state
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\core\states.py:16](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\core\states.py#L16)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\core\states.py:16](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\core\states.py#L16)*
 
 ### `neel_mps`
 
@@ -101,7 +101,7 @@ Create Néel state: |↑↓↑↓...⟩
 
 **Returns**: `<class 'ontic.core.mps.MPS'>` - Néel product state
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\core\states.py:158](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\core\states.py#L158)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\core\states.py:158](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\core\states.py#L158)*
 
 ### `product_mps`
 
@@ -121,7 +121,7 @@ Create product state MPS from local states.
 
 **Returns**: `<class 'ontic.core.mps.MPS'>` - MPS with bond dimension 1
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\core\states.py:61](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\core\states.py#L61)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\core\states.py:61](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\core\states.py#L61)*
 
 ### `random_mps`
 
@@ -144,4 +144,4 @@ Alias for MPS.random() for convenience.
 
 **Returns**: `<class 'ontic.core.mps.MPS'>` - Random MPS
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\core\states.py:91](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\core\states.py#L91)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\core\states.py:91](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\core\states.py#L91)*

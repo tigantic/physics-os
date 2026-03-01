@@ -15,11 +15,11 @@
     "component": "NS2D_Thermal_QTT (Coupled NS + Thermal)",
     "version": "2.0.0",
     "source_files": [
-      "tensornet/cfd/ns2d_qtt_native.py",
-      "tensornet/cfd/thermal_qtt.py",
-      "tensornet/cfd/comfort_metrics.py",
-      "tensornet/cfd/pure_qtt_ops.py",
-      "tensornet/cfd/nd_shift_mpo.py"
+      "ontic/cfd/ns2d_qtt_native.py",
+      "ontic/cfd/thermal_qtt.py",
+      "ontic/cfd/comfort_metrics.py",
+      "ontic/cfd/pure_qtt_ops.py",
+      "ontic/cfd/nd_shift_mpo.py"
     ],
     "formulation": "Vorticity-Streamfunction 2D NS + Advection-Diffusion Temperature",
     "representation": "Quantum Tensor Train (QTT)"
@@ -295,9 +295,9 @@
       "attestation": "TIER1_QTT_CFD_ATTESTATION.json"
     },
     "new_modules": [
-      "tensornet/cfd/thermal_qtt.py",
-      "tensornet/cfd/comfort_metrics.py",
-      "tensornet/cfd/office_ic.py"
+      "ontic/cfd/thermal_qtt.py",
+      "ontic/cfd/comfort_metrics.py",
+      "ontic/cfd/office_ic.py"
     ]
   }
 }

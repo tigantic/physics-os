@@ -1,5 +1,5 @@
 /**
- * HyperTensor Facial Plastics — Command Palette
+ * Ontic Facial Plastics — Command Palette
  *
  * Fuzzy search over all modes, actions, shortcuts.
  * Activated with / key.

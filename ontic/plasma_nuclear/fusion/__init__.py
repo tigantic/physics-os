@@ -1,5 +1,5 @@
 """
-TensorNet Fusion Module
+Ontic Engine Fusion Module
 ========================
 
 Phase 9: Magnetically Confined Plasma (Tokamak)

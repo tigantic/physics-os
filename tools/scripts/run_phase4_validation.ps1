@@ -6,7 +6,7 @@ Write-Host "Phase 4 Component Validation" -ForegroundColor Cyan
 Write-Host "======================================" -ForegroundColor Cyan
 Write-Host ""
 
-$wslPath = "/home/brad/TiganticLabz/Main_Projects/Project HyperTensor"
+$wslPath = "/home/brad/TiganticLabz/Main_Projects/Project The Physics OS"
 
 # Run validation in WSL
 wsl bash -c "cd '$wslPath' && export GIT_PAGER=cat && python3 test_phase4_validation.py"

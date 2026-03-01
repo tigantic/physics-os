@@ -133,7 +133,7 @@
 /ontic/semiconductor/            @tigantic/physics
 /ontic/acoustics/                @tigantic/physics
 
-# Remaining tensornet modules
+# Remaining ontic modules
 /ontic/packs/                    @tigantic/core
 /ontic/substrate/                @tigantic/core
 /ontic/adaptive/                 @tigantic/core

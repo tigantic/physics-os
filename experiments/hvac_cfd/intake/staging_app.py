@@ -858,7 +858,7 @@ def render_submit_step():
                             json.dump(payload, f, indent=2)
                         
                         if not _check_solver_available():
-                            st.error("❌ Solver not available. Missing dependencies (torch, tensornet).")
+                            st.error("❌ Solver not available. Missing dependencies (torch, ontic).")
                             st.info(f"📁 Payload saved to: {output_file.name}")
                             st.code(f"python -m staging.runner {output_file}", language="bash")
                         else:

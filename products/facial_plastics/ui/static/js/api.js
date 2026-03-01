@@ -1,5 +1,5 @@
 /**
- * HyperTensor Facial Plastics — API Client
+ * Ontic Facial Plastics — API Client
  *
  * All backend communication. Auth header injection, retry with
  * exponential backoff, error normalization, LRU response cache.

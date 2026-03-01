@@ -102,7 +102,7 @@ data_source="synthetic_reconstruction"
 
 **Remediation:** Added comprehensive docstrings with ⚠️ production warnings and runtime logging.
 
-These are CLI convenience functions for `python -m tensornet.discovery discover --demo`.
+These are CLI convenience functions for `python -m ontic.discovery discover --demo`.
 
 | File | Function | Lines | Purpose |
 |------|----------|-------|---------|

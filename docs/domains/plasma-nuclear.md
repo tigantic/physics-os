@@ -1,6 +1,6 @@
 # Plasma & Nuclear Domain Pack
 
-`pip install tensornet[plasma]`
+`pip install ontic-engine[plasma]`
 
 ## Modules
 

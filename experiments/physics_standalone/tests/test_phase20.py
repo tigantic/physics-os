@@ -107,13 +107,13 @@ def test_qaoa():
 
 def test_born_machine():
     """Test Tensor Network Born Machine."""
-    print("Testing TensorNetworkBornMachine...")
+    print("Testing Ontic EngineworkBornMachine...")
     
-    from ontic.quantum import TensorNetworkBornMachine
+    from ontic.quantum import Ontic EngineworkBornMachine
     
     # Create Born machine - uses n_sites, not n_qubits
     n_sites = 4
-    born = TensorNetworkBornMachine(n_sites=n_sites, local_dim=2, bond_dim=4)
+    born = Ontic EngineworkBornMachine(n_sites=n_sites, local_dim=2, bond_dim=4)
     
     # Test amplitude computation
     config = [0, 1, 0, 1]

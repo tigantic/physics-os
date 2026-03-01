@@ -1,6 +1,6 @@
 # Aerospace Domain Pack
 
-`pip install tensornet[aerospace]`
+`pip install ontic-engine[aerospace]`
 
 ## Modules
 

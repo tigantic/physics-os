@@ -75,7 +75,7 @@ PHASE 1: THE TENSOR KERNEL (Days 1-14)
 Goal: Build a 1D Compressed Euler Solver that beats Finite Volume Methods (FVM) in shock sharpness.
 1. Infrastructure Setup
 [ ] Initialize Git Repo: physics-os
-[ ] Dependency Lock: PyTorch, NumPy, Matplotlib, tensornet (your engine).
+[ ] Dependency Lock: PyTorch, NumPy, Matplotlib, ontic (your engine).
 [ ] Create Module Structure:
 ontic.physics.euler_1d (The Equations)
 ontic.solvers.tebd (The Time Stepper)

@@ -1,5 +1,5 @@
 """
-Integration Test Suite for TensorNet
+Integration Test Suite for Ontic Engine
 =====================================
 
 Validates that all major components work together.
@@ -15,7 +15,7 @@ import torch
 class TestCoreImports:
     """Test that all core components import correctly."""
 
-    def test_tensornet_import_succeeds_when_installed(self):
+    def test_ontic_import_succeeds_when_installed(self):
         """Test that ontic imports and has version when installed."""
         import ontic
 

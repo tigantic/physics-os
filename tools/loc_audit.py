@@ -48,7 +48,7 @@ CONFIG_EXTS = {'.toml', '.yaml', '.yml', '.json', '.cfg', '.ini', '.env',
 results = {
     'by_extension': defaultdict(lambda: {'files': 0, 'total_lines': 0, 'code_lines': 0, 'blank_lines': 0, 'bytes': 0}),
     'by_top_dir': defaultdict(lambda: {'files': 0, 'total_lines': 0, 'code_lines': 0, 'bytes': 0}),
-    'tensornet_modules': defaultdict(lambda: {'files': 0, 'total_lines': 0, 'code_lines': 0, 'bytes': 0}),
+    'ontic_modules': defaultdict(lambda: {'files': 0, 'total_lines': 0, 'code_lines': 0, 'bytes': 0}),
     'largest_files': [],
     'totals': {'files': 0, 'total_lines': 0, 'code_lines': 0, 'blank_lines': 0, 'bytes': 0}
 }
@@ -91,10 +91,10 @@ for root, dirs, files in os.walk(REPO):
         # ontic submodule breakdown
         if parts and parts[0] == 'ontic' and len(parts) >= 2:
             submod = parts[1]
-            results['tensornet_modules'][submod]['files'] += 1
-            results['tensornet_modules'][submod]['total_lines'] += total
-            results['tensornet_modules'][submod]['code_lines'] += code
-            results['tensornet_modules'][submod]['bytes'] += size
+            results['ontic_modules'][submod]['files'] += 1
+            results['ontic_modules'][submod]['total_lines'] += total
+            results['ontic_modules'][submod]['code_lines'] += code
+            results['ontic_modules'][submod]['bytes'] += size
         
         # Track largest
         all_files.append((str(rel_root / fname), total, code, size))
@@ -113,7 +113,7 @@ results['largest_files'] = all_files[:50]
 # Convert defaultdicts
 results['by_extension'] = dict(results['by_extension'])
 results['by_top_dir'] = dict(results['by_top_dir'])
-results['tensornet_modules'] = dict(results['tensornet_modules'])
+results['ontic_modules'] = dict(results['ontic_modules'])
 
 # Print report
 print("=" * 80)
@@ -142,16 +142,16 @@ print(f"  {'-'*30} {'-'*7} {'-'*12} {'-'*12} {'-'*10}")
 for d, data in dirs_sorted:
     print(f"  {d:<30} {data['files']:>7,} {data['total_lines']:>12,} {data['code_lines']:>12,} {data['bytes']/1024/1024:>10.2f}")
 
-print(f"\n{'TENSORNET SUBMODULES (sorted by total lines)':=^80}")
-mods = sorted(results['tensornet_modules'].items(), key=lambda x: x[1]['total_lines'], reverse=True)
+print(f"\n{'ONTIC SUBMODULES (sorted by total lines)':=^80}")
+mods = sorted(results['ontic_modules'].items(), key=lambda x: x[1]['total_lines'], reverse=True)
 print(f"  {'Module':<25} {'Files':>7} {'Total Lines':>12} {'Code Lines':>12} {'Size MB':>10}")
 print(f"  {'-'*25} {'-'*7} {'-'*12} {'-'*12} {'-'*10}")
 for m, data in mods:
     print(f"  {m:<25} {data['files']:>7,} {data['total_lines']:>12,} {data['code_lines']:>12,} {data['bytes']/1024/1024:>10.2f}")
 
-total_tn = sum(d['total_lines'] for d in results['tensornet_modules'].values())
-total_tn_files = sum(d['files'] for d in results['tensornet_modules'].values())
-print(f"  {'TENSORNET TOTAL':<25} {total_tn_files:>7,} {total_tn:>12,}")
+total_tn = sum(d['total_lines'] for d in results['ontic_modules'].values())
+total_tn_files = sum(d['files'] for d in results['ontic_modules'].values())
+print(f"  {'ONTIC TOTAL':<25} {total_tn_files:>7,} {total_tn:>12,}")
 
 print(f"\n{'TOP 50 LARGEST FILES':=^80}")
 print(f"  {'#':>3} {'Total':>7} {'Code':>7} {'File'}")
@@ -185,7 +185,7 @@ with open(REPO / 'loc_audit_results.json', 'w') as f:
         'totals': results['totals'],
         'by_extension': {k: dict(v) for k, v in results['by_extension'].items()},
         'by_top_dir': {k: dict(v) for k, v in results['by_top_dir'].items()},
-        'tensornet_modules': {k: dict(v) for k, v in results['tensornet_modules'].items()},
+        'ontic_modules': {k: dict(v) for k, v in results['ontic_modules'].items()},
         'top50': results['largest_files'][:50]
     }, f, indent=2)
 

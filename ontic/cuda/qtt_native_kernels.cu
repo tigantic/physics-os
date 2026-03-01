@@ -16,7 +16,7 @@
  * 
  * Target: 100× speedup over CPU sequential contractions
  * 
- * Author: HyperTensor Team
+ * Author: The Physics OS Team
  * Date: January 2026
  */
 

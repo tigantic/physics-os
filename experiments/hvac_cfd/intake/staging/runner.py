@@ -2,7 +2,7 @@
 HyperFOAM Solver Runner
 =======================
 
-Bridges the UI payload to the actual tensornet HVAC solver.
+Bridges the UI payload to the actual ontic HVAC solver.
 
 Article VII, Section 7.2: "Done" means working end-to-end.
 """
@@ -16,7 +16,7 @@ from pathlib import Path
 from typing import Dict, Any, Optional, List
 from dataclasses import dataclass, field
 
-# Add tensornet to path (lazy - don't import yet)
+# Add ontic to path (lazy - don't import yet)
 REPO_ROOT = Path(__file__).parent.parent.parent.parent
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
@@ -34,7 +34,7 @@ def _check_solver_available():
     
     try:
         import torch
-        # Quick check without full tensornet import
+        # Quick check without full ontic import
         SOLVER_AVAILABLE = True
         SOLVER_IMPORT_ERROR = None
     except ImportError as e:
@@ -171,7 +171,7 @@ def run_solver(payload: Dict[str, Any], progress_callback=None,
         return SolverResult(
             success=False,
             error=f"Solver not available: {SOLVER_IMPORT_ERROR}. "
-                  f"Ensure tensornet is installed and torch is available."
+                  f"Ensure ontic is installed and torch is available."
         )
     
     start_time = time.perf_counter()

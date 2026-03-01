@@ -17,7 +17,7 @@ import json
 import sys
 from pathlib import Path
 
-EXPECTED_SIGNATURE_KEY = b'hypertensor-flagship-2024'
+EXPECTED_SIGNATURE_KEY = b'physics-os-flagship-2024'
 
 def main():
     print("=" * 50)

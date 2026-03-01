@@ -1,5 +1,5 @@
 /**
- * HyperTensor Facial Plastics — Centralized State Store
+ * Ontic Facial Plastics — Centralized State Store
  *
  * Pure pub/sub event bus with path-based subscriptions.
  * No framework dependency. Immutable snapshots on change.

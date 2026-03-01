@@ -16,7 +16,7 @@ Usage:
         ...
 
 Enable profiling by setting environment variable:
-    TENSORNET_PROFILE=1 python script.py
+    ONTIC_PROFILE=1 python script.py
 
 **Contents:**
 
@@ -37,7 +37,7 @@ Collect and report performance statistics.
 def __init__(self)
 ```
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\core\profiling.py:152](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\core\profiling.py#L152)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\core\profiling.py:152](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\core\profiling.py#L152)*
 
 ##### `measure`
 
@@ -47,7 +47,7 @@ def measure(self, name: str)
 
 Context manager to measure a named operation.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\core\profiling.py:155](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\core\profiling.py#L155)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\core\profiling.py:155](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\core\profiling.py#L155)*
 
 ##### `summary`
 
@@ -57,7 +57,7 @@ def summary(self) -> str
 
 Generate summary report.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\core\profiling.py:178](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\core\profiling.py#L178)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\core\profiling.py:178](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\core\profiling.py#L178)*
 
 ## Functions
 
@@ -69,7 +69,7 @@ def memory_profile(func: ~F) -> ~F
 
 Decorator that profiles function memory usage.
 
-Only active when TENSORNET_PROFILE=1 environment variable is set.
+Only active when ONTIC_PROFILE=1 environment variable is set.
 Uses tracemalloc to measure peak memory allocation.
 
 **Parameters:**
@@ -86,7 +86,7 @@ def build_environments(psi, H):
     ...
 ```
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\core\profiling.py:68](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\core\profiling.py#L68)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\core\profiling.py:68](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\core\profiling.py#L68)*
 
 ### `profile`
 
@@ -96,7 +96,7 @@ def profile(func: ~F) -> ~F
 
 Decorator that profiles function execution time.
 
-Only active when TENSORNET_PROFILE=1 environment variable is set.
+Only active when ONTIC_PROFILE=1 environment variable is set.
 
 **Parameters:**
 
@@ -112,7 +112,7 @@ def dmrg_sweep(psi, H):
     ...
 ```
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\core\profiling.py:37](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\core\profiling.py#L37)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\core\profiling.py:37](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\core\profiling.py#L37)*
 
 ### `profile_block`
 
@@ -122,7 +122,7 @@ def profile_block(name: str)
 
 Context manager for profiling code blocks.
 
-Only active when TENSORNET_PROFILE=1 environment variable is set.
+Only active when ONTIC_PROFILE=1 environment variable is set.
 
 **Parameters:**
 
@@ -135,4 +135,4 @@ with profile_block("SVD computation"):
     U, S, V = torch.linalg.svd(A)
 ```
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\core\profiling.py:109](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\core\profiling.py#L109)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\core\profiling.py:109](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\core\profiling.py#L109)*

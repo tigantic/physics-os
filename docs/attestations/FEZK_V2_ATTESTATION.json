@@ -2,7 +2,7 @@
   "attestation": {
     "project": "FEZK (FLUIDELITE Enhanced ZK)",
     "version": "2.0.0",
-    "codename": "TensorNet Integration",
+    "codename": "Ontic Engine Integration",
     "release_date": "2025-01-19",
     "framework": "physics-os"
   },
@@ -10,12 +10,12 @@
     "qtt_compression": {
       "enabled": true,
       "description": "Quantized Tensor Train compression for O(log²N) constraint storage",
-      "source": "tensornet/cfd/qtt.py"
+      "source": "ontic/cfd/qtt.py"
     },
     "mpo_operators": {
       "enabled": true,
       "description": "Matrix Product Operators for O(N log N) constraint checking",
-      "source": "tensornet/cfd/pure_qtt_ops.py",
+      "source": "ontic/cfd/pure_qtt_ops.py",
       "operations": [
         "signal_selector_mpo - |i⟩⟨i| projection operators",
         "linear_combo_mpo - Σ c_i |i⟩⟨i| linear combinations",
@@ -26,13 +26,13 @@
     "tci_sampling": {
       "enabled": true,
       "description": "Tensor Cross Interpolation for adaptive constraint sampling",
-      "source": "tensornet/cfd/qtt_tci.py",
+      "source": "ontic/cfd/qtt_tci.py",
       "backends": ["Python (fallback)", "Rust (optional, 10-100x faster)"]
     },
     "gpu_acceleration": {
       "enabled": true,
       "description": "CUDA-accelerated QTT construction via randomized SVD",
-      "source": "tensornet/cfd/qtt_tci_gpu.py",
+      "source": "ontic/cfd/qtt_tci_gpu.py",
       "speedup": "50-100x on large circuits"
     },
     "streaming_construction": {
@@ -55,7 +55,7 @@
     },
     "halo2_support": {
       "enabled": true,
-      "description": "Rust Halo2 circuit analysis via tensornet/zk/halo2_analyzer.py"
+      "description": "Rust Halo2 circuit analysis via ontic/zk/halo2_analyzer.py"
     }
   },
   "performance_metrics": {
@@ -78,7 +78,7 @@
   "architecture": {
     "unified_analyzer": "FEZKAnalyzer",
     "auto_detection": "Circom (.circom), gnark (.go), Halo2 (.rs)",
-    "cli_entry_point": "python -m tensornet.zk.fluidelite_circuit_analyzer"
+    "cli_entry_point": "python -m ontic.zk.fluidelite_circuit_analyzer"
   },
   "upgrade_from_v1": {
     "v1_features_retained": [
@@ -99,12 +99,12 @@
     ]
   },
   "file_manifest": {
-    "core_analyzer": "tensornet/zk/fluidelite_circuit_analyzer.py",
-    "qtt_module": "tensornet/cfd/qtt.py",
-    "mpo_module": "tensornet/cfd/pure_qtt_ops.py",
-    "tci_module": "tensornet/cfd/qtt_tci.py",
-    "gpu_module": "tensornet/cfd/qtt_tci_gpu.py",
-    "halo2_analyzer": "tensornet/zk/halo2_analyzer.py"
+    "core_analyzer": "ontic/zk/fluidelite_circuit_analyzer.py",
+    "qtt_module": "ontic/cfd/qtt.py",
+    "mpo_module": "ontic/cfd/pure_qtt_ops.py",
+    "tci_module": "ontic/cfd/qtt_tci.py",
+    "gpu_module": "ontic/cfd/qtt_tci_gpu.py",
+    "halo2_analyzer": "ontic/zk/halo2_analyzer.py"
   },
   "cryptographic_verification": {
     "sha256_fluidelite_circuit_analyzer": "COMPUTED_AT_RUNTIME",

@@ -89,7 +89,7 @@
       "overall_PASS": true
     },
     "engine": {
-      "md": "The Ontic Engine tensornet.life_sci.md",
+      "md": "The Ontic Engine ontic.life_sci.md",
       "force_field": "AMBER-like LJ + Coulomb + GAFF",
       "thermostat": "Nos\u00e9-Hoover (\u03c4 = 0.5 ps)",
       "integrator": "Velocity Verlet (dt = 2 fs)",

@@ -3,9 +3,9 @@ Phase 19 Test Suite
 ===================
 
 Comprehensive tests for Phase 19 modules:
-- Neural-enhanced truncation (tensornet/neural/)
-- Distributed TN solvers (tensornet/distributed_tn/)
-- Autonomous mission planning (tensornet/autonomy/)
+- Neural-enhanced truncation (ontic/neural/)
+- Distributed TN solvers (ontic/distributed_tn/)
+- Autonomous mission planning (ontic/autonomy/)
 
 Test Coverage:
 - 75+ tests total
@@ -22,7 +22,7 @@ from typing import List, Tuple
 
 
 # =============================================================================
-# Neural Module Tests (tensornet/neural/)
+# Neural Module Tests (ontic/neural/)
 # =============================================================================
 
 class TestTruncationPolicy:
@@ -379,7 +379,7 @@ class TestAlgorithmSelector:
 
 
 # =============================================================================
-# Distributed TN Module Tests (tensornet/distributed_tn/)
+# Distributed TN Module Tests (ontic/distributed_tn/)
 # =============================================================================
 
 class TestDistributedDMRG:
@@ -687,7 +687,7 @@ class TestLoadBalancer:
 
 
 # =============================================================================
-# Autonomy Module Tests (tensornet/autonomy/)
+# Autonomy Module Tests (ontic/autonomy/)
 # =============================================================================
 
 class TestMissionPlanner:

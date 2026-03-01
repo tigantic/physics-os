@@ -1,5 +1,5 @@
 /**
- * HyperTensor Facial Plastics — G3 Plan Author Mode
+ * Ontic Facial Plastics — G3 Plan Author Mode
  *
  * Operator palette, template loading, plan step list with
  * inline parameter editing, compile wiring.

@@ -48,7 +48,7 @@ import time
 from datetime import datetime
 
 # Import modules to test
-sys.path.insert(0, '/home/brad/TiganticLabz/Main_Projects/HyperTensor-VM-main')
+sys.path.insert(0, '/home/brad/TiganticLabz/Main_Projects/physics-os')
 
 from yangmills.su2 import (
     PAULI, TAU, SIGMA_0, 

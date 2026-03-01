@@ -53,7 +53,7 @@
 \pagestyle{fancy}
 \fancyhf{}
 \rhead{Yang-Mills Mass Gap Proof}
-\lhead{HyperTensor-VM}
+\lhead{physics-os}
 \rfoot{Page \thepage}
 \lfoot{Cryptographic Attestation: DILITHIUM-5 + SHA-512}
 
@@ -65,8 +65,8 @@
 }
 
 \author{%
-HyperTensor-VM Collaboration\\
-\texttt{hypertensor-vm@sovereign.compute}\\[1em]
+physics-os Collaboration\\
+\texttt{physics-os@sovereign.compute}\\[1em]
 \small Cryptographically Attested: January 16, 2026
 }
 
@@ -477,7 +477,7 @@ SIGNATURE (Base64, truncated):
   H9I0J1K2L3M4N5O6P7Q8R9S0T1U2V3W4...
 
 VERIFICATION: VALID
-SIGNER: HyperTensor-VM Sovereign Compute
+SIGNER: physics-os Sovereign Compute
 \end{verbatim}
 \end{tcolorbox}
 
@@ -571,7 +571,7 @@ This proof resolves the Millennium Prize Problem for $\SU(2)$ Yang-Mills theory.
 \section*{Acknowledgments}
 %=============================================================================
 
-This work was performed on the HyperTensor-VM sovereign compute infrastructure. All computations are cryptographically attested and reproducible.
+This work was performed on the physics-os sovereign compute infrastructure. All computations are cryptographically attested and reproducible.
 
 %=============================================================================
 \appendix
@@ -582,7 +582,7 @@ To reproduce these results:
 
 \begin{lstlisting}[language=bash,basicstyle=\small\ttfamily]
 # Clone repository
-git clone https://github.com/HyperTensor-VM/yangmills-qtt.git
+git clone https://github.com/physics-os/yangmills-qtt.git
 cd yangmills-qtt
 
 # Install dependencies
@@ -608,7 +608,7 @@ sha512sum -c attestation_hashes.txt
 
 COMPUTATION_ID: YM-MASSGAP-2026-01-16-001
 ALGORITHM: QTT-DMRG Holy Grail
-VERSION: HyperTensor-VM v3.0.0
+VERSION: physics-os v3.0.0
 
 --- INPUT PARAMETERS ---
 GAUGE_GROUP: SU(2)
@@ -650,7 +650,7 @@ H4 (Final):       f1a9c3e7d2b84e6c8a2d4f6b9c1e3a5d7f9b2c4e
 
 --- CRYSTALS-DILITHIUM SIGNATURE ---
 ALGORITHM: Dilithium5
-KEY_ID: HYPERTENSOR-VM-SOVEREIGN-2026
+KEY_ID: PHYSICS-OS-SOVEREIGN-2026
 
 PUBLIC_KEY (SHA256):
   4a7f9c2e8d1b3f6a5e7c9d2b8f4a1e3c7d9b2f5a

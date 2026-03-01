@@ -743,7 +743,7 @@ def emit_evidence_pack(
     
     # Sign manifest
     manifest_json = json.dumps(manifest, indent=2, sort_keys=True, cls=NumpyEncoder)
-    signature_key = b'hypertensor-flagship-2024'
+    signature_key = b'physics-os-flagship-2024'
     signature = hmac.new(signature_key, manifest_json.encode(), hashlib.sha256).hexdigest()
     manifest['signature'] = signature
     
@@ -777,7 +777,7 @@ import json
 import sys
 from pathlib import Path
 
-EXPECTED_SIGNATURE_KEY = b'hypertensor-flagship-2024'
+EXPECTED_SIGNATURE_KEY = b'physics-os-flagship-2024'
 
 def main():
     print("=" * 50)

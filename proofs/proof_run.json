@@ -1,7 +1,7 @@
 {
   "meta": {
     "generated_at": "2025-12-17T23:30:00Z",
-    "package": "tensornet",
+    "package": "ontic",
     "version": "0.1.0",
     "git_commit": "669bfb3d9d63efbaaa9e4524ba3e6ba9684ed8fa",
     "repository": "https://github.com/tigantic/PytorchTN"
@@ -227,7 +227,7 @@
     "worst_error_proof": "2.4"
   },
   "verification_commands": [
-    "cd tensornet_standalone",
+    "cd ontic_standalone",
     "python -m pip install -e .",
     "pytest -q tests/test_proofs.py --disable-warnings",
     "python -c \"import torch; print(torch.__version__)\""

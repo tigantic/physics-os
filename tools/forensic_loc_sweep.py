@@ -212,10 +212,10 @@ def main():
         print(f"{d:<28} {stats['files']:>7,} {stats['sloc']:>10,} {stats['total']:>10,} {mb:>10.2f} {primary:>20}")
     
     # ============================================================
-    # SECTION 3: TENSORNET MODULE BREAKDOWN  
+    # SECTION 3: ONTIC MODULE BREAKDOWN  
     # ============================================================
     print(f"\n{'─'*110}")
-    print(f"SECTION 3: TENSORNET/ MODULE BREAKDOWN (Python SLOC)")
+    print(f"SECTION 3: ONTIC/ MODULE BREAKDOWN (Python SLOC)")
     print(f"{'─'*110}")
     
     tn_modules = {}
@@ -252,7 +252,7 @@ def main():
         print(f"{'  ... + ' + str(len(remaining)) + ' more':<28} {rem_files:>6} {'':>9} {rem_sloc:>9,}")
     
     print(f"{'─'*28} {'─'*6} {'─'*9} {'─'*9}")
-    print(f"{'TENSORNET TOTAL':<28} {tn_total_files:>6} {'':>9} {tn_total_sloc:>9,}")
+    print(f"{'ONTIC TOTAL':<28} {tn_total_files:>6} {'':>9} {tn_total_sloc:>9,}")
     
     # ============================================================
     # SECTION 4: DOMAIN CATEGORY ROLLUPS

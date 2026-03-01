@@ -7,7 +7,7 @@ Measures VRAM usage of FluidElite vs context length.
 Key claim to validate:
     FluidElite memory = O(L × χ²) and BOUNDED regardless of tokens processed.
 
-This uses tensornet.gpu.memory.VRAMManager for profiling.
+This uses ontic.gpu.memory.VRAMManager for profiling.
 
 Usage:
     python -m fluidelite.benchmarks.memory_profile --max-length 16384

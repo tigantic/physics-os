@@ -4,10 +4,10 @@
   "timestamp": "2025-12-28T01:00:00Z",
   "authority": "OPERATION_VALHALLA",
   "components_delivered": [
-    "tensornet/gpu/__init__.py",
-    "tensornet/gpu/tensor_field.py",
-    "tensornet/gpu/fluid_dynamics.py",
-    "tensornet/gpu/memory.py"
+    "ontic/gpu/__init__.py",
+    "ontic/gpu/tensor_field.py",
+    "ontic/gpu/fluid_dynamics.py",
+    "ontic/gpu/memory.py"
   ],
   "performance_validation": {
     "tensor_field": {

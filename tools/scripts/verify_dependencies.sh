@@ -67,13 +67,13 @@ else:
 "
 echo ""
 
-# Check TensorNet
-echo "[6/10] TensorNet Package..."
+# Check Ontic Engine
+echo "[6/10] Ontic Engine Package..."
 python3 -c "
 from ontic.sovereign.bridge_writer import TensorBridgeWriter
 from ontic.sovereign.qtt_slice_extractor import QTTSliceExtractor
 from ontic.sovereign.realtime_tensor_stream import RealtimeTensorStream
-print('✓ TensorNet modules import successfully')
+print('✓ Ontic Engine modules import successfully')
 "
 echo ""
 

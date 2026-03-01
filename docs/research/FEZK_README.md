@@ -2,7 +2,7 @@
 
 ## Overview
 
-FEZK (FLUIDELITE Enhanced ZK) v2.0 is a complete rewrite of the ZK circuit vulnerability analyzer, integrating the full The Ontic Engine tensornet stack for unprecedented scalability.
+FEZK (FLUIDELITE Enhanced ZK) v2.0 is a complete rewrite of the ZK circuit vulnerability analyzer, integrating the full The Ontic Engine ontic stack for unprecedented scalability.
 
 **Key Insight**: ZK circuit analysis is fundamentally a tensor problem. By representing constraint matrices as Quantized Tensor Trains (QTT) and constraint operations as Matrix Product Operators (MPO), we achieve O(log N) complexity instead of O(N²).
 
@@ -12,7 +12,7 @@ FEZK (FLUIDELITE Enhanced ZK) v2.0 is a complete rewrite of the ZK circuit vulne
 |---------|----------|--------------|
 | v1.0 | FLUIDELITE | Basic Circom parsing, interval arithmetic |
 | v1.2 | rSVD Integration | Randomized SVD, QTT compression, initial MPO |
-| **v2.0** | **TensorNet Integration** | **Full MPO-MPS, TCI, GPU, Streaming, gnark** |
+| **v2.0** | **Ontic Engine Integration** | **Full MPO-MPS, TCI, GPU, Streaming, gnark** |
 
 ## Capabilities
 
@@ -56,16 +56,16 @@ FEZK (FLUIDELITE Enhanced ZK) v2.0 is a complete rewrite of the ZK circuit vulne
 
 ```bash
 # Analyze a single circuit
-python -m tensornet.zk.fluidelite_circuit_analyzer circuit.circom
+python -m ontic.zk.fluidelite_circuit_analyzer circuit.circom
 
 # Analyze gnark circuit
-python -m tensornet.zk.fluidelite_circuit_analyzer circuit.go
+python -m ontic.zk.fluidelite_circuit_analyzer circuit.go
 
 # Analyze directory
-python -m tensornet.zk.fluidelite_circuit_analyzer ./circuits/
+python -m ontic.zk.fluidelite_circuit_analyzer ./circuits/
 
 # Show capabilities
-python -m tensornet.zk.fluidelite_circuit_analyzer --version
+python -m ontic.zk.fluidelite_circuit_analyzer --version
 ```
 
 ### Python API
@@ -167,7 +167,7 @@ FEZK v2.0 Test Results: 6/6 PASSED | 0/6 FAILED
                               │
                               ▼
 ┌─────────────────────────────────────────────────────────────┐
-│                  tensornet Stack                            │
+│                  ontic Stack                            │
 ├─────────────────────────────────────────────────────────────┤
 │  qtt.py         - TT-SVD, rSVD compression                  │
 │  pure_qtt_ops.py - QTTState, MPO, apply_mpo, truncate_qtt   │

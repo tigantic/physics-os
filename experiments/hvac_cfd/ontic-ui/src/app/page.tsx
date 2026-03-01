@@ -1,5 +1,5 @@
 /**
- * HyperTensor Root Page
+ * The Physics OS Root Page
  * 
  * Redirects to the CFD dashboard. This is a production application,
  * not a template showcase.

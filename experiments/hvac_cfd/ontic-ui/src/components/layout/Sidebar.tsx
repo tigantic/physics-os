@@ -1,7 +1,7 @@
 /**
  * Sidebar - Main Navigation Component
  * 
- * HyperTensor UI navigation with collapsible sections.
+ * The Physics OS UI navigation with collapsible sections.
  */
 
 'use client';
@@ -101,12 +101,12 @@ export function Sidebar({ className }: SidebarProps) {
         {/* Logo Header */}
         <div className="h-16 flex items-center justify-between px-4 border-b">
           {!isCollapsed && (
-            <Link href="/" className="flex items-center gap-2" aria-label="HyperTensor CFD Home">
+            <Link href="/" className="flex items-center gap-2" aria-label="The Physics OS CFD Home">
               <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center">
                 <Beaker className="h-5 w-5 text-white" aria-hidden="true" />
               </div>
               <div className="flex flex-col">
-                <span className="font-bold text-sm">HyperTensor</span>
+                <span className="font-bold text-sm">The Physics OS</span>
                 <span className="text-[10px] text-muted-foreground">CFD Engine</span>
               </div>
             </Link>

@@ -1,7 +1,7 @@
 {
   "domain": "ns_imex",
-  "certificate_path": "/home/brad/TiganticLabz/FRONT_VAULT/03_SOURCE/Main_Projects/HyperTensor-VM-main/artifacts/NS2D_GAUNTLET.tpc",
-  "trace_path": "/home/brad/TiganticLabz/FRONT_VAULT/03_SOURCE/Main_Projects/HyperTensor-VM-main/traces/ns2d_trace.json",
+  "certificate_path": "/home/brad/TiganticLabz/FRONT_VAULT/03_SOURCE/Main_Projects/physics-os/artifacts/NS2D_GAUNTLET.tpc",
+  "trace_path": "/home/brad/TiganticLabz/FRONT_VAULT/03_SOURCE/Main_Projects/physics-os/traces/ns2d_trace.json",
   "verified": true,
   "grid": "32x32",
   "steps": 11,

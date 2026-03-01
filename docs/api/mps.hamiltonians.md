@@ -32,7 +32,7 @@ H = -t * sum_i (b_i^dag b_{i+1} + h.c.) + (U/2) * sum_i n_i(n_i-1) - mu * sum_i 
 
 **Returns**: `<class 'ontic.core.mpo.MPO'>` - MPO representation
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\mps\hamiltonians.py:336](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\mps\hamiltonians.py#L336)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\mps\hamiltonians.py:336](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\mps\hamiltonians.py#L336)*
 
 ### `heisenberg_mpo`
 
@@ -57,7 +57,7 @@ For XXX model, set Jz = J (or leave as None, which defaults to J).
 
 **Returns**: `<class 'ontic.core.mpo.MPO'>` - MPO representation of Hamiltonian
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\mps\hamiltonians.py:73](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\mps\hamiltonians.py#L73)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\mps\hamiltonians.py:73](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\mps\hamiltonians.py#L73)*
 
 ### `pauli_matrices`
 
@@ -69,7 +69,7 @@ Return Pauli matrices sigma_x, sigma_y, sigma_z.
 
 **Returns**: `<class 'tuple'>` - (sigma_x, sigma_y, sigma_z) each of shape (2, 2)
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\mps\hamiltonians.py:13](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\mps\hamiltonians.py#L13)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\mps\hamiltonians.py:13](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\mps\hamiltonians.py#L13)*
 
 ### `spin_operators`
 
@@ -85,7 +85,7 @@ Return spin operators S_x, S_y, S_z for spin S.
 
 **Returns**: `<class 'tuple'>` - (S_x, S_y, S_z, S_p, S_m) where S_p = S_x + i*S_y, S_m = S_x - i*S_y
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\mps\hamiltonians.py:33](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\mps\hamiltonians.py#L33)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\mps\hamiltonians.py:33](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\mps\hamiltonians.py#L33)*
 
 ### `tfim_mpo`
 
@@ -109,7 +109,7 @@ Critical point at g = 1 (for J = 1).
 
 **Returns**: `<class 'ontic.core.mpo.MPO'>` - MPO representation
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\mps\hamiltonians.py:168](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\mps\hamiltonians.py#L168)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\mps\hamiltonians.py:168](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\mps\hamiltonians.py#L168)*
 
 ### `xx_mpo`
 
@@ -133,7 +133,7 @@ This is equivalent to free fermions and exactly solvable.
 
 **Returns**: `<class 'ontic.core.mpo.MPO'>` - MPO representation
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\mps\hamiltonians.py:230](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\mps\hamiltonians.py#L230)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\mps\hamiltonians.py:230](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\mps\hamiltonians.py#L230)*
 
 ### `xyz_mpo`
 
@@ -157,4 +157,4 @@ H = sum_i (Jx * X_i X_{i+1} + Jy * Y_i Y_{i+1} + Jz * Z_i Z_{i+1}) + h * sum_i Z
 
 **Returns**: `<class 'ontic.core.mpo.MPO'>` - MPO representation
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\mps\hamiltonians.py:258](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\mps\hamiltonians.py#L258)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\mps\hamiltonians.py:258](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\mps\hamiltonians.py#L258)*

@@ -76,7 +76,7 @@ Find multiple lowest eigenvalues using Lanczos.
 
 **Returns**: `typing.Tuple[torch.Tensor, torch.Tensor]` - (eigenvalues, eigenvectors) - sorted by eigenvalue
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\algorithms\lanczos.py:284](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\algorithms\lanczos.py#L284)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\algorithms\lanczos.py:284](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\algorithms\lanczos.py#L284)*
 
 ### `lanczos_expm`
 
@@ -101,7 +101,7 @@ where T_m is the tridiagonal representation in the Krylov basis.
 
 **Returns**: `<class 'torch.Tensor'>` - exp(t*A) @ v
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\algorithms\lanczos.py:189](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\algorithms\lanczos.py#L189)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\algorithms\lanczos.py:189](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\algorithms\lanczos.py#L189)*
 
 ### `lanczos_ground_state`
 
@@ -121,4 +121,4 @@ Find the ground state (lowest eigenvalue) using Lanczos.
 
 **Returns**: `<class 'lanczos.LanczosResult'>` - LanczosResult with ground state eigenvalue and eigenvector
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\algorithms\lanczos.py:58](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\algorithms\lanczos.py#L58)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\algorithms\lanczos.py:58](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\algorithms\lanczos.py#L58)*

@@ -2,7 +2,7 @@
   "_meta": {
     "benchmark": "Golden Physics Benchmark v4.0.0 \u2014 GPU-Native",
     "runner_version": "4.0.0",
-    "config": "/home/brad/TiganticLabz/FRONT_VAULT/03_SOURCE/Main_Projects/HyperTensor-VM-main/benchmarks/golden/configs/benchmark_v1.json",
+    "config": "/home/brad/TiganticLabz/FRONT_VAULT/03_SOURCE/Main_Projects/physics-os/benchmarks/golden/configs/benchmark_v1.json",
     "domains": [
       "burgers",
       "maxwell",

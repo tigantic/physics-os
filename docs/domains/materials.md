@@ -1,6 +1,6 @@
 # Materials Domain Pack
 
-`pip install tensornet[materials]`
+`pip install ontic-engine[materials]`
 
 ## Modules
 

@@ -160,7 +160,7 @@ jobs:
             echo "## The Ontic Engine v${VERSION}"
             echo ""
             echo "### Packages"
-            echo "- \`tensornet\` Python package v${VERSION}"
+            echo "- \`ontic\` Python package v${VERSION}"
             echo "- Rust workspace (18 crates)"
             echo ""
             echo "### Install"

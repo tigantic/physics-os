@@ -264,7 +264,7 @@ def main():
     print(f"Triton: {triton.__version__}")
     
     # Load data
-    data_dir = Path("/home/brad/TiganticLabz/Main_Projects/HyperTensor-VM-main/fluidelite/data")
+    data_dir = Path("/home/brad/TiganticLabz/Main_Projects/physics-os/fluidelite/data")
     train_path = data_dir / "wikitext2_train.txt"
     test_path = data_dir / "wikitext2_test.txt"
     

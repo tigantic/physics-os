@@ -7,7 +7,7 @@ Verify all key findings from multi-plaquette Yang-Mills extension.
 
 import numpy as np
 import sys
-sys.path.insert(0, '/home/brad/TiganticLabz/Main_Projects/HyperTensor-VM-main')
+sys.path.insert(0, '/home/brad/TiganticLabz/Main_Projects/physics-os')
 
 
 def test_single_plaquette_reference():

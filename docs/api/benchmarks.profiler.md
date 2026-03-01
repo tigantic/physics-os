@@ -52,7 +52,7 @@ def to_dict(self) -> Dict[str, Any]
 
 Convert to dictionary.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\benchmarks\profiler.py:86](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\benchmarks\profiler.py#L86)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\benchmarks\profiler.py:86](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\benchmarks\profiler.py#L86)*
 
 ### class `LayerTimer`
 
@@ -68,7 +68,7 @@ def __init__(self, use_cuda: bool = True)
 
 Initialize timer.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\benchmarks\profiler.py:179](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\benchmarks\profiler.py#L179)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\benchmarks\profiler.py:179](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\benchmarks\profiler.py#L179)*
 
 ##### `get_stats`
 
@@ -78,7 +78,7 @@ def get_stats(self) -> Dict[str, float]
 
 Get timing statistics.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\benchmarks\profiler.py:207](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\benchmarks\profiler.py#L207)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\benchmarks\profiler.py:207](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\benchmarks\profiler.py#L207)*
 
 ##### `start`
 
@@ -88,7 +88,7 @@ def start(self)
 
 Start timing.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\benchmarks\profiler.py:188](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\benchmarks\profiler.py#L188)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\benchmarks\profiler.py:188](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\benchmarks\profiler.py#L188)*
 
 ##### `stop`
 
@@ -98,7 +98,7 @@ def stop(self)
 
 Stop timing and record measurement.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\benchmarks\profiler.py:195](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\benchmarks\profiler.py#L195)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\benchmarks\profiler.py:195](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\benchmarks\profiler.py#L195)*
 
 ### class `OperationProfile`
 
@@ -129,7 +129,7 @@ def to_dict(self) -> Dict[str, Any]
 
 Convert to dictionary.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\benchmarks\profiler.py:111](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\benchmarks\profiler.py#L111)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\benchmarks\profiler.py:111](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\benchmarks\profiler.py#L111)*
 
 ### class `OperationType`(Enum)
 
@@ -167,7 +167,7 @@ def to_dict(self) -> Dict[str, Any]
 
 Convert to dictionary.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\benchmarks\profiler.py:46](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\benchmarks\profiler.py#L46)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\benchmarks\profiler.py:46](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\benchmarks\profiler.py#L46)*
 
 ### class `ProfileResult`
 
@@ -200,7 +200,7 @@ def get_operation_breakdown(self) -> Dict[str, float]
 
 Get time breakdown by operation type.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\benchmarks\profiler.py:153](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\benchmarks\profiler.py#L153)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\benchmarks\profiler.py:153](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\benchmarks\profiler.py#L153)*
 
 ##### `get_top_layers`
 
@@ -210,7 +210,7 @@ def get_top_layers(self, n: int = 10) -> List[profiler.LayerProfile]
 
 Get top N layers by time.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\benchmarks\profiler.py:145](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\benchmarks\profiler.py#L145)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\benchmarks\profiler.py:145](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\benchmarks\profiler.py#L145)*
 
 ##### `to_dict`
 
@@ -220,7 +220,7 @@ def to_dict(self) -> Dict[str, Any]
 
 Convert to dictionary.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\benchmarks\profiler.py:160](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\benchmarks\profiler.py#L160)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\benchmarks\profiler.py:160](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\benchmarks\profiler.py#L160)*
 
 ### class `TensorRTProfiler`
 
@@ -242,7 +242,7 @@ Initialize profiler.
 
 - **config** (`typing.Optional[profiler.ProfileConfig]`): Profiling configuration
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\benchmarks\profiler.py:227](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\benchmarks\profiler.py#L227)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\benchmarks\profiler.py:227](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\benchmarks\profiler.py#L227)*
 
 ##### `profile`
 
@@ -259,7 +259,7 @@ Profile model inference.
 
 **Returns**: `<class 'profiler.ProfileResult'>` - ProfileResult with detailed analysis
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\benchmarks\profiler.py:239](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\benchmarks\profiler.py#L239)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\benchmarks\profiler.py:239](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\benchmarks\profiler.py#L239)*
 
 ## Functions
 
@@ -279,7 +279,7 @@ Quick inference profiling.
 
 **Returns**: `typing.Dict[str, typing.Any]` - Dictionary with profiling results
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\benchmarks\profiler.py:516](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\benchmarks\profiler.py#L516)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\benchmarks\profiler.py:516](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\benchmarks\profiler.py#L516)*
 
 ### `profile_model`
 
@@ -297,4 +297,4 @@ Profile a model with given input shape.
 
 **Returns**: `<class 'profiler.ProfileResult'>` - ProfileResult with detailed analysis
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\benchmarks\profiler.py:491](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\benchmarks\profiler.py#L491)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\benchmarks\profiler.py:491](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\benchmarks\profiler.py#L491)*

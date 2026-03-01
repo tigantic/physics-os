@@ -1,5 +1,5 @@
 /**
- * HyperTensor Facial Plastics — G1 Case Library Mode
+ * Ontic Facial Plastics — G1 Case Library Mode
  *
  * Case list with sort, filter, search. CRUD. Curation.
  * Virtual row rendering for performance.

@@ -21,7 +21,7 @@ from pathlib import Path
 # =============================================================================
 # CONFIGURATION
 # =============================================================================
-DATA_DIR = Path('/home/brad/TiganticLabz/Main_Projects/HyperTensor-VM-main/noaa_24h_raw')
+DATA_DIR = Path('/home/brad/TiganticLabz/Main_Projects/physics-os/noaa_24h_raw')
 MAX_RANK = 64
 TEMPORAL_RANK = 16  # Global temporal rank
 DEVICE = torch.device('cuda')

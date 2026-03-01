@@ -256,10 +256,10 @@ This is real physics code, not mockups. Key findings:
 **Issues Found:**
 1. **NONE CRITICAL** - Well implemented bridge.
 
-2. **MINOR:** QTT compression at line 527 uses numpy SVD fallback, not the optimized tensornet version.
+2. **MINOR:** QTT compression at line 527 uses numpy SVD fallback, not the optimized ontic version.
 
 **Action:**
-- [ ] Add tensornet QTT when available (optimization, not required)
+- [ ] Add ontic QTT when available (optimization, not required)
 
 ---
 
@@ -344,7 +344,7 @@ This is real physics code, not mockups. Key findings:
 3. Implement JFA for SDF computation
 4. Add 2nd-order advection scheme (QUICK/MUSCL)
 5. Add radiation heat transfer
-6. Use tensornet QTT when available
+6. Use ontic QTT when available
 
 ---
 

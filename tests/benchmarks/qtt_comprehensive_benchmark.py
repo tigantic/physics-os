@@ -714,7 +714,7 @@ def run_all_benchmarks():
     print(f"Categories: {list(categories.keys())}")
     
     # Save results
-    output_path = "/home/brad/TiganticLabz/Main_Projects/HyperTensor-VM-main/tests/benchmarks/qtt_comprehensive_results.json"
+    output_path = "/home/brad/TiganticLabz/Main_Projects/physics-os/tests/benchmarks/qtt_comprehensive_results.json"
     with open(output_path, "w") as f:
         json.dump({
             "date": datetime.now().isoformat(),

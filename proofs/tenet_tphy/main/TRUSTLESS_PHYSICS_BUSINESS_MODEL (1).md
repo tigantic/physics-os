@@ -184,7 +184,7 @@ No company offers cryptographically verified physics simulation. The combination
 | ZK proofs | zkSync, StarkWare, Polygon | No physics, no scientific computing |
 | Formal verification | Galois, Principia | No physics solvers, no ZK |
 | Physics simulation | Ansys, COMSOL, Siemens | No ZK, no formal verification, dense only |
-| Tensor networks | TensorNetwork (Google), ITensor | No ZK, no formal verification, no CFD at scale |
+| Tensor networks | Ontic Enginework (Google), ITensor | No ZK, no formal verification, no CFD at scale |
 | V&V consulting | ASME V&V standards bodies | Manual process, no cryptographic guarantee |
 
 ### Indirect Competitors

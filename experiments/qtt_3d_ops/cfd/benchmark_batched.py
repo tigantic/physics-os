@@ -10,7 +10,7 @@ Run this on your machine to verify:
 
 Usage:
     cd physics-os-main
-    PYTHONPATH="$PWD:$PYTHONPATH" python3 tensornet/cfd/benchmark_batched.py
+    PYTHONPATH="$PWD:$PYTHONPATH" python3 ontic/cfd/benchmark_batched.py
 """
 
 import torch

@@ -1,5 +1,5 @@
 /**
- * HyperTensor Facial Plastics — G4.5 Parameter Sweep
+ * Ontic Facial Plastics — G4.5 Parameter Sweep
  *
  * Configure sweep: select operator, parameter, range.
  * Execute API.parameterSweep() and render sparkline chart on Canvas2D.

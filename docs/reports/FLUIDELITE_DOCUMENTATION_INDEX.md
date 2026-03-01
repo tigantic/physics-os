@@ -82,7 +82,7 @@
 | `MPOConstraintOps` | MPO constraint operators (framework) |
 | `IntervalPropagator` | Rigorous interval arithmetic |
 
-### tensornet Dependencies
+### ontic Dependencies
 
 | Module | Used For |
 |--------|----------|
@@ -122,7 +122,7 @@
 |----------|-----------|
 | [QTT_COMPRESSION_PHYSICS.md](QTT_COMPRESSION_PHYSICS.md) | QTT theory for CFD (applies to ZK) |
 | [QTT_PHYSICS_SME_DOCUMENT.md](QTT_PHYSICS_SME_DOCUMENT.md) | QTT subject matter expertise |
-| [TOOLBOX.md](TOOLBOX.md) | General tensornet tools reference |
+| [TOOLBOX.md](TOOLBOX.md) | General ontic tools reference |
 
 ---
 
@@ -159,7 +159,7 @@ ALL TESTS PASSED - FLUIDELITE v1.2 OPERATIONAL
 
 ### Run Analysis
 ```bash
-cd /home/brad/TiganticLabz/Main_Projects/HyperTensor-VM-main
+cd /home/brad/TiganticLabz/Main_Projects/physics-os
 python -c "
 from ontic.zk.fluidelite_circuit_analyzer import FluidEliteCircuitAnalyzer
 analyzer = FluidEliteCircuitAnalyzer()

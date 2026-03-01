@@ -1,5 +1,5 @@
 /**
- * HyperTensor Facial Plastics — G6 Three.js 3D Viewer
+ * Ontic Facial Plastics — G6 Three.js 3D Viewer
  *
  * Full scene manager: camera, lights, controls, mesh rendering,
  * landmark sprites, region coloring, wireframe/opacity/reset.

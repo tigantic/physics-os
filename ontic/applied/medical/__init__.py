@@ -1,5 +1,5 @@
 """
-TensorNet Medical Module - Hemodynamic Simulation
+Ontic Engine Medical Module - Hemodynamic Simulation
 
 Phase 11: The Surgical Pre-Flight
 - Non-Newtonian blood flow (shear thinning)

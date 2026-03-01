@@ -116,7 +116,7 @@ Central/skew-symmetric need smaller timestep (already handled in fixed solver wi
 After copying fixed solver:
 ```bash
 cd /path/to/physics_os
-python -m tensornet.hvac.nielsen --re 5000 --nx 256 --ny 128
+python -m ontic.hvac.nielsen --re 5000 --nx 256 --ny 128
 ```
 
 ---

@@ -892,7 +892,7 @@ class QAOA:
 # =============================================================================
 
 
-class TensorNetworkBornMachine:
+class Ontic EngineworkBornMachine:
     """
     Generative model using tensor network as quantum-inspired ansatz.
 
@@ -1238,7 +1238,7 @@ if __name__ == "__main__":
 
     # Test Born Machine
     print("\n3. Testing Tensor Network Born Machine...")
-    tnbm = TensorNetworkBornMachine(n_sites=4, local_dim=2, bond_dim=4)
+    tnbm = Ontic EngineworkBornMachine(n_sites=4, local_dim=2, bond_dim=4)
     # Generate some training data
     data = torch.randint(0, 2, (100, 4))
     history = tnbm.train(data, n_epochs=50, verbose=True)

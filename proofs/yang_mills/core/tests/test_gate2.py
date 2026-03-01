@@ -35,7 +35,7 @@ if torch.cuda.is_available():
     print(f"[Gate 2] VRAM: {torch.cuda.get_device_properties(0).total_memory / 1e9:.1f} GB")
 
 # Import modules
-sys.path.insert(0, '/home/brad/TiganticLabz/Main_Projects/HyperTensor-VM-main')
+sys.path.insert(0, '/home/brad/TiganticLabz/Main_Projects/physics-os')
 
 from yangmills.ground_state_cuda import (
     gpu_ground_state, gpu_exact_diagonalization,

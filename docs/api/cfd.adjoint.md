@@ -68,7 +68,7 @@ or to steady state (for steady primal).
 def __init__(self, Nx: int, Ny: int, dx: float, dy: float, gamma: float = 1.4, config: adjoint.AdjointConfig = None)
 ```
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\adjoint.py:307](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\adjoint.py#L307)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\cfd\adjoint.py:307](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\cfd\adjoint.py#L307)*
 
 ##### `adjoint_rhs`
 
@@ -80,7 +80,7 @@ Compute RHS for adjoint equations.
 
 ∂ψ/∂t = Aᵀ ∂ψ/∂x + Bᵀ ∂ψ/∂y - (∂J/∂U)ᵀ
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\adjoint.py:408](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\adjoint.py#L408)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\cfd\adjoint.py:408](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\cfd\adjoint.py#L408)*
 
 ##### `flux_jacobian_x`
 
@@ -92,7 +92,7 @@ Compute Jacobian ∂F/∂U for x-flux.
 
 **Returns**: `<class 'torch.Tensor'>` - (4, 4, Ny, Nx) tensor of Jacobians at each point
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\adjoint.py:323](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\adjoint.py#L323)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\cfd\adjoint.py:323](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\cfd\adjoint.py#L323)*
 
 ##### `flux_jacobian_y`
 
@@ -104,7 +104,7 @@ Compute Jacobian ∂G/∂U for y-flux.
 
 **Returns**: `<class 'torch.Tensor'>` - (4, 4, Ny, Nx) tensor of Jacobians at each point
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\adjoint.py:366](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\adjoint.py#L366)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\cfd\adjoint.py:366](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\cfd\adjoint.py#L366)*
 
 ##### `solve_steady`
 
@@ -116,7 +116,7 @@ Solve steady adjoint equations.
 
 Iterates until adjoint residual converges.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\adjoint.py:461](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\adjoint.py#L461)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\cfd\adjoint.py:461](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\cfd\adjoint.py#L461)*
 
 ### class `AdjointMethod`(Enum)
 
@@ -144,7 +144,7 @@ For Euler equations, adjoint variables are:
 def shape(self) -> torch.Size
 ```
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\adjoint.py:71](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\adjoint.py#L71)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\cfd\adjoint.py:71](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\cfd\adjoint.py#L71)*
 
 #### Methods
 
@@ -162,7 +162,7 @@ def from_tensor(psi: torch.Tensor) -> 'AdjointState'
 
 Create from (4, Ny, Nx) tensor.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\adjoint.py:81](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\adjoint.py#L81)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\cfd\adjoint.py:81](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\cfd\adjoint.py#L81)*
 
 ##### `to_tensor`
 
@@ -172,7 +172,7 @@ def to_tensor(self) -> torch.Tensor
 
 Stack adjoint variables into (4, Ny, Nx) tensor.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\adjoint.py:75](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\adjoint.py#L75)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\cfd\adjoint.py:75](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\cfd\adjoint.py#L75)*
 
 ##### `zeros`
 
@@ -182,7 +182,7 @@ def zeros(shape: Tuple[int, int], dtype=torch.float64) -> 'AdjointState'
 
 Create zero-initialized adjoint state.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\adjoint.py:91](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\adjoint.py#L91)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\cfd\adjoint.py:91](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\cfd\adjoint.py#L91)*
 
 ### class `DragObjective`(ObjectiveFunction)
 
@@ -207,7 +207,7 @@ surface_mask: Boolean mask for surface cells
     q_inf: Freestream dynamic pressure
     S_ref: Reference area
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\adjoint.py:169](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\adjoint.py#L169)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\cfd\adjoint.py:169](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\cfd\adjoint.py#L169)*
 
 ##### `evaluate`
 
@@ -215,7 +215,7 @@ surface_mask: Boolean mask for surface cells
 def evaluate(self, rho: torch.Tensor, u: torch.Tensor, v: torch.Tensor, p: torch.Tensor, **kwargs) -> torch.Tensor
 ```
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\adjoint.py:190](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\adjoint.py#L190)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\cfd\adjoint.py:190](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\cfd\adjoint.py#L190)*
 
 ##### `gradient`
 
@@ -223,7 +223,7 @@ def evaluate(self, rho: torch.Tensor, u: torch.Tensor, v: torch.Tensor, p: torch
 def gradient(self, rho: torch.Tensor, u: torch.Tensor, v: torch.Tensor, p: torch.Tensor, **kwargs) -> Tuple[torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor]
 ```
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\adjoint.py:204](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\adjoint.py#L204)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\cfd\adjoint.py:204](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\cfd\adjoint.py#L204)*
 
 ### class `HeatFluxObjective`(ObjectiveFunction)
 
@@ -248,7 +248,7 @@ wall_mask: Boolean mask for wall-adjacent cells
     dy: Grid spacing normal to wall
     k: Thermal conductivity field
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\adjoint.py:233](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\adjoint.py#L233)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\cfd\adjoint.py:233](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\cfd\adjoint.py#L233)*
 
 ##### `evaluate`
 
@@ -256,7 +256,7 @@ wall_mask: Boolean mask for wall-adjacent cells
 def evaluate(self, rho: torch.Tensor, u: torch.Tensor, v: torch.Tensor, p: torch.Tensor, T: Optional[torch.Tensor] = None, T_wall: float = 300.0, gamma: float = 1.4, R: float = 287.0, **kwargs) -> torch.Tensor
 ```
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\adjoint.py:249](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\adjoint.py#L249)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\cfd\adjoint.py:249](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\cfd\adjoint.py#L249)*
 
 ##### `gradient`
 
@@ -264,7 +264,7 @@ def evaluate(self, rho: torch.Tensor, u: torch.Tensor, v: torch.Tensor, p: torch
 def gradient(self, rho: torch.Tensor, u: torch.Tensor, v: torch.Tensor, p: torch.Tensor, T_wall: float = 300.0, gamma: float = 1.4, R: float = 287.0, **kwargs) -> Tuple[torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor]
 ```
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\adjoint.py:271](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\adjoint.py#L271)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\cfd\adjoint.py:271](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\cfd\adjoint.py#L271)*
 
 ### class `ObjectiveFunction`
 
@@ -284,7 +284,7 @@ def evaluate(self, rho: torch.Tensor, u: torch.Tensor, v: torch.Tensor, p: torch
 
 Evaluate objective function.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\adjoint.py:132](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\adjoint.py#L132)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\cfd\adjoint.py:132](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\cfd\adjoint.py#L132)*
 
 ##### `gradient`
 
@@ -296,7 +296,7 @@ Compute gradient ∂J/∂U in primitive variables.
 
 **Returns**: `typing.Tuple[torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor]` - Tuple of (∂J/∂ρ, ∂J/∂u, ∂J/∂v, ∂J/∂p)
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\adjoint.py:143](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\adjoint.py#L143)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\cfd\adjoint.py:143](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\cfd\adjoint.py#L143)*
 
 ### class `ObjectiveType`(Enum)
 
@@ -342,7 +342,7 @@ For surface points, sensitivity is:
 
 **Returns**: `<class 'torch.Tensor'>` - Sensitivity on surface
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\adjoint.py:522](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\adjoint.py#L522)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\cfd\adjoint.py:522](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\cfd\adjoint.py#L522)*
 
 ### `validate_adjoint`
 
@@ -352,4 +352,4 @@ def validate_adjoint()
 
 Run validation tests for adjoint module.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\adjoint.py:570](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\cfd\adjoint.py#L570)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\cfd\adjoint.py:570](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\cfd\adjoint.py#L570)*

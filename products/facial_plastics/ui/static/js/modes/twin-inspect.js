@@ -1,5 +1,5 @@
 /**
- * HyperTensor Facial Plastics — G2 Twin Inspector Mode
+ * Ontic Facial Plastics — G2 Twin Inspector Mode
  *
  * Digital twin metadata, mesh statistics, landmarks table,
  * region breakdown, data quality indicators.

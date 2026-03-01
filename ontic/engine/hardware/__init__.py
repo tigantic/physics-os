@@ -1,5 +1,5 @@
 """
-TensorNet Hardware Abstraction Layer
+Ontic Engine Hardware Abstraction Layer
 =====================================
 
 Unified interface for heterogeneous compute backends:

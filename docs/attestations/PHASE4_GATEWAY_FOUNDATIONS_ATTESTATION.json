@@ -10,10 +10,10 @@
   "completion_status": "PARTIAL - Architectural Foundations Complete",
   
   "completed_deliverables": {
-    "tensornet/gateway/__init__.py": "complete",
-    "tensornet/gateway/photonic_discipline.py": "complete",
-    "tensornet/gateway/modular_grid.py": "complete",
-    "tensornet/gateway/onion_renderer.py": "complete"
+    "ontic/gateway/__init__.py": "complete",
+    "ontic/gateway/photonic_discipline.py": "complete",
+    "ontic/gateway/modular_grid.py": "complete",
+    "ontic/gateway/onion_renderer.py": "complete"
   },
   
   "photonic_discipline": {

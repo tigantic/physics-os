@@ -1,5 +1,5 @@
 /**
- * HyperTensor Facial Plastics — G3.5 Simulation Console
+ * Ontic Facial Plastics — G3.5 Simulation Console
  *
  * Structured compilation result viewer: boundary conditions,
  * material modifications, mesh modifications.

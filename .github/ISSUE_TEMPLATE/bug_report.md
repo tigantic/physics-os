@@ -42,7 +42,7 @@ assignees: ''
 
 ```python
 # Minimal code that reproduces the issue
-import tensornet
+import ontic
 
 # Your code here
 ```

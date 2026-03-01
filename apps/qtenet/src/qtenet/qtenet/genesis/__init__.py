@@ -29,7 +29,7 @@ Example:
 Copyright (c) 2026 Tigantic Holdings LLC. All Rights Reserved.
 """
 
-# Re-export all Genesis layers from upstream tensornet
+# Re-export all Genesis layers from upstream ontic
 from ontic.genesis import (
     # Core Infrastructure
     get_logger,

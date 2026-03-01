@@ -1,5 +1,5 @@
 /**
- * HyperTensor Facial Plastics — Three.js Loader
+ * Ontic Facial Plastics — Three.js Loader
  *
  * Loads Three.js and OrbitControls from the self-hosted importmap,
  * creates a mutable proxy (ES module namespaces are sealed),

@@ -31,7 +31,7 @@ QTT Rules Enforced:
     - No decompression in solver loop: qtt_eval_batch for point access
     - No dense arrays in solver loop: TCI builds QTTs directly
 
-Author: HyperTensor Team
+Author: The Physics OS Team
 """
 
 from __future__ import annotations
@@ -43,8 +43,8 @@ from typing import Any, Callable, Dict, List, Optional, Tuple
 import torch
 from torch import Tensor
 
-from tensornet.cfd.nd_shift_mpo import make_nd_shift_mpo
-from tensornet.cfd.qtt_triton_native import (
+from ontic.cfd.nd_shift_mpo import make_nd_shift_mpo
+from ontic.cfd.qtt_triton_native import (
     PackedMPO,
     PackedQTT,
     adaptive_truncate,
@@ -58,7 +58,7 @@ from tensornet.cfd.qtt_triton_native import (
     triton_qtt_norm,
     triton_qtt_scale,
 )
-from tensornet.cfd.qtt_tci import qtt_from_function
+from ontic.cfd.qtt_tci import qtt_from_function
 
 # =====================================================================
 # Chemical Mechanism Data

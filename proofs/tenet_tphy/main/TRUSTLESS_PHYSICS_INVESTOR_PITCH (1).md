@@ -99,7 +99,7 @@ ZK proving systems (Plonk, STARKs, Groth16) have been battle-tested in crypto wi
 | **Ansys** ($2.1B rev) | ✗ | ✗ | ✓ | ✗ |
 | **COMSOL** | ✗ | ✗ | ✓ | ✗ |
 | **StarkWare** ($8B val) | ✗ | ✓ | ✗ | ✗ |
-| **Google TensorNetwork** | ✗ | ✗ | Partial | Partial |
+| **Google Ontic Enginework** | ✗ | ✗ | Partial | Partial |
 | **Palantir** ($50B val) | ✗ | ✗ | ✗ | ✗ |
 | **Trustless Physics** | ✓ | ✓ | ✓ | ✓ |
 

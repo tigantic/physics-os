@@ -73,7 +73,7 @@ def bandwidth_gb_s(self) -> float
 
 Compute achieved memory bandwidth.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\core\gpu.py:74](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\core\gpu.py#L74)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\core\gpu.py:74](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\core\gpu.py#L74)*
 
 ##### `gflops`
 
@@ -83,7 +83,7 @@ def gflops(self) -> float
 
 Compute achieved GFLOP/s.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\core\gpu.py:80](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\core\gpu.py#L80)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\core\gpu.py:80](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\core\gpu.py#L80)*
 
 #### Methods
 
@@ -116,7 +116,7 @@ Args:
 device: Target device
     pool_size: Size in bytes
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\core\gpu.py:144](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\core\gpu.py#L144)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\core\gpu.py:144](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\core\gpu.py#L144)*
 
 ##### `allocate`
 
@@ -126,7 +126,7 @@ def allocate(self, shape: Tuple[int, ...], dtype: torch.dtype) -> torch.Tensor
 
 Allocate tensor from pool.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\core\gpu.py:155](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\core\gpu.py#L155)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\core\gpu.py:155](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\core\gpu.py#L155)*
 
 ##### `reset`
 
@@ -136,7 +136,7 @@ def reset(self)
 
 Reset pool for next iteration.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\core\gpu.py:173](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\core\gpu.py#L173)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\core\gpu.py:173](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\core\gpu.py#L173)*
 
 ## Functions
 
@@ -159,7 +159,7 @@ Uses optimized contraction order for GPU.
 
 **Returns**: `<class 'torch.Tensor'>` - Result vectors (batch_size, m1*m2*...*md)
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\core\gpu.py:180](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\core\gpu.py#L180)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\core\gpu.py:180](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\core\gpu.py#L180)*
 
 ### `benchmark_kernel`
 
@@ -179,7 +179,7 @@ Benchmark a GPU kernel.
 
 **Returns**: `<class 'gpu.KernelStats'>` - KernelStats with timing information
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\core\gpu.py:538](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\core\gpu.py#L538)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\core\gpu.py:538](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\core\gpu.py#L538)*
 
 ### `compute_strain_rate_gpu`
 
@@ -197,7 +197,7 @@ S_ij = 0.5 * (∂u_i/∂x_j + ∂u_j/∂x_i)
 
 **Returns**: `<class 'torch.Tensor'>` - Strain rate magnitude |S| = √(2 S_ij S_ij)
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\core\gpu.py:379](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\core\gpu.py#L379)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\core\gpu.py:379](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\core\gpu.py#L379)*
 
 ### `get_device`
 
@@ -213,7 +213,7 @@ Get the appropriate compute device.
 
 **Returns**: `<class 'torch.device'>` - torch.device object
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\core\gpu.py:86](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\core\gpu.py#L86)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\core\gpu.py:86](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\core\gpu.py#L86)*
 
 ### `optimized_einsum`
 
@@ -231,7 +231,7 @@ Optimized Einstein summation with contraction path optimization.
 
 **Returns**: `<class 'torch.Tensor'>` - Result tensor
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\core\gpu.py:234](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\core\gpu.py#L234)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\core\gpu.py:234](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\core\gpu.py#L234)*
 
 ### `roe_flux_gpu`
 
@@ -251,7 +251,7 @@ in parallel on GPU.
 
 **Returns**: `typing.Tuple[torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor]` - (F_rho, F_rhou, F_rhov, F_E) flux tensors
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\core\gpu.py:258](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\core\gpu.py#L258)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\core\gpu.py:258](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\core\gpu.py#L258)*
 
 ### `to_device`
 
@@ -269,7 +269,7 @@ Transfer tensor to device with optimal settings.
 
 **Returns**: `<class 'torch.Tensor'>` - Tensor on target device
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\core\gpu.py:115](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\core\gpu.py#L115)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\core\gpu.py:115](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\core\gpu.py#L115)*
 
 ### `validate_gpu`
 
@@ -279,7 +279,7 @@ def validate_gpu()
 
 Run validation tests for GPU acceleration.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\core\gpu.py:589](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\core\gpu.py#L589)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\core\gpu.py:589](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\core\gpu.py#L589)*
 
 ### `viscous_flux_gpu`
 
@@ -302,4 +302,4 @@ on GPU with fused operations.
 
 **Returns**: `typing.Tuple[torch.Tensor, ...]` - Viscous flux tensors
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\core\gpu.py:448](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\core\gpu.py#L448)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\core\gpu.py:448](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\core\gpu.py#L448)*

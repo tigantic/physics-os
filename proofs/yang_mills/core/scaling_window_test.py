@@ -31,7 +31,7 @@ import time
 import sys
 from typing import Dict, List, Tuple
 
-sys.path.insert(0, '/home/brad/TiganticLabz/Main_Projects/HyperTensor-VM-main')
+sys.path.insert(0, '/home/brad/TiganticLabz/Main_Projects/physics-os')
 
 from yangmills.tensor_network.dmrg import compute_gap_tensor_network
 

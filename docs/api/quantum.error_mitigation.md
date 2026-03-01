@@ -36,7 +36,7 @@ Corrects single bit-flip (X) errors.
 def distance(self) -> int
 ```
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\error_mitigation.py:651](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\error_mitigation.py#L651)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\quantum\error_mitigation.py:651](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\quantum\error_mitigation.py#L651)*
 
 ##### `n_logical`
 
@@ -44,7 +44,7 @@ def distance(self) -> int
 def n_logical(self) -> int
 ```
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\error_mitigation.py:647](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\error_mitigation.py#L647)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\quantum\error_mitigation.py:647](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\quantum\error_mitigation.py#L647)*
 
 ##### `n_physical`
 
@@ -52,7 +52,7 @@ def n_logical(self) -> int
 def n_physical(self) -> int
 ```
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\error_mitigation.py:643](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\error_mitigation.py#L643)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\quantum\error_mitigation.py:643](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\quantum\error_mitigation.py#L643)*
 
 #### Methods
 
@@ -64,7 +64,7 @@ def correct_error(self, state: torch.Tensor, syndrome: int) -> torch.Tensor
 
 Apply correction based on syndrome.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\error_mitigation.py:712](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\error_mitigation.py#L712)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\quantum\error_mitigation.py:712](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\quantum\error_mitigation.py#L712)*
 
 ##### `decode`
 
@@ -74,7 +74,7 @@ def decode(self, physical_state: torch.Tensor) -> torch.Tensor
 
 Decode by majority voting.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\error_mitigation.py:672](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\error_mitigation.py#L672)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\quantum\error_mitigation.py:672](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\quantum\error_mitigation.py#L672)*
 
 ##### `encode`
 
@@ -87,7 +87,7 @@ Encode single logical qubit.
 |0⟩ → |000⟩
 |1⟩ → |111⟩
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\error_mitigation.py:655](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\error_mitigation.py#L655)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\quantum\error_mitigation.py:655](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\quantum\error_mitigation.py#L655)*
 
 ##### `syndrome_measure`
 
@@ -99,7 +99,7 @@ Measure syndrome bits.
 
 Syndrome = (Z₀Z₁, Z₁Z₂)
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\error_mitigation.py:686](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\error_mitigation.py#L686)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\quantum\error_mitigation.py:686](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\quantum\error_mitigation.py#L686)*
 
 ### class `CDRConfig`
 
@@ -133,7 +133,7 @@ then applies correction to non-Clifford circuits.
 def __init__(self, config: Optional[error_mitigation.CDRConfig] = None)
 ```
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\error_mitigation.py:503](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\error_mitigation.py#L503)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\quantum\error_mitigation.py:503](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\quantum\error_mitigation.py#L503)*
 
 ##### `generate_training_circuits`
 
@@ -145,7 +145,7 @@ Generate Clifford training circuits near the target.
 
 **Returns**: `typing.List[typing.Tuple[typing.List, float]]` - List of (circuit, ideal_value) pairs
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\error_mitigation.py:507](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\error_mitigation.py#L507)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\quantum\error_mitigation.py:507](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\quantum\error_mitigation.py#L507)*
 
 ##### `mitigate`
 
@@ -155,7 +155,7 @@ def mitigate(self, noisy_value: float) -> float
 
 Apply learned correction.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\error_mitigation.py:585](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\error_mitigation.py#L585)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\quantum\error_mitigation.py:585](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\quantum\error_mitigation.py#L585)*
 
 ##### `train`
 
@@ -170,7 +170,7 @@ Train regression model on Clifford data.
 - **training_data** (`typing.List[typing.Tuple[typing.List, float]]`): List of (circuit, ideal_value) pairs
 - **noisy_executor** (`typing.Callable[[typing.List], float]`): Function to run circuits with noise
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\error_mitigation.py:551](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\error_mitigation.py#L551)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\quantum\error_mitigation.py:551](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\quantum\error_mitigation.py#L551)*
 
 ### class `ExtrapolationMethod`(Enum)
 
@@ -194,7 +194,7 @@ Args:
 
 kraus_ops: List of Kraus operators
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\error_mitigation.py:136](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\error_mitigation.py#L136)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\quantum\error_mitigation.py:136](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\quantum\error_mitigation.py#L136)*
 
 ##### `amplitude_damping`
 
@@ -204,7 +204,7 @@ def amplitude_damping(gamma: float) -> 'KrausChannel'
 
 Create amplitude damping channel with decay rate gamma.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\error_mitigation.py:176](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\error_mitigation.py#L176)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\quantum\error_mitigation.py:176](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\quantum\error_mitigation.py#L176)*
 
 ##### `apply`
 
@@ -214,7 +214,7 @@ def apply(self, rho: torch.Tensor) -> torch.Tensor
 
 Apply channel to density matrix.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\error_mitigation.py:154](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\error_mitigation.py#L154)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\quantum\error_mitigation.py:154](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\quantum\error_mitigation.py#L154)*
 
 ##### `bit_flip`
 
@@ -224,7 +224,7 @@ def bit_flip(p: float) -> 'KrausChannel'
 
 Create bit-flip channel.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\error_mitigation.py:190](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\error_mitigation.py#L190)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\quantum\error_mitigation.py:190](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\quantum\error_mitigation.py#L190)*
 
 ##### `depolarizing`
 
@@ -234,7 +234,7 @@ def depolarizing(p: float) -> 'KrausChannel'
 
 Create depolarizing channel with probability p.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\error_mitigation.py:161](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\error_mitigation.py#L161)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\quantum\error_mitigation.py:161](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\quantum\error_mitigation.py#L161)*
 
 ##### `phase_damping`
 
@@ -244,7 +244,7 @@ def phase_damping(gamma: float) -> 'KrausChannel'
 
 Create phase damping channel.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\error_mitigation.py:183](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\error_mitigation.py#L183)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\quantum\error_mitigation.py:183](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\quantum\error_mitigation.py#L183)*
 
 ##### `phase_flip`
 
@@ -254,7 +254,7 @@ def phase_flip(p: float) -> 'KrausChannel'
 
 Create phase-flip channel.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\error_mitigation.py:197](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\error_mitigation.py#L197)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\quantum\error_mitigation.py:197](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\quantum\error_mitigation.py#L197)*
 
 ### class `NoiseAwareOptimizer`
 
@@ -273,7 +273,7 @@ Incorporates:
 def __init__(self, objective: Callable[[torch.Tensor], float], n_params: int, config: Optional[error_mitigation.NoiseAwareVQEConfig] = None)
 ```
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\error_mitigation.py:935](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\error_mitigation.py#L935)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\quantum\error_mitigation.py:935](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\quantum\error_mitigation.py#L935)*
 
 ##### `mitigated_objective`
 
@@ -285,7 +285,7 @@ Evaluate objective with error mitigation.
 
 **Returns**: `typing.Tuple[float, float]` - (mitigated_value, uncertainty)
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\error_mitigation.py:955](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\error_mitigation.py#L955)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\quantum\error_mitigation.py:955](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\quantum\error_mitigation.py#L955)*
 
 ##### `optimize`
 
@@ -297,7 +297,7 @@ Run noise-aware optimization.
 
 **Returns**: `typing.Dict` - Optimization results
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\error_mitigation.py:988](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\error_mitigation.py#L988)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\quantum\error_mitigation.py:988](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\quantum\error_mitigation.py#L988)*
 
 ### class `NoiseAwareVQEConfig`
 
@@ -365,7 +365,7 @@ def add_amplitude_damping(self, gamma: float, qubits: Optional[List[int]] = None
 
 Add amplitude damping (T1 decay).
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\error_mitigation.py:78](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\error_mitigation.py#L78)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\quantum\error_mitigation.py:78](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\quantum\error_mitigation.py#L78)*
 
 ##### `add_depolarizing`
 
@@ -375,7 +375,7 @@ def add_depolarizing(self, p: float, qubits: Optional[List[int]] = None)
 
 Add depolarizing noise channel.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\error_mitigation.py:73](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\error_mitigation.py#L73)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\quantum\error_mitigation.py:73](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\quantum\error_mitigation.py#L73)*
 
 ##### `add_phase_damping`
 
@@ -385,7 +385,7 @@ def add_phase_damping(self, gamma: float, qubits: Optional[List[int]] = None)
 
 Add phase damping (T2 decay).
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\error_mitigation.py:83](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\error_mitigation.py#L83)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\quantum\error_mitigation.py:83](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\quantum\error_mitigation.py#L83)*
 
 ##### `add_readout_error`
 
@@ -395,7 +395,7 @@ def add_readout_error(self, qubit: int, p0_to_1: float, p1_to_0: float)
 
 Add readout error for a qubit.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\error_mitigation.py:88](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\error_mitigation.py#L88)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\quantum\error_mitigation.py:88](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\quantum\error_mitigation.py#L88)*
 
 ##### `from_device_params`
 
@@ -405,7 +405,7 @@ def from_device_params(n_qubits: int, single_qubit_error: float = 0.001, two_qub
 
 Create noise model from typical device parameters.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\error_mitigation.py:98](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\error_mitigation.py#L98)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\quantum\error_mitigation.py:98](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\quantum\error_mitigation.py#L98)*
 
 ##### `set_gate_error`
 
@@ -415,7 +415,7 @@ def set_gate_error(self, gate_name: str, error_rate: float)
 
 Set error rate for a specific gate type.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\error_mitigation.py:93](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\error_mitigation.py#L93)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\quantum\error_mitigation.py:93](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\quantum\error_mitigation.py#L93)*
 
 ### class `NoiseType`(Enum)
 
@@ -455,7 +455,7 @@ Corrects single phase-flip (Z) errors.
 def distance(self) -> int
 ```
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\error_mitigation.py:758](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\error_mitigation.py#L758)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\quantum\error_mitigation.py:758](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\quantum\error_mitigation.py#L758)*
 
 ##### `n_logical`
 
@@ -463,7 +463,7 @@ def distance(self) -> int
 def n_logical(self) -> int
 ```
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\error_mitigation.py:754](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\error_mitigation.py#L754)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\quantum\error_mitigation.py:754](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\quantum\error_mitigation.py#L754)*
 
 ##### `n_physical`
 
@@ -471,7 +471,7 @@ def n_logical(self) -> int
 def n_physical(self) -> int
 ```
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\error_mitigation.py:750](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\error_mitigation.py#L750)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\quantum\error_mitigation.py:750](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\quantum\error_mitigation.py#L750)*
 
 #### Methods
 
@@ -483,7 +483,7 @@ def decode(self, physical_state: torch.Tensor) -> torch.Tensor
 
 Decode phase-flip code.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\error_mitigation.py:781](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\error_mitigation.py#L781)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\quantum\error_mitigation.py:781](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\quantum\error_mitigation.py#L781)*
 
 ##### `encode`
 
@@ -493,7 +493,7 @@ def encode(self, logical_state: torch.Tensor) -> torch.Tensor
 
 Encode into phase-flip code.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\error_mitigation.py:762](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\error_mitigation.py#L762)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\quantum\error_mitigation.py:762](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\quantum\error_mitigation.py#L762)*
 
 ##### `syndrome_measure`
 
@@ -503,7 +503,7 @@ def syndrome_measure(self, state: torch.Tensor) -> torch.Tensor
 
 Measure phase-flip syndrome in X basis.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\error_mitigation.py:803](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\error_mitigation.py#L803)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\quantum\error_mitigation.py:803](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\quantum\error_mitigation.py#L803)*
 
 ### class `ProbabilisticErrorCancellation`
 
@@ -520,7 +520,7 @@ ideal operations and samples to reconstruct ideal expectation.
 def __init__(self, noise_model: error_mitigation.NoiseModel, config: Optional[error_mitigation.PECConfig] = None)
 ```
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\error_mitigation.py:383](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\error_mitigation.py#L383)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\quantum\error_mitigation.py:383](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\quantum\error_mitigation.py#L383)*
 
 ##### `decompose_noisy_gate`
 
@@ -536,7 +536,7 @@ Inverse: I(ρ) = (1/(1-p))[N(ρ) - (p/3)(X + Y + Z)]
 
 **Returns**: `typing.List[typing.Tuple[float, typing.Callable]]` - List of (quasi_probability, gate_operation) tuples
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\error_mitigation.py:390](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\error_mitigation.py#L390)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\quantum\error_mitigation.py:390](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\quantum\error_mitigation.py#L390)*
 
 ##### `mitigate`
 
@@ -553,7 +553,7 @@ Apply PEC mitigation via Monte Carlo sampling.
 
 **Returns**: `typing.Tuple[float, float]` - (mitigated_value, statistical_error)
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\error_mitigation.py:437](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\error_mitigation.py#L437)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\quantum\error_mitigation.py:437](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\quantum\error_mitigation.py#L437)*
 
 ##### `sampling_overhead`
 
@@ -565,7 +565,7 @@ Compute sampling overhead (cost factor).
 
 For PEC, the variance increases by γ² where γ = Σ|c_i|.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\error_mitigation.py:423](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\error_mitigation.py#L423)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\quantum\error_mitigation.py:423](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\quantum\error_mitigation.py#L423)*
 
 ### class `QECCode`(ABC)
 
@@ -581,7 +581,7 @@ def distance(self) -> int
 
 Code distance (number of errors that can be detected).
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\error_mitigation.py:611](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\error_mitigation.py#L611)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\quantum\error_mitigation.py:611](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\quantum\error_mitigation.py#L611)*
 
 ##### `n_logical`
 
@@ -591,7 +591,7 @@ def n_logical(self) -> int
 
 Number of logical qubits.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\error_mitigation.py:605](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\error_mitigation.py#L605)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\quantum\error_mitigation.py:605](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\quantum\error_mitigation.py#L605)*
 
 ##### `n_physical`
 
@@ -601,7 +601,7 @@ def n_physical(self) -> int
 
 Number of physical qubits.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\error_mitigation.py:599](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\error_mitigation.py#L599)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\quantum\error_mitigation.py:599](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\quantum\error_mitigation.py#L599)*
 
 #### Methods
 
@@ -613,7 +613,7 @@ def decode(self, physical_state: torch.Tensor) -> torch.Tensor
 
 Decode physical state to logical qubits.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\error_mitigation.py:622](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\error_mitigation.py#L622)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\quantum\error_mitigation.py:622](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\quantum\error_mitigation.py#L622)*
 
 ##### `encode`
 
@@ -623,7 +623,7 @@ def encode(self, logical_state: torch.Tensor) -> torch.Tensor
 
 Encode logical state into physical qubits.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\error_mitigation.py:617](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\error_mitigation.py#L617)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\quantum\error_mitigation.py:617](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\quantum\error_mitigation.py#L617)*
 
 ##### `syndrome_measure`
 
@@ -633,7 +633,7 @@ def syndrome_measure(self, state: torch.Tensor) -> torch.Tensor
 
 Measure error syndrome.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\error_mitigation.py:627](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\error_mitigation.py#L627)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\quantum\error_mitigation.py:627](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\quantum\error_mitigation.py#L627)*
 
 ### class `ShorCode`(QECCode)
 
@@ -650,7 +650,7 @@ bit-flip and phase-flip codes.
 def distance(self) -> int
 ```
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\error_mitigation.py:828](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\error_mitigation.py#L828)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\quantum\error_mitigation.py:828](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\quantum\error_mitigation.py#L828)*
 
 ##### `n_logical`
 
@@ -658,7 +658,7 @@ def distance(self) -> int
 def n_logical(self) -> int
 ```
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\error_mitigation.py:824](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\error_mitigation.py#L824)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\quantum\error_mitigation.py:824](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\quantum\error_mitigation.py#L824)*
 
 ##### `n_physical`
 
@@ -666,7 +666,7 @@ def n_logical(self) -> int
 def n_physical(self) -> int
 ```
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\error_mitigation.py:820](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\error_mitigation.py#L820)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\quantum\error_mitigation.py:820](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\quantum\error_mitigation.py#L820)*
 
 #### Methods
 
@@ -678,7 +678,7 @@ def decode(self, physical_state: torch.Tensor) -> torch.Tensor
 
 Decode Shor code.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\error_mitigation.py:878](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\error_mitigation.py#L878)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\quantum\error_mitigation.py:878](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\quantum\error_mitigation.py#L878)*
 
 ##### `encode`
 
@@ -691,7 +691,7 @@ Encode using Shor's 9-qubit code.
 |0_L⟩ = (|000⟩ + |111⟩)(|000⟩ + |111⟩)(|000⟩ + |111⟩) / 2√2
 |1_L⟩ = (|000⟩ - |111⟩)(|000⟩ - |111⟩)(|000⟩ - |111⟩) / 2√2
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\error_mitigation.py:832](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\error_mitigation.py#L832)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\quantum\error_mitigation.py:832](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\quantum\error_mitigation.py#L832)*
 
 ##### `syndrome_measure`
 
@@ -701,7 +701,7 @@ def syndrome_measure(self, state: torch.Tensor) -> torch.Tensor
 
 Measure Shor code syndrome (8 syndrome bits).
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\error_mitigation.py:906](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\error_mitigation.py#L906)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\quantum\error_mitigation.py:906](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\quantum\error_mitigation.py#L906)*
 
 ### class `ZNEConfig`
 
@@ -735,7 +735,7 @@ Runs circuit at multiple noise levels and extrapolates to zero noise.
 def __init__(self, config: Optional[error_mitigation.ZNEConfig] = None)
 ```
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\error_mitigation.py:232](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\error_mitigation.py#L232)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\quantum\error_mitigation.py:232](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\quantum\error_mitigation.py#L232)*
 
 ##### `extrapolate`
 
@@ -752,7 +752,7 @@ Extrapolate to zero noise.
 
 **Returns**: `<class 'float'>` - Extrapolated zero-noise value
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\error_mitigation.py:267](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\error_mitigation.py#L267)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\quantum\error_mitigation.py:267](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\quantum\error_mitigation.py#L267)*
 
 ##### `fold_circuit`
 
@@ -772,7 +772,7 @@ U → U (U† U)^n for n repetitions
 
 **Returns**: `typing.Callable[[], float]` - Scaled circuit executor
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\error_mitigation.py:235](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\error_mitigation.py#L235)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\quantum\error_mitigation.py:235](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\quantum\error_mitigation.py#L235)*
 
 ##### `mitigate`
 
@@ -789,7 +789,7 @@ Apply ZNE mitigation.
 
 **Returns**: `<class 'float'>` - Mitigated expectation value
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\error_mitigation.py:335](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\error_mitigation.py#L335)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\quantum\error_mitigation.py:335](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\quantum\error_mitigation.py#L335)*
 
 ## Functions
 
@@ -809,7 +809,7 @@ Apply error mitigation to a circuit execution.
 
 **Returns**: `<class 'float'>` - Mitigated expectation value
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\error_mitigation.py:1054](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\error_mitigation.py#L1054)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\quantum\error_mitigation.py:1054](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\quantum\error_mitigation.py#L1054)*
 
 ### `create_device_noise_model`
 
@@ -825,4 +825,4 @@ Create noise model from device calibration data.
 
 **Returns**: `<class 'error_mitigation.NoiseModel'>` - NoiseModel configured for the device
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\error_mitigation.py:1091](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\quantum\error_mitigation.py#L1091)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\quantum\error_mitigation.py:1091](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\quantum\error_mitigation.py#L1091)*

@@ -9,7 +9,7 @@ Tensor networks provide an efficient representation of quantum many-body states.
 ## Installation
 
 ```bash
-pip install tensornet
+pip install ontic-engine
 ```
 
 ## Quick Start: Heisenberg Spin Chain

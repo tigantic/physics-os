@@ -130,10 +130,10 @@ describe('Sidebar', () => {
   });
 
   describe('branding', () => {
-    it('should display HyperTensor branding', () => {
+    it('should display The Physics OS branding', () => {
       renderSidebar();
       
-      expect(screen.getByText(/hypertensor/i)).toBeInTheDocument();
+      expect(screen.getByText(/physics.os/i)).toBeInTheDocument();
     });
   });
 

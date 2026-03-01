@@ -77,7 +77,7 @@ The complete catalog of The Physics OS - a physics-first tensor network ecosyste
 
 #### Top 15 Submodules by LOC
 
-| Submodule | Files | LOC | % of tensornet |
+| Submodule | Files | LOC | % of ontic |
 |-----------|------:|----:|---------------:|
 | `cfd/` | 73 | 45,681 | 21.4% |
 | `exploit/` | 38 | 25,975 | 12.2% |
@@ -985,7 +985,7 @@ print(f"Best intervention: rank {best.rank_after}, fidelity {best.fidelity:.3f}"
 
 | Error | Cause | Solution |
 |-------|-------|----------|
-| `ModuleNotFoundError: tensornet` | Package not installed | `pip install -e .` from repo root |
+| `ModuleNotFoundError: ontic` | Package not installed | `pip install -e .` from repo root |
 | `ImportError: cannot import 'Euler3D'` | Wrong import path | Use `from ontic.cfd import Euler3D` |
 | `CUDA out of memory` | GPU memory exhausted | Reduce `grid_bits` or use CPU fallback |
 

@@ -23,12 +23,12 @@ from torch import Tensor
 # ═══════════════════════════════════════════════════════════════════════════
 
 _CUDA_AVAILABLE = False
-_tensornet_cuda = None
+_ontic_cuda = None
 
 
 def _load_cuda_extension():
     """Attempt to load the CUDA extension."""
-    global _CUDA_AVAILABLE, _tensornet_cuda
+    global _CUDA_AVAILABLE, _ontic_cuda
 
     if not torch.cuda.is_available():
         return False
@@ -39,9 +39,9 @@ def _load_cuda_extension():
         if cuda_dir not in sys.path:
             sys.path.insert(0, cuda_dir)
 
-        import tensornet_cuda
+        import ontic_cuda
 
-        _tensornet_cuda = tensornet_cuda
+        _ontic_cuda = ontic_cuda
         _CUDA_AVAILABLE = True
         return True
     except ImportError as e:
@@ -176,7 +176,7 @@ def advect_2d(
     )
 
     if use_cuda:
-        return _tensornet_cuda.advect_2d(density, velocity, dt)
+        return _ontic_cuda.advect_2d(density, velocity, dt)
     else:
         return _advect_2d_pytorch(density, velocity, dt)
 
@@ -208,7 +208,7 @@ def advect_velocity_2d(
     use_cuda = _CUDA_AVAILABLE and not force_pytorch and velocity.is_cuda
 
     if use_cuda:
-        return _tensornet_cuda.advect_velocity_2d(velocity, dt)
+        return _ontic_cuda.advect_velocity_2d(velocity, dt)
     else:
         return _advect_velocity_2d_pytorch(velocity, dt)
 
@@ -246,7 +246,7 @@ def advect_3d(
     )
 
     if use_cuda:
-        return _tensornet_cuda.advect_3d(density, velocity, dt)
+        return _ontic_cuda.advect_3d(density, velocity, dt)
     else:
         # PyTorch 3D fallback using semi-Lagrangian advection
         return _advect_3d_pytorch(density, velocity, dt)

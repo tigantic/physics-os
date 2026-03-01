@@ -34,7 +34,7 @@ if torch.cuda.is_available():
     print(f"[Gate 6] GPU: {torch.cuda.get_device_name(0)}")
 
 # Import modules
-sys.path.insert(0, '/home/brad/TiganticLabz/Main_Projects/HyperTensor-VM-main')
+sys.path.insert(0, '/home/brad/TiganticLabz/Main_Projects/physics-os')
 
 from yangmills.hamiltonian import SinglePlaquetteHamiltonian
 from yangmills.gauss import SinglePlaquetteGauss

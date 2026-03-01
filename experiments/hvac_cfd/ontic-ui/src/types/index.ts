@@ -1,5 +1,5 @@
 /**
- * HyperTensor Types - Central Export
+ * The Physics OS Types - Central Export
  * 
  * Re-exports all domain types for clean imports throughout the application.
  */

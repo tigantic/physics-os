@@ -15,8 +15,8 @@ Usage:
     python setup.py build_ext --inplace
 
 After installation:
-    import tensornet_cuda
-    result = tensornet_cuda.advect_2d(density, velocity, dt)
+    import ontic_cuda
+    result = ontic_cuda.advect_2d(density, velocity, dt)
 """
 
 import os
@@ -67,7 +67,7 @@ def get_extensions():
 
     extensions.append(
         CUDAExtension(
-            name="tensornet_cuda",
+            name="ontic_cuda",
             sources=cuda_sources,
             extra_compile_args={
                 "cxx": ["-O3", "-Wall"],
@@ -94,9 +94,9 @@ def get_extensions():
 
 
 setup(
-    name="tensornet_cuda",
+    name="ontic_cuda",
     version="0.2.0",
-    description="CUDA kernels for TensorNet CFD acceleration",
+    description="CUDA kernels for Ontic Engine CFD acceleration",
     author="TiganticLabz",
     author_email="dev@tigantic.com",
     url="https://github.com/tigantic/physics-os",

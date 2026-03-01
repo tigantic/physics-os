@@ -54,7 +54,7 @@ from typing import Any
 import torch
 from torch import Tensor
 
-# Import from upstream tensornet
+# Import from upstream ontic
 from ontic.cfd.nd_shift_mpo import (
     make_nd_shift_mpo,
     apply_nd_shift_mpo,

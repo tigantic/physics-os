@@ -101,7 +101,7 @@
   },
   
   "files": {
-    "implementation": "tensornet/visualization/tensor_slicer.py",
+    "implementation": "ontic/visualization/tensor_slicer.py",
     "documentation": "docs/QTT_SEPARABLE_RENDERING.md",
     "benchmark": "tests/benchmarks/qtt_render_benchmark.py",
     "results": "tests/benchmarks/qtt_render_results.json"

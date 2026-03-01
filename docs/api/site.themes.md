@@ -32,7 +32,7 @@ def name(self) -> str
 
 Get theme name.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\site\themes.py:192](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\site\themes.py#L192)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\site\themes.py:192](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\site\themes.py#L192)*
 
 #### Methods
 
@@ -44,7 +44,7 @@ def __init__(self)
 
 Initialize Physics OS theme.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\site\themes.py:342](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\site\themes.py#L342)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\site\themes.py:342](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\site\themes.py#L342)*
 
 ##### `get_css`
 
@@ -54,7 +54,7 @@ def get_css(self) -> str
 
 Get Physics OS theme CSS.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\site\themes.py:380](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\site\themes.py#L380)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\site\themes.py:380](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\site\themes.py#L380)*
 
 ### class `Theme`
 
@@ -72,7 +72,7 @@ def name(self) -> str
 
 Get theme name.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\site\themes.py:192](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\site\themes.py#L192)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\site\themes.py:192](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\site\themes.py#L192)*
 
 #### Methods
 
@@ -88,7 +88,7 @@ Initialize theme.
 
 - **config** (`typing.Optional[themes.ThemeConfig]`): Theme configuration
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\site\themes.py:183](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\site\themes.py#L183)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\site\themes.py:183](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\site\themes.py#L183)*
 
 ##### `get_css`
 
@@ -98,7 +98,7 @@ def get_css(self) -> str
 
 Get complete CSS for theme.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\site\themes.py:197](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\site\themes.py#L197)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\site\themes.py:197](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\site\themes.py#L197)*
 
 ##### `get_dark_mode_css`
 
@@ -108,7 +108,7 @@ def get_dark_mode_css(self) -> str
 
 Get dark mode CSS overrides.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\site\themes.py:201](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\site\themes.py#L201)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\site\themes.py:201](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\site\themes.py#L201)*
 
 ### class `ThemeColors`
 
@@ -148,7 +148,7 @@ def to_css_vars(self) -> str
 
 Convert to CSS custom properties.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\site\themes.py:41](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\site\themes.py#L41)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\site\themes.py:41](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\site\themes.py#L41)*
 
 ### class `ThemeConfig`
 
@@ -186,7 +186,7 @@ def to_css(self) -> str
 
 Generate complete CSS for theme.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\site\themes.py:162](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\site\themes.py#L162)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\site\themes.py:162](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\site\themes.py#L162)*
 
 ### class `ThemeLayout`
 
@@ -219,7 +219,7 @@ def to_css(self) -> str
 
 Convert to CSS.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\site\themes.py:113](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\site\themes.py#L113)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\site\themes.py:113](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\site\themes.py#L113)*
 
 ### class `ThemeTypography`
 
@@ -252,7 +252,7 @@ def to_css(self) -> str
 
 Convert to CSS.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\site\themes.py:79](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\site\themes.py#L79)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\site\themes.py:79](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\site\themes.py#L79)*
 
 ## Functions
 
@@ -274,7 +274,7 @@ Get theme by name.
 
 - `KeyError`: If theme not found
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\site\themes.py:499](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\site\themes.py#L499)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\site\themes.py:499](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\site\themes.py#L499)*
 
 ### `list_themes`
 
@@ -286,7 +286,7 @@ List available theme names.
 
 **Returns**: `typing.List[str]` - List of theme names
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\site\themes.py:517](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\site\themes.py#L517)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\site\themes.py:517](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\site\themes.py#L517)*
 
 ### `register_theme`
 
@@ -301,4 +301,4 @@ Register a custom theme.
 - **name** (`<class 'str'>`): Theme name
 - **theme** (`<class 'themes.Theme'>`): Theme instance
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\site\themes.py:527](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\site\themes.py#L527)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\site\themes.py:527](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\site\themes.py#L527)*

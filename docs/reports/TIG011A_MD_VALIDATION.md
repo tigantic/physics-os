@@ -113,7 +113,7 @@
 | Charges (protein) | AMBER ff14SB templates |
 | Charges (ligand) | RDKit Gasteiger |
 | Minimization | Steepest descent |
-| Platform | The Ontic Engine tensornet.life_sci.md |
+| Platform | The Ontic Engine ontic.life_sci.md |
 
 ---
 

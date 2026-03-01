@@ -1,7 +1,7 @@
 # Reproducible Test Evidence Report
 
 **Generated**: 2025-12-17T23:30:00Z  
-**Package**: tensornet v0.1.0  
+**Package**: ontic v0.1.0  
 **Environment**: Python 3.11.9, PyTorch 2.9.1+cpu, Windows-10-10.0.26200-SP0  
 **Status**: ALL TESTS PASSED (16/16)
 
@@ -283,7 +283,7 @@ To reproduce these tests:
 
 ```bash
 # 1. Install package
-cd tensornet_standalone
+cd ontic_standalone
 python -m pip install -e .
 
 # 2. Run tests
@@ -293,8 +293,8 @@ pytest -q tests/test_proofs.py --disable-warnings
 python -c "import torch; print(torch.__version__)"
 ```
 
-**Package structure**: `tensornet_standalone/` is a self-contained pip-installable package. It contains:
-- `ontic/` - The library source (copied from torch/tensornet development)
+**Package structure**: `ontic_standalone/` is a self-contained pip-installable package. It contains:
+- `ontic/` - The library source (copied from torch/ontic development)
 - `tests/test_proofs.py` - The test file that generates these results
 - `pyproject.toml` - Package metadata
 
@@ -320,5 +320,5 @@ Per Article I, Section 1.1 of the Constitutional Law:
 
 ---
 
-*This document reports reproducible test evidence for tensornet v0.1.0.*  
+*This document reports reproducible test evidence for ontic v0.1.0.*  
 *Machine-readable artifact: [proof_run_20251217_233000.json](proof_run_20251217_233000.json)*

@@ -1,5 +1,5 @@
 /**
- * HyperTensor Facial Plastics — Router & Keyboard Shortcut Manager
+ * Ontic Facial Plastics — Router & Keyboard Shortcut Manager
  *
  * Hash-based mode routing. Keyboard shortcut registry.
  * Ctrl+1..8 for mode switch, / for command palette, Ctrl+J for inspector.

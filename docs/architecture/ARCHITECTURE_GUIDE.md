@@ -31,7 +31,7 @@ graph TB
         BENCH[benchmarks/]
     end
     
-    subgraph "Library Layer - tensornet"
+    subgraph "Library Layer - ontic"
         CORE[core/]
         ALGO[algorithms/]
         CFD[cfd/]

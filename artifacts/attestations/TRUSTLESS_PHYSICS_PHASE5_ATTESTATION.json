@@ -174,8 +174,8 @@
   },
   "domains": {
     "euler3d": {
-      "solver": "tensornet.cfd.euler_3d.Euler3D",
-      "adapter": "tensornet.cfd.trace_adapters.euler3d_adapter.Euler3DTraceAdapter",
+      "solver": "ontic.cfd.euler_3d.Euler3D",
+      "adapter": "ontic.cfd.trace_adapters.euler3d_adapter.Euler3DTraceAdapter",
       "lean_proof": "euler_conservation_proof/EulerConservation.lean",
       "conservation_laws": [
         "mass",
@@ -187,8 +187,8 @@
       "description": "3D compressible Euler equations, MUSCL-Hancock + HLLC Riemann solver, finite-volume on Cartesian grid"
     },
     "ns_imex": {
-      "solver": "tensornet.cfd.ns_2d.NS2DSolver",
-      "adapter": "tensornet.cfd.trace_adapters.ns2d_adapter.NS2DTraceAdapter",
+      "solver": "ontic.cfd.ns_2d.NS2DSolver",
+      "adapter": "ontic.cfd.trace_adapters.ns2d_adapter.NS2DTraceAdapter",
       "lean_proof": "navier_stokes_proof/NavierStokes.lean",
       "conservation_laws": [
         "kinetic_energy",
@@ -198,8 +198,8 @@
       "description": "2D incompressible Navier-Stokes, pseudo-spectral, RK4 + IMEX diffusion, Taylor-Green benchmark"
     },
     "heat": {
-      "solver": "tensornet.cfd.trace_adapters.heat_adapter.HeatTransferTraceAdapter",
-      "adapter": "tensornet.cfd.trace_adapters.heat_adapter.HeatTransferTraceAdapter",
+      "solver": "ontic.cfd.trace_adapters.heat_adapter.HeatTransferTraceAdapter",
+      "adapter": "ontic.cfd.trace_adapters.heat_adapter.HeatTransferTraceAdapter",
       "lean_proof": "thermal_conservation_proof/ThermalConservation.lean",
       "conservation_laws": [
         "energy_integral",
@@ -208,8 +208,8 @@
       "description": "2D heat equation, implicit spectral (unconditionally stable), sinusoidal IC with analytical comparison"
     },
     "vlasov": {
-      "solver": "tensornet.cfd.trace_adapters.vlasov_adapter.VlasovTraceAdapter",
-      "adapter": "tensornet.cfd.trace_adapters.vlasov_adapter.VlasovTraceAdapter",
+      "solver": "ontic.cfd.trace_adapters.vlasov_adapter.VlasovTraceAdapter",
+      "adapter": "ontic.cfd.trace_adapters.vlasov_adapter.VlasovTraceAdapter",
       "lean_proof": "vlasov_conservation_proof/VlasovConservation.lean",
       "conservation_laws": [
         "l2_norm",

@@ -22,7 +22,7 @@
       "id": "physics-os",
       "name": "The Ontic Engine",
       "description": "The Physics-First Tensor Network Engine",
-      "location": "tensornet/",
+      "location": "ontic/",
       "language": "Python",
       "files": 416,
       "loc": 213663,
@@ -51,14 +51,14 @@
       "id": "sovereign-compute",
       "name": "Sovereign Compute",
       "description": "Decentralized Physics Computation Network",
-      "location": ["tensornet/sovereign/", "gevulot/"],
+      "location": ["ontic/sovereign/", "gevulot/"],
       "language": "Python",
       "files": 10,
       "loc": 3127
     }
   ],
   "modules": {
-    "tensornet": {
+    "ontic": {
       "cfd": {
         "files": 73,
         "loc": 45681,
@@ -234,43 +234,43 @@
     "genesis_layers": {
       "qtt_ot": {
         "name": "QTT-Optimal Transport",
-        "location": "tensornet/genesis/ot/",
+        "location": "ontic/genesis/ot/",
         "loc": 4190,
         "status": "PASS"
       },
       "qtt_sgw": {
         "name": "QTT-Spectral Graph Wavelets",
-        "location": "tensornet/genesis/sgw/",
+        "location": "ontic/genesis/sgw/",
         "loc": 2822,
         "status": "PASS"
       },
       "qtt_rmt": {
         "name": "QTT-Random Matrix Theory",
-        "location": "tensornet/genesis/rmt/",
+        "location": "ontic/genesis/rmt/",
         "loc": 2501,
         "status": "PASS"
       },
       "qtt_tg": {
         "name": "QTT-Tropical Geometry",
-        "location": "tensornet/genesis/tropical/",
+        "location": "ontic/genesis/tropical/",
         "loc": 3143,
         "status": "PASS"
       },
       "qtt_rkhs": {
         "name": "QTT-Kernel Methods",
-        "location": "tensornet/genesis/rkhs/",
+        "location": "ontic/genesis/rkhs/",
         "loc": 2904,
         "status": "PASS"
       },
       "qtt_ph": {
         "name": "QTT-Persistent Homology",
-        "location": "tensornet/genesis/topology/",
+        "location": "ontic/genesis/topology/",
         "loc": 2149,
         "status": "PASS"
       },
       "qtt_ga": {
         "name": "QTT-Geometric Algebra",
-        "location": "tensornet/genesis/ga/",
+        "location": "ontic/genesis/ga/",
         "loc": 3277,
         "status": "PASS"
       }

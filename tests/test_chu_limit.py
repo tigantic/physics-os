@@ -29,7 +29,7 @@ import numpy as np
 
 sys.path.insert(
     0,
-    "/home/brad/TiganticLabz/FRONT_VAULT/03_SOURCE/Main_Projects/HyperTensor-VM-main",
+    "/home/brad/TiganticLabz/FRONT_VAULT/03_SOURCE/Main_Projects/physics-os",
 )
 
 from ontic.em.qtt_3d import (

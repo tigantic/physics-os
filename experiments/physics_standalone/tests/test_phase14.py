@@ -196,7 +196,7 @@ class TestUserGuides:
             content="Welcome to The Ontic Engine!",
             level=2,
             examples=[
-                CodeExample(code="import tensornet", description="Import the library"),
+                CodeExample(code="import ontic", description="Import the library"),
             ],
             notes=[{"type": "tip", "content": "Start with the tutorials."}],
         )
@@ -607,15 +607,15 @@ class TestDocumentationImports:
     
     def test_main_package_exports(self):
         """Test that main package exports documentation module."""
-        import tensornet
+        import ontic
         
         # Check key exports exist
-        assert hasattr(tensornet, 'ModuleDoc')
-        assert hasattr(tensornet, 'ClassDoc')
-        assert hasattr(tensornet, 'Tutorial')
-        assert hasattr(tensornet, 'GuideBuilder')
-        assert hasattr(tensornet, 'SphinxConfig')
-        assert hasattr(tensornet, 'RunnableExample')
+        assert hasattr(ontic, 'ModuleDoc')
+        assert hasattr(ontic, 'ClassDoc')
+        assert hasattr(ontic, 'Tutorial')
+        assert hasattr(ontic, 'GuideBuilder')
+        assert hasattr(ontic, 'SphinxConfig')
+        assert hasattr(ontic, 'RunnableExample')
 
 
 if __name__ == "__main__":

@@ -32,7 +32,7 @@ def __init__(self)
 
 Initialize config manager.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\config.py:299](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\config.py#L299)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\integration\config.py:299](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\integration\config.py#L299)*
 
 ##### `get`
 
@@ -42,7 +42,7 @@ def get(self, path: str, default: Any = None) -> Any
 
 Get configuration value by path.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\config.py:403](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\config.py#L403)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\integration\config.py:403](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\integration\config.py#L403)*
 
 ##### `get_instance`
 
@@ -52,7 +52,7 @@ def get_instance() -> 'ConfigManager'
 
 Get singleton instance.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\config.py:308](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\config.py#L308)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\integration\config.py:308](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\integration\config.py#L308)*
 
 ##### `load_environment`
 
@@ -62,7 +62,7 @@ def load_environment(self, prefix: str = 'ONTIC_ENGINE')
 
 Load configuration from environment variables.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\config.py:398](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\config.py#L398)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\integration\config.py:398](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\integration\config.py#L398)*
 
 ##### `load_file`
 
@@ -79,7 +79,7 @@ Load configuration from file.
 
 **Returns**: `<class 'bool'>` - Whether load was successful
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\config.py:354](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\config.py#L354)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\integration\config.py:354](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\integration\config.py#L354)*
 
 ##### `save`
 
@@ -94,7 +94,7 @@ Save configuration to file.
 - **path** (`typing.Union[str, pathlib.Path]`): Output path
 - **format** (`<class 'str'>`): File format
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\config.py:427](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\config.py#L427)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\integration\config.py:427](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\integration\config.py#L427)*
 
 ##### `set`
 
@@ -104,7 +104,7 @@ def set(self, path: str, value: Any)
 
 Set configuration value.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\config.py:407](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\config.py#L407)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\integration\config.py:407](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\integration\config.py#L407)*
 
 ##### `to_dict`
 
@@ -114,7 +114,7 @@ def to_dict(self) -> Dict
 
 Export configuration to dictionary.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\config.py:423](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\config.py#L423)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\integration\config.py:423](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\integration\config.py#L423)*
 
 ##### `watch`
 
@@ -124,7 +124,7 @@ def watch(self, callback: Callable[[str, Any], NoneType])
 
 Register a configuration change watcher.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\config.py:419](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\config.py#L419)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\integration\config.py:419](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\integration\config.py#L419)*
 
 ### class `ConfigSection`
 
@@ -152,7 +152,7 @@ def define(self, key: str, default: Any = None, dtype: Optional[Type] = None, de
 
 Define a configuration value with metadata.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\config.py:104](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\config.py#L104)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\integration\config.py:104](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\integration\config.py#L104)*
 
 ##### `get`
 
@@ -162,7 +162,7 @@ def get(self, key: str, default: Any = None) -> Any
 
 Get a configuration value.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\config.py:98](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\config.py#L98)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\integration\config.py:98](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\integration\config.py#L98)*
 
 ##### `set`
 
@@ -172,7 +172,7 @@ def set(self, key: str, value: Any, source: config.ConfigSource = <ConfigSource.
 
 Set a configuration value.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\config.py:86](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\config.py#L86)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\integration\config.py:86](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\integration\config.py#L86)*
 
 ##### `to_dict`
 
@@ -182,7 +182,7 @@ def to_dict(self) -> Dict[str, Any]
 
 Convert section to dictionary.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\config.py:124](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\config.py#L124)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\integration\config.py:124](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\integration\config.py#L124)*
 
 ##### `validate`
 
@@ -192,7 +192,7 @@ def validate(self) -> List[str]
 
 Validate all values, returning list of errors.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\config.py:128](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\config.py#L128)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\integration\config.py:128](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\integration\config.py#L128)*
 
 ### class `ConfigSource`(Enum)
 
@@ -212,7 +212,7 @@ def __init__(self)
 
 Initialize validator.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\config.py:448](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\config.py#L448)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\integration\config.py:448](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\integration\config.py#L448)*
 
 ##### `add_rule`
 
@@ -222,7 +222,7 @@ def add_rule(self, rule: Callable[[config.Configuration], List[str]])
 
 Add a validation rule.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\config.py:452](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\config.py#L452)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\integration\config.py:452](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\integration\config.py#L452)*
 
 ##### `validate`
 
@@ -234,7 +234,7 @@ Validate configuration.
 
 **Returns**: `typing.List[str]` - List of error messages
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\config.py:456](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\config.py#L456)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\integration\config.py:456](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\integration\config.py#L456)*
 
 ### class `ConfigValue`
 
@@ -267,7 +267,7 @@ def get(self) -> Any
 
 Get the value, returning default if None.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\config.py:62](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\config.py#L62)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\integration\config.py:62](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\integration\config.py#L62)*
 
 ##### `validate`
 
@@ -277,7 +277,7 @@ def validate(self) -> bool
 
 Validate the value against its type.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\config.py:52](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\config.py#L52)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\integration\config.py:52](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\integration\config.py#L52)*
 
 ### class `Configuration`
 
@@ -305,7 +305,7 @@ def add_section(self, section: config.ConfigSection)
 
 Add a configuration section.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\config.py:153](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\config.py#L153)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\integration\config.py:153](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\integration\config.py#L153)*
 
 ##### `get`
 
@@ -320,7 +320,7 @@ Get a value by dot-separated path.
 - **path** (`<class 'str'>`): Path like "section.key"
 - **default** (`typing.Any`): Default if not found Default: `if not found`.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\config.py:161](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\config.py#L161)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\integration\config.py:161](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\integration\config.py#L161)*
 
 ##### `get_section`
 
@@ -330,7 +330,7 @@ def get_section(self, name: str) -> Optional[config.ConfigSection]
 
 Get a configuration section.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\config.py:157](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\config.py#L157)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\integration\config.py:157](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\integration\config.py#L157)*
 
 ##### `merge`
 
@@ -340,7 +340,7 @@ def merge(self, other: 'Configuration', source: config.ConfigSource = <ConfigSou
 
 Merge another configuration into this one.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\config.py:209](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\config.py#L209)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\integration\config.py:209](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\integration\config.py#L209)*
 
 ##### `set`
 
@@ -356,7 +356,7 @@ Set a value by dot-separated path.
 - **value** (`typing.Any`): Value to set
 - **source** (`<enum 'ConfigSource'>`): Source of the value
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\config.py:179](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\config.py#L179)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\integration\config.py:179](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\integration\config.py#L179)*
 
 ##### `to_dict`
 
@@ -366,7 +366,7 @@ def to_dict(self) -> Dict[str, Dict[str, Any]]
 
 Convert to nested dictionary.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\config.py:198](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\config.py#L198)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\integration\config.py:198](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\integration\config.py#L198)*
 
 ##### `validate`
 
@@ -376,7 +376,7 @@ def validate(self) -> List[str]
 
 Validate all sections, returning list of errors.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\config.py:202](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\config.py#L202)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\integration\config.py:202](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\integration\config.py#L202)*
 
 ### class `EnvironmentConfig`
 
@@ -400,7 +400,7 @@ Load configuration from environment.
 
 **Returns**: `<class 'config.Configuration'>` - Configuration from environment
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\config.py:228](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\config.py#L228)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\integration\config.py:228](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\integration\config.py#L228)*
 
 ## Functions
 
@@ -412,7 +412,7 @@ def get_config() -> config.ConfigManager
 
 Get the global configuration manager.
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\config.py:479](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\config.py#L479)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\integration\config.py:479](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\integration\config.py#L479)*
 
 ### `load_config`
 
@@ -428,7 +428,7 @@ Load configuration from file.
 
 **Returns**: `<class 'bool'>` - Whether load was successful
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\config.py:484](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\config.py#L484)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\integration\config.py:484](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\integration\config.py#L484)*
 
 ### `merge_configs`
 
@@ -445,7 +445,7 @@ Merge two configurations.
 
 **Returns**: `<class 'config.Configuration'>` - Merged configuration
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\config.py:507](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\config.py#L507)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\integration\config.py:507](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\integration\config.py#L507)*
 
 ### `save_config`
 
@@ -459,7 +459,7 @@ Save configuration to file.
 
 - **path** (`typing.Union[str, pathlib.Path]`): Output path
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\config.py:497](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\config.py#L497)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\integration\config.py:497](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\integration\config.py#L497)*
 
 ### `validate_config`
 
@@ -475,4 +475,4 @@ Validate configuration.
 
 **Returns**: `typing.List[str]` - List of validation errors
 
-*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\config.py:526](C:\TiganticLabz\Main_Projects\The Physics OS\tensornet\integration\config.py#L526)*
+*Source: [C:\TiganticLabz\Main_Projects\The Physics OS\ontic\integration\config.py:526](C:\TiganticLabz\Main_Projects\The Physics OS\ontic\integration\config.py#L526)*

@@ -27,8 +27,8 @@ const jetbrainsMono = JetBrains_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: 'HyperTensor CFD',
-    template: '%s | HyperTensor',
+    default: 'The Physics OS CFD',
+    template: '%s | The Physics OS',
   },
   description: 'GPU-Accelerated CFD with QTT Compression - HyperGrid Engine',
   keywords: ['CFD', 'HyperGrid', 'QTT', 'GPU', 'simulation', 'fluid dynamics', 'tensor'],
@@ -41,21 +41,21 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'en_US',
     url: '/',
-    siteName: 'HyperTensor CFD',
-    title: 'HyperTensor CFD Engine',
+    siteName: 'The Physics OS CFD',
+    title: 'The Physics OS CFD Engine',
     description: 'GPU-Accelerated CFD with QTT Compression',
     images: [
       {
         url: '/og-image.png',
         width: 1200,
         height: 630,
-        alt: 'HyperTensor CFD Engine',
+        alt: 'The Physics OS CFD Engine',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'HyperTensor CFD',
+    title: 'The Physics OS CFD',
     description: 'GPU-Accelerated CFD with QTT Compression',
     images: ['/og-image.png'],
     creator: '@tiganticlabz',

@@ -1,5 +1,5 @@
 /**
- * HyperTensor Stores - Central Export
+ * The Physics OS Stores - Central Export
  * 
  * Zustand stores for client-side state management.
  * Server state is handled by TanStack Query.

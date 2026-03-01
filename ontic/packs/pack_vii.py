@@ -397,7 +397,7 @@ class HeisenbergSolver:
 class TNMethodsSpec:
     """PHY-VII.1: Tensor network methods."""
     @property
-    def name(self) -> str: return "TensorNetworkMPS"
+    def name(self) -> str: return "Ontic EngineworkMPS"
     @property
     def ndim(self) -> int: return 1
     @property

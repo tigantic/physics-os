@@ -362,7 +362,7 @@ class S04_PhasePipeline(Scene):
 # Scene 5: Tensor Network Visualization
 # ═══════════════════════════════════════════════════════════════════════════════
 
-class S05_TensorNetwork(Scene):
+class S05_Ontic Enginework(Scene):
     def construct(self):
         self.camera.background_color = BG_BLACK
 
@@ -834,7 +834,7 @@ class TrustlessPhysicsShowcase(Scene):
             S02_TheProblem,
             S03_Architecture,
             S04_PhasePipeline,
-            S05_TensorNetwork,
+            S05_Ontic Enginework,
             S06_ZKProofFlow,
             S07_AttestationChain,
             S08_LeanProof,

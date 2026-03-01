@@ -3,12 +3,12 @@
 The Physics OS uses a three-tier architecture separating the open physics
 engine from the commercial execution fabric and the performance substrate.
 
-## Tier 1: tensornet (Python)
+## Tier 1: ontic (Python)
 
 The physics engine. Pure PyTorch tensor network library implementing MPS,
 MPO, QTT, and 168 physics domain packs. Fully open-source.
 
-**Install:** `pip install tensornet`
+**Install:** `pip install ontic-engine`
 
 ## Tier 2: physics_os (Python)
 

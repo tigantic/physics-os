@@ -6,7 +6,7 @@
   "status": "COMPLETE",
   "components": {
     "plasma_ingester": {
-      "file": "tensornet/discovery/ingest/plasma.py",
+      "file": "ontic/discovery/ingest/plasma.py",
       "classes": [
         "PlasmaIngester",
         "PlasmaShot",
@@ -24,7 +24,7 @@
       ]
     },
     "plasma_pipeline": {
-      "file": "tensornet/discovery/pipelines/plasma_pipeline.py",
+      "file": "ontic/discovery/pipelines/plasma_pipeline.py",
       "class": "PlasmaDiscoveryPipeline",
       "stages": [
         "1. Data ingestion",
@@ -70,10 +70,10 @@
     "total": "21/21 PASS"
   },
   "cli_commands": [
-    "python -m tensornet.discovery discover --domain plasma --demo",
-    "python -m tensornet.discovery discover --domain plasma --input shot.json",
-    "python -m tensornet.discovery test --verbose",
-    "python -m tensornet.discovery info"
+    "python -m ontic.discovery discover --domain plasma --demo",
+    "python -m ontic.discovery discover --domain plasma --input shot.json",
+    "python -m ontic.discovery test --verbose",
+    "python -m ontic.discovery info"
   ],
   "physics_coverage": {
     "plasma_phenomena": [

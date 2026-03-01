@@ -62,7 +62,7 @@ from typing import Dict, List, Optional, Tuple
 import numpy as np
 from numpy.typing import NDArray
 
-# ── TensorNet QTT stack ──
+# ── Ontic Engine QTT stack ──
 from ontic.qtt.sparse_direct import tt_round, tt_matvec
 from ontic.qtt.eigensolvers import tt_inner, tt_norm, tt_axpy, tt_scale, tt_add
 from ontic.qtt.pde_solvers import PDEConfig, PDEResult

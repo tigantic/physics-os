@@ -1183,7 +1183,7 @@ The ORACLE (Offensive Reasoning and Assumption-Challenging Logic Engine) is our 
 
 ```bash
 # Execute hunt
-cd /home/brad/TiganticLabz/Main_Projects/HyperTensor-VM-main
+cd /home/brad/TiganticLabz/Main_Projects/physics-os
 python -m ontic.exploit.elite_hunter --target etherfi --chain eth
 ```
 

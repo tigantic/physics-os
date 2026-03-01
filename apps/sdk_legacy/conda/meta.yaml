@@ -27,14 +27,14 @@ requirements:
 
 test:
   imports:
-    - tensornet
+    - ontic-engine
     - ontic.core
-    - tensornet.substrate
-    - tensornet.operators
+    - ontic.substrate
+    - ontic.operators
   requires:
     - pytest
   commands:
-    - pytest --pyargs tensornet -v
+    - pytest --pyargs ontic -v
 
 about:
   home: https://github.com/tigantic/physics-os

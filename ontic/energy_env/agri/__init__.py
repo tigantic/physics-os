@@ -1,5 +1,5 @@
 """
-TensorNet Agriculture Module
+Ontic Engine Agriculture Module
 
 Phase 15: Vertical Farm Microclimate Optimization
 

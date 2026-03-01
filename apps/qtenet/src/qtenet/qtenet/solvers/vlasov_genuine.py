@@ -26,7 +26,7 @@ Method:
 Validation:
   • Landau damping: γ must match theoretical −0.1533 for k=0.5 (within 15%)
   • Particle number conservation: monitored per step
-  • Verified against dense reference solver (tensornet.packs.pack_xi)
+  • Verified against dense reference solver (ontic.packs.pack_xi)
 
 Morton layout for 2D (x, v) with qubits_per_dim = L:
   Total sites = 2L.  Site k corresponds to Morton bit (2L−1−k).

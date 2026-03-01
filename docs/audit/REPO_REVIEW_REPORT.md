@@ -52,7 +52,7 @@
          ▼                     │  ontic_bridge (shared-mem IPC)           │
 ┌─────────────────────────┐    │  tci_core (TT-Cross PyO3)               │
 │  Physics Engine          │    │  proof_bridge (trace→ZK)                │
-│  tensornet.* (784 files) │    │  fluidelite-core (Q16.16 fixed-point)   │
+│  ontic.* (784 files) │    │  fluidelite-core (Q16.16 fixed-point)   │
 │  - cfd/ (70K LOC)       │    │  fluidelite-zk (Halo2+Groth16)          │
 │  - genesis/ (41K)       │    │  fluidelite-circuits (constraints)       │
 │  - packs/ (26K)         │    │  glass_cockpit (WGPU visualization)     │
@@ -75,7 +75,7 @@
 
 | Entry Point | Path | Protocol |
 |-------------|------|----------|
-| Python package | `import tensornet` | Python API |
+| Python package | `import ontic` | Python API |
 | SDK builder | `ontic.sdk.WorkflowBuilder` | Python DSL |
 | Sovereign API | `sovereign_api/sovereign_api.py` | HTTP REST + WebSocket |
 | SDK Server | `apps/sdk_legacy/server/main.py` | HTTP REST (FastAPI) |
@@ -146,7 +146,7 @@ Source → pip install -e ".[all]" (Python)
 
 ```bash
 python -m venv .venv && source .venv/bin/activate
-pip install -e ".[all]"             # Installs tensornet + all optional extras
+pip install -e ".[all]"             # Installs ontic + all optional extras
 pip install -r requirements-dev.txt  # Pinned dev tools
 ```
 

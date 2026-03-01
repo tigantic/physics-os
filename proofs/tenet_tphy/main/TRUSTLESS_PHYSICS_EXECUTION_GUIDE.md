@@ -222,11 +222,11 @@ The trace is the input to the ZK prover. It must be:
 Connect the QTT solver trace to the FluidElite-ZK prover:
 
 ```
-tensornet (Python) → trace.json → ontic_bridge (mmap) → fluidelite-zk (Rust) → proof.bin
+ontic (Python) → trace.json → ontic_bridge (mmap) → fluidelite-zk (Rust) → proof.bin
 ```
 
 The bridge must:
-1. Accept a computation trace from any tensornet solver
+1. Accept a computation trace from any ontic solver
 2. Translate QTT operations into the ZK circuit representation
 3. Invoke the prover
 4. Return the proof bytes

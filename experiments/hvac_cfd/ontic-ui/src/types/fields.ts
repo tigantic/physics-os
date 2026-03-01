@@ -1,5 +1,5 @@
 /**
- * HyperTensor Field Types
+ * The Physics OS Field Types
  * 
  * Type definitions for CFD field data - velocity, pressure, temperature,
  * and turbulence quantities flowing from HyperFOAM solver.

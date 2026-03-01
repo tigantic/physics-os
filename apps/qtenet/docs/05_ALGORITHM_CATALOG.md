@@ -37,7 +37,7 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
 ## benchmarks (9)
 
 - **experiments/benchmarks/benchmarks/compare_tenpy.py**
-  - `function run_tensornet` (L36) — Run tensornet DMRG, return (energy, time).
+  - `function run_ontic` (L36) — Run ontic DMRG, return (energy, time).
   - `function run_tenpy` (L49) — Run TeNPy DMRG, return (energy, time).
   - `function main` (L79)
 - **experiments/benchmarks/benchmarks/qtt_compression.py**
@@ -1547,8 +1547,8 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
 - **fluidelite/utils/repo_integration.py**
   - `function get_vram_manager` (L95) — Get VRAMManager instance if available.
   - `function mps_inner_product_cuda` (L137) — Compute MPS inner product using CUDA if available.
-  - `function svd_truncated_with_fallback` (L188) — Truncated SVD with tensornet integration.
-  - `function get_integration_status` (L263) — Get status of all integrations with tensornet.
+  - `function svd_truncated_with_fallback` (L188) — Truncated SVD with ontic integration.
+  - `function get_integration_status` (L263) — Get status of all integrations with ontic.
   - `function print_integration_status` (L281) — Print integration status summary.
 - **fluidelite/verify_linearity.py**
   - `function contract_mps_to_scalar` (L37) — Contract MPS to a scalar (quantum amplitude).
@@ -2809,7 +2809,7 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
 - **real_yang_mills_engine.py**
   - `class SU2` (L46) — SU(2) representation theory for lattice gauge theory.
   - `class KogutSusskindHamiltonian` (L140) — The Kogut-Susskind Hamiltonian for SU(2) lattice gauge theory.
-  - `class TensorNetworkSolver` (L361) — DMRG-inspired tensor network solver for larger systems.
+  - `class Ontic EngineworkSolver` (L361) — DMRG-inspired tensor network solver for larger systems.
   - `class TransferMatrixAnalysis` (L550) — Compute mass gap from transfer matrix spectrum.
   - `class RealPhysicsResult` (L625) — Results from real physics computation.
   - `class RealYangMillsEngine` (L651) — The REAL Yang-Mills physics engine.
@@ -2828,7 +2828,7 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `function generate_readme_index` (L100) — Generate an index README for the docs.
   - `function main` (L131)
 - **tools/scripts/check_import_cycles.py**
-  - `function check_imports` (L21) — Check if all tensornet modules can be imported.
+  - `function check_imports` (L21) — Check if all ontic modules can be imported.
   - `function main` (L75) — Run import cycle check.
 - **scripts/compare_tenpy.py**
   - `function run_ontic_dmrg` (L28) — Run DMRG with The Physics OS.
@@ -3482,7 +3482,7 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `class VQE` (L565) — Variational Quantum Eigensolver.
   - `class QAOAConfig` (L748) — Configuration for QAOA.
   - `class QAOA` (L757) — Quantum Approximate Optimization Algorithm.
-  - `class TensorNetworkBornMachine` (L895) — Generative model using tensor network as quantum-inspired ansatz.
+  - `class Ontic EngineworkBornMachine` (L895) — Generative model using tensor network as quantum-inspired ansatz.
   - `class QuantumInspiredOptimizer` (L1060) — Quantum-inspired classical optimization using tensor network techniques.
   - `function create_ising_hamiltonian` (L1170) — Create Ising Hamiltonian for VQE.
   - `function create_maxcut_hamiltonian` (L1195) — Create MaxCut cost Hamiltonian for QAOA.
@@ -4055,7 +4055,7 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `function test_rank_coupling_independence` (L668) — Test 7: TT rank should be roughly independent of coupling.
   - `function main` (L716) — Run all Gate 5 tests.
 - **yangmills/tests/test_tensor_network.py**
-  - `class TestTensorNetworkBasics` (L39) — Test basic tensor network infrastructure.
+  - `class TestOntic EngineworkBasics` (L39) — Test basic tensor network infrastructure.
   - `class TestStrongCoupling` (L97) — Verify tensor networks reproduce strong coupling results.
   - `class TestWeakCoupling` (L138) — THE CRITICAL TESTS!
   - `class TestBondDimensionConvergence` (L251) — Test that results converge with bond dimension.
@@ -4278,7 +4278,7 @@ This section lists QTT algorithms/tools as implemented in the monorepo (by file 
   - `class QTT3DState` (L35) — 3D field in QTT format with Morton ordering.
   - `class QTTSliceExtractor` (L56) — Extract 2D slices from 3D QTT fields with GPU acceleration.
   - `function test_slice_extractor` (L410) — Test QTT slice extraction with synthetic 3D field.
-- **tensornet_qtt_ntt.py**
+- **ontic_qtt_ntt.py**
   - `class FieldParams` (L69) — Parameters for a finite field.
   - `function find_primitive_root` (L89) — Find primitive n-th root of unity in F_p.
   - `function montgomery_reduce` (L117) — Montgomery reduction: compute x * R^{-1} mod p.
