@@ -54,8 +54,6 @@ plugins:
   - section-index
   # API reference auto-generation
   - mkdocstrings:
-      # Continue build when modules cannot be imported (missing domain deps in CI)
-      on_error: warn
       handlers:
         python:
           paths: ["."]
