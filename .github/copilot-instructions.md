@@ -70,12 +70,12 @@ adaptive value.
 ### Known Violations (tracked for remediation)
 - **V-01 RESOLVED**: `LAPLACE_SOLVE` opcode now uses `gpu_poisson_solve()`
   — GPU-native CG with adaptive rank. No CPU fallback.
-- **V-02–V-03**: `qtt_dot_native`, `qtt_hadamard_native` use Python
-  loops over physical modes.  Fix: fused batched contraction.
-- **V-04**: `_tt_core_contract_kernel` has untiled nested loops.
-  Fix: tiled SRAM access.
-- **V-08**: `gpu_mpo_apply` Python loop over cores.  Fix: batched
-  einsum or Triton kernel.
+- **V-02–V-03 RESOLVED**: `qtt_dot_native`, `qtt_hadamard_native` inner
+  loops replaced with fused `torch.einsum` — one GPU kernel per core.
+- **V-04 RESOLVED**: `_tt_core_contract_kernel` rewritten with tiled
+  (BLOCK_RL, BLOCK_RR, BLOCK_RM) access for L2/SRAM locality.
+- **V-08 RESOLVED**: `gpu_mpo_apply` per-core contractions batched into
+  single padded `torch.einsum` — one GPU kernel for all N cores.
 - **V-09 RESOLVED**: Poisson solver now receives adaptive rank via
   `governor.get_effective_rank()`.
 

@@ -48,6 +48,10 @@ def gpu_mpo_apply(
     MPO × QTT contraction followed by rSVD rounding.
     All operations stay on CUDA — no .cpu() calls.
 
+    V-08 RESOLVED: Per-core contractions are batched into a single
+    padded ``torch.einsum`` — one GPU kernel launch for all N cores
+    instead of N sequential dispatches.
+
     Parameters
     ----------
     mpo_cores : list[torch.Tensor]
@@ -70,26 +74,47 @@ def gpu_mpo_apply(
             f"must have same length"
         )
 
-    # QTT-EXCEPTION: Rule 3 — Python Loops → Triton/CUDA Kernels
-    # Why: Per-core contractions are independent but dispatched sequentially
-    #      from Python, each launching a separate torch.einsum GPU kernel.
-    # Cost: N (21–36) sequential Python dispatches with GPU sync overhead.
-    # Fix: Batch all N independent contractions into a single padded
-    #      batched matmul or fused Triton kernel.
     N = len(mpo_cores)
-    result_cores: list[torch.Tensor] = []
+    device = tt.cores[0].device
+    dtype = tt.cores[0].dtype
+    d_phys = mpo_cores[0].shape[1]  # d_out = d_in = 2 for QTT
 
+    # Compute max bond dimensions for padding
+    max_D_l = max(W.shape[0] for W in mpo_cores)
+    max_D_r = max(W.shape[3] for W in mpo_cores)
+    max_r_l = max(G.shape[0] for G in tt.cores)
+    max_r_r = max(G.shape[2] for G in tt.cores)
+
+    # Pad and stack: single allocation, then fill
+    W_batch = torch.zeros(
+        N, max_D_l, d_phys, d_phys, max_D_r,
+        device=device, dtype=dtype,
+    )
+    G_batch = torch.zeros(
+        N, max_r_l, d_phys, max_r_r,
+        device=device, dtype=dtype,
+    )
+
+    # Record actual shapes for extraction
+    shapes: list[tuple[int, int, int, int]] = []
     for k in range(N):
-        W = mpo_cores[k]  # (D_l, d_out, d_in, D_r)
-        G = tt.cores[k]   # (r_l, d, r_r)
+        Dl, _, _, Dr = mpo_cores[k].shape
+        rl, _, rr = tt.cores[k].shape
+        W_batch[k, :Dl, :, :, :Dr] = mpo_cores[k]
+        G_batch[k, :rl, :, :rr] = tt.cores[k]
+        shapes.append((Dl, Dr, rl, rr))
 
-        # Contract over d_in == d:
-        # C[D_l, r_l, d_out, D_r, r_r] = Σ_d W[D_l, d_out, d, D_r] * G[r_l, d, r_r]
-        C = torch.einsum("abcd,ecp->aebdp", W, G)
-        D_l, d_out, _, D_r = W.shape
-        r_l, _, r_r = G.shape
-        C = C.reshape(D_l * r_l, d_out, D_r * r_r)
-        result_cores.append(C)
+    # Single batched einsum: N contractions in ONE GPU kernel launch.
+    # (N, D_l, d_out, d_in, D_r) × (N, r_l, d_in, r_r)
+    # → (N, D_l, r_l, d_out, D_r, r_r)
+    C_batch = torch.einsum("kabcd,kecp->kaebdp", W_batch, G_batch)
+
+    # Extract and reshape per-core results (slicing only, no GPU compute)
+    result_cores: list[torch.Tensor] = []
+    for k in range(N):
+        Dl, Dr, rl, rr = shapes[k]
+        C = C_batch[k, :Dl, :rl, :, :Dr, :rr]
+        result_cores.append(C.reshape(Dl * rl, d_phys, Dr * rr).contiguous())
 
     # rSVD rounding on GPU — NEVER full SVD
     rounded = qtt_round_native(result_cores, max_rank=max_rank, tol=cutoff)
