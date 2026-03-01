@@ -17,7 +17,7 @@ Removed:
 
 Retained:
     • Reconstructed physical field values (dense arrays)
-    • Conservation diagnostics
+    • Conservation diagnostics (with resolution-aware grading)
     • Wall-clock time and throughput
     • Grid metadata
 """
@@ -25,10 +25,65 @@ Retained:
 from __future__ import annotations
 
 import math
+from dataclasses import dataclass
 from typing import Any
 
 import numpy as np
 from numpy.typing import NDArray
+
+
+# ── Resolution tiers ────────────────────────────────────────────
+
+# Conservation thresholds are resolution-dependent.  A 64×64
+# preview run cannot be held to the same bar as a 1024×1024
+# production solve.  The tiers below map n_bits (per dim)
+# to a named tier and an appropriate relative-error threshold.
+
+@dataclass(frozen=True)
+class ResolutionTier:
+    """Named resolution tier with conservation threshold."""
+
+    name: str
+    threshold: float
+    description: str
+
+
+# Tier boundaries: n_bits → tier
+# The resolution advisor enforces tier-aware minimums:
+#   quick=9 (512), standard=10 (1024), high=11 (2048), max=12 (4096)
+# so tiers below "standard" should never appear in production.
+# We still define "preview" for defensive backward-compatibility.
+#
+# preview   : n_bits ≤ 8   (grid ≤ 256)   — threshold 1e-1
+# standard  : 9 ≤ n_bits ≤ 10 (512–1024)  — threshold 1e-3
+# production: n_bits ≥ 11 (2048+)          — threshold 1e-5
+
+_TIERS = {
+    "preview": ResolutionTier(
+        name="preview",
+        threshold=1e-1,
+        description="≤256 pts/dim — below QTT compression threshold",
+    ),
+    "standard": ResolutionTier(
+        name="standard",
+        threshold=1e-3,
+        description="512–1024 pts/dim — engineering quality",
+    ),
+    "production": ResolutionTier(
+        name="production",
+        threshold=1e-5,
+        description="≥2048 pts/dim — publication quality",
+    ),
+}
+
+
+def classify_resolution(n_bits: int) -> ResolutionTier:
+    """Return the resolution tier for a given bits-per-dim."""
+    if n_bits <= 8:
+        return _TIERS["preview"]
+    if n_bits <= 10:
+        return _TIERS["standard"]
+    return _TIERS["production"]
 
 
 # ── Field units (informational, not IP-sensitive) ───────────────────
@@ -88,12 +143,32 @@ def sanitize_result(
     max_field_points: int = 500_000,
     include_fields: bool = True,
     include_coordinates: bool = True,
+    execution_context: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Sanitize an ExecutionResult into a public-safe dictionary.
 
     This function is the critical IP boundary.  NOTHING from the
     internal telemetry or tensor representation passes through
     except reconstructed physical values and conservation metrics.
+
+    Parameters
+    ----------
+    execution_result : ExecutionResult
+        Raw result from the VM runtime.
+    domain_key : str
+        Physics domain identifier.
+    precision : int
+        Decimal places for rounding.
+    max_field_points : int
+        Skip field data if total grid exceeds this.
+    include_fields : bool
+        Whether to include dense field arrays.
+    include_coordinates : bool
+        Whether to include coordinate arrays.
+    execution_context : dict, optional
+        Resolution metadata for tier-aware conservation grading.
+        Expected keys: ``n_bits`` (int), ``n_steps`` (int).
+        If absent, defaults to production-tier thresholds.
     """
     telemetry = execution_result.telemetry
     fields_raw = execution_result.fields
@@ -134,13 +209,57 @@ def sanitize_result(
     if telemetry.invariant_name:
         initial = telemetry.invariant_initial
         final = telemetry.invariant_final
-        rel_err = abs(final - initial) / (abs(initial) + 1e-30)
+
+        # When the invariant is near-zero (e.g., ∫ω dA for symmetric
+        # vortex IC), relative error is numerically meaningless.
+        # Switch to absolute error in that regime.
+        abs_err = abs(final - initial)
+        abs_initial = abs(initial)
+
+        # Threshold below which we consider the invariant "near-zero"
+        # and use absolute error instead of relative error.
+        _NEAR_ZERO = 1e-6
+
+        if abs_initial > _NEAR_ZERO:
+            # Normal case: meaningful initial value → relative error
+            error_value = abs_err / abs_initial
+            error_metric = "relative"
+        else:
+            # Near-zero invariant (e.g., ∫ω dA = 0 by symmetry)
+            # Use absolute error directly.  The drift should stay
+            # within machine-precision for truly conserved quantities.
+            error_value = abs_err
+            error_metric = "absolute"
+
+        # Resolution-aware tier classification
+        ctx_n_bits = (execution_context or {}).get("n_bits")
+        if ctx_n_bits is not None:
+            tier = classify_resolution(ctx_n_bits)
+        else:
+            # Infer from grid: bits_per_dim[0]
+            tier = classify_resolution(bits_per_dim[0])
+
+        # For absolute error on near-zero invariants, use a fixed
+        # absolute threshold rather than the tier's relative one.
+        if error_metric == "absolute":
+            threshold = 1e-6  # absolute drift tolerance
+        else:
+            threshold = tier.threshold
+
+        status = "conserved" if error_value < threshold else "drift"
+
         conservation = {
             "quantity": telemetry.invariant_name,
             "initial_value": _safe_float(initial, precision),
             "final_value": _safe_float(final, precision),
-            "relative_error": float(f"{rel_err:.2e}"),
-            "status": "conserved" if rel_err < 1e-4 else "drift",
+            "error_value": float(f"{error_value:.2e}"),
+            "error_metric": error_metric,
+            "relative_error": float(f"{error_value:.2e}") if error_metric == "relative" else float(f"{abs_err / (abs_initial + 1e-30):.2e}"),
+            "absolute_error": float(f"{abs_err:.2e}"),
+            "status": status,
+            "resolution_tier": tier.name,
+            "tier_threshold": threshold,
+            "tier_description": tier.description,
         }
 
     # ── Performance (only wall time + throughput — no rank info) ────

@@ -70,6 +70,12 @@ def gpu_mpo_apply(
             f"must have same length"
         )
 
+    # QTT-EXCEPTION: Rule 3 — Python Loops → Triton/CUDA Kernels
+    # Why: Per-core contractions are independent but dispatched sequentially
+    #      from Python, each launching a separate torch.einsum GPU kernel.
+    # Cost: N (21–36) sequential Python dispatches with GPU sync overhead.
+    # Fix: Batch all N independent contractions into a single padded
+    #      batched matmul or fused Triton kernel.
     N = len(mpo_cores)
     result_cores: list[torch.Tensor] = []
 

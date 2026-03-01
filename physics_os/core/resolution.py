@@ -47,8 +47,24 @@ _PPBL: dict[QualityTier, int] = {
     QualityTier.MAXIMUM: 32,
 }
 
+# Tier → minimum n_bits.  QTT compression only becomes effective
+# above ~256 points/axis (n_bits ≥ 8).  Below that the TT cores
+# are smaller than dense storage and every Poisson solve is pure
+# overhead.  These floors guarantee every run exercises QTT at a
+# resolution where it provides real value.
+_MIN_N_BITS_TIER: dict[QualityTier, int] = {
+    QualityTier.QUICK: 9,       # 512×512   — QTT compression ≈ 3–5×
+    QualityTier.STANDARD: 10,   # 1024×1024 — production baseline
+    QualityTier.HIGH: 11,       # 2048×2048 — publication quality
+    QualityTier.MAXIMUM: 12,    # 4096×4096 — platform near-ceiling
+}
+
+# Minimum points across the body geometry.  Even when the BL is
+# thick (low Re), the geometry itself must be resolved to capture
+# wake structure, pressure distribution, and correct drag.
+_MIN_POINTS_PER_BODY: int = 32
+
 # Platform hard limits  (mirrors physics_os/api/config.py)
-_MIN_N_BITS = 4
 _MAX_N_BITS = 14
 _MAX_FIELD_POINTS = 500_000
 
@@ -172,12 +188,30 @@ def advise(
 
     # ── Required Δx to resolve boundary layer ─────────────────────
     ppbl_target = _PPBL[tier]
-    dx_required = bl_thickness / ppbl_target
+    dx_bl = bl_thickness / ppbl_target
+
+    # ── Required Δx to resolve body geometry ──────────────────────
+    # Even for creeping flow where δ >> body, we need enough points
+    # across the characteristic length to capture pressure field,
+    # wake structure, and geometry curvature.
+    dx_body = characteristic_length / _MIN_POINTS_PER_BODY
+
+    # Take the finer of the two requirements
+    dx_required = min(dx_bl, dx_body)
 
     # ── n_bits from required Δx ───────────────────────────────────
     n_points_needed = math.ceil(domain_length / dx_required)
     n_bits_raw = math.ceil(math.log2(max(n_points_needed, 16)))
-    n_bits = max(_MIN_N_BITS, min(_MAX_N_BITS, n_bits_raw))
+    min_n_bits = _MIN_N_BITS_TIER[tier]
+    n_bits = max(min_n_bits, min(_MAX_N_BITS, n_bits_raw))
+
+    # Informational: note when QTT tier floor raises resolution
+    if n_bits_raw < min_n_bits:
+        warnings.append(
+            f"Physics requires only 2^{n_bits_raw} points/axis; "
+            f"QTT tier floor raised to 2^{min_n_bits} ({tier.value}) "
+            f"for effective tensor compression."
+        )
 
     grid_1d = 2**n_bits
     dx_actual = domain_length / grid_1d

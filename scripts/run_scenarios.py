@@ -21,6 +21,7 @@ Outputs (all written to ``scenario_output/``):
 
 from __future__ import annotations
 
+import argparse
 import json
 import logging
 import sys
@@ -281,20 +282,68 @@ SCENARIOS: list[dict[str, Any]] = [
             max_rank=32,
         ),
     },
+    # ── 11. Easy-mode: Stokes creeping flow (glycerol, Re < 1) ──
+    {
+        "name": "Stokes Creeping Flow (Glycerol, Re ≈ 0.09)",
+        "description": (
+            "Validation case: very low Re creeping flow.  Glycerol "
+            "(ν = 1.12 × 10⁻³ m²/s) past a 10 mm cylinder at "
+            "0.01 m/s → Re ≈ 0.09.  Smooth, diffusion-dominated "
+            "solution — should conserve circulation even at 64×64."
+        ),
+        "spec": ProblemSpec(
+            problem_class=ProblemClass.EXTERNAL_FLOW,
+            geometry=GeometrySpec(
+                shape=GeometryType.CIRCLE, params={"radius": 0.005}
+            ),
+            flow=FlowConditions(velocity=0.01, fluid="glycerol"),
+            boundaries=BoundarySpec(),
+            quality="quick",
+            max_rank=32,
+        ),
+    },
+    # ── 12. Easy-mode: Slow laminar pipe bend (engine oil, Re ≈ 5) ──
+    {
+        "name": "Laminar Pipe Bend (Engine Oil, Re ≈ 5)",
+        "description": (
+            "Validation case: laminar internal flow.  Engine oil "
+            "(ν = 5.5 × 10⁻⁴ m²/s) through a 20 mm bore pipe "
+            "bend at 0.025 m/s → Re ≈ 5.  Well-resolved at "
+            "64×64.  Validates NS solver+validator handshake."
+        ),
+        "spec": ProblemSpec(
+            problem_class=ProblemClass.INTERNAL_FLOW,
+            geometry=GeometrySpec(
+                shape=GeometryType.PIPE_BEND,
+                params={"radius": 0.01, "bend_angle": 90.0},
+            ),
+            flow=FlowConditions(velocity=0.025, fluid="engine_oil"),
+            boundaries=BoundarySpec(),
+            quality="quick",
+            max_rank=32,
+        ),
+    },
 ]
 
-# ── Execution caps for interactive review runs ────────────────────
-# The compiler recommends ideal parameters for each scenario.  For
-# this review we cap them so the full suite completes in minutes,
-# not hours.  The compilation output still shows what the advisor
-# recommended for a production run.
-MAX_N_BITS = 6       # 64×64 grid — preview resolution for review
-MAX_N_STEPS = 100    # enough steps for qualitative results
+# ── Snapshot schedule ──────────────────────────────────────────────
+# Each snapshot re-executes from step 0 so we cap the snapshot
+# step depth to keep total runtime bounded.
+_SNAPSHOT_COUNT = 4
+_SNAPSHOT_CAP = 500
 
-# Step counts at which to capture field snapshots for animation.
-# Each snapshot requires a separate execution (from step 0), so
-# keep the count small to stay within a reasonable runtime.
-SNAPSHOT_STEPS: list[int] = [10, 25, 50, 75, 100]
+
+def _compute_snapshot_steps(n_steps: int) -> list[int]:
+    """Return evenly-spaced snapshot step counts, capped for cost.
+
+    Each snapshot triggers a fresh execution from step 0, so we
+    limit the deepest snapshot to min(n_steps, _SNAPSHOT_CAP) to
+    keep overhead bounded even for 10 000-step production runs.
+    """
+    cap = min(n_steps, _SNAPSHOT_CAP)
+    if cap <= _SNAPSHOT_COUNT:
+        return list(range(1, cap))
+    spacing = cap // (_SNAPSHOT_COUNT + 1)
+    return [spacing * (i + 1) for i in range(_SNAPSHOT_COUNT)]
 
 # Output directory for all generated artifacts
 OUTPUT_DIR = PROJECT_ROOT / "scenario_output"
@@ -378,7 +427,12 @@ def _capture_field_snapshots(
 # ═══════════════════════════════════════════════════════════════════
 
 
-def run_scenario(scenario: dict[str, Any], index: int) -> dict[str, Any]:
+def run_scenario(
+    scenario: dict[str, Any],
+    index: int,
+    *,
+    skip_snapshots: bool = False,
+) -> dict[str, Any]:
     """Run a single scenario through the full pipeline.
 
     Returns a structured output package for the scenario.
@@ -431,22 +485,22 @@ def run_scenario(scenario: dict[str, Any], index: int) -> dict[str, Any]:
         logger.error("[%d] %-45s  COMPILE FAILED: %s", index, name, exc)
         return package
 
-    # ── Step 2: Execute (capped for review) ──────────────────────
+    # ── Step 2: Execute at compiler-recommended resolution ────────
     try:
-        exec_n_bits = min(compiled.n_bits, MAX_N_BITS)
-        exec_n_steps = min(compiled.n_steps, MAX_N_STEPS)
-        # Scale dt to maintain same CFL if we coarsen the grid
-        scale = 2 ** (compiled.n_bits - exec_n_bits)
-        exec_dt = compiled.dt * scale if scale > 1 else compiled.dt
-        package["execution_overrides"] = {
+        exec_n_bits = compiled.n_bits
+        exec_n_steps = compiled.n_steps
+        exec_dt = compiled.dt
+        package["execution_params"] = {
             "n_bits": exec_n_bits,
             "n_steps": exec_n_steps,
             "dt": exec_dt,
-            "note": (
-                f"Capped from recommended n_bits={compiled.n_bits}, "
-                f"n_steps={compiled.n_steps} for review run"
-            ),
+            "grid": f"{2**exec_n_bits}×{2**exec_n_bits}",
         }
+        logger.info(
+            "[%d] %-45s  executing → grid=%d×%d  steps=%d  dt=%.4e",
+            index, name, 2**exec_n_bits, 2**exec_n_bits,
+            exec_n_steps, exec_dt,
+        )
         config = ExecutionConfig(
             domain=compiled.domain,
             n_bits=exec_n_bits,
@@ -486,7 +540,16 @@ def run_scenario(scenario: dict[str, Any], index: int) -> dict[str, Any]:
 
     # ── Step 3: Sanitize ─────────────────────────────────────────
     try:
-        sanitized = sanitize_result(result, compiled.domain)
+        execution_context = {
+            "n_bits": exec_n_bits,
+            "n_steps": exec_n_steps,
+            "recommended_n_bits": compiled.n_bits,
+            "recommended_n_steps": compiled.n_steps,
+        }
+        sanitized = sanitize_result(
+            result, compiled.domain,
+            execution_context=execution_context,
+        )
         package["result"] = sanitized
         logger.info(
             "[%d] %-45s  sanitized → %d field(s)",
@@ -501,37 +564,41 @@ def run_scenario(scenario: dict[str, Any], index: int) -> dict[str, Any]:
         return package
 
     # ── Step 3b: Capture field snapshots for animation ───────────
-    try:
-        snapshot_steps = [s for s in SNAPSHOT_STEPS if s < exec_n_steps]
-        if snapshot_steps:
-            logger.info(
-                "[%d] %-45s  capturing snapshots at steps %s ...",
-                index, name, snapshot_steps,
-            )
-            field_snapshots = _capture_field_snapshots(
-                config, compiled.domain, snapshot_steps,
-            )
-            # Add the final field state as the last snapshot
-            for fname, fdata in sanitized.get("fields", {}).items():
-                if fdata.get("values"):
-                    if fname not in field_snapshots:
-                        field_snapshots[fname] = []
-                    field_snapshots[fname].append({
-                        "step": exec_n_steps,
-                        "values": fdata["values"],
-                    })
-            package["field_snapshots"] = field_snapshots
-            total_snaps = sum(len(v) for v in field_snapshots.values())
-            logger.info(
-                "[%d] %-45s  captured %d total snapshots across %d fields",
-                index, name, total_snaps, len(field_snapshots),
-            )
-    except Exception as exc:
-        logger.warning(
-            "[%d] %-45s  snapshot capture failed (non-fatal): %s",
-            index, name, exc,
-        )
+    if skip_snapshots:
         package["field_snapshots"] = {}
+        logger.info("[%d] %-45s  snapshots skipped (--no-snapshots)", index, name)
+    else:
+        try:
+            snapshot_steps = _compute_snapshot_steps(exec_n_steps)
+            if snapshot_steps:
+                logger.info(
+                    "[%d] %-45s  capturing snapshots at steps %s ...",
+                    index, name, snapshot_steps,
+                )
+                field_snapshots = _capture_field_snapshots(
+                    config, compiled.domain, snapshot_steps,
+                )
+                # Add the final field state as the last snapshot
+                for fname, fdata in sanitized.get("fields", {}).items():
+                    if fdata.get("values"):
+                        if fname not in field_snapshots:
+                            field_snapshots[fname] = []
+                        field_snapshots[fname].append({
+                            "step": exec_n_steps,
+                            "values": fdata["values"],
+                        })
+                package["field_snapshots"] = field_snapshots
+                total_snaps = sum(len(v) for v in field_snapshots.values())
+                logger.info(
+                    "[%d] %-45s  captured %d total snapshots across %d fields",
+                    index, name, total_snaps, len(field_snapshots),
+                )
+        except Exception as exc:
+            logger.warning(
+                "[%d] %-45s  snapshot capture failed (non-fatal): %s",
+                index, name, exc,
+            )
+            package["field_snapshots"] = {}
 
     # ── Step 4: Validate ─────────────────────────────────────────
     try:
@@ -660,6 +727,33 @@ def build_summary(packages: list[dict[str, Any]]) -> dict[str, Any]:
 
 def main() -> None:
     """Run all scenarios and write combined output package."""
+    parser = argparse.ArgumentParser(
+        description="Physics OS — Real-World Scenario Runner",
+    )
+    parser.add_argument(
+        "--scenarios", type=str, default=None,
+        help=(
+            "Comma-separated 1-based scenario indices to run "
+            "(e.g. '6,11,12'). Default: all."
+        ),
+    )
+    parser.add_argument(
+        "--no-snapshots", action="store_true",
+        help="Skip field snapshot capture (faster runs).",
+    )
+    args = parser.parse_args()
+
+    # Build the scenario subset
+    if args.scenarios:
+        indices = [int(x.strip()) for x in args.scenarios.split(",")]
+        selected = [
+            (i, SCENARIOS[i - 1])
+            for i in indices
+            if 1 <= i <= len(SCENARIOS)
+        ]
+    else:
+        selected = [(i, s) for i, s in enumerate(SCENARIOS, 1)]
+
     banner = (
         "\n"
         "╔══════════════════════════════════════════════════════════╗\n"
@@ -669,17 +763,17 @@ def main() -> None:
         "╚══════════════════════════════════════════════════════════╝\n"
     )
     print(banner)
-    logger.info("Running %d scenarios ...", len(SCENARIOS))
+    logger.info("Running %d scenarios ...", len(selected))
 
     packages: list[dict[str, Any]] = []
     t_start = time.perf_counter()
 
-    for idx, scenario in enumerate(SCENARIOS, start=1):
+    for idx, scenario in selected:
         print(f"\n{'─' * 60}")
         print(f"  Scenario {idx}/{len(SCENARIOS)}: {scenario['name']}")
         print(f"  {scenario['description']}")
         print(f"{'─' * 60}")
-        pkg = run_scenario(scenario, idx)
+        pkg = run_scenario(scenario, idx, skip_snapshots=args.no_snapshots)
         packages.append(pkg)
 
         # Print quick status

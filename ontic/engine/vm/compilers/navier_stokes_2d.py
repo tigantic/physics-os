@@ -12,8 +12,10 @@ equation and enforces incompressibility exactly.
 Explicit Euler time integration on a 2D QTT grid with
 ``bits_per_dim = (n_bits, n_bits)`` cores.
 
-Initial condition: quiescent fluid with a vortex sheet from the lid.
-Conserved quantity: total vorticity ∫ω dA (for periodic BC).
+Initial condition: Taylor–Green vortex.
+Conserved quantity: total circulation Γ = ∫ω dA (Kelvin's theorem,
+periodic BC; also conserved under viscous diffusion since
+∫∇²ω dA = 0 for periodic domains).
 """
 
 from __future__ import annotations
@@ -157,7 +159,7 @@ class NavierStokes2DCompiler(BaseCompiler):
                     bc=BCKind.PERIODIC,
                     bc_params={"domain": dom},
                     initial_fn="init_omega",
-                    conserved_quantity="total_mass",
+                    conserved_quantity="total_circulation",
                 ),
                 "psi": FieldSpec(
                     name="psi",
@@ -185,7 +187,7 @@ class NavierStokes2DCompiler(BaseCompiler):
                 ),
                 # init_psi: zero — handled automatically by GPUQTTTensor.zeros()
                 "invariant_fn": invariant_fn,
-                "invariant": "total_mass",
+                "invariant": "total_circulation",
                 "equations": "∂ω/∂t + (u·∇)ω = ν∇²ω, ∇²ψ = −ω",
             },
         )

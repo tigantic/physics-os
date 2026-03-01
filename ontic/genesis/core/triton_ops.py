@@ -403,14 +403,19 @@ def qtt_dot_native(
 ) -> float:
     """
     Compute dot product <a, b> without dense materialization.
-    
+
     Uses transfer matrix method:
     <a, b> = Tr(T_1 T_2 ... T_d)
-    
+
     where T_k[r, r'] = sum_i A_k[r_left, i, r] * B_k[r_left', i, r']
-    
+
     Complexity: O(d r^4) vs O(2^d) for dense
     """
+    # QTT-EXCEPTION: Rule 3 — Python Loops → Triton/CUDA Kernels
+    # Why: Inner loop over n_k=2 modes launches 2 GPU matmuls per core
+    #      from Python. Outer loop iterates d=21–36 cores sequentially.
+    # Cost: ~2d kernel launches with Python dispatch overhead per call.
+    # Fix: Fuse into single batched torch.einsum or Triton kernel.
     if len(cores_a) != len(cores_b):
         raise ValueError(f"Core count mismatch: {len(cores_a)} vs {len(cores_b)}")
     
@@ -570,33 +575,39 @@ def qtt_hadamard_native(
     device = cores_a[0].device
     dtype = cores_a[0].dtype
     
+    # QTT-EXCEPTION: Rule 3 — Python Loops → Triton/CUDA Kernels
+    # Why: Inner loop over n_k=2 modes launches 2 torch.kron calls per
+    #      core from Python. Outer loop iterates d cores.
+    # Cost: ~2d kernel launches with Python dispatch overhead.
+    # Fix: Fuse per-mode Kronecker products into a single Triton kernel
+    #      or batched torch.einsum over the mode dimension.
     result_cores = []
-    
+
     for k in range(d):
         A_k = cores_a[k]  # (r_left_a, n_k, r_right_a)
         B_k = cores_b[k]  # (r_left_b, n_k, r_right_b)
-        
+
         r_left_a, n_k, r_right_a = A_k.shape
         r_left_b, _, r_right_b = B_k.shape
-        
+
         # Kronecker product over bond dimensions
         # C_k[ra*rb_left, i, ra*rb_right] = A_k[ra_left, i, ra_right] * B_k[rb_left, i, rb_right]
-        
+
         C_k = torch.zeros(
             r_left_a * r_left_b, n_k, r_right_a * r_right_b,
             device=device, dtype=dtype
         )
-        
+
         for i in range(n_k):
             # A_i: (r_left_a, r_right_a)
             # B_i: (r_left_b, r_right_b)
             A_i = A_k[:, i, :].contiguous()
             B_i = B_k[:, i, :].contiguous()
-            
+
             # Kronecker product: (r_left_a * r_left_b, r_right_a * r_right_b)
             kron = torch.kron(A_i, B_i)
             C_k[:, i, :] = kron
-        
+
         result_cores.append(C_k)
     
     # Round to reduce rank

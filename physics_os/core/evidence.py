@@ -63,15 +63,32 @@ def generate_validation_report(
     conservation = sanitized_result.get("conservation")
     if conservation:
         conserved = conservation["status"] == "conserved"
+        tier = conservation.get("resolution_tier", "production")
+        error_metric = conservation.get("error_metric", "relative")
+        error_value = conservation.get("error_value", conservation.get("relative_error", 0))
+        tier_threshold = conservation.get("tier_threshold", 1e-4)
+
+        # Preview-tier runs get "warning" severity — they are
+        # qualitative smoke tests, not production solves.
+        if not conserved and tier == "preview":
+            severity = "warning"
+        elif not conserved:
+            severity = "error"
+        else:
+            severity = "info"
+        tier_label = f" [{tier}]" if tier != "production" else ""
+        metric_label = "abs" if error_metric == "absolute" else "rel"
         checks.append({
             "name": "conservation_law",
             "passed": conserved,
             "detail": (
                 f"{conservation['quantity']}: "
-                f"relative_error={conservation['relative_error']:.2e} "
-                f"({conservation['status']})"
+                f"{metric_label}_error={error_value:.2e} "
+                f"({conservation['status']}, "
+                f"threshold={tier_threshold:.0e})"
+                f"{tier_label}"
             ),
-            "severity": "error" if not conserved else "info",
+            "severity": severity,
         })
 
     # Check 4: Performance sanity
@@ -127,19 +144,27 @@ def generate_claims(
     # Conservation claim
     conservation = sanitized_result.get("conservation")
     if conservation:
-        rel_err = conservation["relative_error"]
-        satisfied = rel_err < 1e-4
+        error_value = conservation.get("error_value", conservation.get("relative_error", 0))
+        error_metric = conservation.get("error_metric", "relative")
+        tier_threshold = conservation.get("tier_threshold", 1e-4)
+        tier_name = conservation.get("resolution_tier", "production")
+        satisfied = error_value < tier_threshold
+        metric_label = "absolute" if error_metric == "absolute" else "relative"
         claims.append({
             "tag": "CONSERVATION",
             "claim": (
                 f"{conservation['quantity']} preserved to "
-                f"{rel_err:.2e} relative error"
+                f"{error_value:.2e} {metric_label} error"
             ),
             "witness": {
                 "initial": conservation["initial_value"],
                 "final": conservation["final_value"],
-                "relative_error": rel_err,
-                "threshold": 1e-4,
+                "error_value": error_value,
+                "error_metric": error_metric,
+                "relative_error": conservation.get("relative_error", error_value),
+                "absolute_error": conservation.get("absolute_error", 0),
+                "threshold": tier_threshold,
+                "resolution_tier": tier_name,
             },
             "satisfied": satisfied,
         })

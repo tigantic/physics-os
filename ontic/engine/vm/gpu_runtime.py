@@ -436,8 +436,19 @@ class GPURuntime:
             regs[instr.dst] = self._apply_bc_gpu(a, kind, bc_p)
 
         elif op == OpCode.LAPLACE_SOLVE:
-            # Poisson solve on GPU — falls back to CPU for now
-            # TODO: GPU-native multigrid Poisson solver
+            # QTT-EXCEPTION: Rule 1 — QTT Stays Native
+            # Why: GPU-native CG Poisson solver not yet implemented.
+            #      Falls back to CPU QTT CG solver via GPU→CPU→GPU transfer.
+            # Cost: Full PCIe round-trip per NS2D timestep. CPU-bound CG
+            #       with NumPy SVD. GPU sits idle during solve. This is the
+            #       PRIMARY reason GPU utilization is near 0% for NS2D runs.
+            # Fix: Implement GPU-native CG solver using gpu_mpo_apply +
+            #      qtt_round_native, eliminating all CPU transfers.
+            #
+            # QTT-EXCEPTION: Rule 8 — Adaptive Rank
+            # Why: Passes raw max_rank ceiling instead of adaptive rank.
+            # Cost: Over-ranked solve wastes compute at large scales.
+            # Fix: Use self.governor.get_effective_rank(rhs.n_cores).
             rhs = self._get_reg(regs, instr.src[0])
             cpu_rhs = rhs.to_cpu()
             from .operators import poisson_solve
@@ -911,6 +922,12 @@ class GPURuntime:
             u = fields["u"]
             h = u.grid_spacing(0)
             return h * u.sum()
+
+        if name == "total_circulation" and "omega" in fields:
+            omega = fields["omega"]
+            hx = omega.grid_spacing(0)
+            hy = omega.grid_spacing(1) if omega.n_dims > 1 else 1.0
+            return hx * hy * omega.sum()
 
         if name == "particle_number" and "f" in fields:
             f = fields["f"]
