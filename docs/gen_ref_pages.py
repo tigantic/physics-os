@@ -11,12 +11,35 @@ See: https://mkdocstrings.github.io/recipes/#automatic-code-reference-pages
 """
 
 import importlib
+import io
 import logging
+import sys
 from pathlib import Path
 
 import mkdocs_gen_files  # type: ignore[import-untyped]
 
 log = logging.getLogger("mkdocs.plugins.gen_ref_pages")
+
+# Sentinel strings that indicate a module's dependencies are missing.
+# If any of these appear on stdout/stderr during import, the module
+# is skipped (it would pass import but fail mkdocstrings collection).
+_IMPORT_ERROR_SENTINELS = (
+    "not installed",
+    "not available",
+    "not found",
+    "requires gpu",
+    "requires cuda",
+    "no module named",
+)
+
+# Subdirectories of ontic/ that require hardware or domain-specific
+# packages not available in the docs CI environment.  Pages for these
+# are skipped to prevent mkdocstrings CollectionError crashes.
+_SKIP_DIRS = frozenset({
+    "cuda",          # requires pycuda / CUDA toolkit
+    "gpu",           # requires GPU runtime
+    "triton",        # requires Triton JIT
+})
 
 nav = mkdocs_gen_files.Nav()
 
@@ -27,6 +50,11 @@ skipped: list[str] = []
 for path in sorted(src.rglob("*.py")):
     # Skip __pycache__, test files, shim-only __init__.py
     if "__pycache__" in str(path):
+        continue
+
+    # Skip directories that require unavailable hardware/deps
+    rel_parts = path.relative_to(src).parts
+    if any(part in _SKIP_DIRS for part in rel_parts):
         continue
 
     module_path = path.relative_to(".")
@@ -48,10 +76,24 @@ for path in sorted(src.rglob("*.py")):
     # Verify the module can be imported before generating a reference page.
     # Modules with unresolvable dependencies (pycuda, domain-specific libs)
     # are skipped to prevent mkdocstrings CollectionError during build.
+    # We also capture stdout/stderr: modules that gracefully degrade by
+    # printing "not installed" / "not available" without raising still
+    # break griffe collection.
+    old_stdout, old_stderr = sys.stdout, sys.stderr
+    sys.stdout = cap_out = io.StringIO()
+    sys.stderr = cap_err = io.StringIO()
     try:
         importlib.import_module(ident)
     except BaseException:  # noqa: BLE001  — includes SystemExit from GPU-only modules
         skipped.append(ident)
+        continue
+    finally:
+        sys.stdout, sys.stderr = old_stdout, old_stderr
+
+    captured = (cap_out.getvalue() + cap_err.getvalue()).lower()
+    if any(sentinel in captured for sentinel in _IMPORT_ERROR_SENTINELS):
+        skipped.append(ident)
+        log.info("Skipping %s — import emitted: %s", ident, captured.strip()[:120])
         continue
 
     nav_parts = list(parts)
