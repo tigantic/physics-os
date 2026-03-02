@@ -896,6 +896,15 @@ def _taylor_green_kinetic_energy(t: float, nu: float) -> float:
     return (1.0 / (16.0 * np.pi**2)) * np.exp(-16.0 * np.pi**2 * nu * t)
 
 
+def _taylor_green_enstrophy(t: float, nu: float) -> float:
+    """Analytic enstrophy Z(t) = (1/2)∫ω² dA on [0,1]².
+
+    For ω = 2 sin(2πx) sin(2πy) exp(-8π²νt):
+      Z = (1/2) · 4 · (1/4) · exp(-16π²νt) = (1/2) exp(-16π²νt)
+    """
+    return 0.5 * np.exp(-16.0 * np.pi**2 * nu * t)
+
+
 def _compute_qoi_from_result(
     result: Any,
     n_bits: int,
@@ -933,26 +942,31 @@ def _compute_qoi_from_result(
     h = 1.0 / N
     qois: dict[str, float] = {}
 
-    # Build dense grid for analytic comparison (post-execution only)
+    # ── Dense field reconstruction (post-execution only) ────────────
+    # QTT Law §5: to_dense() is ONLY for external diagnostics.
     x1d = np.linspace(0.0, 1.0, N, endpoint=False) + 0.5 * h
     xx, yy = np.meshgrid(x1d, x1d, indexing="ij")
 
-    # Convert GPU fields to CPU QTT, then to dense for comparison
     cpu_fields: dict[str, Any] = {}
     for name, gpu_t in result.fields.items():
-        cpu_t = gpu_t.to_cpu()
-        cpu_fields[name] = cpu_t
+        cpu_fields[name] = gpu_t.to_cpu()
 
-    # Dense reconstruction (post-execution diagnostic only — QTT Law §5 exception)
+    # Determine which fields need dense reconstruction
+    OMEGA_QOIS = {
+        "omega_error_L2", "omega_error_L2_rel",
+        "enstrophy", "enstrophy_error_rel",
+        "kinetic_energy_error_rel",
+        "total_circulation_abs_error",
+    }
+    PSI_QOIS = {
+        "psi_error_L2", "psi_error_L2_rel",
+        "kinetic_energy_error_rel",
+    }
+    need_omega = bool(OMEGA_QOIS & set(qoi_names))
+    need_psi = bool(PSI_QOIS & set(qoi_names))
+
     omega_dense: np.ndarray | None = None
     psi_dense: np.ndarray | None = None
-
-    need_omega = any(
-        q in qoi_names
-        for q in ("omega_L2", "kinetic_energy_decay_error",
-                  "total_circulation_abs_error")
-    )
-    need_psi = "psi_L2" in qoi_names
 
     if need_omega and "omega" in cpu_fields:
         omega_cpu = cpu_fields["omega"]
@@ -960,7 +974,7 @@ def _compute_qoi_from_result(
             omega_dense = omega_cpu.to_dense()
             if hasattr(omega_dense, "numpy"):
                 omega_dense = omega_dense.numpy()
-            omega_dense = np.asarray(omega_dense, dtype=np.float64)
+            omega_dense = np.asarray(omega_dense, dtype=np.float64).reshape(N, N)
 
     if need_psi and "psi" in cpu_fields:
         psi_cpu = cpu_fields["psi"]
@@ -968,40 +982,71 @@ def _compute_qoi_from_result(
             psi_dense = psi_cpu.to_dense()
             if hasattr(psi_dense, "numpy"):
                 psi_dense = psi_dense.numpy()
-            psi_dense = np.asarray(psi_dense, dtype=np.float64)
+            psi_dense = np.asarray(psi_dense, dtype=np.float64).reshape(N, N)
 
-    # ── omega_L2 — L2 error vs analytic ─────────────────────────────
-    if "omega_L2" in qoi_names and omega_dense is not None:
-        omega_exact = _taylor_green_analytic_omega(xx, yy, T, nu)
-        diff = omega_dense.reshape(omega_exact.shape) - omega_exact
-        l2_err = np.sqrt(np.sum(diff**2) * h * h)
-        qois["omega_L2"] = float(l2_err)
+    # Pre-compute analytic fields (shared across multiple QoIs)
+    omega_exact = _taylor_green_analytic_omega(xx, yy, T, nu) if need_omega else None
+    psi_exact = _taylor_green_analytic_psi(xx, yy, T, nu) if need_psi else None
 
-    # ── psi_L2 — L2 error vs analytic ───────────────────────────────
-    if "psi_L2" in qoi_names and psi_dense is not None:
-        psi_exact = _taylor_green_analytic_psi(xx, yy, T, nu)
-        diff = psi_dense.reshape(psi_exact.shape) - psi_exact
-        l2_err = np.sqrt(np.sum(diff**2) * h * h)
-        qois["psi_L2"] = float(l2_err)
+    # ═════════════════════════════════════════════════════════════════
+    # FIELD ERROR NORMS
+    # Continuous L²([0,1]²) norms with h² midpoint-rule quadrature:
+    #   ||f||_L² = sqrt(∫|f|² dA) ≈ sqrt(h² · Σᵢ |f(xᵢ)|²)
+    # ═════════════════════════════════════════════════════════════════
 
-    # ── kinetic_energy_decay_error ───────────────────────────────────
-    if "kinetic_energy_decay_error" in qoi_names and omega_dense is not None:
-        # Approximate KE from computed ψ if available, else from ω
-        # KE = (1/2) ∫(u² + v²) dA = (1/2) ∫ ω·ψ dA (for periodic BCs)
-        if psi_dense is not None:
-            omega_flat = omega_dense.reshape(N * N)
-            psi_flat = psi_dense.reshape(N * N)
-            ke_computed = 0.5 * np.abs(np.sum(omega_flat * psi_flat) * h * h)
-        else:
-            # Fallback: estimate KE from enstrophy relation approx
-            ke_computed = 0.5 * np.sum(omega_dense**2) * h * h / (8.0 * np.pi**2)
+    # ── omega_error_L2 / omega_error_L2_rel ────────────────────────
+    if omega_dense is not None and omega_exact is not None:
+        omega_diff = omega_dense - omega_exact
+        omega_err_l2 = float(np.sqrt(np.sum(omega_diff**2) * h * h))
+        omega_exact_l2 = float(np.sqrt(np.sum(omega_exact**2) * h * h))
+
+        if "omega_error_L2" in qoi_names:
+            qois["omega_error_L2"] = omega_err_l2
+        if "omega_error_L2_rel" in qoi_names and omega_exact_l2 > 0:
+            qois["omega_error_L2_rel"] = omega_err_l2 / omega_exact_l2
+
+    # ── psi_error_L2 / psi_error_L2_rel ────────────────────────────
+    if psi_dense is not None and psi_exact is not None:
+        psi_diff = psi_dense - psi_exact
+        psi_err_l2 = float(np.sqrt(np.sum(psi_diff**2) * h * h))
+        psi_exact_l2 = float(np.sqrt(np.sum(psi_exact**2) * h * h))
+
+        if "psi_error_L2" in qoi_names:
+            qois["psi_error_L2"] = psi_err_l2
+        if "psi_error_L2_rel" in qoi_names and psi_exact_l2 > 0:
+            qois["psi_error_L2_rel"] = psi_err_l2 / psi_exact_l2
+
+    # ═════════════════════════════════════════════════════════════════
+    # SCALE-CONSISTENT PHYSICAL QUANTITIES
+    # These converge to grid-independent constants (the analytic values).
+    # ═════════════════════════════════════════════════════════════════
+
+    # ── enstrophy / enstrophy_error_rel ─────────────────────────────
+    if omega_dense is not None and any(
+        q in qoi_names for q in ("enstrophy", "enstrophy_error_rel")
+    ):
+        enstrophy_num = float(0.5 * np.sum(omega_dense**2) * h * h)
+        enstrophy_exact = _taylor_green_enstrophy(T, nu)
+        if "enstrophy" in qoi_names:
+            qois["enstrophy"] = enstrophy_num
+        if "enstrophy_error_rel" in qoi_names and enstrophy_exact > 0:
+            qois["enstrophy_error_rel"] = float(
+                abs(enstrophy_num - enstrophy_exact) / enstrophy_exact
+            )
+
+    # ── kinetic_energy_error_rel ─────────────────────────────────────
+    if "kinetic_energy_error_rel" in qoi_names:
+        ke_computed: float | None = None
+        if omega_dense is not None and psi_dense is not None:
+            # KE = (1/2)∫ω·ψ dA for periodic domains (from ∇²ψ = -ω)
+            ke_computed = float(
+                0.5 * np.abs(np.sum(omega_dense * psi_dense) * h * h)
+            )
         ke_exact = _taylor_green_kinetic_energy(T, nu)
-        if ke_exact > 0:
-            qois["kinetic_energy_decay_error"] = float(
+        if ke_computed is not None and ke_exact > 0:
+            qois["kinetic_energy_error_rel"] = float(
                 abs(ke_computed - ke_exact) / ke_exact
             )
-        else:
-            qois["kinetic_energy_decay_error"] = float(abs(ke_computed))
 
     # ── total_circulation_abs_error ──────────────────────────────────
     if "total_circulation_abs_error" in qoi_names and omega_dense is not None:
@@ -1009,18 +1054,32 @@ def _compute_qoi_from_result(
         circ = float(np.sum(omega_dense) * h * h)
         qois["total_circulation_abs_error"] = abs(circ)
 
-    # ── poisson_residual_max ─────────────────────────────────────────
-    if "poisson_residual_max" in qoi_names:
-        probes = getattr(result, "probes", {})
+    # ═════════════════════════════════════════════════════════════════
+    # POISSON SOLVER DIAGNOSTICS
+    # CG criterion: ||r||/||b|| < tol  (RELATIVE).
+    # Both absolute and relative residuals are reported so the reader
+    # can verify convergence-flag consistency.
+    # ═════════════════════════════════════════════════════════════════
+    probes = getattr(result, "probes", {})
+
+    # ── poisson_residual_abs_max ─────────────────────────────────────
+    if "poisson_residual_abs_max" in qoi_names:
         res_sq = probes.get("poisson_residual_sq", [])
         if res_sq:
-            qois["poisson_residual_max"] = float(np.sqrt(max(res_sq)))
+            qois["poisson_residual_abs_max"] = float(np.sqrt(max(res_sq)))
         else:
-            qois["poisson_residual_max"] = float("nan")
+            qois["poisson_residual_abs_max"] = float("nan")
+
+    # ── poisson_residual_rel_max ─────────────────────────────────────
+    if "poisson_residual_rel_max" in qoi_names:
+        rel_res = probes.get("poisson_relative_residual", [])
+        if rel_res:
+            qois["poisson_residual_rel_max"] = float(max(rel_res))
+        else:
+            qois["poisson_residual_rel_max"] = float("nan")
 
     # ── cg_iters ─────────────────────────────────────────────────────
     if "cg_iters" in qoi_names:
-        probes = getattr(result, "probes", {})
         cg = probes.get("poisson_cg_iters", [])
         if cg:
             qois["cg_iters"] = float(max(cg))
@@ -1128,13 +1187,18 @@ def run_convergence_cli() -> None:
 
     if not qoi_names:
         qoi_names = [
-            "kinetic_energy_decay_error",
-            "poisson_residual_max",
+            "omega_error_L2",
+            "omega_error_L2_rel",
+            "psi_error_L2",
+            "psi_error_L2_rel",
+            "enstrophy",
+            "enstrophy_error_rel",
+            "kinetic_energy_error_rel",
+            "poisson_residual_abs_max",
+            "poisson_residual_rel_max",
             "cg_iters",
-            "nan_inf_steps",
             "total_circulation_abs_error",
-            "omega_L2",
-            "psi_L2",
+            "nan_inf_steps",
         ]
 
     # Validate domain
@@ -1366,7 +1430,7 @@ def run_convergence_cli() -> None:
 
     # ── JSON Scorecard ───────────────────────────────────────────────
     scorecard: dict[str, Any] = {
-        "schema_version": "2.0",
+        "schema_version": "3.0",
         "harness": "ontic.platform.vv.harness",
         "case": args.case,
         "domain": args.domain,
@@ -1381,8 +1445,23 @@ def run_convergence_cli() -> None:
             "poisson_solver": args.poisson_solver,
             "poisson_tol": args.poisson_tol,
             "poisson_max_iters": args.poisson_max_iters,
+            "poisson_convergence_criterion": "relative: ||r||/||b|| < tol",
             "truncate_rel": args.truncate_rel,
             "max_rank_policy": args.max_rank_policy,
+        },
+        "qoi_definitions": {
+            "omega_error_L2": "||ω_h - ω_exact||_L²([0,1]²) with h² midpoint quadrature",
+            "omega_error_L2_rel": "||ω_h - ω_exact||_L² / ||ω_exact||_L² (dimensionless)",
+            "psi_error_L2": "||ψ_h - ψ_exact||_L²([0,1]²) with h² midpoint quadrature",
+            "psi_error_L2_rel": "||ψ_h - ψ_exact||_L² / ||ψ_exact||_L² (dimensionless)",
+            "enstrophy": "(1/2)∫ω² dA — grid-independent physical quantity",
+            "enstrophy_error_rel": "|Z_h - Z_exact|/Z_exact",
+            "kinetic_energy_error_rel": "|KE_h - KE_exact|/KE_exact, KE=(1/2)∫ω·ψ dA",
+            "poisson_residual_abs_max": "max over steps of sqrt(||r||²) — absolute",
+            "poisson_residual_rel_max": "max over steps of ||r||/||b|| — relative (convergence metric)",
+            "cg_iters": "max CG iterations over all timesteps",
+            "total_circulation_abs_error": "|∫ω dA| (analytic = 0)",
+            "nan_inf_steps": "count of fields with NaN/Inf in QTT cores",
         },
         "qoi_names": qoi_names,
         "levels": all_results,
