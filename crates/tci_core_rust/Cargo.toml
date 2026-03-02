@@ -16,7 +16,7 @@ pyo3 = { version = "0.24", features = ["extension-module"] }
 numpy = "0.24"
 
 # Linear algebra - use pure Rust implementation for easier cross-platform build
-ndarray = "0.16"
+ndarray = "0.17"
 # NOTE: For production, consider enabling a BLAS backend for better performance:
 # ndarray-linalg = { version = "0.16", features = ["intel-mkl"] }
 # For now, we implement our own SVD using nalgebra
