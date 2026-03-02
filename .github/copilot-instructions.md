@@ -6,9 +6,9 @@ or "needs to be built," **consult these canonical references first**:
 
 | Document | Path | What It Covers |
 |----------|------|----------------|
-| **Inventory** | [`INVENTORY.md`](../../INVENTORY.md) | Every module, file count, LOC — 16 physics modules, 20 grand projects, 15 Rust crates |
-| **Toolbox** | [`docs/research/TOOLBOX.md`](../../docs/research/TOOLBOX.md) | Full component catalog — 97 modules, 100 applications, 24K+ files |
-| **Platform Spec** | [`PLATFORM_SPECIFICATION.md`](../../PLATFORM_SPECIFICATION.md) | Architecture, API surface, domain compilers, V&V contracts |
+| **Inventory** | `INVENTORY.md` | Every module, file count, LOC — 16 physics modules, 20 grand projects, 15 Rust crates |
+| **Toolbox** | `docs/research/TOOLBOX.md` | Full component catalog — 97 modules, 100 applications, 24K+ files |
+| **Platform Spec** | `PLATFORM_SPECIFICATION.md` | Architecture, API surface, domain compilers, V&V contracts |
 
 Key areas you MUST be aware of:
 - **`ontic/cfd/`** — 115 files, ~78K LOC: Euler 1D/2D/3D/ND, NS 2D/3D (QTT-native, real-time, turbo), Vlasov 5D, WENO/DG/SEM, turbulence, combustion DNS, reactive NS, LBM, SPH, DSMC

@@ -30,7 +30,7 @@
 
 ### 1.1 Two Worlds: Internal Truth vs External Contract
 
-**Internal world (Ontic + VM):** Track ranks, truncations, opcodes, MPO caches, VM trace internals, and use them to drive adaptivity and V&V. The GPU runtime explicitly warns "never go through the sanitizer for internal metrics" — [gpu_runtime.py](ontic/engine/vm/gpu_runtime.py).
+**Internal world (Ontic + VM):** Track ranks, truncations, opcodes, MPO caches, VM trace internals, and use them to drive adaptivity and V&V. The GPU runtime explicitly warns "never go through the sanitizer for internal metrics" — [gpu_runtime.py](ontic/vm/gpu_runtime.py).
 
 **External world (`physics_os` API):** Emit only whitelisted outputs and never leak TT internals. The Platform Spec explicitly forbids "TT cores, bond dims, SVD spectra, opcodes" at the sanitizer boundary ([§20.4](PLATFORM_SPECIFICATION.md#204-ip-boundary--forbidden-outputs)) and reiterates that internal state and rank distributions never leave ([§4 Runtime Access Layer](PLATFORM_SPECIFICATION.md#4-product-architecture--runtime-access-layer)):
 
@@ -41,18 +41,19 @@
 | Pack | Contents | Audience |
 |------|----------|----------|
 | **Private/Internal Proof Pack** | Full telemetry, ranks, truncation history, opcode traces, saturation rates, CG iteration counts | Engineering, QA, NDA customer due diligence |
-| **Public/Sanitized Proof Pack** | QoIs, conservation metrics, stability predicates, performance timing, dense slices (if whitelisted) | Certificates, `/v1/` result envelope, public attestation |
+| **Public/Sanitized Proof Pack** | QoIs, conservation metrics, stability predicates, performance timing, dense field values (from `qtt.to_dense()`) and derived slices, validation reports, certificate metadata | Certificates, `/v1/` result envelope, public attestation |
 
 The sanitizer ([`physics_os/core/sanitizer.py`](PLATFORM_SPECIFICATION.md#146-physics_os-package-breakdown)) is the **sole exit path** from the QTT runtime to the public API. It performs whitelist-only extraction — only explicitly listed fields pass through. Everything else is discarded at the function boundary. This is not a filter; it is a reconstruction step that builds a new dictionary from scratch ([§20.4](PLATFORM_SPECIFICATION.md#204-ip-boundary--forbidden-outputs)).
 
 ### 1.2 API Freeze Means "No New Surface Area"
 
-The Platform Spec states the API surface is **frozen** as of v4.0.0 ([§20.1](PLATFORM_SPECIFICATION.md#201-api-surface-contract)):
+The Platform Spec states the API surface is **frozen** as of v4.0.0 per [`API_SURFACE_FREEZE.md`](docs/governance/API_SURFACE_FREEZE.md) ([§20.1](PLATFORM_SPECIFICATION.md#201-api-surface-contract)):
 
 - **Frozen endpoints:** 9 (all in `physics_os/api/routers/`)
 - **Frozen schemas:** `JobRequest`, `JobResponse`, `ArtifactEnvelope`, `TrustCertificate`, `ValidationReport`, `Capabilities`, `ContractSchema`
 - **Frozen error codes:** E001–E012
 - **Versioning policy:** URI-versioned (`/v1/`), additive-only within a major version
+- **Breaking changes require a new URI version (`/v2/`)** with 90-day deprecation notice ([§20.1](PLATFORM_SPECIFICATION.md#201-api-surface-contract))
 
 **Implication:** UD/UG **cannot require new endpoints.** It must ship as:
 
@@ -128,8 +129,8 @@ Structured as phases with deliverables and "Definition of Done" gates. No timeli
 #### Deliverables
 
 **IR and runtime invariants:**
-- "Never go dense" enforced at runtime level (the GPU runtime already codifies this as a rule set — [gpu_runtime.py](ontic/engine/vm/gpu_runtime.py)).
-- Prohibit internal metric leakage through sanitizer paths — [gpu_runtime.py](ontic/engine/vm/gpu_runtime.py).
+- "Never go dense" enforced **in the execution pipeline** (the GPU runtime codifies this as a rule set — [gpu_runtime.py](ontic/vm/gpu_runtime.py)). Dense reconstruction via `qtt.to_dense()` is permitted **only at the sanitizer boundary** after execution completes, for output field extraction ([§4.4](PLATFORM_SPECIFICATION.md#44-security-architecture)).
+- Prohibit internal metric leakage through sanitizer paths — [gpu_runtime.py](ontic/vm/gpu_runtime.py).
 
 **Determinism envelope integration:**
 - Record seed/config hashes and device class so Tier-2 reproducibility can be asserted ([§20.2](PLATFORM_SPECIFICATION.md#202-determinism-contract)).
@@ -145,7 +146,8 @@ Structured as phases with deliverables and "Definition of Done" gates. No timeli
   - Sanitized result envelope that **provably contains none** of the 25 forbidden categories (TT cores, bond dims, opcodes, etc.) ([§20.4](PLATFORM_SPECIFICATION.md#204-ip-boundary--forbidden-outputs)).
 - [x] Certificates only bind to sanitized outputs and contract fields.
 
-> **Completed:** `PublicMetrics`/`PrivateMetrics` split, `DeterminismTier` enum, `FORBIDDEN_FIELDS` enforcement, `to_dense()` execution fence, 22 tests in `test_sanitizer_compliance.py`.
+> **Status: Implemented** — `PublicMetrics`/`PrivateMetrics` split, `DeterminismTier` enum, `FORBIDDEN_FIELDS` enforcement, `to_dense()` execution fence.
+> **Evidence:** commit `55325f59`, 22 tests in `test_sanitizer_compliance.py`.
 
 ---
 
@@ -160,7 +162,7 @@ Structured as phases with deliverables and "Definition of Done" gates. No timeli
 - Variable-coefficient elliptic forms (e.g., ∇·(a∇u)) as composable MPO pipelines.
 
 **Poisson/projection quality:**
-- CG Poisson solver correctness and robust truncation coupling (since CG in TT implies truncation is part of the algorithm) — [gpu_operators.py](ontic/engine/vm/gpu_operators.py).
+- CG Poisson solver correctness and robust truncation coupling (since CG in TT implies truncation is part of the algorithm) — [gpu_operators.py](ontic/vm/gpu_operators.py).
 
 **Verification suite (MMS):**
 - Gradient MMS, Laplacian MMS, Poisson analytic checks.
@@ -170,9 +172,10 @@ Structured as phases with deliverables and "Definition of Done" gates. No timeli
 #### Definition of Done
 
 - [x] Observed convergence trend exists across bit-depth levels on MMS.
-- [x] Poisson residual meets target without pathological rank blow-up under governor (governor already supports adaptive effective rank and tracks saturation — [§5.3](PLATFORM_SPECIFICATION.md#53-rank-governor), [gpu_runtime.py](ontic/engine/vm/gpu_runtime.py)).
+- [x] Poisson residual meets target without pathological rank blow-up under governor (governor already supports adaptive effective rank and tracks saturation — [§5.3](PLATFORM_SPECIFICATION.md#53-rank-governor), [gpu_runtime.py](ontic/vm/gpu_runtime.py)).
 
-> **Completed:** `OperatorFamily`/`OperatorVariant` enums, 4th-order MPOs, variable-coefficient elliptic operator, MMS verification suite, 31 tests in `test_operator_fidelity.py`.
+> **Status: Implemented** — `OperatorFamily`/`OperatorVariant` enums, 4th-order MPOs, variable-coefficient elliptic operator, MMS verification suite.
+> **Evidence:** commit `55325f59`, 31 tests in `test_operator_fidelity.py`.
 
 ---
 
@@ -198,7 +201,8 @@ Structured as phases with deliverables and "Definition of Done" gates. No timeli
 - [x] Imported geometry (if supported) yields stable coefficient fields without exploding rank for typical shapes.
 - [x] Rank behavior recorded **internally only** (forbidden externally per [§20.4](PLATFORM_SPECIFICATION.md#204-ip-boundary--forbidden-outputs)).
 
-> **Completed:** `geometry_coeffs.py` compiler (mask, material, penalty, distance fields), 17 tests in `test_geometry_coeffs.py`.
+> **Status: Implemented** — `geometry_coeffs.py` compiler (mask, material, penalty, distance fields).
+> **Evidence:** commit `55325f59`, 17 tests in `test_geometry_coeffs.py`.
 
 ---
 
@@ -227,7 +231,10 @@ Structured as phases with deliverables and "Definition of Done" gates. No timeli
 - [x] All benchmark jobs can be executed via existing job model and routed to attestation without exposing forbidden outputs ([§20.4](PLATFORM_SPECIFICATION.md#204-ip-boundary--forbidden-outputs)).
 - [x] `/v1/contracts/v1` remains stable — additive-only where allowed ([§20.1](PLATFORM_SPECIFICATION.md#201-api-surface-contract)).
 
-> **Completed:** `registry.yaml`, `scorecard_public_v1.schema.json`, V&V `harness.py`, 4 promoted claim tags (CONVERGENCE, REPRODUCIBILITY, ENERGY_BOUND, CFL_SATISFIED), 55 tests in `test_vv_harness.py`.
+> **Job model constraint:** All UD benchmark runs execute via existing job types (`physics_vm_execution`, `rank_atlas_benchmark`, `validation`, `attestation`) within the 6-state / 6-type job model ([§4.3](PLATFORM_SPECIFICATION.md#43-job-model)) and never require new endpoints.
+
+> **Status: Implemented** — `registry.yaml`, `scorecard_public_v1.schema.json`, V&V `harness.py`, 4 promoted claim tags (CONVERGENCE, REPRODUCIBILITY, ENERGY_BOUND, CFL_SATISFIED).
+> **Evidence:** commit `55325f59`, 55 tests in `test_vv_harness.py`.
 
 ---
 
@@ -251,13 +258,18 @@ Structured as phases with deliverables and "Definition of Done" gates. No timeli
 - [x] Turbulent channel/cavity style validations pass in a repeatable way (with convergence trends and stable certificates).
 - [x] No leakage of wall-model internals beyond whitelisted aggregates — ([§20.4](PLATFORM_SPECIFICATION.md#204-ip-boundary--forbidden-outputs)).
 
-> **Completed:** `wall_model.py` (penalization + calibrated wall model), `wall_benchmarks.py` (Ghia cavity, Schäfer-Turek), extended `navier_stokes_2d.py` with Brinkman penalization, 57 tests in `test_wall_model.py`.
+> **Status: Implemented** — `wall_model.py` (penalization + calibrated wall model), `wall_benchmarks.py` (Ghia cavity, Schäfer-Turek), extended `navier_stokes_2d.py` with Brinkman penalization.
+> **Evidence:** commit `55325f59`, 57 tests in `test_wall_model.py`.
 
 ---
 
-### Phase F: UGv2 Physics Breadth (Compressible + CHT + One Multiphase Lane)
+### Phase F: UDv2 Physics Breadth (Compressible + CHT + One Multiphase Lane)
 
 **Goal:** Expand physics coverage while keeping correctness and contract compliance.
+
+> **Governance note — v4.0.x scope freeze:** The Platform Spec explicitly states that v4.0.x is a hardening cycle on `release/v4.0.x` — "no new features, domains, or surface area are added during this cycle" ([§1](PLATFORM_SPECIFICATION.md#1-executive-summary)). Phase F compilers therefore live in the **Ontic/Platform Substrate** layer (internal) and are not promoted into the `physics_os` 7-domain public registry ([§14.6](PLATFORM_SPECIFICATION.md#146-physics_os-package-breakdown)) until post-freeze (v4.1+). They ship behind internal V&V harnesses and execute via existing job types — no new endpoints or public surface area.
+
+**Promotion Pipeline:** New domains/compilers land in Ontic/Platform Substrate first, ship behind internal harnesses, then are promoted into the `physics_os` 7-domain registry only after passing V&V + sanitizer compliance + certificate invariants. See Section 6 (Domain Promotion Protocol) for the full stage gate.
 
 #### Deliverables
 
@@ -277,7 +289,8 @@ Structured as phases with deliverables and "Definition of Done" gates. No timeli
 - [x] Each new lane ships with: benchmarks, convergence trend artifacts, certificate predicates.
 - [x] Sanitizer whitelist updates **only if truly necessary** — avoid unless essential ([§20.1](PLATFORM_SPECIFICATION.md#201-api-surface-contract)).
 
-> **Completed:** `compressible_euler.py` (1D Euler with exact Riemann solver, Sod/Shu-Osher/smooth-sine ICs), `cht_coupling.py` (CHT with variable-coefficient heat equation), `phase_field.py` (Cahn-Hilliard 2D), BOUNDEDNESS evidence claim, 58 tests in `test_physics_breadth.py`.
+> **Status: Implemented (Research stage — see Section 6)** — `compressible_euler.py` (1D Euler with exact Riemann solver, Sod/Shu-Osher/smooth-sine ICs), `cht_coupling.py` (CHT with variable-coefficient heat equation), `phase_field.py` (Cahn-Hilliard 2D), BOUNDEDNESS evidence claim.
+> **Evidence:** commit `55325f59`, 58 tests in `test_physics_breadth.py`.
 
 ---
 
@@ -308,7 +321,8 @@ Structured as phases with deliverables and "Definition of Done" gates. No timeli
 - [x] Demonstrated "rank-hostile" cases (shocks/interfaces) stay stable and accurate without uncontrolled saturation.
 - [x] Public outputs remain contract-safe and do not leak forbidden categories.
 
-> **Completed:** `hybrid_field.py` (HybridField: q_TT + q_local, LocalTile, FeatureSensor, TileActivationPolicy), `qoi_adaptivity.py` (QoITarget, ConvergenceTrend, QoIHistory, AdaptiveRankPolicy), 65 tests in `test_hybrid_adaptivity.py`.
+> **Status: Implemented** — `hybrid_field.py` (HybridField: q_TT + q_local, LocalTile, FeatureSensor, TileActivationPolicy), `qoi_adaptivity.py` (QoITarget, ConvergenceTrend, QoIHistory, AdaptiveRankPolicy).
+> **Evidence:** commit `55325f59`, 65 tests in `test_hybrid_adaptivity.py`.
 
 ---
 
@@ -319,7 +333,7 @@ Earlier "HyperFoam" disadvantages were largely about explicit grid/immersed boun
 | Risk Class | Nature | Tracking Mechanism |
 |-----------|--------|-------------------|
 | **Boundary and wall closure maturity** | Still the hardest part of "universal CFD." | Phase E benchmarks + wall diagnostics. |
-| **Truncation-governed numerical bias** | Now a first-class accuracy variable and a product telemetry variable (internal) — [gpu_runtime.py](ontic/engine/vm/gpu_runtime.py). | Rank governor saturation tracking, convergence studies. |
+| **Truncation-governed numerical bias** | Now a first-class accuracy variable and a product telemetry variable (internal) — [gpu_runtime.py](ontic/vm/gpu_runtime.py). | Rank governor saturation tracking, convergence studies. |
 | **Evidence and contract compliance** | The platform spec makes non-negotiable: forbidden outputs, API freeze, determinism envelope ([§20.1](PLATFORM_SPECIFICATION.md#201-api-surface-contract), [§20.2](PLATFORM_SPECIFICATION.md#202-determinism-contract), [§20.4](PLATFORM_SPECIFICATION.md#204-ip-boundary--forbidden-outputs)). | Sanitizer compliance tests, certificate binding. |
 
 ---
@@ -654,7 +668,7 @@ benchmarks:
 
 ### 5.2 Sanitizer-Safe Scorecard Schema (JSON Schema)
 
-This is a **public-facing** (sanitized) scorecard shape that can sit inside the existing `ArtifactEnvelope` without adding new endpoints — consistent with the "whitelist only, block internal state, tensor cores, compiler IR, rank distributions" rule ([§20.4](PLATFORM_SPECIFICATION.md#204-ip-boundary--forbidden-outputs)). It bakes in the determinism tier field per the determinism contract ([§20.2](PLATFORM_SPECIFICATION.md#202-determinism-contract)), and a metering summary aligned to the CU formula ([§20.3](PLATFORM_SPECIFICATION.md#203-metering--pricing-contract)).
+This is a **public-facing** (sanitized) scorecard shape that can sit inside the existing `ArtifactEnvelope` without adding new endpoints — consistent with the "whitelist only, block internal state, tensor cores, compiler IR, rank distributions" rule ([§20.4](PLATFORM_SPECIFICATION.md#204-ip-boundary--forbidden-outputs)). It bakes in the determinism tier field per the determinism contract ([§20.2](PLATFORM_SPECIFICATION.md#202-determinism-contract)), and a metering summary whose `wall_seconds`, `device_class`, and `domain_weight` fields feed the CU formula. Numeric multipliers and plan limits are defined in [`METERING_POLICY.md`](docs/governance/METERING_POLICY.md) and [`PRICING_MODEL.md`](docs/product/PRICING_MODEL.md) (the authoritative sources) and are intentionally **not** restated here to prevent drift as pricing evolves ([§20.3](PLATFORM_SPECIFICATION.md#203-metering--pricing-contract)).
 
 **Target path:** `contracts/v1/schemas/scorecard_public_v1.schema.json`
 
@@ -996,6 +1010,29 @@ This map records where each UD phase landed in the repo. All `/v1/` endpoints an
 
 ---
 
+## 6) Domain Promotion Protocol
+
+New physics domains progress through four stages before reaching the public API surface. This protocol maps directly to the product architecture: REST/SDK/CLI/MCP → sanitizer → registry → VM → evidence → certs ([§4](PLATFORM_SPECIFICATION.md#4-product-architecture--runtime-access-layer)).
+
+| Stage | Where It Lives | What's Allowed | Exit Gate |
+|-------|---------------|----------------|-----------|
+| **Experimental** | `ontic/...` (any module) | Anything — no API exposure | Unit tests + internal proof pack |
+| **Research** | `ontic/platform/vv/` (benchmark harness) | benchmark harness + convergence studies | V&V pass, determinism tier declared ([§20.2](PLATFORM_SPECIFICATION.md#202-determinism-contract)) |
+| **Production-Eligible** | `physics_os/core/registry.py` candidate | sanitizer + certificate integration | Sanitizer whitelist proof + cert claim predicates ([§20.4](PLATFORM_SPECIFICATION.md#204-ip-boundary--forbidden-outputs)) |
+| **Production** | `physics_os` public surface | `/v1/` artifacts only | Contract validation + certificate binding ([§20.1](PLATFORM_SPECIFICATION.md#201-api-surface-contract)) |
+
+**v4.0.x constraint:** During the v4.0.x hardening cycle, no domain may advance to Production stage. New work stays at Experimental or Research until the freeze lifts ([§1](PLATFORM_SPECIFICATION.md#1-executive-summary)).
+
+**Current status of Phase F domains:**
+
+| Domain | Stage | Evidence |
+|--------|-------|---------|
+| Compressible Euler 1D | Research | Sod + Shu-Osher benchmarks passing, boundedness predicates, 58 tests |
+| CHT Coupling 1D | Research | Variable-coefficient heat equation, interface flux diagnostics |
+| Phase-Field 2D (Cahn-Hilliard) | Research | Interface energy + phase fraction tracking, Rayleigh-Taylor IC |
+
+---
+
 ## Appendix: Platform Spec Cross-Reference Index
 
 Every claim in this document traces to a specific Platform Specification section:
@@ -1020,6 +1057,12 @@ Every claim in this document traces to a specific Platform Specification section
 | Evidence validation + claim generation | [§14.6](PLATFORM_SPECIFICATION.md#146-physics_os-package-breakdown) |
 | V&V harness location (`ontic/platform/vv/`) | [§6.2 Platform Substrate](PLATFORM_SPECIFICATION.md#62-platform-substrate-v200) |
 | Never-dense guarantee | [§5.3 Rank Governor](PLATFORM_SPECIFICATION.md#53-rank-governor), [§1 Executive Summary](PLATFORM_SPECIFICATION.md#1-executive-summary) |
-| CU formula (metering) | [§20.3 Metering & Pricing Contract](PLATFORM_SPECIFICATION.md#203-metering--pricing-contract) |
+| CU formula (metering) | [§20.3 Metering & Pricing Contract](PLATFORM_SPECIFICATION.md#203-metering--pricing-contract), [`METERING_POLICY.md`](docs/governance/METERING_POLICY.md), [`PRICING_MODEL.md`](docs/product/PRICING_MODEL.md) |
 | ScorecardPublicV1 schema compliance | [§20.4](PLATFORM_SPECIFICATION.md#204-ip-boundary--forbidden-outputs) (forbidden fields), [§20.1](PLATFORM_SPECIFICATION.md#201-api-surface-contract) (fits ArtifactEnvelope) |
 | Benchmark registry uses V&V harness methods | [§13.3](PLATFORM_SPECIFICATION.md#133-vv-framework), [§6.2](PLATFORM_SPECIFICATION.md#62-platform-substrate-v200) |
+| Breaking changes require new URI version (`/v2/`) | [§20.1](PLATFORM_SPECIFICATION.md#201-api-surface-contract) |
+| Job model (6 states, 6 types) | [§4.3 Job Model](PLATFORM_SPECIFICATION.md#43-job-model) |
+| v4.0.x is hardening — no new features/domains/surface | [§1 Executive Summary](PLATFORM_SPECIFICATION.md#1-executive-summary) |
+| Domain Promotion Protocol (Experimental → Production) | [§4](PLATFORM_SPECIFICATION.md#4-product-architecture--runtime-access-layer), [§14.6](PLATFORM_SPECIFICATION.md#146-physics_os-package-breakdown) |
+| Dense reconstruction at sanitizer boundary (post-execution) | [§4.4 Security Architecture](PLATFORM_SPECIFICATION.md#44-security-architecture) |
+| Allowed output field families | [§4.4](PLATFORM_SPECIFICATION.md#44-security-architecture): domain, grid metadata, dense field values, conservation, timing, validation, certificate metadata |
