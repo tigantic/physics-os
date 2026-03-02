@@ -83,7 +83,7 @@ jobs:
         continue-on-error: true
 
       - name: Upload MMS results
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: mms-results
           path: |
@@ -128,7 +128,7 @@ jobs:
         continue-on-error: true
 
       - name: Upload benchmark results
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: benchmark-results
           path: |
@@ -172,7 +172,7 @@ jobs:
         continue-on-error: true
 
       - name: Upload conservation results
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: conservation-results
           path: |
@@ -217,7 +217,7 @@ jobs:
         continue-on-error: true
 
       - name: Upload convergence results
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: convergence-results
           path: |
@@ -268,7 +268,7 @@ jobs:
         continue-on-error: true
 
       - name: Upload regression report
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: regression-report
           path: |
@@ -309,7 +309,7 @@ jobs:
           echo "Dashboard generated: vv_dashboard.html"
 
       - name: Upload dashboard
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: vv-dashboard
           path: vv_dashboard.html
@@ -376,7 +376,7 @@ jobs:
         continue-on-error: true
 
       - name: Upload signed manifest
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: signed-validation
           path: |

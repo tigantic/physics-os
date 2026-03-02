@@ -87,7 +87,7 @@ jobs:
           forge test --gas-report 2>&1 | tee gas-report.txt
 
       - name: Upload gas report
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: gas-report
           path: crates/fluidelite_zk/foundry/gas-report.txt
@@ -167,7 +167,7 @@ jobs:
           echo "✓ Gas benchmarks recorded"
 
       - name: Upload benchmark results
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: gas-benchmark
           path: crates/fluidelite_zk/foundry/gas-benchmark.txt
