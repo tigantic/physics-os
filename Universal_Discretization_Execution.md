@@ -421,7 +421,7 @@ benchmarks:
 
   - id: "C110_SOD_SHOCK_TUBE_1D"
     category: "cfd"
-    domain_key: "burgers"          # switch to euler_1d when Euler compiler lands
+    domain_key: "compressible_euler_1d"
     dimensions: 1
     benchmark_name: "Sod shock tube"
     reference: "Exact Riemann solution"
@@ -496,7 +496,7 @@ benchmarks:
 
   - id: "C220_KIDA_VORTEX_3D"
     category: "cfd"
-    domain_key: "maxwell_3d"        # placeholder until Euler/NS3D compiler lands
+    domain_key: "navier_stokes_3d"
     dimensions: 3
     benchmark_name: "Kida vortex"
     reference: "Enstrophy conservation"
