@@ -19,7 +19,7 @@ pyo3 = { version = "0.24", features = ["extension-module"] }
 numpy = "0.24"
 
 # Math
-ndarray = "0.16"
+ndarray = "0.17"
 
 # Error Handling
 thiserror = "1.0"
