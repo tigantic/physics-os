@@ -1,0 +1,84 @@
+{
+  "schema_version": "1.0",
+  "run_id": "ud_validation_20260302T032450Z",
+  "domain_key": "navier_stokes_2d",
+  "backend": "GPU",
+  "grid": "512\u00b2 (9 bits/dim)",
+  "n_steps": 10,
+  "dt": 4.76837158203125e-05,
+  "viscosity": 0.01,
+  "status": "succeeded",
+  "determinism": {
+    "tier": "reproducible",
+    "device_class": "gpu_consumer",
+    "config_hash": "71c05d6966fdbdba..."
+  },
+  "telemetry_summary": {
+    "chi_max": 2,
+    "compression_ratio": 2259.862068965517,
+    "total_truncations": 30,
+    "saturation_rate": "0.0%",
+    "wall_time_s": 2.885,
+    "invariant_error": 1.4986183964378763e-32
+  },
+  "evidence": {
+    "claims": [
+      {
+        "tag": "CONSERVATION",
+        "passed": true,
+        "detail": "|\u0394\u0393/\u0393\u2080| = 1.50e-32 (initial/final: 1.50e-02, runtime: 1.50e-32, tol=1e-04)"
+      },
+      {
+        "tag": "STABILITY",
+        "passed": true,
+        "detail": "NaN/Inf steps: 0/10"
+      },
+      {
+        "tag": "BOUND",
+        "passed": true,
+        "detail": "Saturation rate: 0.0%"
+      },
+      {
+        "tag": "REPRODUCIBILITY",
+        "passed": true,
+        "detail": "Tier: reproducible"
+      },
+      {
+        "tag": "CFL_SATISFIED",
+        "passed": true,
+        "detail": "All 10 steps completed"
+      }
+    ],
+    "all_passed": true
+  },
+  "sanitizer": {
+    "clean": true,
+    "fields_checked": 15,
+    "violations": []
+  },
+  "phase_validations": {
+    "C_geometry": {
+      "passed": true
+    },
+    "E_wall_model": {
+      "passed": true
+    },
+    "F_physics_breadth": {
+      "compressible_euler": {
+        "passed": true
+      },
+      "cht_coupling": {
+        "passed": true
+      },
+      "phase_field": {
+        "passed": true
+      }
+    },
+    "G_hybrid_field": {
+      "passed": true
+    },
+    "G_qoi_adaptivity": {
+      "passed": true
+    }
+  }
+}
