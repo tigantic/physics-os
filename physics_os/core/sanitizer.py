@@ -4,6 +4,10 @@ This is the ONLY path from VM internals to the outside world.
 It converts ``ExecutionResult`` → public-safe dictionaries,
 stripping ALL tensor-train internal state.
 
+Enforced by §20.4 IP Boundary & Forbidden Outputs.  The
+``FORBIDDEN_FIELDS`` frozenset is the machine-readable authority
+on what MUST NOT appear in any public output.
+
 Removed:
     • Bond dimensions (χ_max, χ_mean, χ_final)
     • Compression ratios
@@ -30,6 +34,67 @@ from typing import Any
 
 import numpy as np
 from numpy.typing import NDArray
+
+
+# ─────────────────────────────────────────────────────────────────────
+# Forbidden Field Categories (§20.4 — Machine-Readable Authority)
+# ─────────────────────────────────────────────────────────────────────
+#
+# If a key in ANY output dictionary matches one of these tokens
+# (case-insensitive substring match), the sanitizer MUST strip it.
+# This is the enforcement mechanism for the 25 forbidden categories
+# listed in PLATFORM_SPECIFICATION.md §20.4.
+
+FORBIDDEN_FIELDS: frozenset[str] = frozenset({
+    # TT / QTT structure internals
+    "tt_cores",
+    "cores",
+    "bond_dim",
+    "chi_max",
+    "chi_mean",
+    "chi_final",
+    "bond_dimensions",
+    "rank_distribution",
+    "rank_history",
+    # SVD / truncation internals
+    "svd_spectra",
+    "singular_values",
+    "truncation_error",
+    "truncation_count",
+    "total_truncations",
+    "saturation_rate",
+    "saturation_count",
+    # Compression internals
+    "compression_ratio",
+    "numel_compressed",
+    # Rank governor internals
+    "max_rank_policy",
+    "effective_rank",
+    "rank_ceiling",
+    "governor_config",
+    # Scaling classification
+    "scaling_class",
+    "rank_scaling",
+    # IR / VM internals
+    "ir_opcodes",
+    "ir_opcodes_used",
+    "opcode_trace",
+    "instruction_count",
+    "n_instructions",
+    "register_map",
+    "register_count",
+    "program_ir",
+    # Compiler internals
+    "compiler_ir",
+    "compiler_trace",
+    "mpo_cache",
+    # Internal class names
+    "class_name",
+    "internal_type",
+    # Private telemetry bundle
+    "private_metrics",
+    "private",
+})
 
 
 # ── Resolution tiers ────────────────────────────────────────────
@@ -272,9 +337,53 @@ def sanitize_result(
         "throughput_gp_per_s": round(throughput, 1),
     }
 
-    return {
+    result = {
         "grid": grid,
         "fields": fields,
         "conservation": conservation,
         "performance": performance,
     }
+
+    # ── Final enforcement: assert no forbidden keys leaked ──────────
+    _assert_no_forbidden_fields(result)
+
+    return result
+
+
+# ─────────────────────────────────────────────────────────────────────
+# Forbidden-field enforcement (§20.4)
+# ─────────────────────────────────────────────────────────────────────
+
+
+def _collect_all_keys(obj: Any, prefix: str = "") -> set[str]:
+    """Recursively collect all dictionary keys in a nested structure."""
+    keys: set[str] = set()
+    if isinstance(obj, dict):
+        for k, v in obj.items():
+            full = f"{prefix}.{k}" if prefix else k
+            keys.add(k)
+            keys.update(_collect_all_keys(v, full))
+    elif isinstance(obj, (list, tuple)):
+        for item in obj:
+            keys.update(_collect_all_keys(item, prefix))
+    return keys
+
+
+def _assert_no_forbidden_fields(result: dict[str, Any]) -> None:
+    """Raise if any forbidden field key appears in the sanitized output.
+
+    This is a hard runtime assertion — if a code change accidentally
+    leaks internal state, this will catch it immediately.
+    """
+    all_keys = _collect_all_keys(result)
+    # Case-insensitive exact match against forbidden set
+    leaked = {k for k in all_keys if k.lower() in FORBIDDEN_FIELDS}
+    if leaked:
+        raise SanitizerIPViolation(
+            f"FORBIDDEN fields detected in sanitized output: {sorted(leaked)}. "
+            f"This is a §20.4 IP boundary violation."
+        )
+
+
+class SanitizerIPViolation(Exception):
+    """Raised when forbidden internal state leaks through the sanitizer."""

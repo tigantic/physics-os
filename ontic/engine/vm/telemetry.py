@@ -3,19 +3,127 @@
 Records per-step and per-program metrics using the same measurement
 protocol for every physics domain.  Produces proof artifacts that
 can be compared across domains on a single benchmark sheet.
+
+The telemetry layer enforces a strict two-world split:
+
+  **PrivateMetrics** — ranks, truncation counts, saturation rates,
+      opcodes, compression ratios, scaling classification.  NEVER
+      crosses the sanitizer boundary (§20.4 IP Boundary).
+
+  **PublicMetrics** — conservation, stability, boundedness, QoIs,
+      wall time, device class, determinism tier.  These are the ONLY
+      fields allowed in the sanitized result envelope.
 """
 
 from __future__ import annotations
 
+import hashlib
 import json
+import platform
 import time
 from dataclasses import dataclass, field, asdict
+from enum import Enum
 from pathlib import Path
 from typing import Any
 
 import numpy as np
 
 from .qtt_tensor import QTTTensor
+
+
+# ─────────────────────────────────────────────────────────────────────
+# Determinism Envelope (§20.2)
+# ─────────────────────────────────────────────────────────────────────
+
+
+class DeterminismTier(str, Enum):
+    """Three-tier determinism envelope per §20.2 Determinism Contract.
+
+    BITWISE              — identical bytes across runs (hashing, signing)
+    REPRODUCIBLE         — identical within ε ≤ 10⁻¹² (same hw + seed)
+    PHYSICALLY_EQUIVALENT — within measurement uncertainty (cross-hw)
+    """
+
+    BITWISE = "bitwise"
+    REPRODUCIBLE = "reproducible"
+    PHYSICALLY_EQUIVALENT = "physically_equivalent"
+
+
+# ─────────────────────────────────────────────────────────────────────
+# Two-world metrics split
+# ─────────────────────────────────────────────────────────────────────
+
+
+@dataclass
+class PublicMetrics:
+    """Sanitizer-safe metrics that may cross the IP boundary.
+
+    ONLY these fields are permitted in the external result envelope,
+    certificates, and ``/v1/`` responses.  Enforced by
+    ``physics_os/core/sanitizer.py`` (§20.4).
+    """
+
+    # ── conservation ────────────────────────────────────────────────
+    invariant_name: str = ""
+    invariant_initial: float = 0.0
+    invariant_final: float = 0.0
+    invariant_error: float = 0.0
+
+    # ── stability / boundedness ─────────────────────────────────────
+    stable: bool = True
+    bounded: bool = True
+    max_field_abs: float = 0.0
+
+    # ── performance (non-IP) ────────────────────────────────────────
+    wall_time_s: float = 0.0
+    n_steps: int = 0
+    grid_points: int = 0
+    throughput_gp_per_s: float = 0.0
+
+    # ── determinism (§20.2) ─────────────────────────────────────────
+    determinism_tier: DeterminismTier = DeterminismTier.REPRODUCIBLE
+    device_class: str = ""        # "cpu", "gpu_consumer", "gpu_datacenter"
+    config_hash: str = ""         # SHA-256 of canonical program config
+    seed: int = 0
+
+    def to_dict(self) -> dict[str, Any]:
+        d = asdict(self)
+        d["determinism_tier"] = self.determinism_tier.value
+        return d
+
+
+@dataclass
+class PrivateMetrics:
+    """Internal-only metrics that MUST NEVER cross the sanitizer.
+
+    Contains rank distributions, truncation telemetry, opcode traces,
+    compression ratios, scaling classification — all forbidden per
+    §20.4 IP Boundary & Forbidden Outputs.
+    """
+
+    # ── rank metrics (FORBIDDEN externally) ─────────────────────────
+    chi_max: int = 0
+    chi_mean: float = 0.0
+    chi_final: int = 0
+    compression_ratio_final: float = 0.0
+
+    # ── scaling classification (FORBIDDEN externally) ───────────────
+    scaling_class: str = ""  # A, B, C, D
+
+    # ── governor metrics (FORBIDDEN externally) ─────────────────────
+    saturation_rate: float = 0.0
+    total_truncations: int = 0
+    max_rank_policy: int = 0
+
+    # ── VM info (FORBIDDEN externally) ──────────────────────────────
+    n_instructions: int = 0
+    ir_opcodes_used: list[str] = field(default_factory=list)
+
+    # ── per-step rank history (FORBIDDEN externally) ────────────────
+    rank_history: list[int] = field(default_factory=list)
+
+    def to_dict(self) -> dict[str, Any]:
+        return asdict(self)
 
 
 @dataclass
@@ -37,7 +145,9 @@ class StepTelemetry:
 class ProgramTelemetry:
     """Aggregate telemetry for a complete program execution.
 
-    This is the "benchmark sheet row" for one domain.
+    This is the "benchmark sheet row" for one domain.  It contains
+    BOTH public and private metrics.  The sanitizer extracts only
+    ``public`` when building the external result envelope.
     """
     domain: str = ""
     domain_label: str = ""
@@ -74,6 +184,10 @@ class ProgramTelemetry:
     # ── VM info ─────────────────────────────────────────────────────
     n_instructions: int = 0
     ir_opcodes_used: list[str] = field(default_factory=list)
+
+    # ── two-world split (Phase A) ───────────────────────────────────
+    public: PublicMetrics = field(default_factory=PublicMetrics)
+    private: PrivateMetrics = field(default_factory=PrivateMetrics)
 
     def classify_scaling(self) -> str:
         """Classify rank scaling from the step history.
@@ -115,10 +229,50 @@ class ProgramTelemetry:
         self.scaling_class = cls
         return cls
 
+    def populate_split(self) -> None:
+        """Populate the two-world PublicMetrics / PrivateMetrics split.
+
+        Must be called after ``classify_scaling()`` so that all
+        aggregate metrics are available.  The split is the
+        authoritative source for what may cross the sanitizer.
+        """
+        # ── Public (sanitizer-safe) ─────────────────────────────────
+        p = self.public
+        p.invariant_name = self.invariant_name
+        p.invariant_initial = self.invariant_initial
+        p.invariant_final = self.invariant_final
+        p.invariant_error = self.invariant_error
+        p.wall_time_s = self.total_wall_time_s
+        p.n_steps = self.n_steps
+
+        total_points = 1
+        for _ in range(self.n_dims):
+            total_points *= 2 ** self.n_bits
+        p.grid_points = total_points
+        p.throughput_gp_per_s = (
+            (total_points * self.n_steps) / (self.total_wall_time_s + 1e-30)
+        )
+
+        # ── Private (NEVER crosses sanitizer) ───────────────────────
+        q = self.private
+        q.chi_max = self.chi_max
+        q.chi_mean = self.chi_mean
+        q.chi_final = self.chi_final
+        q.compression_ratio_final = self.compression_ratio_final
+        q.scaling_class = self.scaling_class
+        q.saturation_rate = self.saturation_rate
+        q.total_truncations = self.total_truncations
+        q.max_rank_policy = self.max_rank_policy
+        q.n_instructions = self.n_instructions
+        q.ir_opcodes_used = list(self.ir_opcodes_used)
+        q.rank_history = [s.chi_max for s in self.steps]
+
     def to_dict(self) -> dict[str, Any]:
         """Serialize to a JSON-compatible dictionary."""
         d = asdict(self)
         d["steps"] = [asdict(s) for s in self.steps]
+        d["public"] = self.public.to_dict()
+        d["private"] = self.private.to_dict()
         return d
 
     def summary_line(self) -> str:
@@ -131,6 +285,31 @@ class ProgramTelemetry:
             f"Δinv={self.invariant_error:>9.2e}  "
             f"class={self.scaling_class}"
         )
+
+
+def compute_config_hash(program_dict: dict[str, Any]) -> str:
+    """SHA-256 of canonical JSON program config.
+
+    Used for determinism tier recording — allows verification that
+    two runs used identical configuration.
+    """
+    canonical = json.dumps(program_dict, sort_keys=True, separators=(",", ":"))
+    return hashlib.sha256(canonical.encode("utf-8")).hexdigest()
+
+
+def detect_device_class() -> str:
+    """Detect the device class for determinism tier metadata."""
+    try:
+        import torch
+        if torch.cuda.is_available():
+            name = torch.cuda.get_device_name(0).lower()
+            # Datacenter GPUs: A100, H100, V100, A30, etc.
+            if any(k in name for k in ("a100", "h100", "h200", "v100", "a30", "l40")):
+                return "gpu_datacenter"
+            return "gpu_consumer"
+    except ImportError:
+        pass
+    return "cpu"
 
 
 class TelemetryCollector:
@@ -247,4 +426,5 @@ class TelemetryCollector:
                         r.invariant_error = abs_diff
 
         r.classify_scaling()
+        r.populate_split()
         return r

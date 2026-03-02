@@ -268,11 +268,18 @@ def gradient_mpo_gpu(
     dim: int,
     bits_per_dim: tuple[int, ...],
     domain: tuple[tuple[float, float], ...],
+    variant: str = "grad_v1",
 ) -> list[torch.Tensor]:
-    """Gradient MPO ∂/∂x_dim on GPU."""
+    """Gradient MPO ∂/∂x_dim on GPU.
+
+    Parameters
+    ----------
+    variant : str
+        ``"grad_v1"`` (2nd order) or ``"grad_v2_high_order"`` (4th order).
+    """
     from ontic.engine.vm.operators import gradient_mpo
 
-    np_cores = gradient_mpo(dim, bits_per_dim, domain)
+    np_cores = gradient_mpo(dim, bits_per_dim, domain, variant=variant)
     return _numpy_to_gpu(np_cores)
 
 
@@ -280,11 +287,18 @@ def laplacian_mpo_gpu(
     bits_per_dim: tuple[int, ...],
     domain: tuple[tuple[float, float], ...],
     dim: int | None = None,
+    variant: str = "lap_v1",
 ) -> list[torch.Tensor]:
-    """Laplacian MPO ∇² on GPU."""
+    """Laplacian MPO ∇² on GPU.
+
+    Parameters
+    ----------
+    variant : str
+        ``"lap_v1"`` (2nd order) or ``"lap_v2_high_order"`` (4th order).
+    """
     from ontic.engine.vm.operators import laplacian_mpo
 
-    np_cores = laplacian_mpo(bits_per_dim, domain, dim)
+    np_cores = laplacian_mpo(bits_per_dim, domain, dim, variant=variant)
     return _numpy_to_gpu(np_cores)
 
 
@@ -299,6 +313,8 @@ class GPUOperatorCache:
     MPOs are built once (CPU), transferred to GPU once, then
     reused across all time steps. The CUDA memory cost is minimal:
     each MPO is O(L × D² × d²) which is small for D ≤ 5, d = 2.
+
+    Variant-aware: keyed by ``(operator, variant, dim, grid_config)``.
     """
 
     def __init__(self) -> None:
@@ -309,11 +325,13 @@ class GPUOperatorCache:
         dim: int,
         bits_per_dim: tuple[int, ...],
         domain: tuple[tuple[float, float], ...],
+        variant: str = "grad_v1",
     ) -> list[torch.Tensor]:
         """Get or create cached gradient MPO on GPU."""
-        key = f"grad_{dim}_{bits_per_dim}_{domain}"
+        key = f"grad_{variant}_{dim}_{bits_per_dim}_{domain}"
         if key not in self._cache:
-            self._cache[key] = gradient_mpo_gpu(dim, bits_per_dim, domain)
+            self._cache[key] = gradient_mpo_gpu(dim, bits_per_dim, domain,
+                                                variant=variant)
         return self._cache[key]
 
     def get_laplacian(
@@ -321,11 +339,13 @@ class GPUOperatorCache:
         bits_per_dim: tuple[int, ...],
         domain: tuple[tuple[float, float], ...],
         dim: int | None = None,
+        variant: str = "lap_v1",
     ) -> list[torch.Tensor]:
         """Get or create cached Laplacian MPO on GPU."""
-        key = f"lap_{dim}_{bits_per_dim}_{domain}"
+        key = f"lap_{variant}_{dim}_{bits_per_dim}_{domain}"
         if key not in self._cache:
-            self._cache[key] = laplacian_mpo_gpu(bits_per_dim, domain, dim)
+            self._cache[key] = laplacian_mpo_gpu(bits_per_dim, domain, dim,
+                                                 variant=variant)
         return self._cache[key]
 
     def clear(self) -> None:

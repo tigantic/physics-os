@@ -20,6 +20,17 @@ from typing import Generator
 import numpy as np
 import pytest
 
+# ── Standalone scripts that corrupt pytest's capture fd — exclude from collection
+collect_ignore = [
+    "test_1iter_256.py",
+    "test_baseline_256.py",
+    "test_crash_isolate.py",
+    "test_pervoxel_v2.py",
+    "test_pervoxel_256.py",
+    "test_pervoxel_mini.py",
+    "test_vlasov_genuine.py",      # requires missing `qtenet` package
+]
+
 # ── Ensure moved directories are importable ─────────────────────────────────
 _repo_root = Path(__file__).resolve().parent.parent
 _benchmarks_parent = _repo_root / "experiments" / "benchmarks"

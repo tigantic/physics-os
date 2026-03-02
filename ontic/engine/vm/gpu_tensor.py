@@ -190,7 +190,11 @@ class GPUQTTTensor:
 
         This exists ONLY for sanitizer/reporting compatibility.
         NEVER call in the hot path — kills QTT compression.
+        Raises ``DenseInDispatchError`` if called inside VM dispatch.
         """
+        from .execution_fence import assert_not_in_dispatch
+        assert_not_in_dispatch()
+
         return self.to_cpu().to_dense()
 
     @classmethod

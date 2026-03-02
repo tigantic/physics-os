@@ -199,6 +199,108 @@ def generate_claims(
             "satisfied": bounded,
         })
 
+    # ── CONVERGENCE (reserved tag, now implemented) ─────────────────
+    convergence_data = sanitized_result.get("convergence")
+    if convergence_data:
+        observed_order = convergence_data.get("observed_order", 0.0)
+        required_order = convergence_data.get("required_order", 2.0)
+        qoi_name = convergence_data.get("qoi", "unknown")
+        satisfied = observed_order >= required_order
+        claims.append({
+            "tag": "CONVERGENCE",
+            "claim": (
+                f"Grid convergence verified for {qoi_name}: "
+                f"observed order {observed_order:.3f} >= required {required_order:.1f}"
+            ),
+            "witness": {
+                "qoi": qoi_name,
+                "observed_order": observed_order,
+                "required_order": required_order,
+                "refinement_levels": convergence_data.get("levels", 0),
+            },
+            "satisfied": satisfied,
+        })
+
+    # ── REPRODUCIBILITY (reserved tag, now implemented) ─────────────
+    reproducibility = sanitized_result.get("reproducibility")
+    if reproducibility:
+        config_hash = reproducibility.get("config_hash", "")
+        determinism_tier = reproducibility.get("determinism_tier", "unknown")
+        claims.append({
+            "tag": "REPRODUCIBILITY",
+            "claim": (
+                f"Deterministic execution: tier={determinism_tier}, "
+                f"config_hash={config_hash[:12]}"
+            ),
+            "witness": {
+                "determinism_tier": determinism_tier,
+                "config_hash": config_hash,
+                "seed": reproducibility.get("seed", 0),
+            },
+            "satisfied": bool(config_hash),
+        })
+
+    # ── ENERGY_BOUND (reserved tag, now implemented) ────────────────
+    energy_data = sanitized_result.get("energy_bound")
+    if energy_data:
+        energy_value = energy_data.get("value", 0.0)
+        energy_threshold = energy_data.get("threshold", 1e15)
+        energy_name = energy_data.get("quantity", "total_energy")
+        satisfied = abs(energy_value) < energy_threshold
+        claims.append({
+            "tag": "ENERGY_BOUND",
+            "claim": (
+                f"Energy bounded: {energy_name} = {energy_value:.6e} "
+                f"(threshold {energy_threshold:.2e})"
+            ),
+            "witness": {
+                "quantity": energy_name,
+                "value": energy_value,
+                "threshold": energy_threshold,
+            },
+            "satisfied": satisfied,
+        })
+
+    # ── CFL_SATISFIED (reserved tag, now implemented) ───────────────
+    cfl_data = sanitized_result.get("cfl")
+    if cfl_data:
+        max_cfl = cfl_data.get("max_cfl", 0.0)
+        cfl_limit = cfl_data.get("cfl_limit", 1.0)
+        satisfied = max_cfl <= cfl_limit
+        claims.append({
+            "tag": "CFL_SATISFIED",
+            "claim": (
+                f"CFL condition satisfied: max CFL = {max_cfl:.4f} "
+                f"(<= {cfl_limit:.1f})"
+            ),
+            "witness": {
+                "max_cfl": max_cfl,
+                "cfl_limit": cfl_limit,
+            },
+            "satisfied": satisfied,
+        })
+
+    # ── BOUNDEDNESS (compressible: ρ > 0, p > 0 predicates) ────────
+    boundedness_data = sanitized_result.get("boundedness")
+    if boundedness_data:
+        predicates = boundedness_data.get("predicates", {})
+        all_satisfied = all(predicates.values()) if predicates else False
+        failed_preds = [k for k, v in predicates.items() if not v]
+        claims.append({
+            "tag": "BOUNDEDNESS",
+            "claim": (
+                "Physical boundedness predicates satisfied"
+                if all_satisfied
+                else f"Boundedness violations: {', '.join(failed_preds)}"
+            ),
+            "witness": {
+                "predicates": predicates,
+                "all_satisfied": all_satisfied,
+                "failed": failed_preds,
+            },
+            "satisfied": all_satisfied,
+        })
+
     return claims
 
 

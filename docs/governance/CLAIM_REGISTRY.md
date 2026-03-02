@@ -114,12 +114,121 @@ MAY reject certificates containing unregistered tags.
 These tags are reserved for future MINOR versions.  They MUST NOT
 appear in v4.0.x certificates.
 
-| Tag                  | Intended Use                                      |
-|----------------------|---------------------------------------------------|
-| `CONVERGENCE`        | Grid convergence (result stable under refinement) |
-| `REPRODUCIBILITY`    | Deterministic replay (same input → same hash)     |
-| `ENERGY_BOUND`       | Energy remains below a specific physical threshold |
-| `CFL_SATISFIED`      | CFL condition met throughout simulation           |
+*(All previously reserved tags have been promoted to registered status
+in v4.1.0 — see sections below.)*
+
+---
+
+### CONVERGENCE
+
+| Property          | Value                                                         |
+|-------------------|---------------------------------------------------------------|
+| **Tag**           | `CONVERGENCE`                                                 |
+| **Assertion**     | Grid convergence is verified (result stable under refinement) |
+| **Witness fields**| `qoi`, `observed_order`, `required_order`, `refinement_levels`|
+| **Satisfied when**| `observed_order >= required_order`                            |
+| **Domains**       | All domains with convergence studies                          |
+
+**Witness schema:**
+
+```json
+{
+  "qoi": "L2_error_dudx",
+  "observed_order": 2.13,
+  "required_order": 2.0,
+  "refinement_levels": 3
+}
+```
+
+---
+
+### REPRODUCIBILITY
+
+| Property          | Value                                                         |
+|-------------------|---------------------------------------------------------------|
+| **Tag**           | `REPRODUCIBILITY`                                             |
+| **Assertion**     | Deterministic replay — same input produces same config hash   |
+| **Witness fields**| `determinism_tier`, `config_hash`, `seed`                     |
+| **Satisfied when**| `config_hash` is non-empty                                    |
+| **Domains**       | All                                                           |
+
+**Witness schema:**
+
+```json
+{
+  "determinism_tier": "reproducible",
+  "config_hash": "a1b2c3d4e5f6...",
+  "seed": 42
+}
+```
+
+---
+
+### ENERGY_BOUND
+
+| Property          | Value                                                         |
+|-------------------|---------------------------------------------------------------|
+| **Tag**           | `ENERGY_BOUND`                                                |
+| **Assertion**     | Energy remains below a specific physical threshold            |
+| **Witness fields**| `quantity`, `value`, `threshold`                              |
+| **Satisfied when**| `abs(value) < threshold`                                      |
+| **Domains**       | Domains with energy conservation (NS 2D, Maxwell, etc.)       |
+
+**Witness schema:**
+
+```json
+{
+  "quantity": "kinetic_energy",
+  "value": 1.234567e+02,
+  "threshold": 1e+15
+}
+```
+
+---
+
+### CFL_SATISFIED
+
+| Property          | Value                                                         |
+|-------------------|---------------------------------------------------------------|
+| **Tag**           | `CFL_SATISFIED`                                               |
+| **Assertion**     | CFL condition met throughout the simulation                   |
+| **Witness fields**| `max_cfl`, `cfl_limit`                                        |
+| **Satisfied when**| `max_cfl <= cfl_limit`                                        |
+| **Domains**       | All time-dependent domains                                    |
+
+**Witness schema:**
+
+```json
+{
+  "max_cfl": 0.4512,
+  "cfl_limit": 1.0
+}
+```
+
+---
+
+### BOUNDEDNESS
+
+| Property          | Value                                                         |
+|-------------------|---------------------------------------------------------------|
+| **Tag**           | `BOUNDEDNESS`                                                 |
+| **Assertion**     | Physical boundedness predicates satisfied (e.g., ρ > 0, p > 0)|
+| **Witness fields**| `predicates`, `all_satisfied`, `failed`                       |
+| **Satisfied when**| All predicates in `predicates` map are `true`                 |
+| **Domains**       | Compressible flows, phase-field, any domain with physical bounds|
+
+**Witness schema:**
+
+```json
+{
+  "predicates": {
+    "rho_positive": true,
+    "pressure_positive": true
+  },
+  "all_satisfied": true,
+  "failed": []
+}
+```
 
 ---
 

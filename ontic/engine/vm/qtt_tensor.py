@@ -281,7 +281,14 @@ class QTTTensor:
                          domain=self.domain)
 
     def to_dense(self) -> NDArray:
-        """Contract all cores to a dense array.  Only feasible for small L."""
+        """Contract all cores to a dense array.  Only feasible for small L.
+
+        ONLY permitted for post-execution reporting/sanitization.
+        Raises ``DenseInDispatchError`` if called inside VM dispatch.
+        """
+        from .execution_fence import assert_not_in_dispatch
+        assert_not_in_dispatch()
+
         total = self.n_cores
         if total > 22:
             raise ValueError(f"to_dense with {total} cores would require "

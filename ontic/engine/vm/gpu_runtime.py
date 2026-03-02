@@ -39,7 +39,11 @@ from .gpu_tensor import GPUQTTTensor
 from .gpu_operators import GPUOperatorCache, gpu_mpo_apply, gpu_poisson_solve
 from .ir import BCKind, FieldSpec, Instruction, OpCode, Program
 from .qtt_tensor import QTTTensor
-from .telemetry import ProgramTelemetry, StepTelemetry, TelemetryCollector
+from .telemetry import (
+    ProgramTelemetry, StepTelemetry, TelemetryCollector,
+    DeterminismTier, compute_config_hash, detect_device_class,
+)
+from .execution_fence import vm_dispatch_context
 
 from ontic.genesis.core.triton_ops import (
     qtt_round_native,
@@ -261,33 +265,34 @@ class GPURuntime:
 
         # ── 5. Execute time-step loop ON GPU ────────────────────────
         try:
-            for step in range(program.n_steps):
-                collector.begin_step(step)
-                trunc_before = self.governor.n_truncations
+            with vm_dispatch_context():
+                for step in range(program.n_steps):
+                    collector.begin_step(step)
+                    trunc_before = self.governor.n_truncations
 
-                for instr in loop_body:
-                    self._dispatch(instr, registers, fields, program, step=step)
+                    for instr in loop_body:
+                        self._dispatch(instr, registers, fields, program, step=step)
 
-                trunc_after = self.governor.n_truncations
+                    trunc_after = self.governor.n_truncations
 
-                # Record telemetry — read from GPU tensor shapes (no data xfer)
-                for name, gpu_tensor in fields.items():
-                    # Create a lightweight CPU proxy for telemetry recording
-                    # that only exposes shape info — NO data transfer
-                    self._record_gpu_telemetry(collector, name, gpu_tensor)
+                    # Record telemetry — read from GPU tensor shapes (no data xfer)
+                    for name, gpu_tensor in fields.items():
+                        # Create a lightweight CPU proxy for telemetry recording
+                        # that only exposes shape info — NO data transfer
+                        self._record_gpu_telemetry(collector, name, gpu_tensor)
 
-                # Compute conserved quantity on GPU
-                inv_name = self._find_invariant_name(program)
-                if inv_name:
-                    inv_val = self._compute_invariant_gpu(
-                        inv_name, fields, program
+                    # Compute conserved quantity on GPU
+                    inv_name = self._find_invariant_name(program)
+                    if inv_name:
+                        inv_val = self._compute_invariant_gpu(
+                            inv_name, fields, program
+                        )
+                        collector.record_invariant(inv_name, inv_val)
+
+                    collector.end_step(
+                        n_truncations=trunc_after - trunc_before,
+                        peak_rank=self.governor.peak_rank,
                     )
-                    collector.record_invariant(inv_name, inv_val)
-
-                collector.end_step(
-                    n_truncations=trunc_after - trunc_before,
-                    peak_rank=self.governor.peak_rank,
-                )
 
         except Exception as exc:
             logger.exception("GPU Runtime error at step %d", step)
@@ -304,6 +309,17 @@ class GPURuntime:
         telemetry = collector.finalize()
         telemetry.saturation_rate = self.governor.saturation_rate
         telemetry.total_truncations = self.governor.n_truncations
+
+        # ── 6b. Determinism metadata (§20.2) ───────────────────────
+        telemetry.public.determinism_tier = DeterminismTier.REPRODUCIBLE
+        telemetry.public.device_class = detect_device_class()
+        telemetry.public.config_hash = compute_config_hash({
+            "domain": program.domain,
+            "n_bits": program.n_bits,
+            "n_steps": program.n_steps,
+            "dt": program.dt,
+            "params": program.params,
+        })
 
         return GPUExecutionResult(
             telemetry=telemetry,
@@ -380,7 +396,9 @@ class GPURuntime:
         elif op == OpCode.GRAD:
             a = self._get_reg(regs, instr.src[0])
             dim = int(instr.params.get("dim", 0))
-            mpo = self.op_cache.get_gradient(dim, a.bits_per_dim, a.domain)
+            variant = str(instr.params.get("operator_variant", "grad_v1"))
+            mpo = self.op_cache.get_gradient(dim, a.bits_per_dim, a.domain,
+                                             variant=variant)
             regs[instr.dst] = gpu_mpo_apply(
                 mpo,
                 a,
@@ -391,7 +409,9 @@ class GPURuntime:
         elif op == OpCode.LAPLACE:
             a = self._get_reg(regs, instr.src[0])
             dim = instr.params.get("dim", None)
-            mpo = self.op_cache.get_laplacian(a.bits_per_dim, a.domain, dim)
+            variant = str(instr.params.get("operator_variant", "lap_v1"))
+            mpo = self.op_cache.get_laplacian(a.bits_per_dim, a.domain, dim,
+                                              variant=variant)
             regs[instr.dst] = gpu_mpo_apply(
                 mpo,
                 a,

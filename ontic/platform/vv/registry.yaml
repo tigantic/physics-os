@@ -1,0 +1,309 @@
+version: "1.0"
+registry_name: "UD_BENCHMARK_REGISTRY_V1"
+contract_surface: "/v1 (frozen, additive-only)"
+notes:
+  - "This registry is internal to ontic/platform/vv and must not require new API endpoints."
+  - "All benchmark outputs must be emitted as (a) internal proof pack (full telemetry) and (b) sanitized proof pack (whitelisted only)."
+
+global_defaults:
+  determinism_tier_required: "reproducible"   # tiers: §20.2 Determinism Contract
+  convergence:
+    levels: 3
+    refinement_axes: ["n_bits", "dt", "operator_variant"]
+    richardson: true
+  gates:
+    conservation:
+      mass_abs_max: 1.0e-10
+      momentum_abs_max: 1.0e-10
+      energy_abs_max: 1.0e-10
+    boundedness:
+      require_positive: ["rho", "p"]   # only for compressible cases
+    stability:
+      max_nan_steps: 0
+      max_inf_steps: 0
+
+benchmarks:
+
+  # ====================================================================
+  # Verification (MMS / Analytic)
+  # ====================================================================
+
+  - id: "V010_MMS_GRADIENT_1D"
+    category: "verification"
+    domain_key: "advection_diffusion"
+    dimensions: 1
+    purpose: "Verify gradient MPO correctness and observed order under n_bits refinement."
+    run_spec: "ontic/platform/vv/cases/V010_MMS_GRADIENT_1D/spec.yaml"
+    vv:
+      mms: "vv/mms.py"
+      convergence: "vv/convergence.py"
+      performance: "vv/performance.py"
+    refinement_plan:
+      n_bits: [8, 9, 10]
+      operator_variant: ["grad_v1", "grad_v2_high_order"]
+    qoi:
+      - name: "L2_error_dudx"
+        units: "1"
+    gates:
+      - type: "observed_order_min"
+        qoi: "L2_error_dudx"
+        min_order: 2.0
+
+  - id: "V020_MMS_LAPLACIAN_1D"
+    category: "verification"
+    domain_key: "advection_diffusion"
+    dimensions: 1
+    purpose: "Verify Laplacian MPO correctness and observed order."
+    run_spec: "ontic/platform/vv/cases/V020_MMS_LAPLACIAN_1D/spec.yaml"
+    vv:
+      mms: "vv/mms.py"
+      convergence: "vv/convergence.py"
+    refinement_plan:
+      n_bits: [8, 9, 10]
+      operator_variant: ["lap_v1", "lap_v2_high_order"]
+    qoi:
+      - name: "L2_error_d2udx2"
+        units: "1"
+    gates:
+      - type: "observed_order_min"
+        qoi: "L2_error_d2udx2"
+        min_order: 2.0
+
+  - id: "V030_POISSON_ANALYTIC_2D"
+    category: "verification"
+    domain_key: "navier_stokes_2d"
+    dimensions: 2
+    purpose: "Verify Poisson/elliptic solve accuracy with analytic RHS/solution; validate CG+truncation interaction."
+    run_spec: "ontic/platform/vv/cases/V030_POISSON_ANALYTIC_2D/spec.yaml"
+    vv:
+      benchmarks: "vv/benchmarks.py"
+      convergence: "vv/convergence.py"
+    refinement_plan:
+      n_bits: [7, 8, 9]
+      operator_variant: ["lap_v1", "lap_v2_high_order"]
+      dt: [null]   # steady solve
+    qoi:
+      - name: "L2_error_phi"
+        units: "1"
+      - name: "cg_iterations"
+        units: "count"
+    gates:
+      - type: "absolute_max"
+        qoi: "L2_error_phi"
+        max: 1.0e-6
+
+  - id: "V040_PROJECTION_INTEGRITY_2D"
+    category: "verification"
+    domain_key: "navier_stokes_2d"
+    dimensions: 2
+    purpose: "Verify incompressible projection reduces divergence and remains stable under truncation policy."
+    run_spec: "ontic/platform/vv/cases/V040_PROJECTION_INTEGRITY_2D/spec.yaml"
+    vv:
+      conservation: "vv/conservation.py"
+      stability: "vv/stability.py"
+      convergence: "vv/convergence.py"
+    refinement_plan:
+      n_bits: [7, 8, 9]
+      dt: [1.0e-2, 5.0e-3, 2.5e-3]
+    qoi:
+      - name: "divergence_norm_post_projection"
+        units: "1"
+    gates:
+      - type: "absolute_max"
+        qoi: "divergence_norm_post_projection"
+        max: 1.0e-10
+
+  # ====================================================================
+  # CFD Benchmarks (per §13.1 CFD Benchmarks)
+  # ====================================================================
+
+  - id: "C110_SOD_SHOCK_TUBE_1D"
+    category: "cfd"
+    domain_key: "burgers"          # switch to euler_1d when Euler compiler lands
+    dimensions: 1
+    benchmark_name: "Sod shock tube"
+    reference: "Exact Riemann solution"
+    status_in_spec: "validated"
+    run_spec: "ontic/platform/vv/cases/C110_SOD_SHOCK_TUBE_1D/spec.yaml"
+    vv:
+      benchmarks: "vv/benchmarks.py"
+      stability: "vv/stability.py"
+      convergence: "vv/convergence.py"
+    refinement_plan:
+      n_bits: [10, 11, 12]
+      dt: [2.0e-4, 1.0e-4, 5.0e-5]
+      operator_variant: ["flux_hllc_v1"]
+    qoi:
+      - name: "L1_error_rho"
+        units: "1"
+      - name: "boundedness"
+        units: "bool"
+    gates:
+      - type: "boundedness"
+        require_positive: ["rho", "p"]
+      - type: "absolute_max"
+        qoi: "L1_error_rho"
+        max: 2.0e-2
+
+  - id: "C120_SHU_OSHER_1D"
+    category: "cfd"
+    domain_key: "burgers"
+    dimensions: 1
+    benchmark_name: "Shu-Osher"
+    reference: "Shock-turbulence interaction"
+    status_in_spec: "validated"
+    run_spec: "ontic/platform/vv/cases/C120_SHU_OSHER_1D/spec.yaml"
+    vv:
+      benchmarks: "vv/benchmarks.py"
+      stability: "vv/stability.py"
+    refinement_plan:
+      n_bits: [10, 11, 12]
+      operator_variant: ["flux_hllc_v1", "flux_weno_like_v2"]
+    qoi:
+      - name: "density_oscillation_metric"
+        units: "1"
+      - name: "boundedness"
+        units: "bool"
+    gates:
+      - type: "boundedness"
+        require_positive: ["rho", "p"]
+
+  - id: "C210_TAYLOR_GREEN_VORTEX_2D"
+    category: "cfd"
+    domain_key: "navier_stokes_2d"
+    dimensions: 2
+    benchmark_name: "Taylor-Green vortex"
+    reference: "Analytical decay rate"
+    status_in_spec: "validated"
+    run_spec: "ontic/platform/vv/cases/C210_TAYLOR_GREEN_VORTEX_2D/spec.yaml"
+    vv:
+      conservation: "vv/conservation.py"
+      benchmarks: "vv/benchmarks.py"
+      convergence: "vv/convergence.py"
+    refinement_plan:
+      n_bits: [8, 9, 10]
+      dt: [1.0e-2, 5.0e-3, 2.5e-3]
+      operator_variant: ["ns2d_vorticity_v1", "ns2d_vorticity_v2_low_diffusion"]
+    qoi:
+      - name: "kinetic_energy_decay_error"
+        units: "1"
+    gates:
+      - type: "absolute_max"
+        qoi: "kinetic_energy_decay_error"
+        max: 1.0e-3
+
+  - id: "C220_KIDA_VORTEX_3D"
+    category: "cfd"
+    domain_key: "maxwell_3d"        # placeholder until Euler/NS3D compiler lands
+    dimensions: 3
+    benchmark_name: "Kida vortex"
+    reference: "Enstrophy conservation"
+    status_in_spec: "validated"
+    run_spec: "ontic/platform/vv/cases/C220_KIDA_VORTEX_3D/spec.yaml"
+    vv:
+      conservation: "vv/conservation.py"
+      stability: "vv/stability.py"
+    refinement_plan:
+      n_bits: [6, 7, 8]
+      dt: [5.0e-3, 2.5e-3, 1.25e-3]
+    qoi:
+      - name: "enstrophy_drift"
+        units: "1"
+    gates:
+      - type: "absolute_max"
+        qoi: "enstrophy_drift"
+        max: 1.0e-3
+
+  - id: "C230_DOUBLE_MACH_REFLECTION_2D"
+    category: "cfd"
+    domain_key: "burgers"
+    dimensions: 2
+    benchmark_name: "Double Mach reflection"
+    reference: "Woodward-Colella reference"
+    status_in_spec: "validated"
+    run_spec: "ontic/platform/vv/cases/C230_DOUBLE_MACH_REFLECTION_2D/spec.yaml"
+    vv:
+      benchmarks: "vv/benchmarks.py"
+      stability: "vv/stability.py"
+    refinement_plan:
+      n_bits: [9, 10, 11]
+      operator_variant: ["flux_hllc_v1", "flux_weno_like_v2"]
+    qoi:
+      - name: "shock_position_error"
+        units: "1"
+      - name: "boundedness"
+        units: "bool"
+    gates:
+      - type: "boundedness"
+        require_positive: ["rho", "p"]
+
+  - id: "C240_KELVIN_HELMHOLTZ_2D"
+    category: "cfd"
+    domain_key: "navier_stokes_2d"
+    dimensions: 2
+    benchmark_name: "Kelvin-Helmholtz"
+    reference: "Instability growth rate"
+    status_in_spec: "validated"
+    run_spec: "ontic/platform/vv/cases/C240_KELVIN_HELMHOLTZ_2D/spec.yaml"
+    vv:
+      benchmarks: "vv/benchmarks.py"
+      convergence: "vv/convergence.py"
+    refinement_plan:
+      n_bits: [8, 9, 10]
+      dt: [1.0e-2, 5.0e-3, 2.5e-3]
+    qoi:
+      - name: "growth_rate_error"
+        units: "1"
+    gates:
+      - type: "absolute_max"
+        qoi: "growth_rate_error"
+        max: 5.0e-2
+
+  - id: "C250_LID_DRIVEN_CAVITY_2D"
+    category: "cfd"
+    domain_key: "navier_stokes_2d"
+    dimensions: 2
+    benchmark_name: "Lid-driven cavity"
+    reference: "Ghia et al. (1982)"
+    status_in_spec: "validated"
+    run_spec: "ontic/platform/vv/cases/C250_LID_DRIVEN_CAVITY_2D/spec.yaml"
+    vv:
+      benchmarks: "vv/benchmarks.py"
+      convergence: "vv/convergence.py"
+    refinement_plan:
+      n_bits: [7, 8, 9]
+      dt: [5.0e-3, 2.5e-3, 1.25e-3]
+    qoi:
+      - name: "centerline_u_profile_L2"
+        units: "1"
+      - name: "centerline_v_profile_L2"
+        units: "1"
+    gates:
+      - type: "absolute_max"
+        qoi: "centerline_u_profile_L2"
+        max: 5.0e-2
+      - type: "absolute_max"
+        qoi: "centerline_v_profile_L2"
+        max: 5.0e-2
+
+  - id: "C260_COUETTE_FLOW_2D"
+    category: "cfd"
+    domain_key: "navier_stokes_2d"
+    dimensions: 2
+    benchmark_name: "Couette flow"
+    reference: "Analytical linear profile"
+    status_in_spec: "validated"
+    run_spec: "ontic/platform/vv/cases/C260_COUETTE_FLOW_2D/spec.yaml"
+    vv:
+      benchmarks: "vv/benchmarks.py"
+      convergence: "vv/convergence.py"
+    refinement_plan:
+      n_bits: [7, 8, 9]
+      dt: [5.0e-3, 2.5e-3, 1.25e-3]
+    qoi:
+      - name: "velocity_profile_L2"
+        units: "1"
+    gates:
+      - type: "absolute_max"
+        qoi: "velocity_profile_L2"
+        max: 1.0e-3

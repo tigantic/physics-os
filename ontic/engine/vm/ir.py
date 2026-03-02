@@ -247,14 +247,36 @@ def negate(dst: int, src: int) -> Instruction:
     return Instruction(OpCode.NEGATE, dst=dst, src=(src,))
 
 
-def grad(dst: int, src: int, dim: int = 0) -> Instruction:
-    """dst = ∂(src)/∂x_dim."""
-    return Instruction(OpCode.GRAD, dst=dst, src=(src,), params={"dim": dim})
+def grad(dst: int, src: int, dim: int = 0,
+         operator_variant: str = "grad_v1") -> Instruction:
+    """dst = ∂(src)/∂x_dim.
+
+    Parameters
+    ----------
+    operator_variant : str
+        MPO variant tag: ``"grad_v1"`` (2nd order) or
+        ``"grad_v2_high_order"`` (4th order).
+    """
+    params: dict[str, Any] = {"dim": dim}
+    if operator_variant != "grad_v1":
+        params["operator_variant"] = operator_variant
+    return Instruction(OpCode.GRAD, dst=dst, src=(src,), params=params)
 
 
-def laplace(dst: int, src: int, dim: int | None = None) -> Instruction:
-    """dst = ∇²(src).  If dim is None, sum over all dimensions."""
-    return Instruction(OpCode.LAPLACE, dst=dst, src=(src,), params={"dim": dim})
+def laplace(dst: int, src: int, dim: int | None = None,
+            operator_variant: str = "lap_v1") -> Instruction:
+    """dst = ∇²(src).  If dim is None, sum over all dimensions.
+
+    Parameters
+    ----------
+    operator_variant : str
+        MPO variant tag: ``"lap_v1"`` (2nd order) or
+        ``"lap_v2_high_order"`` (4th order).
+    """
+    params: dict[str, Any] = {"dim": dim}
+    if operator_variant != "lap_v1":
+        params["operator_variant"] = operator_variant
+    return Instruction(OpCode.LAPLACE, dst=dst, src=(src,), params=params)
 
 
 def div(dst: int, *component_regs: int) -> Instruction:

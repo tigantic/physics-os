@@ -1,0 +1,186 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://holonomix.local/schemas/scorecard_public_v1.schema.json",
+  "title": "ScorecardPublicV1 (Sanitized)",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "job_id",
+    "domain_key",
+    "status",
+    "timestamps",
+    "determinism",
+    "evidence",
+    "qoi",
+    "performance"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "pattern": "^1\\.[0-9]+$"
+    },
+
+    "job_id": { "type": "string", "minLength": 8 },
+    "run_id": { "type": "string" },
+
+    "domain_key": {
+      "type": "string",
+      "description": "Domain pack key used by the VM compiler (e.g., navier_stokes_2d)."
+    },
+
+    "status": {
+      "type": "string",
+      "enum": ["succeeded", "failed", "canceled"]
+    },
+
+    "error": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "code": { "type": "string" },
+        "message": { "type": "string" },
+        "hint": { "type": "string" }
+      }
+    },
+
+    "timestamps": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["started_utc", "finished_utc"],
+      "properties": {
+        "started_utc": { "type": "string", "format": "date-time" },
+        "finished_utc": { "type": "string", "format": "date-time" }
+      }
+    },
+
+    "determinism": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["tier"],
+      "properties": {
+        "tier": {
+          "type": "string",
+          "enum": ["bitwise", "reproducible", "physically_equivalent"],
+          "description": "Determinism tier claimed for this run (§20.2)."
+        },
+        "notes": { "type": "string" }
+      }
+    },
+
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["claims", "checks"],
+      "properties": {
+        "claims": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "CONSERVATION",
+              "STABILITY",
+              "BOUND",
+              "CONVERGENCE",
+              "REPRODUCIBILITY",
+              "ENERGY_BOUND",
+              "CFL_SATISFIED"
+            ]
+          }
+        },
+        "checks": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "mass_balance_abs": { "type": "number", "minimum": 0.0 },
+            "momentum_balance_abs": { "type": "number", "minimum": 0.0 },
+            "energy_balance_abs": { "type": "number", "minimum": 0.0 },
+
+            "boundedness_pass": { "type": "boolean" },
+            "boundedness_notes": { "type": "string" },
+
+            "stability_pass": { "type": "boolean" },
+            "stability_notes": { "type": "string" }
+          }
+        },
+
+        "certificate": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "trust_certificate_id": { "type": "string" },
+            "signature_alg": { "type": "string" },
+            "certificate_hash": { "type": "string" }
+          }
+        }
+      }
+    },
+
+    "qoi": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name", "value", "units"],
+        "properties": {
+          "name": { "type": "string" },
+          "value": { "type": "number" },
+          "units": { "type": "string" },
+          "reference": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "source": { "type": "string" },
+              "value": { "type": "number" },
+              "error_abs": { "type": "number", "minimum": 0.0 },
+              "error_rel": { "type": "number", "minimum": 0.0 }
+            }
+          }
+        }
+      }
+    },
+
+    "convergence": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "performed": { "type": "boolean" },
+        "levels": { "type": "integer", "minimum": 1 },
+        "refinement_axes": {
+          "type": "array",
+          "items": { "type": "string", "enum": ["n_bits", "dt", "operator_variant"] }
+        },
+        "summary": { "type": "string" }
+      }
+    },
+
+    "performance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["wall_seconds", "device_class", "compute_units"],
+      "properties": {
+        "wall_seconds": { "type": "number", "minimum": 0.0 },
+        "device_class": { "type": "string", "enum": ["cpu", "gpu_consumer", "gpu_datacenter"] },
+        "compute_units": { "type": "number", "minimum": 0.0 },
+        "domain_weight": { "type": "number", "minimum": 0.0 },
+        "notes": { "type": "string" }
+      }
+    },
+
+    "artifacts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["kind", "ref"],
+        "properties": {
+          "kind": { "type": "string", "description": "e.g., slice_png, roi_vtk, report_md" },
+          "ref": { "type": "string", "description": "Opaque storage key or path — not raw internals" }
+        }
+      }
+    }
+  },
+
+  "description": "Sanitized scorecard. Must not include TT cores, bond dimensions, SVD spectra, compiler IR, opcode traces, rank distributions, or any internal VM state. Enforced by §20.4 IP Boundary & Forbidden Outputs."
+}

@@ -16,9 +16,23 @@ Initial condition: Taylor–Green vortex.
 Conserved quantity: total circulation Γ = ∫ω dA (Kelvin's theorem,
 periodic BC; also conserved under viscous diffusion since
 ∫∇²ω dA = 0 for periodic domains).
+
+Wall Model Support (Phase E)
+----------------------------
+When ``wall_model=True``, the compiler injects Brinkman volume
+penalization into the timestep loop:
+
+    ω_new = ω - dt · (1/η) · χ_solid · ω
+
+This enforces no-slip conditions on immersed boundaries via the
+penalization coefficient field from the geometry compiler.  The
+penalization field is loaded into a dedicated register at the start
+of each timestep and applied after the advection-diffusion update.
 """
 
 from __future__ import annotations
+
+from typing import Any
 
 import numpy as np
 from numpy.typing import NDArray
@@ -27,7 +41,7 @@ from ..ir import (
     BCKind, FieldSpec, Instruction, Program,
     add, bc_apply, grad, hadamard, laplace, laplace_solve,
     load_field, loop_end, loop_start, measure, negate,
-    scale, store_field, truncate,
+    scale, store_field, sub, truncate,
 )
 from .base import BaseCompiler
 
@@ -45,6 +59,14 @@ class NavierStokes2DCompiler(BaseCompiler):
         Kinematic viscosity ν.
     dt : float | None
         Time step.  Auto from CFL if None.
+    wall_model : bool
+        If True, inject Brinkman penalization for immersed boundaries.
+        Requires ``penalization_field`` in geometry setup.
+    eta_permeability : float
+        Brinkman permeability η (only used when ``wall_model=True``).
+        Smaller → stronger no-slip enforcement.
+    bc_kind : BCKind
+        Boundary condition type.  Default: PERIODIC.
     """
 
     def __init__(
@@ -53,10 +75,16 @@ class NavierStokes2DCompiler(BaseCompiler):
         n_steps: int = 50,
         viscosity: float = 0.01,
         dt: float | None = None,
+        wall_model: bool = False,
+        eta_permeability: float = 1e-4,
+        bc_kind: BCKind = BCKind.PERIODIC,
     ) -> None:
         self._n_bits = n_bits
         self._n_steps = n_steps
         self._viscosity = viscosity
+        self._wall_model = wall_model
+        self._eta_permeability = eta_permeability
+        self._bc_kind = bc_kind
         N = 2 ** n_bits
         h = 1.0 / N
         if dt is None:
@@ -103,6 +131,10 @@ class NavierStokes2DCompiler(BaseCompiler):
         # r8 = advection total = -(u·∂ω/∂x + v·∂ω/∂y)
         # r9 = ∇²ω (diffusion)
         # r10 = RHS, r11 = dt*RHS
+        # r12 = penalization coefficient (if wall_model)
+        # r13 = penalization scratch (if wall_model)
+
+        n_regs = 14 if self._wall_model else 12
 
         instructions: list[Instruction] = [
             loop_start(self._n_steps),
@@ -138,56 +170,95 @@ class NavierStokes2DCompiler(BaseCompiler):
             scale(11, 10, dt),                     # r11 = dt * RHS
             add(0, 0, 11),                         # ω += dt * RHS
             truncate(0),
-            bc_apply(0, BCKind.PERIODIC),
+            bc_apply(0, self._bc_kind),
+        ]
 
+        # ── Wall model penalization (Phase E) ────────────────────────
+        if self._wall_model:
+            instructions.extend([
+                # Load penalization coefficient: (1/η) · χ_solid
+                load_field(12, "penalization_coeff"),
+                # r13 = penal_coeff ⊙ ω
+                hadamard(13, 12, 0),
+                # r13 = dt · penal_coeff ⊙ ω
+                scale(13, 13, dt),
+                truncate(13),
+                # ω = ω - dt · penal_coeff ⊙ ω
+                sub(0, 0, 13),
+                truncate(0),
+            ])
+
+        instructions.extend([
             store_field(0, "omega"),
             store_field(1, "psi"),
             measure(0, "omega"),
 
             loop_end(),
-        ]
+        ])
+
+        # ── Fields ───────────────────────────────────────────────────
+        fields: dict[str, FieldSpec] = {
+            "omega": FieldSpec(
+                name="omega",
+                n_dims=2,
+                bits_per_dim=bits,
+                bc=self._bc_kind,
+                bc_params={"domain": dom},
+                initial_fn="init_omega",
+                conserved_quantity="total_circulation",
+            ),
+            "psi": FieldSpec(
+                name="psi",
+                n_dims=2,
+                bits_per_dim=bits,
+                bc=self._bc_kind,
+                bc_params={"domain": dom},
+                initial_fn="init_psi",
+            ),
+        }
+
+        # Add penalization field spec when wall model is active
+        if self._wall_model:
+            fields["penalization_coeff"] = FieldSpec(
+                name="penalization_coeff",
+                n_dims=2,
+                bits_per_dim=bits,
+                bc=BCKind.DIRICHLET,
+                bc_params={"value": 0.0, "domain": dom},
+                conserved_quantity=None,
+            )
+
+        metadata: dict[str, Any] = {
+            "init_omega": init_omega,
+            "init_psi": init_psi,
+            # Separable: 2 sin(2πx) sin(2πy) = f(x) × g(y)
+            "init_omega_separable": (
+                [
+                    lambda x: np.sin(2.0 * np.pi * x),
+                    lambda y: np.sin(2.0 * np.pi * y),
+                ],
+                2.0,  # scale factor
+            ),
+            "invariant_fn": invariant_fn,
+            "invariant": "total_circulation",
+            "equations": "∂ω/∂t + (u·∇)ω = ν∇²ω, ∇²ψ = −ω",
+        }
+
+        if self._wall_model:
+            metadata["wall_model"] = True
+            metadata["eta_permeability"] = self._eta_permeability
+            metadata["penalization_beta"] = 1.0 / max(
+                self._eta_permeability, 1e-30,
+            )
 
         return Program(
             domain=self.domain,
             domain_label=self.domain_label,
-            n_registers=12,
-            fields={
-                "omega": FieldSpec(
-                    name="omega",
-                    n_dims=2,
-                    bits_per_dim=bits,
-                    bc=BCKind.PERIODIC,
-                    bc_params={"domain": dom},
-                    initial_fn="init_omega",
-                    conserved_quantity="total_circulation",
-                ),
-                "psi": FieldSpec(
-                    name="psi",
-                    n_dims=2,
-                    bits_per_dim=bits,
-                    bc=BCKind.PERIODIC,
-                    bc_params={"domain": dom},
-                    initial_fn="init_psi",
-                ),
-            },
+            n_registers=n_regs,
+            fields=fields,
             instructions=instructions,
             dt=self._dt,
             n_steps=self._n_steps,
             params={"viscosity": self._viscosity},
-            metadata={
-                "init_omega": init_omega,
-                "init_psi": init_psi,
-                # Separable: 2 sin(2πx) sin(2πy) = f(x) × g(y)
-                "init_omega_separable": (
-                    [
-                        lambda x: np.sin(2.0 * np.pi * x),
-                        lambda y: np.sin(2.0 * np.pi * y),
-                    ],
-                    2.0,  # scale factor
-                ),
-                # init_psi: zero — handled automatically by GPUQTTTensor.zeros()
-                "invariant_fn": invariant_fn,
-                "invariant": "total_circulation",
-                "equations": "∂ω/∂t + (u·∇)ω = ν∇²ω, ∇²ψ = −ω",
-            },
+            metadata=metadata,
         )
