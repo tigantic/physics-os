@@ -60,19 +60,47 @@ import numpy as np
 # ─────────────────────────────────────────────────────────────────────
 
 N_BITS = 9          # 2^9 = 512 per dimension → 512² grid
-N_STEPS = 10        # 10 time steps
+N_STEPS = 100       # 100 time steps
 VISCOSITY = 0.01    # kinematic viscosity
 MAX_RANK = 64       # adaptive ceiling
 CONSERVATION_TOL = 1e-4  # total circulation drift tolerance
 
+# ── ASCII sparkline characters for rank history ─────────────────────
+_SPARK_CHARS = " ▁▂▃▄▅▆▇█"
+
+
+def _sparkline(values: list[int | float], width: int = 60) -> str:
+    """Render a list of numeric values as an ASCII sparkline."""
+    if not values:
+        return ""
+    lo, hi = min(values), max(values)
+    span = hi - lo if hi > lo else 1.0
+    # Downsample if too many points
+    if len(values) > width:
+        step = len(values) / width
+        sampled = [values[int(i * step)] for i in range(width)]
+    else:
+        sampled = values
+    return "".join(
+        _SPARK_CHARS[min(int((v - lo) / span * 8), 8)] for v in sampled
+    )
+
 
 def parse_args() -> argparse.Namespace:
-    p = argparse.ArgumentParser(description="UD Validation: 2D NS 512² × 10 steps")
+    p = argparse.ArgumentParser(
+        description="UD Validation: 2D NS 512² — full telemetry output",
+    )
     p.add_argument("--cpu", action="store_true", help="Force CPU runtime")
-    p.add_argument("--n-bits", type=int, default=N_BITS, help="Bits per dim (default: 9 → 512²)")
-    p.add_argument("--n-steps", type=int, default=N_STEPS, help="Time steps (default: 10)")
-    p.add_argument("--max-rank", type=int, default=MAX_RANK, help="Max rank ceiling (default: 64)")
-    p.add_argument("--json", action="store_true", help="Output JSON scorecard")
+    p.add_argument("--n-bits", type=int, default=N_BITS,
+                   help="Bits per dim (default: 9 → 512²)")
+    p.add_argument("--n-steps", type=int, default=N_STEPS,
+                   help="Time steps (default: 100)")
+    p.add_argument("--max-rank", type=int, default=MAX_RANK,
+                   help="Max rank ceiling (default: 64)")
+    p.add_argument("--json", action="store_true",
+                   help="Output JSON scorecard")
+    p.add_argument("--no-step-table", action="store_true",
+                   help="Suppress per-step telemetry table")
     return p.parse_args()
 
 
@@ -440,8 +468,33 @@ def build_scorecard(
     backend: str,
 ) -> dict:
     """Assemble the public scorecard (Phase D)."""
+    # ── Per-step history ────────────────────────────────────────────
+    step_history = []
+    for s in telemetry.steps:
+        step_history.append({
+            "step": s.step,
+            "wall_time_s": round(s.wall_time_s, 6),
+            "chi_max": s.chi_max,
+            "chi_mean": round(s.chi_mean, 2),
+            "compression_ratio": round(s.compression_ratio, 1),
+            "n_truncations": s.n_truncations,
+            "peak_rank_this_step": s.peak_rank_this_step,
+            "field_norms": {k: float(v) for k, v in s.field_norms.items()},
+            "invariant_values": {k: float(v) for k, v in s.invariant_values.items()},
+        })
+
+    # ── Rank & compression histories ────────────────────────────────
+    rank_history = [s.chi_max for s in telemetry.steps]
+    compression_history = [round(s.compression_ratio, 1) for s in telemetry.steps]
+
+    # ── Field summary ───────────────────────────────────────────────
+    field_summary = {}
+    if hasattr(program, 'field_specs'):
+        for fname in program.field_specs:
+            field_summary[fname] = {"registered": True}
+
     return {
-        "schema_version": "1.0",
+        "schema_version": "1.1",
         "run_id": f"ud_validation_{datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%SZ')}",
         "domain_key": program.domain,
         "backend": backend,
@@ -456,17 +509,32 @@ def build_scorecard(
             "tier": telemetry.public.determinism_tier.value
             if telemetry.public.determinism_tier else "unset",
             "device_class": telemetry.public.device_class,
-            "config_hash": telemetry.public.config_hash[:16] + "...",
+            "config_hash": telemetry.public.config_hash,
         },
 
         "telemetry_summary": {
             "chi_max": telemetry.chi_max,
+            "chi_mean": round(telemetry.chi_mean, 2),
+            "chi_final": telemetry.chi_final,
             "compression_ratio": telemetry.compression_ratio_final,
             "total_truncations": telemetry.total_truncations,
-            "saturation_rate": f"{telemetry.saturation_rate:.1%}",
+            "saturation_rate": telemetry.saturation_rate,
+            "scaling_class": telemetry.scaling_class,
             "wall_time_s": round(wall_time, 3),
+            "invariant_name": telemetry.invariant_name,
+            "invariant_initial": telemetry.invariant_initial,
+            "invariant_final": telemetry.invariant_final,
             "invariant_error": telemetry.invariant_error,
+            "max_rank_policy": telemetry.max_rank_policy,
+            "n_fields": telemetry.n_fields,
+            "n_instructions": telemetry.n_instructions,
+            "ir_opcodes_used": telemetry.ir_opcodes_used,
         },
+
+        "rank_history": rank_history,
+        "compression_history": compression_history,
+
+        "step_telemetry": step_history,
 
         "evidence": {
             "claims": [
@@ -483,15 +551,14 @@ def build_scorecard(
         },
 
         "phase_validations": {
-            "C_geometry": {"passed": geometry["passed"]},
-            "E_wall_model": {"passed": wall_model["passed"]},
-            "F_physics_breadth": {
-                k: {"passed": v["passed"]}
-                for k, v in physics_breadth.items()
-            },
-            "G_hybrid_field": {"passed": hybrid_field["passed"]},
-            "G_qoi_adaptivity": {"passed": qoi_adapt["passed"]},
+            "C_geometry": geometry,
+            "E_wall_model": wall_model,
+            "F_physics_breadth": physics_breadth,
+            "G_hybrid_field": hybrid_field,
+            "G_qoi_adaptivity": qoi_adapt,
         },
+
+        "field_summary": field_summary,
     }
 
 
@@ -559,7 +626,72 @@ def main() -> int:
     print(f"  ✓ Compression: {telemetry.compression_ratio_final:.1f}×")
     print(f"  ✓ Truncations: {telemetry.total_truncations}")
     print(f"  ✓ Saturation rate: {telemetry.saturation_rate:.1%}")
+    print(f"  ✓ Scaling class: {telemetry.scaling_class}")
+    print(f"  ✓ Invariant: {telemetry.invariant_name} = "
+          f"{telemetry.invariant_initial:.6e} → {telemetry.invariant_final:.6e}")
+    print(f"  ✓ Invariant drift: {telemetry.invariant_error:.2e}")
+    print(f"  ✓ Fields: {telemetry.n_fields}")
+    print(f"  ✓ IR opcodes: {', '.join(telemetry.ir_opcodes_used)}")
     print()
+
+    # ── Per-step telemetry table ────────────────────────────────────
+    if not args.no_step_table and telemetry.steps:
+        print("[Phase B] Per-step telemetry:")
+        print("  ┌──────┬────────┬──────┬────────┬───────────┬──────┬─────────────────────┐")
+        print("  │ Step │ T(ms)  │ χmax │ χ_mean │ Compress. │ Trns │ Field Norms         │")
+        print("  ├──────┼────────┼──────┼────────┼───────────┼──────┼─────────────────────┤")
+        for s in telemetry.steps:
+            t_ms = s.wall_time_s * 1000
+            # Compact field norms
+            norms_str = "  ".join(
+                f"{k}={v:.2e}" for k, v in sorted(s.field_norms.items())
+            )
+            if len(norms_str) > 20:
+                norms_str = norms_str[:17] + "..."
+            print(f"  │ {s.step:4d} │ {t_ms:6.1f} │ {s.chi_max:4d} │ {s.chi_mean:6.2f} │"
+                  f" {s.compression_ratio:9.1f} │ {s.n_truncations:4d} │"
+                  f" {norms_str:<19s} │")
+        print("  └──────┴────────┴──────┴────────┴───────────┴──────┴─────────────────────┘")
+        print()
+
+        # Rank sparkline
+        ranks = [s.chi_max for s in telemetry.steps]
+        print(f"  Rank history (χmax): min={min(ranks)} max={max(ranks)}")
+        print(f"  {_sparkline(ranks)}")
+        print()
+
+        # Compression sparkline
+        comps = [s.compression_ratio for s in telemetry.steps]
+        print(f"  Compression history: min={min(comps):.1f}× max={max(comps):.1f}×")
+        print(f"  {_sparkline(comps)}")
+        print()
+
+        # Invariant history
+        inv_name = telemetry.invariant_name
+        if inv_name:
+            inv_vals = [s.invariant_values.get(inv_name, 0.0) for s in telemetry.steps]
+            nonzero = [v for v in inv_vals if v != 0.0]
+            if nonzero:
+                print(f"  Invariant ({inv_name}): "
+                      f"min={min(nonzero):.6e} max={max(nonzero):.6e}")
+                print(f"  {_sparkline(nonzero)}")
+                print()
+
+        # Per-step wall time sparkline
+        times = [s.wall_time_s * 1000 for s in telemetry.steps]
+        print(f"  Step wall time: min={min(times):.1f}ms max={max(times):.1f}ms "
+              f"avg={sum(times)/len(times):.1f}ms")
+        print(f"  {_sparkline(times)}")
+        print()
+
+    # ── Field report ────────────────────────────────────────────────
+    if result.fields:
+        print("[Phase B] Final field state (GPU-resident):")
+        for fname, gpu_tensor in sorted(result.fields.items()):
+            n_cores = len(gpu_tensor.cores) if hasattr(gpu_tensor, 'cores') else '?'
+            max_r = gpu_tensor.max_rank if hasattr(gpu_tensor, 'max_rank') else '?'
+            print(f"  ✓ {fname}: cores={n_cores}, max_rank={max_r}")
+        print()
 
     # ── Phase D: Evidence ───────────────────────────────────────────
     print("[Phase D] Evaluating evidence claims...")
@@ -669,17 +801,32 @@ def main() -> int:
     print(f"  Domain:       {program.domain}")
     print(f"  Grid:         {grid_size}² ({n_bits} bits/dim)")
     print(f"  Steps:        {n_steps}")
+    print(f"  dt:           {program.dt:.6e}")
+    print(f"  Viscosity:    {VISCOSITY}")
     print(f"  Backend:      {backend}")
     print(f"  Wall time:    {wall_time:.3f}s")
     print(f"  Peak rank:    {telemetry.chi_max}")
+    print(f"  Mean rank:    {telemetry.chi_mean:.2f}")
+    print(f"  Final rank:   {telemetry.chi_final}")
     print(f"  Compression:  {telemetry.compression_ratio_final:.1f}×")
+    print(f"  Scaling:      class {telemetry.scaling_class}")
+    print(f"  Truncations:  {telemetry.total_truncations}")
+    print(f"  Saturation:   {telemetry.saturation_rate:.1%}")
+    print(f"  Invariant:    {telemetry.invariant_name}")
+    print(f"  Inv. initial: {telemetry.invariant_initial:.10e}")
+    print(f"  Inv. final:   {telemetry.invariant_final:.10e}")
     print(f"  Conservation: |ΔΓ/Γ₀| = {telemetry.invariant_error:.2e}")
+    print(f"  Instructions: {telemetry.n_instructions}")
+    print(f"  Fields:       {telemetry.n_fields}")
+    print(f"  Determinism:  {telemetry.public.determinism_tier.value}")
+    print(f"  Device:       {telemetry.public.device_class}")
     print("=" * 72)
 
     if args.json:
         out_path = Path("ud_validation_scorecard.json")
         out_path.write_text(json.dumps(scorecard, indent=2, default=str))
         print(f"\nScorecard written to {out_path}")
+        print(f"  Size: {out_path.stat().st_size:,} bytes")
 
     return 0 if all_passed else 1
 

@@ -1,37 +1,1868 @@
 {
-  "schema_version": "1.0",
-  "run_id": "ud_validation_20260302T032450Z",
+  "schema_version": "1.1",
+  "run_id": "ud_validation_20260302T033228Z",
   "domain_key": "navier_stokes_2d",
   "backend": "GPU",
   "grid": "512\u00b2 (9 bits/dim)",
-  "n_steps": 10,
+  "n_steps": 100,
   "dt": 4.76837158203125e-05,
   "viscosity": 0.01,
   "status": "succeeded",
   "determinism": {
     "tier": "reproducible",
     "device_class": "gpu_consumer",
-    "config_hash": "71c05d6966fdbdba..."
+    "config_hash": "2722d57721f58464fb2a0e10f0b0fe667bc8e090699766c3ac5f8d1fd633aaaa"
   },
   "telemetry_summary": {
     "chi_max": 2,
+    "chi_mean": 2.0,
+    "chi_final": 2,
     "compression_ratio": 2259.862068965517,
-    "total_truncations": 30,
-    "saturation_rate": "0.0%",
-    "wall_time_s": 2.885,
-    "invariant_error": 1.4986183964378763e-32
+    "total_truncations": 300,
+    "saturation_rate": 0.0,
+    "scaling_class": "A",
+    "wall_time_s": 14.283,
+    "invariant_name": "total_circulation",
+    "invariant_initial": 0.0,
+    "invariant_final": -1.7483881291775167e-30,
+    "invariant_error": 1.7483881291775167e-30,
+    "max_rank_policy": 64,
+    "n_fields": 2,
+    "n_instructions": 25,
+    "ir_opcodes_used": [
+      "add",
+      "bc_apply",
+      "grad",
+      "hadamard",
+      "laplace",
+      "laplace_solve",
+      "load_field",
+      "loop_end",
+      "loop_start",
+      "measure",
+      "negate",
+      "scale",
+      "store_field",
+      "truncate"
+    ]
   },
+  "rank_history": [
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2
+  ],
+  "compression_history": [
+    2259.9,
+    2259.9,
+    2259.9,
+    2259.9,
+    2259.9,
+    2259.9,
+    2259.9,
+    2259.9,
+    2259.9,
+    2259.9,
+    2259.9,
+    2259.9,
+    2259.9,
+    2259.9,
+    2259.9,
+    2259.9,
+    2259.9,
+    2259.9,
+    2259.9,
+    2259.9,
+    2259.9,
+    2259.9,
+    2259.9,
+    2259.9,
+    2259.9,
+    2259.9,
+    2259.9,
+    2259.9,
+    2259.9,
+    2259.9,
+    2259.9,
+    2259.9,
+    2259.9,
+    2259.9,
+    2259.9,
+    2259.9,
+    2259.9,
+    2259.9,
+    2259.9,
+    2259.9,
+    2259.9,
+    2259.9,
+    2259.9,
+    2259.9,
+    2259.9,
+    2259.9,
+    2259.9,
+    2259.9,
+    2259.9,
+    2259.9,
+    2259.9,
+    2259.9,
+    2259.9,
+    2259.9,
+    2259.9,
+    2259.9,
+    2259.9,
+    2259.9,
+    2259.9,
+    2259.9,
+    2259.9,
+    2259.9,
+    2259.9,
+    2259.9,
+    2259.9,
+    2259.9,
+    2259.9,
+    2259.9,
+    2259.9,
+    2259.9,
+    2259.9,
+    2259.9,
+    2259.9,
+    2259.9,
+    2259.9,
+    2259.9,
+    2259.9,
+    2259.9,
+    2259.9,
+    2259.9,
+    2259.9,
+    2259.9,
+    2259.9,
+    2259.9,
+    2259.9,
+    2259.9,
+    2259.9,
+    2259.9,
+    2259.9,
+    2259.9,
+    2259.9,
+    2259.9,
+    2259.9,
+    2259.9,
+    2259.9,
+    2259.9,
+    2259.9,
+    2259.9,
+    2259.9,
+    2259.9
+  ],
+  "step_telemetry": [
+    {
+      "step": 0,
+      "wall_time_s": 0.303371,
+      "chi_max": 2,
+      "chi_mean": 2.0,
+      "compression_ratio": 2259.9,
+      "n_truncations": 3,
+      "peak_rank_this_step": 2,
+      "field_norms": {
+        "omega": 511.9807236708168,
+        "psi": 6.4846371339149265
+      },
+      "invariant_values": {
+        "total_circulation": 0.0
+      }
+    },
+    {
+      "step": 1,
+      "wall_time_s": 0.133235,
+      "chi_max": 2,
+      "chi_mean": 2.0,
+      "compression_ratio": 2259.9,
+      "n_truncations": 3,
+      "peak_rank_this_step": 2,
+      "field_norms": {
+        "omega": 511.9614480673658,
+        "psi": 6.484392993310921
+      },
+      "invariant_values": {
+        "total_circulation": 0.0
+      }
+    },
+    {
+      "step": 2,
+      "wall_time_s": 0.139508,
+      "chi_max": 2,
+      "chi_mean": 2.0,
+      "compression_ratio": 2259.9,
+      "n_truncations": 3,
+      "peak_rank_this_step": 2,
+      "field_norms": {
+        "omega": 511.9421731896266,
+        "psi": 6.484148861888284
+      },
+      "invariant_values": {
+        "total_circulation": -4.995394654792924e-33
+      }
+    },
+    {
+      "step": 3,
+      "wall_time_s": 0.139465,
+      "chi_max": 2,
+      "chi_mean": 2.0,
+      "compression_ratio": 2259.9,
+      "n_truncations": 3,
+      "peak_rank_this_step": 2,
+      "field_norms": {
+        "omega": 511.92289903756944,
+        "psi": 6.483904739617671
+      },
+      "invariant_values": {
+        "total_circulation": 0.0
+      }
+    },
+    {
+      "step": 4,
+      "wall_time_s": 0.134563,
+      "chi_max": 2,
+      "chi_mean": 2.0,
+      "compression_ratio": 2259.9,
+      "n_truncations": 3,
+      "peak_rank_this_step": 2,
+      "field_norms": {
+        "omega": 511.9036256111627,
+        "psi": 6.483660626584976
+      },
+      "invariant_values": {
+        "total_circulation": 0.0
+      }
+    },
+    {
+      "step": 5,
+      "wall_time_s": 0.137544,
+      "chi_max": 2,
+      "chi_mean": 2.0,
+      "compression_ratio": 2259.9,
+      "n_truncations": 3,
+      "peak_rank_this_step": 2,
+      "field_norms": {
+        "omega": 511.8843529103858,
+        "psi": 6.483416522709088
+      },
+      "invariant_values": {
+        "total_circulation": -4.995394654792926e-33
+      }
+    },
+    {
+      "step": 6,
+      "wall_time_s": 0.134667,
+      "chi_max": 2,
+      "chi_mean": 2.0,
+      "compression_ratio": 2259.9,
+      "n_truncations": 3,
+      "peak_rank_this_step": 2,
+      "field_norms": {
+        "omega": 511.86508093520547,
+        "psi": 6.4831724280781975
+      },
+      "invariant_values": {
+        "total_circulation": 0.0
+      }
+    },
+    {
+      "step": 7,
+      "wall_time_s": 0.1328,
+      "chi_max": 2,
+      "chi_mean": 2.0,
+      "compression_ratio": 2259.9,
+      "n_truncations": 3,
+      "peak_rank_this_step": 2,
+      "field_norms": {
+        "omega": 511.84580968559976,
+        "psi": 6.482928342548854
+      },
+      "invariant_values": {
+        "total_circulation": 0.0
+      }
+    },
+    {
+      "step": 8,
+      "wall_time_s": 0.136458,
+      "chi_max": 2,
+      "chi_mean": 2.0,
+      "compression_ratio": 2259.9,
+      "n_truncations": 3,
+      "peak_rank_this_step": 2,
+      "field_norms": {
+        "omega": 511.8265391615383,
+        "psi": 6.482684266274787
+      },
+      "invariant_values": {
+        "total_circulation": -1.4986183964378758e-32
+      }
+    },
+    {
+      "step": 9,
+      "wall_time_s": 0.139377,
+      "chi_max": 2,
+      "chi_mean": 2.0,
+      "compression_ratio": 2259.9,
+      "n_truncations": 3,
+      "peak_rank_this_step": 2,
+      "field_norms": {
+        "omega": 511.80726936299527,
+        "psi": 6.482440199161827
+      },
+      "invariant_values": {
+        "total_circulation": -1.4986183964378763e-32
+      }
+    },
+    {
+      "step": 10,
+      "wall_time_s": 0.128013,
+      "chi_max": 2,
+      "chi_mean": 2.0,
+      "compression_ratio": 2259.9,
+      "n_truncations": 3,
+      "peak_rank_this_step": 2,
+      "field_norms": {
+        "omega": 511.78800028994124,
+        "psi": 6.4821961412524285
+      },
+      "invariant_values": {
+        "total_circulation": 0.0
+      }
+    },
+    {
+      "step": 11,
+      "wall_time_s": 0.130481,
+      "chi_max": 2,
+      "chi_mean": 2.0,
+      "compression_ratio": 2259.9,
+      "n_truncations": 3,
+      "peak_rank_this_step": 2,
+      "field_norms": {
+        "omega": 511.76873194234616,
+        "psi": 6.481952092530008
+      },
+      "invariant_values": {
+        "total_circulation": 0.0
+      }
+    },
+    {
+      "step": 12,
+      "wall_time_s": 0.130638,
+      "chi_max": 2,
+      "chi_mean": 2.0,
+      "compression_ratio": 2259.9,
+      "n_truncations": 3,
+      "peak_rank_this_step": 2,
+      "field_norms": {
+        "omega": 511.74946432019,
+        "psi": 6.481708053006797
+      },
+      "invariant_values": {
+        "total_circulation": -9.990789309585866e-33
+      }
+    },
+    {
+      "step": 13,
+      "wall_time_s": 0.13657,
+      "chi_max": 2,
+      "chi_mean": 2.0,
+      "compression_ratio": 2259.9,
+      "n_truncations": 3,
+      "peak_rank_this_step": 2,
+      "field_norms": {
+        "omega": 511.7301974234405,
+        "psi": 6.481464022657542
+      },
+      "invariant_values": {
+        "total_circulation": -1.4986183964378785e-32
+      }
+    },
+    {
+      "step": 14,
+      "wall_time_s": 0.135787,
+      "chi_max": 2,
+      "chi_mean": 2.0,
+      "compression_ratio": 2259.9,
+      "n_truncations": 3,
+      "peak_rank_this_step": 2,
+      "field_norms": {
+        "omega": 511.71093125207466,
+        "psi": 6.481220001506431
+      },
+      "invariant_values": {
+        "total_circulation": 0.0
+      }
+    },
+    {
+      "step": 15,
+      "wall_time_s": 0.139343,
+      "chi_max": 2,
+      "chi_mean": 2.0,
+      "compression_ratio": 2259.9,
+      "n_truncations": 3,
+      "peak_rank_this_step": 2,
+      "field_norms": {
+        "omega": 511.6916658060586,
+        "psi": 6.4809759895243095
+      },
+      "invariant_values": {
+        "total_circulation": 0.0
+      }
+    },
+    {
+      "step": 16,
+      "wall_time_s": 0.13539,
+      "chi_max": 2,
+      "chi_mean": 2.0,
+      "compression_ratio": 2259.9,
+      "n_truncations": 3,
+      "peak_rank_this_step": 2,
+      "field_norms": {
+        "omega": 511.6724010853733,
+        "psi": 6.480731986725543
+      },
+      "invariant_values": {
+        "total_circulation": -2.497697327396462e-32
+      }
+    },
+    {
+      "step": 17,
+      "wall_time_s": 0.128398,
+      "chi_max": 2,
+      "chi_mean": 2.0,
+      "compression_ratio": 2259.9,
+      "n_truncations": 3,
+      "peak_rank_this_step": 2,
+      "field_norms": {
+        "omega": 511.6531370899844,
+        "psi": 6.480487993149594
+      },
+      "invariant_values": {
+        "total_circulation": -5.994473585751502e-32
+      }
+    },
+    {
+      "step": 18,
+      "wall_time_s": 0.136647,
+      "chi_max": 2,
+      "chi_mean": 2.0,
+      "compression_ratio": 2259.9,
+      "n_truncations": 3,
+      "peak_rank_this_step": 2,
+      "field_norms": {
+        "omega": 511.63387381986064,
+        "psi": 6.480244008717602
+      },
+      "invariant_values": {
+        "total_circulation": -7.99263144766866e-32
+      }
+    },
+    {
+      "step": 19,
+      "wall_time_s": 0.142289,
+      "chi_max": 2,
+      "chi_mean": 2.0,
+      "compression_ratio": 2259.9,
+      "n_truncations": 3,
+      "peak_rank_this_step": 2,
+      "field_norms": {
+        "omega": 511.6146112749872,
+        "psi": 6.480000033504457
+      },
+      "invariant_values": {
+        "total_circulation": -9.990789309585848e-32
+      }
+    },
+    {
+      "step": 20,
+      "wall_time_s": 0.138741,
+      "chi_max": 2,
+      "chi_mean": 2.0,
+      "compression_ratio": 2259.9,
+      "n_truncations": 3,
+      "peak_rank_this_step": 2,
+      "field_norms": {
+        "omega": 511.5953494553309,
+        "psi": 6.479756067462369
+      },
+      "invariant_values": {
+        "total_circulation": -7.992631447668666e-32
+      }
+    },
+    {
+      "step": 21,
+      "wall_time_s": 0.13358,
+      "chi_max": 2,
+      "chi_mean": 2.0,
+      "compression_ratio": 2259.9,
+      "n_truncations": 3,
+      "peak_rank_this_step": 2,
+      "field_norms": {
+        "omega": 511.5760883608655,
+        "psi": 6.479512110591019
+      },
+      "invariant_values": {
+        "total_circulation": -8.991710378627244e-32
+      }
+    },
+    {
+      "step": 22,
+      "wall_time_s": 0.1264,
+      "chi_max": 2,
+      "chi_mean": 2.0,
+      "compression_ratio": 2259.9,
+      "n_truncations": 3,
+      "peak_rank_this_step": 2,
+      "field_norms": {
+        "omega": 511.55682799156386,
+        "psi": 6.4792681629228825
+      },
+      "invariant_values": {
+        "total_circulation": -8.991710378627237e-32
+      }
+    },
+    {
+      "step": 23,
+      "wall_time_s": 0.140126,
+      "chi_max": 2,
+      "chi_mean": 2.0,
+      "compression_ratio": 2259.9,
+      "n_truncations": 3,
+      "peak_rank_this_step": 2,
+      "field_norms": {
+        "omega": 511.5375683473956,
+        "psi": 6.47902422443058
+      },
+      "invariant_values": {
+        "total_circulation": -1.198894717150297e-31
+      }
+    },
+    {
+      "step": 24,
+      "wall_time_s": 0.133225,
+      "chi_max": 2,
+      "chi_mean": 2.0,
+      "compression_ratio": 2259.9,
+      "n_truncations": 3,
+      "peak_rank_this_step": 2,
+      "field_norms": {
+        "omega": 511.5183094283344,
+        "psi": 6.4787802951457145
+      },
+      "invariant_values": {
+        "total_circulation": -1.198894717150297e-31
+      }
+    },
+    {
+      "step": 25,
+      "wall_time_s": 0.132147,
+      "chi_max": 2,
+      "chi_mean": 2.0,
+      "compression_ratio": 2259.9,
+      "n_truncations": 3,
+      "peak_rank_this_step": 2,
+      "field_norms": {
+        "omega": 511.4990512343553,
+        "psi": 6.478536375022458
+      },
+      "invariant_values": {
+        "total_circulation": -1.198894717150298e-31
+      }
+    },
+    {
+      "step": 26,
+      "wall_time_s": 0.1349,
+      "chi_max": 2,
+      "chi_mean": 2.0,
+      "compression_ratio": 2259.9,
+      "n_truncations": 3,
+      "peak_rank_this_step": 2,
+      "field_norms": {
+        "omega": 511.47979376543157,
+        "psi": 6.478292464075651
+      },
+      "invariant_values": {
+        "total_circulation": -1.1988947171502973e-31
+      }
+    },
+    {
+      "step": 27,
+      "wall_time_s": 0.129291,
+      "chi_max": 2,
+      "chi_mean": 2.0,
+      "compression_ratio": 2259.9,
+      "n_truncations": 3,
+      "peak_rank_this_step": 2,
+      "field_norms": {
+        "omega": 511.4605370215321,
+        "psi": 6.478048562328058
+      },
+      "invariant_values": {
+        "total_circulation": -1.1988947171502975e-31
+      }
+    },
+    {
+      "step": 28,
+      "wall_time_s": 0.128335,
+      "chi_max": 2,
+      "chi_mean": 2.0,
+      "compression_ratio": 2259.9,
+      "n_truncations": 3,
+      "peak_rank_this_step": 2,
+      "field_norms": {
+        "omega": 511.44128100263185,
+        "psi": 6.477804669730933
+      },
+      "invariant_values": {
+        "total_circulation": -1.1988947171502975e-31
+      }
+    },
+    {
+      "step": 29,
+      "wall_time_s": 0.132756,
+      "chi_max": 2,
+      "chi_mean": 2.0,
+      "compression_ratio": 2259.9,
+      "n_truncations": 3,
+      "peak_rank_this_step": 2,
+      "field_norms": {
+        "omega": 511.42202570869887,
+        "psi": 6.477560786306068
+      },
+      "invariant_values": {
+        "total_circulation": -1.1988947171502967e-31
+      }
+    },
+    {
+      "step": 30,
+      "wall_time_s": 0.126871,
+      "chi_max": 2,
+      "chi_mean": 2.0,
+      "compression_ratio": 2259.9,
+      "n_truncations": 3,
+      "peak_rank_this_step": 2,
+      "field_norms": {
+        "omega": 511.4027711397121,
+        "psi": 6.47731691215951
+      },
+      "invariant_values": {
+        "total_circulation": -1.198894717150297e-31
+      }
+    },
+    {
+      "step": 31,
+      "wall_time_s": 0.124654,
+      "chi_max": 2,
+      "chi_mean": 2.0,
+      "compression_ratio": 2259.9,
+      "n_truncations": 3,
+      "peak_rank_this_step": 2,
+      "field_norms": {
+        "omega": 511.3835172956456,
+        "psi": 6.477073047133778
+      },
+      "invariant_values": {
+        "total_circulation": -1.1988947171502978e-31
+      }
+    },
+    {
+      "step": 32,
+      "wall_time_s": 0.125354,
+      "chi_max": 2,
+      "chi_mean": 2.0,
+      "compression_ratio": 2259.9,
+      "n_truncations": 3,
+      "peak_rank_this_step": 2,
+      "field_norms": {
+        "omega": 511.3642641764678,
+        "psi": 6.4768291912876474
+      },
+      "invariant_values": {
+        "total_circulation": -1.4986183964378712e-31
+      }
+    },
+    {
+      "step": 33,
+      "wall_time_s": 0.135078,
+      "chi_max": 2,
+      "chi_mean": 2.0,
+      "compression_ratio": 2259.9,
+      "n_truncations": 3,
+      "peak_rank_this_step": 2,
+      "field_norms": {
+        "omega": 511.34501178215265,
+        "psi": 6.476585344628686
+      },
+      "invariant_values": {
+        "total_circulation": -1.1988947171502982e-31
+      }
+    },
+    {
+      "step": 34,
+      "wall_time_s": 0.125591,
+      "chi_max": 2,
+      "chi_mean": 2.0,
+      "compression_ratio": 2259.9,
+      "n_truncations": 3,
+      "peak_rank_this_step": 2,
+      "field_norms": {
+        "omega": 511.32576011266883,
+        "psi": 6.476341507135887
+      },
+      "invariant_values": {
+        "total_circulation": -1.1988947171502978e-31
+      }
+    },
+    {
+      "step": 35,
+      "wall_time_s": 0.127444,
+      "chi_max": 2,
+      "chi_mean": 2.0,
+      "compression_ratio": 2259.9,
+      "n_truncations": 3,
+      "peak_rank_this_step": 2,
+      "field_norms": {
+        "omega": 511.3065091679943,
+        "psi": 6.476097678809161
+      },
+      "invariant_values": {
+        "total_circulation": -8.991710378627235e-32
+      }
+    },
+    {
+      "step": 36,
+      "wall_time_s": 0.130706,
+      "chi_max": 2,
+      "chi_mean": 2.0,
+      "compression_ratio": 2259.9,
+      "n_truncations": 3,
+      "peak_rank_this_step": 2,
+      "field_norms": {
+        "omega": 511.28725894810094,
+        "psi": 6.475853859732493
+      },
+      "invariant_values": {
+        "total_circulation": -5.994473585751487e-32
+      }
+    },
+    {
+      "step": 37,
+      "wall_time_s": 0.130269,
+      "chi_max": 2,
+      "chi_mean": 2.0,
+      "compression_ratio": 2259.9,
+      "n_truncations": 3,
+      "peak_rank_this_step": 2,
+      "field_norms": {
+        "omega": 511.2680094529601,
+        "psi": 6.475610049778509
+      },
+      "invariant_values": {
+        "total_circulation": -2.997236792875747e-32
+      }
+    },
+    {
+      "step": 38,
+      "wall_time_s": 0.136369,
+      "chi_max": 2,
+      "chi_mean": 2.0,
+      "compression_ratio": 2259.9,
+      "n_truncations": 3,
+      "peak_rank_this_step": 2,
+      "field_norms": {
+        "omega": 511.2487606825472,
+        "psi": 6.475366249003315
+      },
+      "invariant_values": {
+        "total_circulation": -7.992631447668651e-32
+      }
+    },
+    {
+      "step": 39,
+      "wall_time_s": 0.125773,
+      "chi_max": 2,
+      "chi_mean": 2.0,
+      "compression_ratio": 2259.9,
+      "n_truncations": 3,
+      "peak_rank_this_step": 2,
+      "field_norms": {
+        "omega": 511.2295126368296,
+        "psi": 6.475122457429956
+      },
+      "invariant_values": {
+        "total_circulation": -1.998157861917163e-31
+      }
+    },
+    {
+      "step": 40,
+      "wall_time_s": 0.125165,
+      "chi_max": 2,
+      "chi_mean": 2.0,
+      "compression_ratio": 2259.9,
+      "n_truncations": 3,
+      "peak_rank_this_step": 2,
+      "field_norms": {
+        "omega": 511.2102653157874,
+        "psi": 6.474878675010558
+      },
+      "invariant_values": {
+        "total_circulation": -1.9981578619171635e-31
+      }
+    },
+    {
+      "step": 41,
+      "wall_time_s": 0.127029,
+      "chi_max": 2,
+      "chi_mean": 2.0,
+      "compression_ratio": 2259.9,
+      "n_truncations": 3,
+      "peak_rank_this_step": 2,
+      "field_norms": {
+        "omega": 511.1910187193819,
+        "psi": 6.474634901785251
+      },
+      "invariant_values": {
+        "total_circulation": -3.2470065256153843e-31
+      }
+    },
+    {
+      "step": 42,
+      "wall_time_s": 0.125015,
+      "chi_max": 2,
+      "chi_mean": 2.0,
+      "compression_ratio": 2259.9,
+      "n_truncations": 3,
+      "peak_rank_this_step": 2,
+      "field_norms": {
+        "omega": 511.1717728475962,
+        "psi": 6.474391137728804
+      },
+      "invariant_values": {
+        "total_circulation": -4.196131510026035e-31
+      }
+    },
+    {
+      "step": 43,
+      "wall_time_s": 0.124394,
+      "chi_max": 2,
+      "chi_mean": 2.0,
+      "compression_ratio": 2259.9,
+      "n_truncations": 3,
+      "peak_rank_this_step": 2,
+      "field_norms": {
+        "omega": 511.152527700402,
+        "psi": 6.474147382885359
+      },
+      "invariant_values": {
+        "total_circulation": -4.895486761697049e-31
+      }
+    },
+    {
+      "step": 44,
+      "wall_time_s": 0.126723,
+      "chi_max": 2,
+      "chi_mean": 2.0,
+      "compression_ratio": 2259.9,
+      "n_truncations": 3,
+      "peak_rank_this_step": 2,
+      "field_norms": {
+        "omega": 511.133283277768,
+        "psi": 6.473903637158244
+      },
+      "invariant_values": {
+        "total_circulation": -4.196131510026042e-31
+      }
+    },
+    {
+      "step": 45,
+      "wall_time_s": 0.135475,
+      "chi_max": 2,
+      "chi_mean": 2.0,
+      "compression_ratio": 2259.9,
+      "n_truncations": 3,
+      "peak_rank_this_step": 2,
+      "field_norms": {
+        "omega": 511.11403957967065,
+        "psi": 6.473659900657944
+      },
+      "invariant_values": {
+        "total_circulation": -5.594842013368051e-31
+      }
+    },
+    {
+      "step": 46,
+      "wall_time_s": 0.127168,
+      "chi_max": 2,
+      "chi_mean": 2.0,
+      "compression_ratio": 2259.9,
+      "n_truncations": 3,
+      "peak_rank_this_step": 2,
+      "field_norms": {
+        "omega": 511.09479660607957,
+        "psi": 6.473416173291278
+      },
+      "invariant_values": {
+        "total_circulation": -5.594842013368057e-31
+      }
+    },
+    {
+      "step": 47,
+      "wall_time_s": 0.126502,
+      "chi_max": 2,
+      "chi_mean": 2.0,
+      "compression_ratio": 2259.9,
+      "n_truncations": 3,
+      "peak_rank_this_step": 2,
+      "field_norms": {
+        "omega": 511.075554356969,
+        "psi": 6.473172455167285
+      },
+      "invariant_values": {
+        "total_circulation": -7.642953821833151e-31
+      }
+    },
+    {
+      "step": 48,
+      "wall_time_s": 0.124007,
+      "chi_max": 2,
+      "chi_mean": 2.0,
+      "compression_ratio": 2259.9,
+      "n_truncations": 3,
+      "peak_rank_this_step": 2,
+      "field_norms": {
+        "omega": 511.05631283230815,
+        "psi": 6.4729287461763985
+      },
+      "invariant_values": {
+        "total_circulation": -7.193368302901786e-31
+      }
+    },
+    {
+      "step": 49,
+      "wall_time_s": 0.127029,
+      "chi_max": 2,
+      "chi_mean": 2.0,
+      "compression_ratio": 2259.9,
+      "n_truncations": 3,
+      "peak_rank_this_step": 2,
+      "field_norms": {
+        "omega": 511.03707203207523,
+        "psi": 6.472685046362548
+      },
+      "invariant_values": {
+        "total_circulation": -9.990789309585822e-31
+      }
+    },
+    {
+      "step": 50,
+      "wall_time_s": 0.127932,
+      "chi_max": 2,
+      "chi_mean": 2.0,
+      "compression_ratio": 2259.9,
+      "n_truncations": 3,
+      "peak_rank_this_step": 2,
+      "field_norms": {
+        "omega": 511.0178319562414,
+        "psi": 6.472441355675787
+      },
+      "invariant_values": {
+        "total_circulation": -9.990789309585812e-31
+      }
+    },
+    {
+      "step": 51,
+      "wall_time_s": 0.127174,
+      "chi_max": 2,
+      "chi_mean": 2.0,
+      "compression_ratio": 2259.9,
+      "n_truncations": 3,
+      "peak_rank_this_step": 2,
+      "field_norms": {
+        "omega": 510.998592604777,
+        "psi": 6.472197674237644
+      },
+      "invariant_values": {
+        "total_circulation": -1.153936165257161e-30
+      }
+    },
+    {
+      "step": 52,
+      "wall_time_s": 0.129102,
+      "chi_max": 2,
+      "chi_mean": 2.0,
+      "compression_ratio": 2259.9,
+      "n_truncations": 3,
+      "peak_rank_this_step": 2,
+      "field_norms": {
+        "omega": 510.97935397765775,
+        "psi": 6.471954001908082
+      },
+      "invariant_values": {
+        "total_circulation": -1.098986824054438e-30
+      }
+    },
+    {
+      "step": 53,
+      "wall_time_s": 0.127283,
+      "chi_max": 2,
+      "chi_mean": 2.0,
+      "compression_ratio": 2259.9,
+      "n_truncations": 3,
+      "peak_rank_this_step": 2,
+      "field_norms": {
+        "omega": 510.9601160748555,
+        "psi": 6.471710338827986
+      },
+      "invariant_values": {
+        "total_circulation": -8.99171037862722e-31
+      }
+    },
+    {
+      "step": 54,
+      "wall_time_s": 0.133484,
+      "chi_max": 2,
+      "chi_mean": 2.0,
+      "compression_ratio": 2259.9,
+      "n_truncations": 3,
+      "peak_rank_this_step": 2,
+      "field_norms": {
+        "omega": 510.9408788963408,
+        "psi": 6.47146668489278
+      },
+      "invariant_values": {
+        "total_circulation": -9.890881416489934e-31
+      }
+    },
+    {
+      "step": 55,
+      "wall_time_s": 0.125245,
+      "chi_max": 2,
+      "chi_mean": 2.0,
+      "compression_ratio": 2259.9,
+      "n_truncations": 3,
+      "peak_rank_this_step": 2,
+      "field_norms": {
+        "omega": 510.9216424420915,
+        "psi": 6.471223040136532
+      },
+      "invariant_values": {
+        "total_circulation": -8.991710378627223e-31
+      }
+    },
+    {
+      "step": 56,
+      "wall_time_s": 0.12896,
+      "chi_max": 2,
+      "chi_mean": 2.0,
+      "compression_ratio": 2259.9,
+      "n_truncations": 3,
+      "peak_rank_this_step": 2,
+      "field_norms": {
+        "omega": 510.9024067120758,
+        "psi": 6.470979404518728
+      },
+      "invariant_values": {
+        "total_circulation": -9.34138800446272e-31
+      }
+    },
+    {
+      "step": 57,
+      "wall_time_s": 0.124824,
+      "chi_max": 2,
+      "chi_mean": 2.0,
+      "compression_ratio": 2259.9,
+      "n_truncations": 3,
+      "peak_rank_this_step": 2,
+      "field_norms": {
+        "omega": 510.8831717062669,
+        "psi": 6.470735778052039
+      },
+      "invariant_values": {
+        "total_circulation": -8.991710378627216e-31
+      }
+    },
+    {
+      "step": 58,
+      "wall_time_s": 0.126013,
+      "chi_max": 2,
+      "chi_mean": 2.0,
+      "compression_ratio": 2259.9,
+      "n_truncations": 3,
+      "peak_rank_this_step": 2,
+      "field_norms": {
+        "omega": 510.8639374246389,
+        "psi": 6.4704921608398775
+      },
+      "invariant_values": {
+        "total_circulation": -8.991710378627223e-31
+      }
+    },
+    {
+      "step": 59,
+      "wall_time_s": 0.128639,
+      "chi_max": 2,
+      "chi_mean": 2.0,
+      "compression_ratio": 2259.9,
+      "n_truncations": 3,
+      "peak_rank_this_step": 2,
+      "field_norms": {
+        "omega": 510.8447038671655,
+        "psi": 6.4702485527625795
+      },
+      "invariant_values": {
+        "total_circulation": -8.092539340764502e-31
+      }
+    },
+    {
+      "step": 60,
+      "wall_time_s": 0.133637,
+      "chi_max": 2,
+      "chi_mean": 2.0,
+      "compression_ratio": 2259.9,
+      "n_truncations": 3,
+      "peak_rank_this_step": 2,
+      "field_norms": {
+        "omega": 510.8254710338179,
+        "psi": 6.470004953868595
+      },
+      "invariant_values": {
+        "total_circulation": -8.042585394216568e-31
+      }
+    },
+    {
+      "step": 61,
+      "wall_time_s": 0.133847,
+      "chi_max": 2,
+      "chi_mean": 2.0,
+      "compression_ratio": 2259.9,
+      "n_truncations": 3,
+      "peak_rank_this_step": 2,
+      "field_norms": {
+        "omega": 510.80623892456816,
+        "psi": 6.469761364107294
+      },
+      "invariant_values": {
+        "total_circulation": -8.04258539421656e-31
+      }
+    },
+    {
+      "step": 62,
+      "wall_time_s": 0.124741,
+      "chi_max": 2,
+      "chi_mean": 2.0,
+      "compression_ratio": 2259.9,
+      "n_truncations": 3,
+      "peak_rank_this_step": 2,
+      "field_norms": {
+        "omega": 510.7870075393939,
+        "psi": 6.469517783502119
+      },
+      "invariant_values": {
+        "total_circulation": -8.392263020052075e-31
+      }
+    },
+    {
+      "step": 63,
+      "wall_time_s": 0.129313,
+      "chi_max": 2,
+      "chi_mean": 2.0,
+      "compression_ratio": 2259.9,
+      "n_truncations": 3,
+      "peak_rank_this_step": 2,
+      "field_norms": {
+        "omega": 510.7677768782554,
+        "psi": 6.469274212155633
+      },
+      "invariant_values": {
+        "total_circulation": -8.39226302005207e-31
+      }
+    },
+    {
+      "step": 64,
+      "wall_time_s": 0.131577,
+      "chi_max": 2,
+      "chi_mean": 2.0,
+      "compression_ratio": 2259.9,
+      "n_truncations": 3,
+      "peak_rank_this_step": 2,
+      "field_norms": {
+        "omega": 510.7485469411387,
+        "psi": 6.469030649913316
+      },
+      "invariant_values": {
+        "total_circulation": -7.193368302901782e-31
+      }
+    },
+    {
+      "step": 65,
+      "wall_time_s": 0.127748,
+      "chi_max": 2,
+      "chi_mean": 2.0,
+      "compression_ratio": 2259.9,
+      "n_truncations": 3,
+      "peak_rank_this_step": 2,
+      "field_norms": {
+        "omega": 510.7293177280094,
+        "psi": 6.468787096871784
+      },
+      "invariant_values": {
+        "total_circulation": -9.591157737202384e-31
+      }
+    },
+    {
+      "step": 66,
+      "wall_time_s": 0.132311,
+      "chi_max": 2,
+      "chi_mean": 2.0,
+      "compression_ratio": 2259.9,
+      "n_truncations": 3,
+      "peak_rank_this_step": 2,
+      "field_norms": {
+        "omega": 510.7100892388384,
+        "psi": 6.468543552985005
+      },
+      "invariant_values": {
+        "total_circulation": -9.591157737202379e-31
+      }
+    },
+    {
+      "step": 67,
+      "wall_time_s": 0.129335,
+      "chi_max": 2,
+      "chi_mean": 2.0,
+      "compression_ratio": 2259.9,
+      "n_truncations": 3,
+      "peak_rank_this_step": 2,
+      "field_norms": {
+        "omega": 510.69086147360775,
+        "psi": 6.4683000182664525
+      },
+      "invariant_values": {
+        "total_circulation": -9.191526164818942e-31
+      }
+    },
+    {
+      "step": 68,
+      "wall_time_s": 0.132509,
+      "chi_max": 2,
+      "chi_mean": 2.0,
+      "compression_ratio": 2259.9,
+      "n_truncations": 3,
+      "peak_rank_this_step": 2,
+      "field_norms": {
+        "omega": 510.6716344322871,
+        "psi": 6.468056492727218
+      },
+      "invariant_values": {
+        "total_circulation": -6.893644623614213e-31
+      }
+    },
+    {
+      "step": 69,
+      "wall_time_s": 0.130469,
+      "chi_max": 2,
+      "chi_mean": 2.0,
+      "compression_ratio": 2259.9,
+      "n_truncations": 3,
+      "peak_rank_this_step": 2,
+      "field_norms": {
+        "omega": 510.6524081148435,
+        "psi": 6.467812976343783
+      },
+      "invariant_values": {
+        "total_circulation": -6.89364462361421e-31
+      }
+    },
+    {
+      "step": 70,
+      "wall_time_s": 0.126768,
+      "chi_max": 2,
+      "chi_mean": 2.0,
+      "compression_ratio": 2259.9,
+      "n_truncations": 3,
+      "peak_rank_this_step": 2,
+      "field_norms": {
+        "omega": 510.6331825212523,
+        "psi": 6.467569469096566
+      },
+      "invariant_values": {
+        "total_circulation": -7.193368302901789e-31
+      }
+    },
+    {
+      "step": 71,
+      "wall_time_s": 0.127405,
+      "chi_max": 2,
+      "chi_mean": 2.0,
+      "compression_ratio": 2259.9,
+      "n_truncations": 3,
+      "peak_rank_this_step": 2,
+      "field_norms": {
+        "omega": 510.61395765148427,
+        "psi": 6.46732597106963
+      },
+      "invariant_values": {
+        "total_circulation": -7.19336830290178e-31
+      }
+    },
+    {
+      "step": 72,
+      "wall_time_s": 0.128598,
+      "chi_max": 2,
+      "chi_mean": 2.0,
+      "compression_ratio": 2259.9,
+      "n_truncations": 3,
+      "peak_rank_this_step": 2,
+      "field_norms": {
+        "omega": 510.5947335055199,
+        "psi": 6.467082482206473
+      },
+      "invariant_values": {
+        "total_circulation": -7.493091982189363e-31
+      }
+    },
+    {
+      "step": 73,
+      "wall_time_s": 0.127069,
+      "chi_max": 2,
+      "chi_mean": 2.0,
+      "compression_ratio": 2259.9,
+      "n_truncations": 3,
+      "peak_rank_this_step": 2,
+      "field_norms": {
+        "omega": 510.5755100833278,
+        "psi": 6.466839002496678
+      },
+      "invariant_values": {
+        "total_circulation": -8.741940645887584e-31
+      }
+    },
+    {
+      "step": 74,
+      "wall_time_s": 0.130856,
+      "chi_max": 2,
+      "chi_mean": 2.0,
+      "compression_ratio": 2259.9,
+      "n_truncations": 3,
+      "peak_rank_this_step": 2,
+      "field_norms": {
+        "omega": 510.55628738487786,
+        "psi": 6.4665955319612785
+      },
+      "invariant_values": {
+        "total_circulation": -1.0790052454352687e-30
+      }
+    },
+    {
+      "step": 75,
+      "wall_time_s": 0.129056,
+      "chi_max": 2,
+      "chi_mean": 2.0,
+      "compression_ratio": 2259.9,
+      "n_truncations": 3,
+      "peak_rank_this_step": 2,
+      "field_norms": {
+        "omega": 510.5370654101441,
+        "psi": 6.466352070569527
+      },
+      "invariant_values": {
+        "total_circulation": -1.1489407706023678e-30
+      }
+    },
+    {
+      "step": 76,
+      "wall_time_s": 0.130822,
+      "chi_max": 2,
+      "chi_mean": 2.0,
+      "compression_ratio": 2259.9,
+      "n_truncations": 3,
+      "peak_rank_this_step": 2,
+      "field_norms": {
+        "omega": 510.5178441590973,
+        "psi": 6.466108618374123
+      },
+      "invariant_values": {
+        "total_circulation": -1.378728924722842e-30
+      }
+    },
+    {
+      "step": 77,
+      "wall_time_s": 0.135471,
+      "chi_max": 2,
+      "chi_mean": 2.0,
+      "compression_ratio": 2259.9,
+      "n_truncations": 3,
+      "peak_rank_this_step": 2,
+      "field_norms": {
+        "omega": 510.49862363171303,
+        "psi": 6.465865175339329
+      },
+      "invariant_values": {
+        "total_circulation": -1.5585631322953845e-30
+      }
+    },
+    {
+      "step": 78,
+      "wall_time_s": 0.128319,
+      "chi_max": 2,
+      "chi_mean": 2.0,
+      "compression_ratio": 2259.9,
+      "n_truncations": 3,
+      "peak_rank_this_step": 2,
+      "field_norms": {
+        "omega": 510.4794038279674,
+        "psi": 6.4656217414436545
+      },
+      "invariant_values": {
+        "total_circulation": -1.6784526040104168e-30
+      }
+    },
+    {
+      "step": 79,
+      "wall_time_s": 0.136893,
+      "chi_max": 2,
+      "chi_mean": 2.0,
+      "compression_ratio": 2259.9,
+      "n_truncations": 3,
+      "peak_rank_this_step": 2,
+      "field_norms": {
+        "omega": 510.4601847478268,
+        "psi": 6.465378316747423
+      },
+      "invariant_values": {
+        "total_circulation": -1.6085170788433137e-30
+      }
+    },
+    {
+      "step": 80,
+      "wall_time_s": 0.129252,
+      "chi_max": 2,
+      "chi_mean": 2.0,
+      "compression_ratio": 2259.9,
+      "n_truncations": 3,
+      "peak_rank_this_step": 2,
+      "field_norms": {
+        "omega": 510.4409663912703,
+        "psi": 6.465134901229095
+      },
+      "invariant_values": {
+        "total_circulation": -1.7234111559035524e-30
+      }
+    },
+    {
+      "step": 81,
+      "wall_time_s": 0.12488,
+      "chi_max": 2,
+      "chi_mean": 2.0,
+      "compression_ratio": 2259.9,
+      "n_truncations": 3,
+      "peak_rank_this_step": 2,
+      "field_norms": {
+        "omega": 510.42174875826595,
+        "psi": 6.464891494804896
+      },
+      "invariant_values": {
+        "total_circulation": -1.9182315474404764e-30
+      }
+    },
+    {
+      "step": 82,
+      "wall_time_s": 0.127908,
+      "chi_max": 2,
+      "chi_mean": 2.0,
+      "compression_ratio": 2259.9,
+      "n_truncations": 3,
+      "peak_rank_this_step": 2,
+      "field_norms": {
+        "omega": 510.4025318487881,
+        "psi": 6.464648097572778
+      },
+      "invariant_values": {
+        "total_circulation": -1.9981578619171627e-30
+      }
+    },
+    {
+      "step": 83,
+      "wall_time_s": 0.127367,
+      "chi_max": 2,
+      "chi_mean": 2.0,
+      "compression_ratio": 2259.9,
+      "n_truncations": 3,
+      "peak_rank_this_step": 2,
+      "field_norms": {
+        "omega": 510.3833156628061,
+        "psi": 6.4644047095278765
+      },
+      "invariant_values": {
+        "total_circulation": -1.798342075725447e-30
+      }
+    },
+    {
+      "step": 84,
+      "wall_time_s": 0.125998,
+      "chi_max": 2,
+      "chi_mean": 2.0,
+      "compression_ratio": 2259.9,
+      "n_truncations": 3,
+      "peak_rank_this_step": 2,
+      "field_norms": {
+        "omega": 510.3641002002987,
+        "psi": 6.464161330631731
+      },
+      "invariant_values": {
+        "total_circulation": -1.9182315474404757e-30
+      }
+    },
+    {
+      "step": 85,
+      "wall_time_s": 0.127722,
+      "chi_max": 2,
+      "chi_mean": 2.0,
+      "compression_ratio": 2259.9,
+      "n_truncations": 3,
+      "peak_rank_this_step": 2,
+      "field_norms": {
+        "omega": 510.34488546123396,
+        "psi": 6.463917960898292
+      },
+      "invariant_values": {
+        "total_circulation": -1.798342075725446e-30
+      }
+    },
+    {
+      "step": 86,
+      "wall_time_s": 0.129577,
+      "chi_max": 2,
+      "chi_mean": 2.0,
+      "compression_ratio": 2259.9,
+      "n_truncations": 3,
+      "peak_rank_this_step": 2,
+      "field_norms": {
+        "omega": 510.3256714455873,
+        "psi": 6.463674600318023
+      },
+      "invariant_values": {
+        "total_circulation": -1.678452604010416e-30
+      }
+    },
+    {
+      "step": 87,
+      "wall_time_s": 0.130102,
+      "chi_max": 2,
+      "chi_mean": 2.0,
+      "compression_ratio": 2259.9,
+      "n_truncations": 3,
+      "peak_rank_this_step": 2,
+      "field_norms": {
+        "omega": 510.3064581533305,
+        "psi": 6.463431248918489
+      },
+      "invariant_values": {
+        "total_circulation": -1.798342075725447e-30
+      }
+    },
+    {
+      "step": 88,
+      "wall_time_s": 0.126515,
+      "chi_max": 2,
+      "chi_mean": 2.0,
+      "compression_ratio": 2259.9,
+      "n_truncations": 3,
+      "peak_rank_this_step": 2,
+      "field_norms": {
+        "omega": 510.2872455844362,
+        "psi": 6.46318790668316
+      },
+      "invariant_values": {
+        "total_circulation": -1.953199310024026e-30
+      }
+    },
+    {
+      "step": 89,
+      "wall_time_s": 0.128326,
+      "chi_max": 2,
+      "chi_mean": 2.0,
+      "compression_ratio": 2259.9,
+      "n_truncations": 3,
+      "peak_rank_this_step": 2,
+      "field_norms": {
+        "omega": 510.26803373887793,
+        "psi": 6.462944573576268
+      },
+      "invariant_values": {
+        "total_circulation": -1.9182315474404747e-30
+      }
+    },
+    {
+      "step": 90,
+      "wall_time_s": 0.12465,
+      "chi_max": 2,
+      "chi_mean": 2.0,
+      "compression_ratio": 2259.9,
+      "n_truncations": 3,
+      "peak_rank_this_step": 2,
+      "field_norms": {
+        "omega": 510.2488226166308,
+        "psi": 6.462701249678402
+      },
+      "invariant_values": {
+        "total_circulation": -1.7983420757254464e-30
+      }
+    },
+    {
+      "step": 91,
+      "wall_time_s": 0.124567,
+      "chi_max": 2,
+      "chi_mean": 2.0,
+      "compression_ratio": 2259.9,
+      "n_truncations": 3,
+      "peak_rank_this_step": 2,
+      "field_norms": {
+        "omega": 510.2296122176654,
+        "psi": 6.462457934940386
+      },
+      "invariant_values": {
+        "total_circulation": -1.9981578619171662e-30
+      }
+    },
+    {
+      "step": 92,
+      "wall_time_s": 0.127969,
+      "chi_max": 2,
+      "chi_mean": 2.0,
+      "compression_ratio": 2259.9,
+      "n_truncations": 3,
+      "peak_rank_this_step": 2,
+      "field_norms": {
+        "omega": 510.21040254195077,
+        "psi": 6.462214629341193
+      },
+      "invariant_values": {
+        "total_circulation": -2.12304272828699e-30
+      }
+    },
+    {
+      "step": 93,
+      "wall_time_s": 0.141074,
+      "chi_max": 2,
+      "chi_mean": 2.0,
+      "compression_ratio": 2259.9,
+      "n_truncations": 3,
+      "peak_rank_this_step": 2,
+      "field_norms": {
+        "omega": 510.191193589464,
+        "psi": 6.461971332892778
+      },
+      "invariant_values": {
+        "total_circulation": -1.8732729955473425e-30
+      }
+    },
+    {
+      "step": 94,
+      "wall_time_s": 0.141603,
+      "chi_max": 2,
+      "chi_mean": 2.0,
+      "compression_ratio": 2259.9,
+      "n_truncations": 3,
+      "peak_rank_this_step": 2,
+      "field_norms": {
+        "omega": 510.171985360172,
+        "psi": 6.461728045617683
+      },
+      "invariant_values": {
+        "total_circulation": -2.023134835191128e-30
+      }
+    },
+    {
+      "step": 95,
+      "wall_time_s": 0.126449,
+      "chi_max": 2,
+      "chi_mean": 2.0,
+      "compression_ratio": 2259.9,
+      "n_truncations": 3,
+      "peak_rank_this_step": 2,
+      "field_norms": {
+        "omega": 510.1527778540569,
+        "psi": 6.461484767498036
+      },
+      "invariant_values": {
+        "total_circulation": -2.0231348351911285e-30
+      }
+    },
+    {
+      "step": 96,
+      "wall_time_s": 0.129371,
+      "chi_max": 2,
+      "chi_mean": 2.0,
+      "compression_ratio": 2259.9,
+      "n_truncations": 3,
+      "peak_rank_this_step": 2,
+      "field_norms": {
+        "omega": 510.133571071085,
+        "psi": 6.461241498499101
+      },
+      "invariant_values": {
+        "total_circulation": -2.2379368053472227e-30
+      }
+    },
+    {
+      "step": 97,
+      "wall_time_s": 0.130129,
+      "chi_max": 2,
+      "chi_mean": 2.0,
+      "compression_ratio": 2259.9,
+      "n_truncations": 3,
+      "peak_rank_this_step": 2,
+      "field_norms": {
+        "omega": 510.11436501123177,
+        "psi": 6.460998238731519
+      },
+      "invariant_values": {
+        "total_circulation": -2.0980657550130204e-30
+      }
+    },
+    {
+      "step": 98,
+      "wall_time_s": 0.124503,
+      "chi_max": 2,
+      "chi_mean": 2.0,
+      "compression_ratio": 2259.9,
+      "n_truncations": 3,
+      "peak_rank_this_step": 2,
+      "field_norms": {
+        "omega": 510.09515967446873,
+        "psi": 6.4607549880919315
+      },
+      "invariant_values": {
+        "total_circulation": -2.023134835191127e-30
+      }
+    },
+    {
+      "step": 99,
+      "wall_time_s": 0.12797,
+      "chi_max": 2,
+      "chi_mean": 2.0,
+      "compression_ratio": 2259.9,
+      "n_truncations": 3,
+      "peak_rank_this_step": 2,
+      "field_norms": {
+        "omega": 510.0759550607684,
+        "psi": 6.460511746629312
+      },
+      "invariant_values": {
+        "total_circulation": -1.7483881291775167e-30
+      }
+    }
+  ],
   "evidence": {
     "claims": [
       {
         "tag": "CONSERVATION",
         "passed": true,
-        "detail": "|\u0394\u0393/\u0393\u2080| = 1.50e-32 (initial/final: 1.50e-02, runtime: 1.50e-32, tol=1e-04)"
+        "detail": "|\u0394\u0393/\u0393\u2080| = 1.75e-30 (initial/final: 1.75e+00, runtime: 1.75e-30, tol=1e-04)"
       },
       {
         "tag": "STABILITY",
         "passed": true,
-        "detail": "NaN/Inf steps: 0/10"
+        "detail": "NaN/Inf steps: 0/100"
       },
       {
         "tag": "BOUND",
@@ -46,7 +1877,7 @@
       {
         "tag": "CFL_SATISFIED",
         "passed": true,
-        "detail": "All 10 steps completed"
+        "detail": "All 100 steps completed"
       }
     ],
     "all_passed": true
@@ -58,27 +1889,54 @@
   },
   "phase_validations": {
     "C_geometry": {
+      "mask_rank": 64,
+      "penalty_rank": 64,
+      "distance_rank": 64,
+      "rank_stats": {
+        "solid_mask_max_rank": 64,
+        "penalization_max_rank": 64,
+        "distance_proxy_max_rank": 64
+      },
       "passed": true
     },
     "E_wall_model": {
+      "eta_permeability": 0.0001,
+      "viscosity": 0.001,
+      "model_type": "WallModel",
       "passed": true
     },
     "F_physics_breadth": {
       "compressible_euler": {
+        "domain": "compressible_euler_1d",
+        "n_registers": 13,
+        "n_instructions": 54,
         "passed": true
       },
       "cht_coupling": {
+        "domain": "cht_1d",
+        "n_registers": 10,
+        "n_instructions": 25,
         "passed": true
       },
       "phase_field": {
+        "domain": "phase_field_2d",
+        "n_registers": 8,
+        "n_instructions": 22,
         "passed": true
       }
     },
     "G_hybrid_field": {
+      "sensor_kind": "GRADIENT_MAGNITUDE",
+      "features_detected": 18,
+      "max_tiles": 16,
       "passed": true
     },
     "G_qoi_adaptivity": {
+      "trend_state": "CONVERGED",
+      "adjustments": {},
+      "n_samples": 100,
       "passed": true
     }
-  }
+  },
+  "field_summary": {}
 }
