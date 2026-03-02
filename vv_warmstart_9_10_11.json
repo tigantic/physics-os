@@ -1,0 +1,73 @@
+{
+  "schema_version": "2.0",
+  "harness": "ontic.platform.vv.harness",
+  "case": "taylor_green",
+  "domain": "navier_stokes_2d",
+  "config": {
+    "n_bits_levels": [
+      9,
+      10,
+      11
+    ],
+    "dt": 0.001,
+    "n_steps": 10,
+    "viscosity": 0.001,
+    "op_variant": "v2_high_order",
+    "grad_variant": "v2_high_order",
+    "lap_variant": "v2_high_order",
+    "poisson_solver": "cg",
+    "poisson_tol": 1e-08,
+    "poisson_max_iters": 500,
+    "truncate_rel": 1e-10,
+    "max_rank_policy": 64
+  },
+  "qoi_names": [
+    "kinetic_energy_decay_error",
+    "poisson_residual_max",
+    "cg_iters",
+    "nan_inf_steps",
+    "total_circulation_abs_error",
+    "omega_L2",
+    "psi_L2"
+  ],
+  "levels": [
+    {
+      "n_bits": 9,
+      "N": 512,
+      "wall_s": 210.56076911399578,
+      "status": "succeeded",
+      "chi_max": 2,
+      "compression": 131072.0,
+      "invariant_error": 8.991710378627244e-32,
+      "qois": {
+        "omega_L2": 0.008670602459049171,
+        "psi_L2": 0.00010982559110043028,
+        "kinetic_energy_decay_error": 9.14704826961329e-05,
+        "total_circulation_abs_error": 3.049318610115481e-20,
+        "poisson_residual_max": 9.913741456935613e-09,
+        "cg_iters": 182.0,
+        "nan_inf_steps": 0.0
+      },
+      "poisson_converged": true,
+      "poisson_fail_reason": ""
+    },
+    {
+      "n_bits": 10,
+      "N": 1024,
+      "wall_s": 336.2393092419952,
+      "status": "failed",
+      "error": "einsum(): subscript d has size 2 for operand 1 which does not broadcast with previously seen size 3",
+      "qois": {}
+    },
+    {
+      "n_bits": 11,
+      "N": 2048,
+      "wall_s": 222.03715631099476,
+      "status": "failed",
+      "error": "einsum(): subscript d has size 2 for operand 1 which does not broadcast with previously seen size 3",
+      "qois": {}
+    }
+  ],
+  "total_wall_s": 769.7771558719978,
+  "generated_utc": "2026-03-02T04:45:13.039876+00:00"
+}

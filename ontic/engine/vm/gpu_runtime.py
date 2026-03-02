@@ -37,6 +37,7 @@ import numpy as np
 
 from .gpu_tensor import GPUQTTTensor
 from .gpu_operators import GPUOperatorCache, gpu_mpo_apply, gpu_poisson_solve
+from .multigrid import QTTMultigridPreconditioner
 from .ir import BCKind, FieldSpec, Instruction, OpCode, Program
 from .qtt_tensor import QTTTensor
 from .telemetry import (
@@ -212,6 +213,7 @@ class GPURuntime:
         self.governor = governor or GPURankGovernor()
         self.op_cache = GPUOperatorCache()
         self._poisson_info_latest: dict[str, Any] = {}
+        self._mg_precond_cache: dict[str, QTTMultigridPreconditioner] = {}
 
     def execute(self, program: Program) -> GPUExecutionResult:
         """Execute a compiled program on GPU and return metrics.
@@ -474,9 +476,9 @@ class GPURuntime:
             regs[instr.dst] = self._apply_bc_gpu(a, kind, bc_p)
 
         elif op == OpCode.LAPLACE_SOLVE:
-            # V-01 RESOLVED: GPU-native CG Poisson solver.
+            # V-01 RESOLVED: GPU-native (P)CG Poisson solver.
             # No CPU fallback. No PCIe round-trip. Adaptive rank.
-            # All operations (matvec, inner, axpy, round) stay on GPU.
+            # With MG preconditioner: κ collapses from O(N²) to O(1).
             rhs = self._get_reg(regs, instr.src[0])
             dim = instr.params.get("dim", None)
             lap_mpo = self.op_cache.get_laplacian(
@@ -484,38 +486,34 @@ class GPURuntime:
             )
             effective_rank = self.governor.get_effective_rank(rhs.n_cores)
 
-            # Poisson solver config: read from IR instruction params,
-            # fall back to defaults if not specified by the compiler.
-            poisson_tol = instr.params.get("poisson_tol", 1e-8)
-            poisson_max_iter = instr.params.get("poisson_max_iter", 80)
+            # Poisson solver config from IR params.
+            poisson_tol = float(instr.params.get("poisson_tol", 1e-8))
+            poisson_max_iter = int(instr.params.get("poisson_max_iter", 800))
+            precond_kind = instr.params.get("poisson_precond", "none")
 
-            # CG arithmetic precision: use tighter cutoff than the
-            # governor default.  CG accumulates truncation errors
-            # proportional to cutoff × √(K·n_cores·κ).  At 1e-12
-            # this gives a precision floor of ~3e-08 at n_bits=10
-            # (κ≈10⁵), which is marginal for tol=1e-08.  This is
-            # the best trade-off: tighter cutoffs (1e-14) cause
-            # over-retention of noise in QTT cores, while looser
-            # ones (1e-10) make CG unreliable above n_bits=9.
-            #
-            # For n_bits≥10 with many timesteps, the accumulated
-            # time-stepping truncation error breaks the eigenfunction
-            # shortcut (CG=1), requiring O(√κ) iterations.  The
-            # correct long-term fix is a QTT-native preconditioner
-            # (multigrid or spectral); the Poisson convergence gate
-            # in the harness will flag affected tiers until then.
+            # CG truncation tuning:
+            # - cutoff 1e-12: tight enough for 1e-8 Poisson tolerance,
+            #   loose enough to avoid over-retaining noise modes.
+            # - rank = max_rank: CG intermediates need full representational
+            #   headroom.  adaptive_rank gives only ~9 at n_bits=10, which
+            #   limits the truncation floor to ~2e-8.
             cg_cutoff = min(self.governor.rel_tol, 1e-12)
-            cg_rank = max(16, min(2 * effective_rank, self.governor.max_rank))
+            cg_rank = self.governor.max_rank
 
-            # NOTE: Warm-start (x0=ψ_prev) is intentionally NOT used.
-            # For eigenfunction RHS (Taylor-Green, standing waves),
-            # cold-start CG converges in 1 iteration because
-            # p₀ = r₀ = rhs is the eigenfunction itself.  Warm-start
-            # produces a smaller initial residual but its non-eigenfunction
-            # structure prevents CG from exploiting the 1-step shortcut,
-            # leading to 200+ stalled iterations.  The conditional
-            # comparison (rs_warm < rs_cold) picks warm by initial size
-            # but cannot predict convergence speed.  Cold-start wins.
+            # ── Build / cache MG preconditioner ─────────────────────
+            precond_fn = None
+            if precond_kind == "mg":
+                mg_key = f"{rhs.bits_per_dim}_{rhs.domain}"
+                if mg_key not in self._mg_precond_cache:
+                    self._mg_precond_cache[mg_key] = (
+                        QTTMultigridPreconditioner(
+                            bits_per_dim=rhs.bits_per_dim,
+                            domain=rhs.domain,
+                            max_rank=cg_rank,
+                            cutoff=cg_cutoff,
+                        )
+                    )
+                precond_fn = self._mg_precond_cache[mg_key]
 
             solve_info: dict[str, Any] = {}
             regs[instr.dst] = gpu_poisson_solve(
@@ -526,6 +524,7 @@ class GPURuntime:
                 tol=poisson_tol,
                 max_iter=poisson_max_iter,
                 info=solve_info,
+                precond=precond_fn,
             )
 
             # Accumulate per-step Poisson diagnostics for QoI extraction

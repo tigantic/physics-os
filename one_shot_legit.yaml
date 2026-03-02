@@ -1,0 +1,36 @@
+# one_shot_legit.yaml
+mode: vv_convergence
+case: taylor_green_vortex_2d
+domain_key: navier_stokes_2d
+
+convergence:
+  axis: n_bits
+  levels: [8, 9, 10]
+
+physics:
+  viscosity: 0.01
+
+time:
+  dt: 3.90625e-05
+  n_steps: 256          # T = 0.01
+
+numerics:
+  grad_mpo: grad_v2_high_order
+  lap_mpo: lap_v2_high_order
+  poisson:
+    solver: cg
+    tol: 1.0e-12
+    max_iters: 2000
+
+qtt:
+  truncate_rel: 1.0e-10
+  max_rank_policy: 64
+
+qoi:
+  - L2_error_u_vs_analytic_T
+  - L2_error_v_vs_analytic_T
+  - kinetic_energy_error_vs_analytic_T
+  - poisson_residual_max
+  - cg_iters
+  - nan_inf_steps
+  - mass_or_circulation_abs_error

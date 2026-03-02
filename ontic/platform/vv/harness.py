@@ -1163,6 +1163,11 @@ def run_convergence_cli() -> None:
         help="Poisson CG maximum iterations",
     )
     parser.add_argument(
+        "--poisson_precond", type=str, default="none",
+        choices=["none", "mg"],
+        help="Poisson preconditioner: none (plain CG) or mg (multigrid V-cycle)",
+    )
+    parser.add_argument(
         "--truncate_rel", type=float, default=1e-10,
         help="rSVD relative truncation tolerance for GPURankGovernor",
     )
@@ -1223,6 +1228,7 @@ def run_convergence_cli() -> None:
     print(f"  poisson_solver: {args.poisson_solver}")
     print(f"  poisson_tol:    {args.poisson_tol:.2e}")
     print(f"  poisson_iters:  {args.poisson_max_iters}")
+    print(f"  poisson_precond:{args.poisson_precond}")
     print(f"  truncate_rel:   {args.truncate_rel:.2e}")
     print(f"  max_rank:       {args.max_rank_policy}")
     print(f"  QoIs:           {qoi_names}")
@@ -1253,6 +1259,7 @@ def run_convergence_cli() -> None:
             op_variant=args.op_variant,
             poisson_tol=args.poisson_tol,
             poisson_max_iters=args.poisson_max_iters,
+            poisson_precond=args.poisson_precond if args.poisson_precond != "none" else None,
         )
         program = compiler.compile()
         n_ir = len(program.instructions)
@@ -1445,6 +1452,7 @@ def run_convergence_cli() -> None:
             "poisson_solver": args.poisson_solver,
             "poisson_tol": args.poisson_tol,
             "poisson_max_iters": args.poisson_max_iters,
+            "poisson_precond": args.poisson_precond,
             "poisson_convergence_criterion": "relative: ||r||/||b|| < tol",
             "truncate_rel": args.truncate_rel,
             "max_rank_policy": args.max_rank_policy,

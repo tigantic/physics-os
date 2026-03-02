@@ -82,6 +82,10 @@ class NavierStokes2DCompiler(BaseCompiler):
     poisson_max_iters : int | None
         Maximum CG iterations for the Poisson solver.
         If None, the runtime default is used.
+    poisson_precond : str | None
+        Preconditioner for the Poisson solver: ``"none"`` (plain CG)
+        or ``"mg"`` (QTT multigrid V-cycle preconditioner).
+        If None, the runtime default (``"none"``) is used.
     """
 
     def __init__(
@@ -98,6 +102,7 @@ class NavierStokes2DCompiler(BaseCompiler):
         op_variant: str = "ns2d_vorticity_v1",
         poisson_tol: float | None = None,
         poisson_max_iters: int | None = None,
+        poisson_precond: str | None = None,
     ) -> None:
         self._n_bits = n_bits
         self._n_steps = n_steps
@@ -110,6 +115,7 @@ class NavierStokes2DCompiler(BaseCompiler):
         self._op_variant = op_variant
         self._poisson_tol = poisson_tol
         self._poisson_max_iters = poisson_max_iters
+        self._poisson_precond = poisson_precond
         N = 2 ** n_bits
         h = 1.0 / N
         if dt is None:
@@ -173,7 +179,8 @@ class NavierStokes2DCompiler(BaseCompiler):
             negate(11, 0),                         # r11 = -ω
             laplace_solve(1, 11,                   # r1 = ψ (Poisson solve)
                           tol=self._poisson_tol,
-                          max_iter=self._poisson_max_iters),
+                          max_iter=self._poisson_max_iters,
+                          precond=self._poisson_precond),
 
             # Velocity from stream function
             grad(2, 1, dim=1, operator_variant=gv), # r2 = u = ∂ψ/∂y
@@ -280,6 +287,8 @@ class NavierStokes2DCompiler(BaseCompiler):
             metadata["poisson_tol"] = self._poisson_tol
         if self._poisson_max_iters is not None:
             metadata["poisson_max_iters"] = self._poisson_max_iters
+        if self._poisson_precond is not None:
+            metadata["poisson_precond"] = self._poisson_precond
 
         if self._wall_model:
             metadata["wall_model"] = True

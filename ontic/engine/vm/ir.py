@@ -331,6 +331,7 @@ def laplace_solve(
     dim: int | None = None,
     tol: float | None = None,
     max_iter: int | None = None,
+    precond: str | None = None,
 ) -> Instruction:
     """dst = ∇⁻²(rhs), Poisson solve.
 
@@ -340,12 +341,17 @@ def laplace_solve(
         CG convergence tolerance.  If None, the runtime uses its default.
     max_iter : int, optional
         Maximum CG iterations.  If None, the runtime uses its default.
+    precond : str, optional
+        Preconditioner kind: ``"none"`` (default CG) or ``"mg"``
+        (QTT multigrid V-cycle).  If None, the runtime default is used.
     """
     params: dict[str, Any] = {"dim": dim}
     if tol is not None:
         params["poisson_tol"] = tol
     if max_iter is not None:
         params["poisson_max_iter"] = max_iter
+    if precond is not None:
+        params["poisson_precond"] = precond
     return Instruction(OpCode.LAPLACE_SOLVE, dst=dst, src=(rhs,),
                        params=params)
 

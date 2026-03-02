@@ -1,0 +1,97 @@
+{
+  "schema_version": "2.0",
+  "harness": "ontic.platform.vv.harness",
+  "case": "taylor_green",
+  "domain": "navier_stokes_2d",
+  "config": {
+    "n_bits_levels": [
+      9,
+      10,
+      11
+    ],
+    "dt": 0.001,
+    "n_steps": 10,
+    "viscosity": 0.001,
+    "op_variant": "v2_high_order",
+    "grad_variant": "v2_high_order",
+    "lap_variant": "v2_high_order",
+    "poisson_solver": "cg",
+    "poisson_tol": 1e-08,
+    "poisson_max_iters": 500,
+    "truncate_rel": 1e-10,
+    "max_rank_policy": 64
+  },
+  "qoi_names": [
+    "kinetic_energy_decay_error",
+    "poisson_residual_max",
+    "cg_iters",
+    "nan_inf_steps",
+    "total_circulation_abs_error",
+    "omega_L2",
+    "psi_L2"
+  ],
+  "levels": [
+    {
+      "n_bits": 9,
+      "N": 512,
+      "wall_s": 149.26845506500104,
+      "status": "succeeded",
+      "chi_max": 9,
+      "compression": 29127.11111111111,
+      "invariant_error": 2.525210457196173e-16,
+      "qois": {
+        "omega_L2": 0.008670602459050708,
+        "psi_L2": 0.00010982558362879887,
+        "kinetic_energy_decay_error": 9.147276354810889e-05,
+        "total_circulation_abs_error": 2.5944802085469477e-16,
+        "poisson_residual_max": 4.9895294191380345e-06,
+        "cg_iters": 258.0,
+        "nan_inf_steps": 0.0
+      },
+      "poisson_converged": true,
+      "poisson_fail_reason": ""
+    },
+    {
+      "n_bits": 10,
+      "N": 1024,
+      "wall_s": 652.3303196359993,
+      "status": "poisson_unconverged",
+      "chi_max": 29,
+      "compression": 36157.793103448275,
+      "invariant_error": 1.3690846863687558e-10,
+      "qois": {
+        "omega_L2": 0.004335321615991255,
+        "psi_L2": 5.489065952960648e-05,
+        "kinetic_energy_decay_error": 0.00010694648883288545,
+        "total_circulation_abs_error": 1.3690847135332004e-10,
+        "poisson_residual_max": 0.0875433078768903,
+        "cg_iters": 500.0,
+        "nan_inf_steps": 0.0
+      },
+      "poisson_converged": false,
+      "poisson_fail_reason": "5/10 steps unconverged, max_cg_iters=500, max_relative_residual=8.56e-05"
+    },
+    {
+      "n_bits": 11,
+      "N": 2048,
+      "wall_s": 928.7339765419965,
+      "status": "poisson_unconverged",
+      "chi_max": 37,
+      "compression": 113359.56756756757,
+      "invariant_error": 8.68417473277882e-07,
+      "qois": {
+        "omega_L2": 0.0023371023820753884,
+        "psi_L2": 2.7560026764383756e-05,
+        "kinetic_energy_decay_error": 7.848727733849476e-05,
+        "total_circulation_abs_error": 8.684174732783375e-07,
+        "poisson_residual_max": 1943.3018483262938,
+        "cg_iters": 500.0,
+        "nan_inf_steps": 0.0
+      },
+      "poisson_converged": false,
+      "poisson_fail_reason": "7/10 steps unconverged, max_cg_iters=500, max_relative_residual=9.49e-01"
+    }
+  ],
+  "total_wall_s": 1731.8548478490047,
+  "generated_utc": "2026-03-02T05:36:02.584270+00:00"
+}
