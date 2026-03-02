@@ -285,6 +285,12 @@ class GPURuntime:
                         self._probe_data["poisson_residual_sq"].append(
                             float(pi.get("residual_norm_sq", 0.0))
                         )
+                        self._probe_data["poisson_relative_residual"].append(
+                            float(pi.get("relative_residual", 0.0))
+                        )
+                        self._probe_data["poisson_converged"].append(
+                            1.0 if pi.get("converged", False) else 0.0
+                        )
                         self._poisson_info_latest = {}
 
                     # Record telemetry — read from GPU tensor shapes (no data xfer)
@@ -483,12 +489,20 @@ class GPURuntime:
             poisson_tol = instr.params.get("poisson_tol", 1e-8)
             poisson_max_iter = instr.params.get("poisson_max_iter", 80)
 
+            # CG arithmetic precision: use tighter cutoff than the
+            # governor default.  CG accumulates O(n_cores × n_iters)
+            # truncation errors; lowering cutoff by 100× reduces this
+            # floor proportionally and prevents rank-growth feedback.
+            # Max rank is also boosted 2× for CG intermediates.
+            cg_cutoff = min(self.governor.rel_tol, 1e-12)
+            cg_rank = min(2 * effective_rank, self.governor.max_rank)
+
             solve_info: dict[str, Any] = {}
             regs[instr.dst] = gpu_poisson_solve(
                 lap_mpo,
                 rhs,
-                max_rank=effective_rank,
-                cutoff=self.governor.rel_tol,
+                max_rank=cg_rank,
+                cutoff=cg_cutoff,
                 tol=poisson_tol,
                 max_iter=poisson_max_iter,
                 info=solve_info,

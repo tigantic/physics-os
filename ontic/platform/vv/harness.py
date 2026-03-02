@@ -1243,15 +1243,49 @@ def run_convergence_cli() -> None:
             val = qois.get(name, float("nan"))
             print(f"   {name:40s} = {val:.6e}")
 
+        # ── Hard gate: Poisson convergence ──────────────────────────
+        # Check per-step convergence flags from the runtime probe data.
+        # The CG solver reports converged=True/False per solve; any
+        # unconverged step contaminates the tier and we flag it.
+        probes = getattr(exec_result, "probes", {})
+        conv_flags = probes.get("poisson_converged", [])
+        rel_resids = probes.get("poisson_relative_residual", [])
+
+        poisson_failed = False
+        poisson_fail_reason = ""
+
+        if conv_flags:
+            n_unconverged = sum(1 for f in conv_flags if f < 0.5)
+            if n_unconverged > 0:
+                cg_max = qois.get("cg_iters", 0.0)
+                rel_max = max(rel_resids) if rel_resids else float("nan")
+                poisson_failed = True
+                poisson_fail_reason = (
+                    f"{n_unconverged}/{len(conv_flags)} steps unconverged, "
+                    f"max_cg_iters={int(cg_max)}, "
+                    f"max_relative_residual={rel_max:.2e}"
+                )
+        else:
+            # No Poisson probe data at all — no CG ran (edge case)
+            pass
+
+        tier_status = "succeeded"
+        if poisson_failed:
+            tier_status = "poisson_unconverged"
+            print(f"   ⚠ POISSON GATE FAIL: {poisson_fail_reason}")
+            print(f"   ⚠ QoIs for this tier are NOT trustworthy for convergence claims.")
+
         all_results.append({
             "n_bits": nb,
             "N": N,
             "wall_s": wall,
-            "status": "succeeded",
+            "status": tier_status,
             "chi_max": chi_max,
             "compression": compression,
             "invariant_error": float(inv_err),
             "qois": qois,
+            "poisson_converged": not poisson_failed,
+            "poisson_fail_reason": poisson_fail_reason,
         })
         print()
 
@@ -1271,20 +1305,39 @@ def run_convergence_cli() -> None:
     print("  " + "─" * (20 + 8 + 6 + 6 + len(hdr_qois) * 22))
 
     for r in all_results:
+        status_tag = ""
+        if r.get("status") == "poisson_unconverged":
+            status_tag = "  ⚠POISSON"
+        elif r.get("status") == "failed":
+            status_tag = "  ✗FAILED"
         row = f"  {r['n_bits']:>6}  {r['N']:>6}  {r['wall_s']:>8.3f}"
         for q in qoi_names:
             val = r["qois"].get(q, float("nan"))
             row += f"  {val:>20.6e}"
+        row += status_tag
         print(row)
 
     # Compute observed convergence orders (log-log slope between successive levels)
-    if len(all_results) >= 2:
+    # ONLY use tiers where Poisson actually converged.
+    converged_results = [
+        r for r in all_results if r.get("poisson_converged", True)
+    ]
+    unconverged_results = [
+        r for r in all_results if not r.get("poisson_converged", True)
+    ]
+    if unconverged_results:
+        print()
+        print("  ⚠ EXCLUDED FROM CONVERGENCE (Poisson unconverged):")
+        for r in unconverged_results:
+            print(f"    n_bits={r['n_bits']}  N={r['N']}  reason: {r.get('poisson_fail_reason', '?')}")
+
+    if len(converged_results) >= 2:
         print()
         print("  Observed convergence orders (log₂ ratio between successive levels):")
         for q in qoi_names:
             vals = [
                 (r["N"], r["qois"].get(q, float("nan")))
-                for r in all_results if r["status"] == "succeeded"
+                for r in converged_results
             ]
             orders = []
             for i in range(1, len(vals)):

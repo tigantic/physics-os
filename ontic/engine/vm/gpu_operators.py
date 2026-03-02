@@ -139,6 +139,7 @@ def gpu_poisson_solve(
     max_iter: int = 80,
     tol: float = 1e-8,
     info: dict[str, Any] | None = None,
+    x0: GPUQTTTensor | None = None,
 ) -> GPUQTTTensor:
     """Solve nabla^2 phi = rhs via CG entirely on GPU in QTT format.
 
@@ -170,6 +171,10 @@ def gpu_poisson_solve(
     info : dict, optional
         If provided, populated with solver diagnostics:
         ``n_iters``, ``converged``, ``residual_norm_sq``.
+    x0 : GPUQTTTensor, optional
+        Warm-start initial guess.  If provided, CG starts from x0
+        instead of zero, computing r₀ = rhs − A·x0.  Critical for
+        multi-timestep solves where the previous solution is close.
 
     Returns
     -------
@@ -180,20 +185,71 @@ def gpu_poisson_solve(
 
     logger = logging.getLogger(__name__)
 
-    # Initial guess: zero
-    x = GPUQTTTensor.zeros(rhs.bits_per_dim, rhs.domain)
+    # ── Initial guess selection ──────────────────────────────────────
+    # If x0 (warm-start) is provided, compare residuals:
+    #   cold  ||r_cold||² = ||rhs||²              (x = 0)
+    #   warm  ||r_warm||² = ||rhs - A·x0||²       (x = x0)
+    # Pick whichever gives the smaller initial residual.
+    #
+    # This is critical because QTT subtraction of nearly-equal tensors
+    # can introduce noise larger than the zero-start residual.  For
+    # separable eigenmodes (e.g. Taylor-Green), CG from zero converges
+    # in 1 iteration; the warm-start noise would only add iterations.
+    # For general flows where ψ changes significantly between steps,
+    # warm-start gives a genuinely smaller residual and wins.
+    r_cold = rhs.clone()
+    rs_cold = r_cold.inner(r_cold)
 
-    # r = rhs - A*x = rhs (since x = 0)
-    r = rhs.clone()
+    use_warm = False
+    if x0 is not None:
+        Ax0 = gpu_mpo_apply(lap_mpo, x0, max_rank=max_rank, cutoff=cutoff)
+        r_warm = rhs.sub(Ax0).truncate(max_rank=max_rank, cutoff=cutoff)
+        rs_warm = r_warm.inner(r_warm)
+        if rs_warm < rs_cold:
+            use_warm = True
+            logger.debug(
+                "GPU Poisson CG: warm-start wins (||r_warm||²=%.2e < ||r_cold||²=%.2e)",
+                float(rs_warm), float(rs_cold),
+            )
+
+    if use_warm:
+        x = x0.clone()
+        r = r_warm
+        rs_old = rs_warm
+    else:
+        x = GPUQTTTensor.zeros(rhs.bits_per_dim, rhs.domain)
+        r = r_cold
+        rs_old = rs_cold
+        if x0 is not None:
+            logger.debug(
+                "GPU Poisson CG: cold-start wins (||r_cold||²=%.2e ≤ ||r_warm||²=%.2e)",
+                float(rs_cold), float(rs_warm),
+            )
+
     p = r.clone()
-    rs_old = r.inner(r)
 
-    if rs_old < tol * tol:
-        logger.debug("GPU Poisson CG: rhs is near-zero, returning zero")
+    # ── Convergence criterion: RELATIVE residual ──────────────────
+    # CG converges when ||r||²/||rhs||² < tol².
+    #
+    # Using ABSOLUTE ||r||² < tol² is grid-size-dependent because
+    # QTT inner products compute Σᵢ rᵢ², which scales as N² × ∫r².
+    # At n_bits=10 (N²=10⁶), the N² factor pushes ||r||² above tol²
+    # even though the per-element accuracy is identical to n_bits=9.
+    # Relative residual eliminates this N²-dependence.
+    rhs_norm_sq = max(float(rs_cold), 1e-30)  # ||rhs||², always available
+    tol_sq = tol * tol * rhs_norm_sq
+
+    if rs_old < tol_sq:
+        logger.debug(
+            "GPU Poisson CG: initial residual already below relative tol "
+            "(||r₀||²=%.2e, tol²·||b||²=%.2e)",
+            float(rs_old), tol_sq,
+        )
         if info is not None:
             info["n_iters"] = 0
             info["converged"] = True
             info["residual_norm_sq"] = float(rs_old)
+            info["relative_residual"] = float(rs_old) / rhs_norm_sq
         return x
 
     converged = False
@@ -225,12 +281,14 @@ def gpu_poisson_solve(
         rs_new = r.inner(r)
         final_rs = float(rs_new)
         final_iters = it + 1
-        if rs_new < tol * tol:
+        if rs_new < tol_sq:
             converged = True
             logger.debug(
-                "GPU Poisson CG converged in %d iters (||r||^2=%.2e)",
+                "GPU Poisson CG converged in %d iters "
+                "(||r||²=%.2e, ||r||/||b||=%.2e)",
                 it + 1,
                 rs_new,
+                (float(rs_new) / rhs_norm_sq) ** 0.5,
             )
             break
 
@@ -245,9 +303,12 @@ def gpu_poisson_solve(
 
     if not converged:
         logger.warning(
-            "GPU Poisson CG did NOT converge in %d iters (||r||^2=%.2e)",
+            "GPU Poisson CG did NOT converge in %d iters "
+            "(||r||²=%.2e, ||r||/||b||=%.2e, tol=%.2e)",
             max_iter,
             rs_old,
+            (float(rs_old) / rhs_norm_sq) ** 0.5,
+            tol,
         )
 
     # Populate solver diagnostics if caller wants them
@@ -255,6 +316,8 @@ def gpu_poisson_solve(
         info["n_iters"] = final_iters
         info["converged"] = converged
         info["residual_norm_sq"] = final_rs
+        info["relative_residual"] = (final_rs / rhs_norm_sq) ** 0.5
+        info["rhs_norm_sq"] = rhs_norm_sq
 
     return x
 

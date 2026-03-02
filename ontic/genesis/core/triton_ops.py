@@ -581,14 +581,9 @@ def qtt_hadamard_native(
         rb_l, _, rb_r = B_k.shape
 
         # Fused Kronecker product over bond dimensions for ALL modes at once.
-        # einsum produces (ra_l, rb_l, n_k, ra_r, rb_r) then reshape to
-        # (ra_l*rb_l, n_k, ra_r*rb_r) — single GPU kernel, no Python loop.
-        C_k = torch.einsum('adb,cde->acbde', A_k.transpose(1, 2), B_k.transpose(1, 2))
-        # C_k: (ra_l, rb_l, ra_r, rb_r, ... wait, let me be precise)
-        # Actually: A_k transposed is (ra_l, ra_r, n_k), B_k transposed is (rb_l, rb_r, n_k)
-        # 'adb,cde->acdbe' with a=ra_l, d=ra_r, b=n_k, c=rb_l, e=rb_r
-        # Nope. Let me use the direct approach:
-        # C[ra_l, rb_l, d, ra_r, rb_r] = A[ra_l, d, ra_r] * B[rb_l, d, rb_r]
+        # C[ra_l, rb_l, n_k, ra_r, rb_r] = A[ra_l, n_k, ra_r] * B[rb_l, n_k, rb_r]
+        # Index 'd' = physical dimension (shared), 'c'/'e' = bond dims (independent).
+        # Single GPU kernel, no Python loop.
         C_k = torch.einsum('adc,bde->abdce', A_k, B_k)
         C_k = C_k.reshape(ra_l * rb_l, n_k, ra_r * rb_r)
 
