@@ -84,7 +84,8 @@
               "CONVERGENCE",
               "REPRODUCIBILITY",
               "ENERGY_BOUND",
-              "CFL_SATISFIED"
+              "CFL_SATISFIED",
+              "BOUNDEDNESS"
             ]
           }
         },

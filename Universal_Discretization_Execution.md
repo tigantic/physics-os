@@ -7,6 +7,25 @@
 
 ---
 
+## Execution Status
+
+> **All phases (A through G) are COMPLETE.** Committed as `55325f59` (Phases A–G) and `94dd8749` (domain key corrections).
+
+| Phase | Deliverable | Tests | Commit |
+|-------|-------------|------:|--------|
+| **A** | VM Contract Hardening | 22 | `55325f59` |
+| **B** | Operator Fidelity v1 | 31 | `55325f59` |
+| **C** | Geometry Coefficient Compilation | 17 | `55325f59` |
+| **D** | Benchmark Harness + Evidence Pipeline | 55 | `55325f59` |
+| **E** | Wall Strategy v1.5 | 57 | `55325f59` |
+| **F** | UDv2 Physics Breadth | 58 | `55325f59` |
+| **G** | Hybrid Local Corrections + QoI Adaptivity | 65 | `55325f59` |
+| | **Total** | **305** | |
+
+**Output:** 34 files changed, 13,106 insertions, 122 deletions. 7 test files, all passing.
+
+---
+
 ## 1) What the Platform Spec Forces, Architecturally
 
 ### 1.1 Two Worlds: Internal Truth vs External Contract
@@ -61,6 +80,24 @@ This is especially important once hybrid local corrections and QoI-driven adapti
 The Platform Spec already defines the VM architecture and its module boundaries ([§5.1 VM Architecture](PLATFORM_SPECIFICATION.md#51-vm-architecture)): IR, compilers, runtime, GPU runtime, QTT tensor, operators, GPU operators, rank governor, telemetry, benchmark, postprocessing.
 
 That means the "UG program" **is not a new repo** — it is a set of focused evolutions inside these existing seams.
+
+### 2.0 Existing Solver Inventory (Context)
+
+The VM compilers in `ontic/vm/compilers/` emit QTT IR programs that express physics as bytecode. They draw algorithmic foundations from the **existing full-scale solver library** already in the codebase — this is not greenfield work:
+
+| Module | Files | LOC | Solvers Present |
+|--------|------:|----:|-----------------|
+| `ontic/cfd/` | 115 | ~78K | Euler 1D/2D/3D/ND, NS 2D/3D (QTT-native, real-time, turbo), Vlasov 5D, WENO/DG/SEM, turbulence (RANS, LES, DNS), combustion DNS, reactive NS, LBM, SPH, DSMC |
+| `ontic/em/` | 24 | ~15K | 3D Maxwell, Helmholtz (CPU + GPU), topology optimization, S-parameters, PML boundaries |
+| `ontic/engine/` | 93 | ~36K | QTT Physics VM, GPU kernels, HAL (7 HW backends), distributed TN |
+| `ontic/quantum/` | 99 | ~22K | Condensed matter, electronic structure, QFT, stat mech |
+| `ontic/materials/` | 42 | ~10K | Mechanics, fracture, IGA, MPM, peridynamics, XFEM |
+| `ontic/plasma_nuclear/` | 36 | ~8.8K | MHD, gyrokinetics, fusion, nuclear |
+| `ontic/fluids/` | 38 | ~8.9K | Multiphase, FSI, heat transfer, porous media, phase-field |
+
+**Key point:** Solvers like `ns3d_qtt_native.py`, `euler_3d.py`, `fast_euler_3d.py`, and `qtt_helmholtz_gpu.py` already exist as production QTT-native implementations. The VM compiler layer provides the *bytecode abstraction* — compiling physics into IR programs that the VM runtime executes — not reimplementing the solvers from scratch. See [`INVENTORY.md`](INVENTORY.md) for the complete catalog.
+
+Additionally, `experiments/benchmarks/benchmarks/gpu_qtt_maxwell_3d.py` (343 lines) demonstrates O(log N) QTT compression on 3D Helmholtz from 128³ → 4096³ — rank *decreasing* at higher scales (48 → 16), with full GPU attestation artifacts. This is the proven operational pattern the VM compilers formalize.
 
 ### 2.1 Canonical Placement (No Conceptual Conflicts)
 
@@ -183,7 +220,7 @@ Structured as phases with deliverables and "Definition of Done" gates. No timeli
 
 **Claim-witness predicates** wired to certificates:
 - Registered tags: `CONSERVATION`, `STABILITY`, `BOUND` (already in the certificate model — [§10](PLATFORM_SPECIFICATION.md#10-trustless-physics-certificates--tenet-tphy)).
-- Future reserved: `CONVERGENCE`, `REPRODUCIBILITY`, `ENERGY_BOUND`, `CFL_SATISFIED` (the spec explicitly anticipates reserved tags — [`CLAIM_REGISTRY.md`](docs/governance/CLAIM_REGISTRY.md)).
+- Promoted tags (now implemented in `evidence.py`): `CONVERGENCE`, `REPRODUCIBILITY`, `ENERGY_BOUND`, `CFL_SATISFIED`, `BOUNDEDNESS` — see [`CLAIM_REGISTRY.md`](docs/governance/CLAIM_REGISTRY.md) for definitions.
 
 #### Definition of Done
 
@@ -449,7 +486,7 @@ benchmarks:
 
   - id: "C120_SHU_OSHER_1D"
     category: "cfd"
-    domain_key: "burgers"
+    domain_key: "compressible_euler_1d"
     dimensions: 1
     benchmark_name: "Shu-Osher"
     reference: "Shock-turbulence interaction"
@@ -518,7 +555,7 @@ benchmarks:
 
   - id: "C230_DOUBLE_MACH_REFLECTION_2D"
     category: "cfd"
-    domain_key: "burgers"
+    domain_key: "compressible_euler_2d"
     dimensions: 2
     benchmark_name: "Double Mach reflection"
     reference: "Woodward-Colella reference"
@@ -701,7 +738,16 @@ This is a **public-facing** (sanitized) scorecard shape that can sit inside the 
           "type": "array",
           "items": {
             "type": "string",
-            "enum": ["CONSERVATION", "STABILITY", "BOUND"]
+            "enum": [
+              "CONSERVATION",
+              "STABILITY",
+              "BOUND",
+              "CONVERGENCE",
+              "REPRODUCIBILITY",
+              "ENERGY_BOUND",
+              "CFL_SATISFIED",
+              "BOUNDEDNESS"
+            ]
           }
         },
         "checks": {
@@ -808,11 +854,11 @@ This schema is intentionally **silent** on TT/QTT-specific internals to satisfy 
 
 ### 5.3 Phase-to-Repo Change Map
 
-This map assumes the `/v1/` endpoint set and schemas remain **frozen** (9 frozen endpoints/schemas, additive-only within `/v1/` — [§20.1](PLATFORM_SPECIFICATION.md#201-api-surface-contract)), and that all UD evolution happens inside the VM/compilers/V&V/evidence plumbing.
+This map records where each UD phase landed in the repo. All `/v1/` endpoints and schemas remained **frozen** (9 frozen endpoints/schemas, additive-only within `/v1/` — [§20.1](PLATFORM_SPECIFICATION.md#201-api-surface-contract)), and all UD evolution is contained inside the VM/compilers/V&V/evidence plumbing.
 
-#### A. VM Contract Hardening (Product-Kernel Maturity)
+#### A. VM Contract Hardening (Product-Kernel Maturity) — COMPLETED
 
-**Primary files** (must exist per VM architecture — [§5.1](PLATFORM_SPECIFICATION.md#51-vm-architecture)):
+**Primary files** (per VM architecture — [§5.1](PLATFORM_SPECIFICATION.md#51-vm-architecture)):
 
 | File | Role | Spec Reference |
 |------|------|----------------|
@@ -821,18 +867,16 @@ This map assumes the `/v1/` endpoint set and schemas remain **frozen** (9 frozen
 | `ontic/vm/qtt_tensor.py` | Core TT/QTT structure | [§5.1](PLATFORM_SPECIFICATION.md#51-vm-architecture): "QTT Tensor" |
 | `ontic/vm/telemetry.py` | Execution metrics | [§5.1](PLATFORM_SPECIFICATION.md#51-vm-architecture): "Telemetry" |
 
-**Edits:**
-- Add a "sanitizer boundary class" in telemetry: `PublicMetrics` vs `PrivateMetrics`.
-- Record determinism tier in run manifests, matching the 3-tier definition ([§20.2](PLATFORM_SPECIFICATION.md#202-determinism-contract)).
-- Enforce "never dense" as an invariant in the VM execution pipeline (the spec makes this a platform guarantee — [§1](PLATFORM_SPECIFICATION.md#1-executive-summary), [§5.3](PLATFORM_SPECIFICATION.md#53-rank-governor)).
-
-**Security enforcement:**
-- `physics_os/core/sanitizer.py` is the boundary enforcer ([§20.4](PLATFORM_SPECIFICATION.md#204-ip-boundary--forbidden-outputs)).
-- Add/extend tests in `test_log_security.py` (mentioned as part of enforcement in the spec) to ensure `ScorecardPublicV1` cannot carry forbidden fields.
+**Delivered:**
+- `PublicMetrics` / `PrivateMetrics` sanitizer boundary class in telemetry.
+- `DeterminismTier` enum in run manifests, matching the 3-tier definition ([§20.2](PLATFORM_SPECIFICATION.md#202-determinism-contract)).
+- `to_dense()` execution fence enforcing "never dense" as a runtime invariant ([§1](PLATFORM_SPECIFICATION.md#1-executive-summary), [§5.3](PLATFORM_SPECIFICATION.md#53-rank-governor)).
+- `FORBIDDEN_FIELDS` enforcement in `physics_os/core/sanitizer.py` ([§20.4](PLATFORM_SPECIFICATION.md#204-ip-boundary--forbidden-outputs)).
+- 22 tests in `test_sanitizer_compliance.py`.
 
 ---
 
-#### B. Operator Fidelity v1 (MPO Quality Becomes "Mesh Quality")
+#### B. Operator Fidelity v1 (MPO Quality Becomes "Mesh Quality") — COMPLETED
 
 **Primary files:**
 
@@ -841,14 +885,16 @@ This map assumes the `/v1/` endpoint set and schemas remain **frozen** (9 frozen
 | `ontic/vm/operators.py` | QTT-format differential operators | [§5.1](PLATFORM_SPECIFICATION.md#51-vm-architecture): "Operators" |
 | `ontic/vm/gpu_operators.py` | GPU-accelerated operator kernels | [§5.1](PLATFORM_SPECIFICATION.md#51-vm-architecture): "GPU Operators" |
 
-**Edits:**
-- Add explicit operator family/version IDs (for convergence "p refinement").
-- Add "variable coefficient operator composition" primitives (still within operator module boundaries).
-- Make Poisson solver behavior and tolerances reportable (public: iteration count, residual norms; private: rank telemetry).
+**Delivered:**
+- `OperatorFamily` / `OperatorVariant` enums for convergence "p refinement."
+- 4th-order gradient and Laplacian MPO variants (`grad_v2`, `lap_v2`).
+- Variable-coefficient elliptic operator composition (`variable_coeff_elliptic_apply`).
+- MMS verification suite with observed order checks.
+- 31 tests in `test_operator_fidelity.py`.
 
 ---
 
-#### C. Geometry as Coefficient Compilation (CAD-Optional Universality)
+#### C. Geometry as Coefficient Compilation (CAD-Optional Universality) — COMPLETED
 
 **Primary files:**
 
@@ -856,17 +902,19 @@ This map assumes the `/v1/` endpoint set and schemas remain **frozen** (9 frozen
 |------|------|----------------|
 | `ontic/vm/compilers/` | Domain compilers that translate params into IR | [§5.2](PLATFORM_SPECIFICATION.md#52-domain-compilers) |
 
-**Add:**
-- `ontic/vm/compilers/geometry_coeffs.py` — new compiler helper module producing:
-  - Mask fields (fluid/solid)
-  - Material coefficient fields
-  - Penalty fields
+**Delivered:**
+- `ontic/vm/compilers/geometry_coeffs.py` — compiler helper module producing:
+  - Mask fields (fluid/solid indicator)
+  - Material coefficient fields (spatially varying)
+  - Penalty fields (Brinkman penalization strength)
+  - Distance fields (signed distance for wall models)
+- 17 tests in `test_geometry_coeffs.py`.
 
 **Why this fits the spec:** It extends compilers (allowed and expected — [§5.2](PLATFORM_SPECIFICATION.md#52-domain-compilers)) rather than adding a "mesh system." The VM contract already frames operations as QTT create/apply/round/measure/step, not mesh assembly ([§5.1](PLATFORM_SPECIFICATION.md#51-vm-architecture)).
 
 ---
 
-#### D. Benchmark Harness + Evidence Pipeline v1
+#### D. Benchmark Harness + Evidence Pipeline v1 — COMPLETED
 
 **Primary files:**
 
@@ -880,45 +928,56 @@ This map assumes the `/v1/` endpoint set and schemas remain **frozen** (9 frozen
 | `ontic/platform/vv/performance.py` | Timing, memory, scaling analysis | [§13.3](PLATFORM_SPECIFICATION.md#133-vv-framework) |
 | `ontic/vm/benchmark.py` | Rank Atlas profiling | [§5.1](PLATFORM_SPECIFICATION.md#51-vm-architecture): "Benchmark" |
 
-**Add:**
-- `ontic/platform/vv/registry.yaml` — the benchmark registry (§5.1 of this document).
-- `ontic/platform/vv/harness.py` that:
-  - Runs benchmark specs.
-  - Computes QoIs.
-  - Emits both private and public proof packs.
+**Delivered:**
+- `ontic/platform/vv/registry.yaml` — 12+ benchmark entries (V010–V040, C110–C260).
+- `ontic/platform/vv/harness.py` (~850 lines) — runs benchmark specs, computes QoIs, evaluates gates, emits both private and public proof packs.
+- `contracts/v1/schemas/scorecard_public_v1.schema.json` — public scorecard JSON Schema.
+- 5 promoted claim tags in `physics_os/core/evidence.py`: CONVERGENCE, REPRODUCIBILITY, ENERGY_BOUND, CFL_SATISFIED, BOUNDEDNESS.
+- 55 tests in `test_vv_harness.py`.
 
-**Keep API frozen:** The bench harness runs as internal tooling or background tasks — not as new endpoints. Consistent with API surface freeze ([§20.1](PLATFORM_SPECIFICATION.md#201-api-surface-contract)).
+**API remained frozen:** The bench harness runs as internal tooling — not as new endpoints. Consistent with API surface freeze ([§20.1](PLATFORM_SPECIFICATION.md#201-api-surface-contract)).
 
 ---
 
-#### E. Wall Strategy v1.5
+#### E. Wall Strategy v1.5 — COMPLETED
 
 **Primary files:**
 
 | File | Role | Spec Reference |
 |------|------|----------------|
-| `ontic/vm/compilers/navier_stokes_2d.py` | NS2D compiler (and future RANS/LES) | [§5.2](PLATFORM_SPECIFICATION.md#52-domain-compilers) |
+| `ontic/vm/compilers/navier_stokes_2d.py` | NS2D compiler with Brinkman penalization | [§5.2](PLATFORM_SPECIFICATION.md#52-domain-compilers) |
 | `ontic/vm/operators.py` | Near-wall operator support | [§5.1](PLATFORM_SPECIFICATION.md#51-vm-architecture) |
 | `ontic/platform/vv/benchmarks.py` | Channel/cavity-type validations | [§13.3](PLATFORM_SPECIFICATION.md#133-vv-framework) |
 
-**Add:**
-- `ontic/vm/models/wall_model.py` — domain-agnostic wall model invoked by compilers. Kept out of public outputs per IP boundary ([§20.4](PLATFORM_SPECIFICATION.md#204-ip-boundary--forbidden-outputs)).
+**Delivered:**
+- `ontic/vm/models/wall_model.py` (~607 lines) — domain-agnostic wall model: `WallModelConfig`, `WallFields`, `WallModel` with penalization, diagnostics, and IR generation.
+- `ontic/platform/vv/wall_benchmarks.py` (~603 lines) — Ghia cavity tables (Re=100/400/1000), Schäfer & Turek cylinder reference, 5 benchmarks (W010–W050).
+- Extended `navier_stokes_2d.py` with Brinkman penalization support, `wall_model` parameter, `bc_kind` selection.
+- Wall-model internals kept out of public outputs per IP boundary ([§20.4](PLATFORM_SPECIFICATION.md#204-ip-boundary--forbidden-outputs)).
+- 57 tests in `test_wall_model.py`.
 
 ---
 
-#### F. UDv2 Physics Breadth (Compressible + CHT + Multiphase Lane)
+#### F. UDv2 Physics Breadth (Compressible + CHT + Multiphase Lane) — COMPLETED
 
 **Primary files:**
 
 | Action | Location | Spec Reference |
 |--------|----------|----------------|
-| Add new compilers | `ontic/vm/compilers/` | [§5.2](PLATFORM_SPECIFICATION.md#52-domain-compilers): designated compiler location |
-| Extend operators | `ontic/vm/operators.py`, `ontic/vm/gpu_operators.py` | [§5.1](PLATFORM_SPECIFICATION.md#51-vm-architecture) |
-| Extend V&V suite | `ontic/platform/vv/` | [§13.3](PLATFORM_SPECIFICATION.md#133-vv-framework): same module set |
+| New compilers | `ontic/vm/compilers/` | [§5.2](PLATFORM_SPECIFICATION.md#52-domain-compilers): designated compiler location |
+| Extended operators | `ontic/vm/operators.py`, `ontic/vm/gpu_operators.py` | [§5.1](PLATFORM_SPECIFICATION.md#51-vm-architecture) |
+| Extended V&V suite | `ontic/platform/vv/` | [§13.3](PLATFORM_SPECIFICATION.md#133-vv-framework): same module set |
+
+**Delivered:**
+- `ontic/vm/compilers/compressible_euler.py` (~490 lines) — `CompressibleEuler1DCompiler` with exact Riemann solver (Newton-Raphson), 3 IC types (Sod, Shu-Osher, smooth-sine), boundedness predicates (ρ > 0, p > 0), conservation balance tracking.
+- `ontic/vm/compilers/cht_coupling.py` (~480 lines) — `CHTCompiler1D` with variable-coefficient heat equation (ρCp ∂T/∂t = ∇·(k∇T) + Q), tanh interface blending, thermal energy and interface flux diagnostics.
+- `ontic/vm/compilers/phase_field.py` (~470 lines) — `PhaseField2DCompiler` implementing Cahn-Hilliard 2D with Ginzburg-Landau free energy, circle-droplet and Rayleigh-Taylor ICs, interface energy and phase fraction tracking.
+- `BOUNDEDNESS` evidence claim tag added to `physics_os/core/evidence.py`.
+- 58 tests in `test_physics_breadth.py`.
 
 ---
 
-#### G. Hybrid Local Corrections + QoI-Driven Adaptivity
+#### G. Hybrid Local Corrections + QoI-Driven Adaptivity — COMPLETED
 
 **Primary files:**
 
@@ -928,7 +987,12 @@ This map assumes the `/v1/` endpoint set and schemas remain **frozen** (9 frozen
 | `ontic/vm/runtime.py`, `ontic/vm/gpu_runtime.py` | Apply policies consistently | [§5.1](PLATFORM_SPECIFICATION.md#51-vm-architecture), [§5.4](PLATFORM_SPECIFICATION.md#54-gpu-runtime) |
 | `ontic/platform/vv/convergence.py` | Validate adaptivity against QoI targets | [§13.3](PLATFORM_SPECIFICATION.md#133-vv-framework) |
 
-**Key constraint:** Any adaptivity policy must be classified under the determinism tiers and must preserve the contract semantics (bitwise, reproducible ε ≤ 10⁻¹², physically equivalent) ([§20.2](PLATFORM_SPECIFICATION.md#202-determinism-contract)).
+**Delivered:**
+- `ontic/vm/hybrid_field.py` (~550 lines) — `HybridField` (q = q_TT + q_local), `LocalTile` (dense correction with cosine-taper blending), `FeatureSensor` (gradient magnitude, jump indicator, curvature, phase gradient), `TileActivationPolicy` (budget enforcement, pruning), `HybridRoundPolicy` (aggressive backbone compression when tiles active).
+- `ontic/vm/qoi_adaptivity.py` (~450 lines) — `QoITarget` (frozen dataclass), `ConvergenceTrend` (CONVERGING/CONVERGED/STAGNATING/DIVERGING/INSUFFICIENT_DATA), `QoIHistory` (multi-QoI tracking), `AdaptiveRankPolicy` (per-field rank/tolerance tuning: INCREASE/DECREASE/HOLD based on QoI convergence, respects ceiling/floor).
+- 65 tests in `test_hybrid_adaptivity.py`.
+
+**Determinism constraint met:** All adaptivity policies are deterministic given seed/config, classified under determinism tiering ([§20.2](PLATFORM_SPECIFICATION.md#202-determinism-contract)).
 
 ---
 
