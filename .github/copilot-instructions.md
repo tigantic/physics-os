@@ -1,3 +1,27 @@
+## Codebase Reference — Read Before You Claim
+
+This is a **1.84M LOC, 10,364-file** physics operating system.
+Before asserting that a solver, module, or capability "doesn't exist"
+or "needs to be built," **consult these canonical references first**:
+
+| Document | Path | What It Covers |
+|----------|------|----------------|
+| **Inventory** | [`INVENTORY.md`](../../INVENTORY.md) | Every module, file count, LOC — 16 physics modules, 20 grand projects, 15 Rust crates |
+| **Toolbox** | [`docs/research/TOOLBOX.md`](../../docs/research/TOOLBOX.md) | Full component catalog — 97 modules, 100 applications, 24K+ files |
+| **Platform Spec** | [`PLATFORM_SPECIFICATION.md`](../../PLATFORM_SPECIFICATION.md) | Architecture, API surface, domain compilers, V&V contracts |
+
+Key areas you MUST be aware of:
+- **`ontic/cfd/`** — 115 files, ~78K LOC: Euler 1D/2D/3D/ND, NS 2D/3D (QTT-native, real-time, turbo), Vlasov 5D, WENO/DG/SEM, turbulence, combustion DNS, reactive NS, LBM, SPH, DSMC
+- **`ontic/em/`** — 24 files, ~15K LOC: 3D Maxwell, Helmholtz (CPU+GPU), topology opt, S-parameters
+- **`ontic/engine/`** — 93 files, ~36K LOC: QTT Physics VM, GPU kernels, HAL (7 HW backends), distributed TN
+- **`ontic/quantum/`** — 99 files, ~22K LOC: condensed matter, electronic structure, QFT, stat mech
+- **`ontic/materials/`** — 42 files, ~10K LOC: mechanics, fracture, IGA, MPM, peridynamics, XFEM
+- **`ontic/plasma_nuclear/`** — 36 files, ~8.8K LOC: MHD, gyrokinetics, fusion, nuclear
+- **`ontic/fluids/`** — 38 files, ~8.9K LOC: multiphase, FSI, heat transfer, porous media, phase-field
+
+Do NOT use placeholder domain keys or write "when X compiler lands"
+without first verifying it doesn't already exist in the inventory.
+
 ## Code Quality
 
 Code to production grade:
