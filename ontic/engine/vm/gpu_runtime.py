@@ -211,6 +211,7 @@ class GPURuntime:
             )
         self.governor = governor or GPURankGovernor()
         self.op_cache = GPUOperatorCache()
+        self._poisson_info_latest: dict[str, Any] = {}
 
     def execute(self, program: Program) -> GPUExecutionResult:
         """Execute a compiled program on GPU and return metrics.
@@ -274,6 +275,17 @@ class GPURuntime:
                         self._dispatch(instr, registers, fields, program, step=step)
 
                     trunc_after = self.governor.n_truncations
+
+                    # Record Poisson solver diagnostics into probe data
+                    if self._poisson_info_latest:
+                        pi = self._poisson_info_latest
+                        self._probe_data["poisson_cg_iters"].append(
+                            float(pi.get("n_iters", 0))
+                        )
+                        self._probe_data["poisson_residual_sq"].append(
+                            float(pi.get("residual_norm_sq", 0.0))
+                        )
+                        self._poisson_info_latest = {}
 
                     # Record telemetry — read from GPU tensor shapes (no data xfer)
                     for name, gpu_tensor in fields.items():
@@ -465,12 +477,25 @@ class GPURuntime:
                 rhs.bits_per_dim, rhs.domain, dim=dim
             )
             effective_rank = self.governor.get_effective_rank(rhs.n_cores)
+
+            # Poisson solver config: read from IR instruction params,
+            # fall back to defaults if not specified by the compiler.
+            poisson_tol = instr.params.get("poisson_tol", 1e-8)
+            poisson_max_iter = instr.params.get("poisson_max_iter", 80)
+
+            solve_info: dict[str, Any] = {}
             regs[instr.dst] = gpu_poisson_solve(
                 lap_mpo,
                 rhs,
                 max_rank=effective_rank,
                 cutoff=self.governor.rel_tol,
+                tol=poisson_tol,
+                max_iter=poisson_max_iter,
+                info=solve_info,
             )
+
+            # Accumulate per-step Poisson diagnostics for QoI extraction
+            self._poisson_info_latest = solve_info
 
         elif op == OpCode.INTEGRATE:
             a = self._get_reg(regs, instr.src[0])

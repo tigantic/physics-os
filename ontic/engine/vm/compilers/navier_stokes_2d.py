@@ -67,6 +67,21 @@ class NavierStokes2DCompiler(BaseCompiler):
         Smaller → stronger no-slip enforcement.
     bc_kind : BCKind
         Boundary condition type.  Default: PERIODIC.
+    grad_variant : str
+        MPO variant for gradient operators.
+        ``"grad_v1"`` (2nd order) or ``"grad_v2_high_order"`` (4th order).
+    lap_variant : str
+        MPO variant for Laplacian operators.
+        ``"lap_v1"`` (2nd order) or ``"lap_v2_high_order"`` (4th order).
+    op_variant : str
+        Algorithmic variant tag for the NS2D formulation.
+        Stored in program metadata.
+    poisson_tol : float | None
+        CG convergence tolerance for the Poisson solver.
+        If None, the runtime default is used.
+    poisson_max_iters : int | None
+        Maximum CG iterations for the Poisson solver.
+        If None, the runtime default is used.
     """
 
     def __init__(
@@ -78,6 +93,11 @@ class NavierStokes2DCompiler(BaseCompiler):
         wall_model: bool = False,
         eta_permeability: float = 1e-4,
         bc_kind: BCKind = BCKind.PERIODIC,
+        grad_variant: str = "grad_v1",
+        lap_variant: str = "lap_v1",
+        op_variant: str = "ns2d_vorticity_v1",
+        poisson_tol: float | None = None,
+        poisson_max_iters: int | None = None,
     ) -> None:
         self._n_bits = n_bits
         self._n_steps = n_steps
@@ -85,6 +105,11 @@ class NavierStokes2DCompiler(BaseCompiler):
         self._wall_model = wall_model
         self._eta_permeability = eta_permeability
         self._bc_kind = bc_kind
+        self._grad_variant = grad_variant
+        self._lap_variant = lap_variant
+        self._op_variant = op_variant
+        self._poisson_tol = poisson_tol
+        self._poisson_max_iters = poisson_max_iters
         N = 2 ** n_bits
         h = 1.0 / N
         if dt is None:
@@ -106,6 +131,8 @@ class NavierStokes2DCompiler(BaseCompiler):
         nb = self._n_bits
         bits = (nb, nb)
         dom = ((0.0, 1.0), (0.0, 1.0))
+        gv = self._grad_variant
+        lv = self._lap_variant
 
         def init_omega(x: NDArray, y: NDArray) -> NDArray:
             """Taylor–Green-like initial vortex."""
@@ -144,16 +171,18 @@ class NavierStokes2DCompiler(BaseCompiler):
 
             # Solve Poisson: ∇²ψ = -ω  → ψ = Lap⁻¹(-ω)
             negate(11, 0),                         # r11 = -ω
-            laplace_solve(1, 11),                  # r1 = ψ (Poisson solve)
+            laplace_solve(1, 11,                   # r1 = ψ (Poisson solve)
+                          tol=self._poisson_tol,
+                          max_iter=self._poisson_max_iters),
 
             # Velocity from stream function
-            grad(2, 1, dim=1),                     # r2 = u = ∂ψ/∂y
-            grad(3, 1, dim=0),                     # r3 = ∂ψ/∂x
-            negate(3, 3),                          # r3 = v = -∂ψ/∂x
+            grad(2, 1, dim=1, operator_variant=gv), # r2 = u = ∂ψ/∂y
+            grad(3, 1, dim=0, operator_variant=gv), # r3 = ∂ψ/∂x
+            negate(3, 3),                           # r3 = v = -∂ψ/∂x
 
             # Vorticity gradient
-            grad(4, 0, dim=0),                     # r4 = ∂ω/∂x
-            grad(5, 0, dim=1),                     # r5 = ∂ω/∂y
+            grad(4, 0, dim=0, operator_variant=gv), # r4 = ∂ω/∂x
+            grad(5, 0, dim=1, operator_variant=gv), # r5 = ∂ω/∂y
 
             # Advection: u·∂ω/∂x + v·∂ω/∂y
             hadamard(6, 2, 4),                     # r6 = u·∂ω/∂x
@@ -162,7 +191,7 @@ class NavierStokes2DCompiler(BaseCompiler):
             negate(8, 8),                          # r8 = -(advection)
 
             # Diffusion: ν∇²ω
-            laplace(9, 0),                         # r9 = ∇²ω
+            laplace(9, 0, operator_variant=lv),    # r9 = ∇²ω
             scale(9, 9, nu),                       # r9 = ν∇²ω
 
             # RHS and time update
@@ -242,7 +271,15 @@ class NavierStokes2DCompiler(BaseCompiler):
             "invariant_fn": invariant_fn,
             "invariant": "total_circulation",
             "equations": "∂ω/∂t + (u·∇)ω = ν∇²ω, ∇²ψ = −ω",
+            "op_variant": self._op_variant,
+            "grad_variant": self._grad_variant,
+            "lap_variant": self._lap_variant,
         }
+
+        if self._poisson_tol is not None:
+            metadata["poisson_tol"] = self._poisson_tol
+        if self._poisson_max_iters is not None:
+            metadata["poisson_max_iters"] = self._poisson_max_iters
 
         if self._wall_model:
             metadata["wall_model"] = True

@@ -850,3 +850,501 @@ def make_qtt_qoi_extractor(
         return qois
 
     return extract
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# CLI Convergence Study Runner
+# ═══════════════════════════════════════════════════════════════════════════════
+
+
+def _taylor_green_analytic_omega(
+    x: np.ndarray, y: np.ndarray, t: float, nu: float,
+) -> np.ndarray:
+    """Analytic vorticity for 2D Taylor–Green vortex on [0,1]².
+
+    ω(x, y, t) = 2 sin(2πx) sin(2πy) exp(-8π²νt)
+    """
+    decay = np.exp(-8.0 * np.pi**2 * nu * t)
+    return 2.0 * np.sin(2.0 * np.pi * x) * np.sin(2.0 * np.pi * y) * decay
+
+
+def _taylor_green_analytic_psi(
+    x: np.ndarray, y: np.ndarray, t: float, nu: float,
+) -> np.ndarray:
+    """Analytic stream function for 2D Taylor–Green vortex on [0,1]².
+
+    ∇²ψ = -ω  with  ω = 2 sin(2πx) sin(2πy)
+    ψ(x, y, t) = [1/(4π²)] sin(2πx) sin(2πy) exp(-8π²νt)
+
+    Eigenvalue:  ∇²[sin(kx)sin(ky)] = -2k² sin(kx)sin(ky),  k=2π
+    So  ψ = ω / (2k²) = 2 sin(...)/(8π²) = sin(...)/(4π²).
+    """
+    decay = np.exp(-8.0 * np.pi**2 * nu * t)
+    return (
+        (1.0 / (4.0 * np.pi**2))
+        * np.sin(2.0 * np.pi * x)
+        * np.sin(2.0 * np.pi * y)
+        * decay
+    )
+
+
+def _taylor_green_kinetic_energy(t: float, nu: float) -> float:
+    """Analytic kinetic energy E(t) = 1/(16π²) exp(-16π²νt).
+
+    Derived from E = (1/2)∫|∇ψ|² dA with the single-mode solution.
+    """
+    return (1.0 / (16.0 * np.pi**2)) * np.exp(-16.0 * np.pi**2 * nu * t)
+
+
+def _compute_qoi_from_result(
+    result: Any,
+    n_bits: int,
+    nu: float,
+    dt: float,
+    n_steps: int,
+    qoi_names: list[str],
+) -> dict[str, float]:
+    """Compute all requested QoIs from a GPUExecutionResult.
+
+    This runs post-execution: ``to_cpu()`` / dense reconstruction
+    are permitted per QTT Law §1 (post-execution reporting only).
+
+    Parameters
+    ----------
+    result : GPUExecutionResult
+        Execution result with GPU-resident fields and probes.
+    n_bits : int
+        Bits per spatial dimension.
+    nu : float
+        Kinematic viscosity.
+    dt : float
+        Time step.
+    n_steps : int
+        Number of time steps executed.
+    qoi_names : list of str
+        Which QoIs to compute.
+
+    Returns
+    -------
+    dict mapping QoI name → value
+    """
+    T = dt * n_steps
+    N = 2 ** n_bits
+    h = 1.0 / N
+    qois: dict[str, float] = {}
+
+    # Build dense grid for analytic comparison (post-execution only)
+    x1d = np.linspace(0.0, 1.0, N, endpoint=False) + 0.5 * h
+    xx, yy = np.meshgrid(x1d, x1d, indexing="ij")
+
+    # Convert GPU fields to CPU QTT, then to dense for comparison
+    cpu_fields: dict[str, Any] = {}
+    for name, gpu_t in result.fields.items():
+        cpu_t = gpu_t.to_cpu()
+        cpu_fields[name] = cpu_t
+
+    # Dense reconstruction (post-execution diagnostic only — QTT Law §5 exception)
+    omega_dense: np.ndarray | None = None
+    psi_dense: np.ndarray | None = None
+
+    need_omega = any(
+        q in qoi_names
+        for q in ("omega_L2", "kinetic_energy_decay_error",
+                  "total_circulation_abs_error")
+    )
+    need_psi = "psi_L2" in qoi_names
+
+    if need_omega and "omega" in cpu_fields:
+        omega_cpu = cpu_fields["omega"]
+        if hasattr(omega_cpu, "to_dense"):
+            omega_dense = omega_cpu.to_dense()
+            if hasattr(omega_dense, "numpy"):
+                omega_dense = omega_dense.numpy()
+            omega_dense = np.asarray(omega_dense, dtype=np.float64)
+
+    if need_psi and "psi" in cpu_fields:
+        psi_cpu = cpu_fields["psi"]
+        if hasattr(psi_cpu, "to_dense"):
+            psi_dense = psi_cpu.to_dense()
+            if hasattr(psi_dense, "numpy"):
+                psi_dense = psi_dense.numpy()
+            psi_dense = np.asarray(psi_dense, dtype=np.float64)
+
+    # ── omega_L2 — L2 error vs analytic ─────────────────────────────
+    if "omega_L2" in qoi_names and omega_dense is not None:
+        omega_exact = _taylor_green_analytic_omega(xx, yy, T, nu)
+        diff = omega_dense.reshape(omega_exact.shape) - omega_exact
+        l2_err = np.sqrt(np.sum(diff**2) * h * h)
+        qois["omega_L2"] = float(l2_err)
+
+    # ── psi_L2 — L2 error vs analytic ───────────────────────────────
+    if "psi_L2" in qoi_names and psi_dense is not None:
+        psi_exact = _taylor_green_analytic_psi(xx, yy, T, nu)
+        diff = psi_dense.reshape(psi_exact.shape) - psi_exact
+        l2_err = np.sqrt(np.sum(diff**2) * h * h)
+        qois["psi_L2"] = float(l2_err)
+
+    # ── kinetic_energy_decay_error ───────────────────────────────────
+    if "kinetic_energy_decay_error" in qoi_names and omega_dense is not None:
+        # Approximate KE from computed ψ if available, else from ω
+        # KE = (1/2) ∫(u² + v²) dA = (1/2) ∫ ω·ψ dA (for periodic BCs)
+        if psi_dense is not None:
+            omega_flat = omega_dense.reshape(N * N)
+            psi_flat = psi_dense.reshape(N * N)
+            ke_computed = 0.5 * np.abs(np.sum(omega_flat * psi_flat) * h * h)
+        else:
+            # Fallback: estimate KE from enstrophy relation approx
+            ke_computed = 0.5 * np.sum(omega_dense**2) * h * h / (8.0 * np.pi**2)
+        ke_exact = _taylor_green_kinetic_energy(T, nu)
+        if ke_exact > 0:
+            qois["kinetic_energy_decay_error"] = float(
+                abs(ke_computed - ke_exact) / ke_exact
+            )
+        else:
+            qois["kinetic_energy_decay_error"] = float(abs(ke_computed))
+
+    # ── total_circulation_abs_error ──────────────────────────────────
+    if "total_circulation_abs_error" in qoi_names and omega_dense is not None:
+        # Analytic: Γ = ∫ω dA = 0 for periodic Taylor–Green on [0,1]²
+        circ = float(np.sum(omega_dense) * h * h)
+        qois["total_circulation_abs_error"] = abs(circ)
+
+    # ── poisson_residual_max ─────────────────────────────────────────
+    if "poisson_residual_max" in qoi_names:
+        probes = getattr(result, "probes", {})
+        res_sq = probes.get("poisson_residual_sq", [])
+        if res_sq:
+            qois["poisson_residual_max"] = float(np.sqrt(max(res_sq)))
+        else:
+            qois["poisson_residual_max"] = float("nan")
+
+    # ── cg_iters ─────────────────────────────────────────────────────
+    if "cg_iters" in qoi_names:
+        probes = getattr(result, "probes", {})
+        cg = probes.get("poisson_cg_iters", [])
+        if cg:
+            qois["cg_iters"] = float(max(cg))
+        else:
+            qois["cg_iters"] = float("nan")
+
+    # ── nan_inf_steps ────────────────────────────────────────────────
+    if "nan_inf_steps" in qoi_names:
+        nan_count = 0
+        for name, gpu_t in result.fields.items():
+            cpu_t = gpu_t.to_cpu()
+            for core in cpu_t.cores:
+                arr = core.numpy() if hasattr(core, "numpy") else np.asarray(core)
+                if not np.all(np.isfinite(arr)):
+                    nan_count += 1
+                    break
+        qois["nan_inf_steps"] = float(nan_count)
+
+    return qois
+
+
+def run_convergence_cli() -> None:
+    """CLI entry point for ``python -m ontic.platform.vv.harness``.
+
+    Runs a multi-resolution convergence study on the QTT GPU VM.
+    Supports Taylor–Green vortex 2D with analytic QoI comparison.
+    """
+    import argparse
+    import sys
+
+    parser = argparse.ArgumentParser(
+        prog="ontic.platform.vv.harness",
+        description="QTT VM V&V Convergence Harness",
+    )
+    parser.add_argument(
+        "--case", type=str, required=True,
+        help="Case identifier (e.g. C210_TAYLOR_GREEN_VORTEX_2D)",
+    )
+    parser.add_argument(
+        "--domain", type=str, required=True,
+        help="Domain key: navier_stokes_2d",
+    )
+    parser.add_argument(
+        "--n_bits", type=str, required=True,
+        help="Comma-separated list of n_bits levels (e.g. 8,9,10)",
+    )
+    parser.add_argument(
+        "--dt", type=float, required=True,
+        help="Time step size",
+    )
+    parser.add_argument(
+        "--n_steps", type=int, required=True,
+        help="Number of time steps",
+    )
+    parser.add_argument(
+        "--viscosity", type=float, default=0.01,
+        help="Kinematic viscosity (default: 0.01)",
+    )
+    parser.add_argument(
+        "--op_variant", type=str, default="ns2d_vorticity_v1",
+        help="NS2D operator variant tag",
+    )
+    parser.add_argument(
+        "--lap_variant", type=str, default="lap_v1",
+        help="Laplacian MPO variant: lap_v1 (2nd) or lap_v2_high_order (4th)",
+    )
+    parser.add_argument(
+        "--grad_variant", type=str, default="grad_v1",
+        help="Gradient MPO variant: grad_v1 (2nd) or grad_v2_high_order (4th)",
+    )
+    parser.add_argument(
+        "--poisson_solver", type=str, default="cg",
+        help="Poisson solver method (default: cg)",
+    )
+    parser.add_argument(
+        "--poisson_tol", type=float, default=1e-8,
+        help="Poisson CG convergence tolerance",
+    )
+    parser.add_argument(
+        "--poisson_max_iters", type=int, default=80,
+        help="Poisson CG maximum iterations",
+    )
+    parser.add_argument(
+        "--truncate_rel", type=float, default=1e-10,
+        help="rSVD relative truncation tolerance for GPURankGovernor",
+    )
+    parser.add_argument(
+        "--max_rank_policy", type=int, default=64,
+        help="Maximum bond dimension for GPURankGovernor",
+    )
+    parser.add_argument(
+        "--qoi", type=str, default="",
+        help="Comma-separated QoI names to evaluate",
+    )
+    parser.add_argument(
+        "--output", type=str, default=None,
+        help="Path to write JSON scorecard (default: stdout summary only)",
+    )
+
+    args = parser.parse_args()
+
+    # Parse n_bits list
+    n_bits_list = [int(b.strip()) for b in args.n_bits.split(",")]
+    qoi_names = [q.strip() for q in args.qoi.split(",") if q.strip()]
+
+    if not qoi_names:
+        qoi_names = [
+            "kinetic_energy_decay_error",
+            "poisson_residual_max",
+            "cg_iters",
+            "nan_inf_steps",
+            "total_circulation_abs_error",
+            "omega_L2",
+            "psi_L2",
+        ]
+
+    # Validate domain
+    if args.domain != "navier_stokes_2d":
+        print(f"ERROR: domain '{args.domain}' not yet supported by CLI harness",
+              file=sys.stderr)
+        sys.exit(1)
+
+    # ── Header ───────────────────────────────────────────────────────
+    print("╔══════════════════════════════════════════════════════════════╗")
+    print("║          QTT VM V&V Convergence Harness                    ║")
+    print("╚══════════════════════════════════════════════════════════════╝")
+    print(f"  Case:           {args.case}")
+    print(f"  Domain:         {args.domain}")
+    print(f"  n_bits:         {n_bits_list}")
+    print(f"  dt:             {args.dt:.6e}")
+    print(f"  n_steps:        {args.n_steps}")
+    print(f"  ν:              {args.viscosity}")
+    print(f"  op_variant:     {args.op_variant}")
+    print(f"  grad_variant:   {args.grad_variant}")
+    print(f"  lap_variant:    {args.lap_variant}")
+    print(f"  poisson_solver: {args.poisson_solver}")
+    print(f"  poisson_tol:    {args.poisson_tol:.2e}")
+    print(f"  poisson_iters:  {args.poisson_max_iters}")
+    print(f"  truncate_rel:   {args.truncate_rel:.2e}")
+    print(f"  max_rank:       {args.max_rank_policy}")
+    print(f"  QoIs:           {qoi_names}")
+    print()
+
+    # ── Imports (lazy to avoid import overhead for --help) ───────────
+    import torch
+
+    from ontic.engine.vm.compilers.navier_stokes_2d import NavierStokes2DCompiler
+    from ontic.engine.vm.gpu_runtime import GPURankGovernor, GPURuntime
+
+    # ── Run across n_bits levels ─────────────────────────────────────
+    all_results: list[dict[str, Any]] = []
+    t_global_start = time.monotonic()
+
+    for nb in n_bits_list:
+        N = 2 ** nb
+        print(f"── n_bits={nb}  (grid {N}×{N} = {N*N:,} DOF) ", "─" * 30)
+
+        # Compile
+        compiler = NavierStokes2DCompiler(
+            n_bits=nb,
+            n_steps=args.n_steps,
+            viscosity=args.viscosity,
+            dt=args.dt,
+            grad_variant=args.grad_variant,
+            lap_variant=args.lap_variant,
+            op_variant=args.op_variant,
+            poisson_tol=args.poisson_tol,
+            poisson_max_iters=args.poisson_max_iters,
+        )
+        program = compiler.compile()
+        n_ir = len(program.instructions)
+        print(f"   Compiled: {n_ir} IR instructions")
+
+        # Runtime
+        governor = GPURankGovernor(
+            max_rank=args.max_rank_policy,
+            rel_tol=args.truncate_rel,
+            adaptive=True,
+            base_rank=args.max_rank_policy,
+        )
+        runtime = GPURuntime(governor=governor)
+
+        # Execute
+        torch.cuda.synchronize()
+        t0 = time.monotonic()
+        exec_result = runtime.execute(program)
+        torch.cuda.synchronize()
+        wall = time.monotonic() - t0
+
+        if not exec_result.success:
+            print(f"   FAILED: {exec_result.error}")
+            all_results.append({
+                "n_bits": nb, "N": N, "wall_s": wall,
+                "status": "failed", "error": exec_result.error,
+                "qois": {},
+            })
+            continue
+
+        # Telemetry summary
+        telem = exec_result.telemetry
+        chi_max = getattr(telem, "chi_max", 0)
+        if chi_max == 0:
+            # Fall back to governor peak if telemetry collector hadn't
+            # updated chi_max (first-timer Triton compile delay edge case)
+            chi_max = governor.peak_rank or 1
+        compression = (N * N) / max(chi_max, 1)
+        inv_err = getattr(telem, "invariant_error", 0.0)
+        print(f"   Wall:        {wall:.3f}s")
+        print(f"   χ_max:       {chi_max}")
+        print(f"   Compression: {compression:.1f}×")
+        print(f"   |ΔΓ/Γ₀|:    {abs(inv_err):.4e}")
+
+        # Compute QoIs
+        qois = _compute_qoi_from_result(
+            exec_result, nb, args.viscosity,
+            args.dt, args.n_steps, qoi_names,
+        )
+
+        for name in qoi_names:
+            val = qois.get(name, float("nan"))
+            print(f"   {name:40s} = {val:.6e}")
+
+        all_results.append({
+            "n_bits": nb,
+            "N": N,
+            "wall_s": wall,
+            "status": "succeeded",
+            "chi_max": chi_max,
+            "compression": compression,
+            "invariant_error": float(inv_err),
+            "qois": qois,
+        })
+        print()
+
+    t_global = time.monotonic() - t_global_start
+
+    # ── Convergence Table ────────────────────────────────────────────
+    print("╔══════════════════════════════════════════════════════════════════════════════╗")
+    print("║                        CONVERGENCE SUMMARY                                 ║")
+    print("╠══════════════════════════════════════════════════════════════════════════════╣")
+
+    # Header row
+    hdr_qois = [q[:20] for q in qoi_names]
+    hdr = f"  {'n_bits':>6}  {'N':>6}  {'wall_s':>8}"
+    for q in hdr_qois:
+        hdr += f"  {q:>20}"
+    print(hdr)
+    print("  " + "─" * (20 + 8 + 6 + 6 + len(hdr_qois) * 22))
+
+    for r in all_results:
+        row = f"  {r['n_bits']:>6}  {r['N']:>6}  {r['wall_s']:>8.3f}"
+        for q in qoi_names:
+            val = r["qois"].get(q, float("nan"))
+            row += f"  {val:>20.6e}"
+        print(row)
+
+    # Compute observed convergence orders (log-log slope between successive levels)
+    if len(all_results) >= 2:
+        print()
+        print("  Observed convergence orders (log₂ ratio between successive levels):")
+        for q in qoi_names:
+            vals = [
+                (r["N"], r["qois"].get(q, float("nan")))
+                for r in all_results if r["status"] == "succeeded"
+            ]
+            orders = []
+            for i in range(1, len(vals)):
+                N_prev, e_prev = vals[i - 1]
+                N_curr, e_curr = vals[i]
+                if (
+                    np.isfinite(e_prev)
+                    and np.isfinite(e_curr)
+                    and e_prev > 0
+                    and e_curr > 0
+                    and N_curr != N_prev
+                ):
+                    h_ratio = N_prev / N_curr  # h = 1/N, so h_prev/h_curr = N_curr/N_prev
+                    order = np.log2(e_prev / e_curr) / np.log2(N_curr / N_prev)
+                    orders.append(order)
+            if orders:
+                avg_order = np.mean(orders)
+                order_str = ", ".join(f"{o:.3f}" for o in orders)
+                print(f"    {q:40s}  orders=[{order_str}]  avg={avg_order:.3f}")
+            else:
+                print(f"    {q:40s}  (insufficient data)")
+
+    print("╚══════════════════════════════════════════════════════════════════════════════╝")
+    print(f"  Total wall time: {t_global:.3f}s")
+    print()
+
+    # ── JSON Scorecard ───────────────────────────────────────────────
+    scorecard: dict[str, Any] = {
+        "schema_version": "2.0",
+        "harness": "ontic.platform.vv.harness",
+        "case": args.case,
+        "domain": args.domain,
+        "config": {
+            "n_bits_levels": n_bits_list,
+            "dt": args.dt,
+            "n_steps": args.n_steps,
+            "viscosity": args.viscosity,
+            "op_variant": args.op_variant,
+            "grad_variant": args.grad_variant,
+            "lap_variant": args.lap_variant,
+            "poisson_solver": args.poisson_solver,
+            "poisson_tol": args.poisson_tol,
+            "poisson_max_iters": args.poisson_max_iters,
+            "truncate_rel": args.truncate_rel,
+            "max_rank_policy": args.max_rank_policy,
+        },
+        "qoi_names": qoi_names,
+        "levels": all_results,
+        "total_wall_s": t_global,
+        "generated_utc": datetime.now(timezone.utc).isoformat(),
+    }
+
+    if args.output:
+        out_path = Path(args.output)
+        out_path.write_text(json.dumps(scorecard, indent=2, default=str))
+        print(f"  Scorecard written to {out_path}")
+    else:
+        # Print JSON to stdout as well
+        print(json.dumps(scorecard, indent=2, default=str))
+
+
+if __name__ == "__main__":
+    run_convergence_cli()

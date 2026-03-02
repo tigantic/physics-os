@@ -138,6 +138,7 @@ def gpu_poisson_solve(
     cutoff: float = 1e-12,
     max_iter: int = 80,
     tol: float = 1e-8,
+    info: dict[str, Any] | None = None,
 ) -> GPUQTTTensor:
     """Solve nabla^2 phi = rhs via CG entirely on GPU in QTT format.
 
@@ -166,6 +167,9 @@ def gpu_poisson_solve(
         Maximum CG iterations.
     tol : float
         Convergence tolerance on ||r||^2.
+    info : dict, optional
+        If provided, populated with solver diagnostics:
+        ``n_iters``, ``converged``, ``residual_norm_sq``.
 
     Returns
     -------
@@ -186,9 +190,15 @@ def gpu_poisson_solve(
 
     if rs_old < tol * tol:
         logger.debug("GPU Poisson CG: rhs is near-zero, returning zero")
+        if info is not None:
+            info["n_iters"] = 0
+            info["converged"] = True
+            info["residual_norm_sq"] = float(rs_old)
         return x
 
     converged = False
+    final_rs = float(rs_old)
+    final_iters = 0
     for it in range(max_iter):
         # Ap = L * p  (GPU MPO apply + rSVD rounding)
         Ap = gpu_mpo_apply(lap_mpo, p, max_rank=max_rank, cutoff=cutoff)
@@ -197,6 +207,7 @@ def gpu_poisson_solve(
         pAp = p.inner(Ap)
         if abs(pAp) < 1e-30:
             logger.debug("GPU Poisson CG: pAp near-zero at iter %d", it)
+            final_iters = it + 1
             break
 
         alpha = rs_old / pAp
@@ -212,6 +223,8 @@ def gpu_poisson_solve(
         )
 
         rs_new = r.inner(r)
+        final_rs = float(rs_new)
+        final_iters = it + 1
         if rs_new < tol * tol:
             converged = True
             logger.debug(
@@ -236,6 +249,12 @@ def gpu_poisson_solve(
             max_iter,
             rs_old,
         )
+
+    # Populate solver diagnostics if caller wants them
+    if info is not None:
+        info["n_iters"] = final_iters
+        info["converged"] = converged
+        info["residual_norm_sq"] = final_rs
 
     return x
 

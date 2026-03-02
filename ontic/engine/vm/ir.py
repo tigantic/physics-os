@@ -325,10 +325,29 @@ def bc_apply(reg: int, kind: BCKind,
     return Instruction(OpCode.BC_APPLY, dst=reg, src=(reg,), params=p)
 
 
-def laplace_solve(dst: int, rhs: int, dim: int | None = None) -> Instruction:
-    """dst = ∇⁻²(rhs), Poisson solve."""
+def laplace_solve(
+    dst: int,
+    rhs: int,
+    dim: int | None = None,
+    tol: float | None = None,
+    max_iter: int | None = None,
+) -> Instruction:
+    """dst = ∇⁻²(rhs), Poisson solve.
+
+    Parameters
+    ----------
+    tol : float, optional
+        CG convergence tolerance.  If None, the runtime uses its default.
+    max_iter : int, optional
+        Maximum CG iterations.  If None, the runtime uses its default.
+    """
+    params: dict[str, Any] = {"dim": dim}
+    if tol is not None:
+        params["poisson_tol"] = tol
+    if max_iter is not None:
+        params["poisson_max_iter"] = max_iter
     return Instruction(OpCode.LAPLACE_SOLVE, dst=dst, src=(rhs,),
-                       params={"dim": dim})
+                       params=params)
 
 
 def integrate(dst: int, src: int, dim: int) -> Instruction:
