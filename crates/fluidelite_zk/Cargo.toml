@@ -160,7 +160,7 @@ rayon = "1.8"
 sysinfo = "0.30"
 aws-sdk-s3 = "1.24.0"
 aws-config = "1.8.11"
-chrono = "0.4.43"
+chrono = "0.4.44"
 
 [dev-dependencies]
 criterion = { version = "0.5", features = ["html_reports"] }
