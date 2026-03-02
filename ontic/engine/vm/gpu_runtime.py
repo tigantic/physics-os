@@ -490,12 +490,32 @@ class GPURuntime:
             poisson_max_iter = instr.params.get("poisson_max_iter", 80)
 
             # CG arithmetic precision: use tighter cutoff than the
-            # governor default.  CG accumulates O(n_cores × n_iters)
-            # truncation errors; lowering cutoff by 100× reduces this
-            # floor proportionally and prevents rank-growth feedback.
-            # Max rank is also boosted 2× for CG intermediates.
+            # governor default.  CG accumulates truncation errors
+            # proportional to cutoff × √(K·n_cores·κ).  At 1e-12
+            # this gives a precision floor of ~3e-08 at n_bits=10
+            # (κ≈10⁵), which is marginal for tol=1e-08.  This is
+            # the best trade-off: tighter cutoffs (1e-14) cause
+            # over-retention of noise in QTT cores, while looser
+            # ones (1e-10) make CG unreliable above n_bits=9.
+            #
+            # For n_bits≥10 with many timesteps, the accumulated
+            # time-stepping truncation error breaks the eigenfunction
+            # shortcut (CG=1), requiring O(√κ) iterations.  The
+            # correct long-term fix is a QTT-native preconditioner
+            # (multigrid or spectral); the Poisson convergence gate
+            # in the harness will flag affected tiers until then.
             cg_cutoff = min(self.governor.rel_tol, 1e-12)
-            cg_rank = min(2 * effective_rank, self.governor.max_rank)
+            cg_rank = max(16, min(2 * effective_rank, self.governor.max_rank))
+
+            # NOTE: Warm-start (x0=ψ_prev) is intentionally NOT used.
+            # For eigenfunction RHS (Taylor-Green, standing waves),
+            # cold-start CG converges in 1 iteration because
+            # p₀ = r₀ = rhs is the eigenfunction itself.  Warm-start
+            # produces a smaller initial residual but its non-eigenfunction
+            # structure prevents CG from exploiting the 1-step shortcut,
+            # leading to 200+ stalled iterations.  The conditional
+            # comparison (rs_warm < rs_cold) picks warm by initial size
+            # but cannot predict convergence speed.  Cold-start wins.
 
             solve_info: dict[str, Any] = {}
             regs[instr.dst] = gpu_poisson_solve(

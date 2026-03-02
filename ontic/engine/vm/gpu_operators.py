@@ -154,6 +154,12 @@ def gpu_poisson_solve(
     ``GPUQTTTensor.inner`` (GPU transfer-matrix contraction), and
     rounding uses ``qtt_round_native`` (QR + rSVD, NEVER full SVD).
 
+    After the CG loop, a post-loop true-residual validation detects
+    cases where the recursively updated residual has drifted above tol
+    due to accumulated QTT truncation error, while the actual residual
+    r = b − A·x is below tol.  This avoids false non-convergence
+    reports without the convergence-rate penalty of periodic restarts.
+
     Parameters
     ----------
     lap_mpo : list[torch.Tensor]
@@ -301,15 +307,55 @@ def gpu_poisson_solve(
 
         rs_old = rs_new
 
+    # ── Post-loop true residual validation ───────────────────────
+    # In QTT-CG, every add/sub/truncation introduces O(cutoff)
+    # error per core.  After K iterations the recursively updated
+    # residual r_k drifts from the true residual (b − A·x_k) by
+    # O(K × n_cores × cutoff).  At n_bits=10 (20 cores) with
+    # cutoff=1e-12, 200 iterations give drift ≈ 4e-9 — enough
+    # to push the recursive ||r||/||b|| above tol=1e-08 even when
+    # the TRUE residual is well below it.
+    #
+    # We intentionally do NOT use periodic recomputation (restarted
+    # CG) because discarding the Krylov subspace every K iters
+    # destroys the O(√κ) convergence rate, reducing it to
+    # restart-limited O(κ/K).
+    #
+    # Instead: run full CG, then validate with one true residual
+    # computation.  Cost: one extra MPO apply — negligible compared
+    # to the CG iterations already spent.
     if not converged:
-        logger.warning(
-            "GPU Poisson CG did NOT converge in %d iters "
-            "(||r||²=%.2e, ||r||/||b||=%.2e, tol=%.2e)",
-            max_iter,
-            rs_old,
-            (float(rs_old) / rhs_norm_sq) ** 0.5,
-            tol,
+        Ax_true = gpu_mpo_apply(
+            lap_mpo, x, max_rank=max_rank, cutoff=cutoff
         )
+        r_true = rhs.sub(Ax_true).truncate(
+            max_rank=max_rank, cutoff=cutoff
+        )
+        rs_true = float(r_true.inner(r_true))
+        rel_true = (rs_true / rhs_norm_sq) ** 0.5
+
+        if rs_true < tol_sq:
+            # Recursive residual drifted, but true residual is fine.
+            converged = True
+            final_rs = rs_true
+            logger.debug(
+                "GPU Poisson CG: true residual BELOW tol after %d iters "
+                "(recursive ||r||/||b||=%.2e, true ||r||/||b||=%.2e)",
+                final_iters,
+                (float(rs_old) / rhs_norm_sq) ** 0.5,
+                rel_true,
+            )
+        else:
+            # Genuinely did not converge.
+            final_rs = rs_true
+            logger.warning(
+                "GPU Poisson CG did NOT converge in %d iters "
+                "(true ||r||²=%.2e, true ||r||/||b||=%.2e, tol=%.2e)",
+                max_iter,
+                rs_true,
+                rel_true,
+                tol,
+            )
 
     # Populate solver diagnostics if caller wants them
     if info is not None:
