@@ -1,12 +1,17 @@
 """
 NS2D QTT MG-DC Evidence — V&V integration.
 
-Registers four evidence panels as formal VVTest cases in the V&V harness:
+Registers six evidence panels as formal VVTest cases in the V&V harness:
 
   1. Tolerance sensitivity  — proves noise-floor and production sweet spot
   2. Reproducibility        — proves seed-invariant QoIs under rSVD randomness
   3. Divergence constraint  — proves ∇·u ≈ 0 under QTT truncation
   4. Taylor-Green benchmark — proves enstrophy accuracy vs exact solution
+  5. Long-horizon TG 512²  — stability + analytic accuracy over 1049 steps
+  6. Dense FFT cross-check  — QTT vs exact discrete reference at 256²
+
+Panels 1–4 are quick evidence; panels 5–6 are scheduled scenarios
+(weekly / nightly).  See ``docs/reports/NS2D_SCHEDULED_VV_SCENARIOS.md``.
 
 Each panel is a callable returning a dict of metrics with acceptance criteria.
 Use ``build_ns2d_evidence_plan()`` to get a runnable ``VVPlan``.
@@ -129,30 +134,100 @@ def _exec_taylor_green() -> dict[str, Any]:
 
 
 # ---------------------------------------------------------------------------
+# Panel 5 & 6 — Scheduled scenarios (lazy import)
+# ---------------------------------------------------------------------------
+
+def _lazy_long_horizon():
+    """Import run_tg_long_horizon lazily."""
+    import importlib.util
+
+    spec = importlib.util.spec_from_file_location(
+        "run_tg_long_horizon",
+        os.path.join(_ROOT, "scripts", "run_tg_long_horizon.py"),
+    )
+    mod = importlib.util.module_from_spec(spec)  # type: ignore[arg-type]
+    spec.loader.exec_module(mod)  # type: ignore[union-attr]
+    return mod
+
+
+def _lazy_fft_crosscheck():
+    """Import run_tg_fft_crosscheck lazily."""
+    import importlib.util
+
+    spec = importlib.util.spec_from_file_location(
+        "run_tg_fft_crosscheck",
+        os.path.join(_ROOT, "scripts", "run_tg_fft_crosscheck.py"),
+    )
+    mod = importlib.util.module_from_spec(spec)  # type: ignore[arg-type]
+    spec.loader.exec_module(mod)  # type: ignore[union-attr]
+    return mod
+
+
+def _exec_long_horizon() -> dict[str, Any]:
+    """VVTest executor for Panel 5 — long-horizon TG 512²."""
+    mod = _lazy_long_horizon()
+    result = mod.run_scenario()
+    # Extract the seed-0 final metrics as the primary result
+    s0 = result["seeds"]["0"]["final"]
+    return {
+        "enstrophy_error_rel": s0["enstrophy_error_rel"],
+        "omega_l2_error_rel": s0["omega_l2_error_rel"],
+        "div_relative_to_vel": s0["div_relative_to_vel"],
+        "repro_enstrophy_delta": result["reproducibility"]["delta_enstrophy_rel"],
+        "repro_omega_l2_delta": result["reproducibility"]["delta_omega_l2_rel"],
+        "wall_time_s": result["total_wall_time_s"],
+        "_raw": result,
+    }
+
+
+def _exec_fft_crosscheck() -> dict[str, Any]:
+    """VVTest executor for Panel 6 — dense FFT cross-check 256²."""
+    mod = _lazy_fft_crosscheck()
+    result = mod.run_scenario()
+    comp = result["comparison"]
+    return {
+        "omega_rel_l2": comp.get("omega_rel_l2", float("nan")),
+        "enstrophy_rel_diff": comp.get("enstrophy_rel_diff", float("nan")),
+        "omega_l2_rel_diff": comp.get("omega_l2_rel_diff", float("nan")),
+        "qtt_wall_time_s": result["qtt"]["wall_time_s"],
+        "dense_wall_time_s": result["dense"]["wall_time_s"],
+        "_raw": result,
+    }
+
+
+# ---------------------------------------------------------------------------
 # Public API: Build the V&V plan
 # ---------------------------------------------------------------------------
 
 def build_ns2d_evidence_plan() -> VVPlan:
-    """Construct a VVPlan containing all four NS2D evidence panels.
+    """Construct a VVPlan containing all six NS2D evidence panels.
 
     Returns a fully configured ``VVPlan`` ready for ``plan.run()`` or
     ``run_vv_plan(plan)``.
+
+    Panels 1–4: Quick evidence (short-horizon, ~minutes each)
+    Panel 5: Long-horizon TG 512² (weekly, ~60-90 min)
+    Panel 6: Dense FFT cross-check 256² (nightly, ~5-10 min)
 
     Acceptance criteria encode the proven production bounds:
       - Enstrophy relative error < 1e-6  (observed ~9e-8)
       - Poisson residual < 1e-3          (production gate)
       - Divergence ||∇·u||/||u|| < 1e-3  (observed ~8e-5)
       - Reproducibility CV < 1%          (observed 0%)
+      - Long-horizon enstrophy error < 1e-4 (spec threshold)
+      - QTT vs dense field rel_L2 < 5e-3 (spec threshold)
     """
     plan = VVPlan(
         name="NS2D QTT MG-DC Evidence Package",
-        version="1.0.0",
+        version="2.0.0",
         description=(
-            "Four-panel evidence package for the QTT Navier-Stokes 2D solver "
+            "Six-panel evidence package for the QTT Navier-Stokes 2D solver "
             "with MG-DC (defect correction + geometric multigrid V-cycle) "
-            "Poisson preconditioner at 512² (n_bits=9). "
-            "Proves tolerance sensitivity, reproducibility, divergence "
-            "constraint health, and Taylor-Green benchmark accuracy."
+            "Poisson preconditioner. "
+            "Panels 1–4: tolerance sensitivity, reproducibility, divergence "
+            "constraint health, and Taylor-Green benchmark accuracy (512²). "
+            "Panel 5: long-horizon (1049 steps) stability + analytic accuracy (512²). "
+            "Panel 6: dense FFT cross-check against exact discrete reference (256²)."
         ),
     )
 
@@ -221,6 +296,50 @@ def build_ns2d_evidence_plan() -> VVPlan:
             "circulation_error": 1e-10,
         },
         priority=1,
+    ))
+
+    # Panel 5: Long-horizon Taylor-Green @ 512² (weekly / stress)
+    plan.add_test(VVTest(
+        name="ns2d_tg_long_horizon_512",
+        category=VVCategory.VALIDATION,
+        level=VVLevel.CERTIFICATION,
+        description=(
+            "Long-horizon Taylor-Green vortex at 512² (1049 steps, t_final=0.05). "
+            "Proves analytic accuracy (enstrophy error ≤ 1e-4), constraint health "
+            "(div ≤ 1e-3), Poisson stability, and seed reproducibility (≤ 1e-6). "
+            "Run ID: TG_LH_512_QTT_PROD. Schedule: weekly / release gate."
+        ),
+        executor=_exec_long_horizon,
+        acceptance_criteria={
+            "enstrophy_error_rel": 1e-4,
+            "omega_l2_error_rel": 1e-4,
+            "div_relative_to_vel": 1e-3,
+            "repro_enstrophy_delta": 1e-6,
+            "repro_omega_l2_delta": 1e-6,
+        },
+        priority=2,
+    ))
+
+    # Panel 6: Dense FFT cross-check @ 256² (nightly)
+    plan.add_test(VVTest(
+        name="ns2d_tg_fft_crosscheck_256",
+        category=VVCategory.VALIDATION,
+        level=VVLevel.CERTIFICATION,
+        description=(
+            "QTT vs dense FFT reference for the same discrete PDE at 256². "
+            "Dense solver uses FFT diagonalization of the 5-point periodic "
+            "Laplacian (exact discrete inverse). "
+            "Proves field-level agreement (rel_L2 ≤ 5e-3) and QoI match "
+            "(enstrophy diff ≤ 1e-4). "
+            "Run ID: TG_XCHECK_256_QTT_vs_DENSEFDFFT. Schedule: nightly."
+        ),
+        executor=_exec_fft_crosscheck,
+        acceptance_criteria={
+            "omega_rel_l2": 5e-3,
+            "enstrophy_rel_diff": 1e-4,
+            "omega_l2_rel_diff": 1e-4,
+        },
+        priority=2,
     ))
 
     return plan

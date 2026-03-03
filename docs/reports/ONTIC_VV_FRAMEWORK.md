@@ -10,7 +10,7 @@
   VERIFICATION & VALIDATION
 ```
 
-**Version**: 1.6.0  
+**Version**: 1.7.0  
 **Date**: March 3, 2026  
 **Classification**: PROPRIETARY — Tigantic Holdings LLC  
 **Standard**: Aligned with ASME V&V 10-2019, NASA-STD-7009A
@@ -220,6 +220,8 @@ These are non-negotiable for any serious CFD code:
 | Taylor-Green Vortex | ✅ | ✅ | ✅ test_taylor_green_benchmark.py |
 | Lid-Driven Cavity | ✅ | ✅ | ✅ test_lid_driven_cavity.py |
 | **NS2D QTT Taylor-Green** | ✅ | ✅ | ✅ evidence_package.json |
+| **NS2D TG Long-Horizon 512²** | ✅ | ✅ | ✅ tg_lh_512_qtt_prod.json |
+| **NS2D TG FFT Cross-Check 256²** | ✅ | ✅ | ✅ tg_xcheck_256_qtt_vs_densefdfft.json |
 
 ---
 
@@ -238,11 +240,25 @@ preconditioner.
 | **2. Reproducibility** | Seed-invariant QoIs under rSVD randomness | Enstrophy CV = 0.0%, Poisson residual CV = 1.5% (5 seeds) | ✅ |
 | **3. Divergence constraint** | ∇·u ≈ 0 under QTT truncation | ‖∇·u‖/‖u‖ = 8.1e-5, Poisson drift ratio 0.85 (improving) | ✅ |
 | **4. Taylor-Green benchmark** | Enstrophy vs exact analytical solution | Enstrophy error = 1.6e-8, circulation error < 1e-24 | ✅ |
+| **5. Long-horizon TG 512²** | Stability + accuracy over 1049 steps (t=0.05) | enstrophy_error ≤ 1e-4, repro ≤ 1e-6 | ✅ |
+| **6. Dense FFT cross-check 256²** | QTT vs exact discrete reference | field rel_L2 ≤ 5e-3, enstrophy_diff ≤ 1e-4 | ✅ |
+
+**Scheduled V&V scenarios**: See `docs/reports/NS2D_SCHEDULED_VV_SCENARIOS.md` for full specification.
+
+| Scenario | Schedule | Purpose |
+|----------|----------|--------|
+| Panel 5: TG_LH_512_QTT_PROD | Weekly / release gate | Long-horizon analytic accuracy + reproduce |
+| Panel 6: TG_XCHECK_256_QTT_vs_DENSEFDFFT | Nightly | Dense FFT discrete reference cross-check |
 
 **Files**:
 - Script: `scripts/run_evidence_package.py`
+- Script: `scripts/run_tg_long_horizon.py` (Scenario 1 — long-horizon)
+- Script: `scripts/run_tg_fft_crosscheck.py` (Scenario 2 — FFT cross-check)
 - Output: `scenario_output/data/evidence_package.json`
+- Output: `scenario_output/data/tg_lh_512_qtt_prod.json`
+- Output: `scenario_output/data/tg_xcheck_256_qtt_vs_densefdfft.json`
 - V&V integration: `ontic/sim/validation/ns2d_evidence.py`
+- Scenario spec: `docs/reports/NS2D_SCHEDULED_VV_SCENARIOS.md`
 - QoI extraction: `physics_os/core/physics_qoi.py`
 - Validation checks: `physics_os/core/evidence.py`
 
@@ -629,6 +645,7 @@ A module is **PRODUCTION-READY** when:
 | 1.3.0 | 2026-01-01 | Tigantic Holdings LLC | **100% V&V MATURITY**: Formal MMS test suite (test_euler2d_mms.py), ValidationReport generator for all 15 domains, enhanced mypy config || 1.4.0 | 2026-01-02 | Tigantic Holdings LLC | Complete MMS coverage: Added test_euler3d_mms.py, test_advection_mms.py, test_poisson_mms.py |
 | 1.5.0 | 2026-01-02 | Tigantic Holdings LLC | **Phase 3 COMPLETE**: CI/CD pipeline (vv-validation.yml), dashboard generator, regression detection, PQC signing automation |
 | 1.6.0 | 2026-03-03 | Tigantic Holdings LLC | **NS2D QTT Evidence Package**: 4-panel evidence (tolerance sensitivity, reproducibility, divergence, Taylor-Green benchmark), V&V harness integration via `ns2d_evidence.py`, MG-DC solver proven at 512² |
+| 1.7.0 | 2026-03-03 | Tigantic Holdings LLC | **Scheduled V&V Scenarios**: Panel 5 (long-horizon TG 512², 1049 steps, weekly), Panel 6 (dense FFT cross-check 256², nightly), formal scenario spec doc, runner scripts |
 ---
 
 ## Appendix C: Current Repository V&V Status (January 2, 2026)
