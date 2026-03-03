@@ -331,88 +331,96 @@ def rsvd_native(
     m, n = A.shape
     device = A.device
     dtype = A.dtype
-    
-    # Small matrix fast path
+
+    # Small matrix fast path (Rule 2: full SVD only when min(m,n) <= 4)
     if m <= 4 or n <= 4:
         U, S, Vh = torch.linalg.svd(A.to(torch.float64), full_matrices=False)
         k_actual = min(k, len(S), max(1, int((S > tol * S[0]).sum())))
         return U[:, :k_actual].to(dtype), S[:k_actual].to(dtype), Vh[:k_actual, :].to(dtype)
-    
+
     l = min(k + n_oversamples, min(m, n))
-    
-    # Work in float64 for numerical stability
-    A_64 = A.to(torch.float64) if dtype != torch.float64 else A
-    
+
+    # All large matmuls stay in the native dtype (float32) for GPU
+    # throughput.  Consumer GPUs (RTX 30xx/40xx/50xx) have 1/32 FP64
+    # rate — using float64 here was costing 16-32× wall time on every
+    # truncation call.  Only the small Gram-matrix eigendecomposition
+    # (at most l×l ≈ 74×74) is upcast to float64 for precision.
+    # Effective truncation tolerance in float32 saturates at ~1e-7,
+    # which may keep 1-2 extra singular values vs float64 — acceptable
+    # since the max_rank cap is the binding constraint.
+
     if m <= n:
         # Wide matrix: work with A @ A.T which is (m × m)
-        Omega = torch.randn(n, l, device=device, dtype=torch.float64)
-        Y = A_64 @ Omega
-        
+        Omega = torch.randn(n, l, device=device, dtype=dtype)
+        Y = A @ Omega
+
         # Power iteration
         for _ in range(n_iter):
-            Z = A_64.T @ Y
-            Y = A_64 @ Z
-        
+            Z = A.T @ Y
+            Y = A @ Z
+
         # QR
         Q, _ = torch.linalg.qr(Y, mode='reduced')
-        
-        # Gram matrix: Q.T @ A @ A.T @ Q
-        AAt_Q = A_64 @ (A_64.T @ Q)
-        BtB = Q.T @ AAt_Q
-        
-        # Eigendecomposition of small Gram matrix
+
+        # Gram matrix → float64 for eigendecomposition precision
+        AAt_Q = A @ (A.T @ Q)
+        BtB = (Q.T @ AAt_Q).to(torch.float64)
+
         eigvals, eigvecs = torch.linalg.eigh(BtB)
         idx = torch.argsort(eigvals, descending=True)
         eigvals = eigvals[idx]
         eigvecs = eigvecs[:, idx]
-        
-        S = torch.sqrt(torch.clamp(eigvals, min=0))
+
+        S = torch.sqrt(torch.clamp(eigvals, min=0)).to(dtype)
+        eigvecs = eigvecs.to(dtype)
         U = Q @ eigvecs
-        
+
         k_actual = min(k, max(1, int((S > tol * S[0]).sum())))
-        
+
         inv_S = torch.zeros_like(S)
         mask = S[:k_actual] > tol * S[0]
         inv_S[:k_actual][mask] = 1.0 / S[:k_actual][mask]
-        
-        Vh = (A_64.T @ U) * inv_S.unsqueeze(0)
+
+        Vh = (A.T @ U) * inv_S.unsqueeze(0)
         Vh = Vh.T
-        
+
     else:
         # Tall matrix: work with A.T @ A which is (n × n)
-        Omega = torch.randn(m, l, device=device, dtype=torch.float64)
-        Y = A_64.T @ Omega
-        
+        Omega = torch.randn(m, l, device=device, dtype=dtype)
+        Y = A.T @ Omega
+
         for _ in range(n_iter):
-            Z = A_64 @ Y
-            Y = A_64.T @ Z
-        
+            Z = A @ Y
+            Y = A.T @ Z
+
         Q, _ = torch.linalg.qr(Y, mode='reduced')
-        
-        AtA_Q = A_64.T @ (A_64 @ Q)
-        BtB = Q.T @ AtA_Q
-        
+
+        # Gram matrix → float64 for eigendecomposition precision
+        AtA_Q = A.T @ (A @ Q)
+        BtB = (Q.T @ AtA_Q).to(torch.float64)
+
         eigvals, eigvecs = torch.linalg.eigh(BtB)
         idx = torch.argsort(eigvals, descending=True)
         eigvals = eigvals[idx]
         eigvecs = eigvecs[:, idx]
-        
-        S = torch.sqrt(torch.clamp(eigvals, min=0))
+
+        S = torch.sqrt(torch.clamp(eigvals, min=0)).to(dtype)
+        eigvecs = eigvecs.to(dtype)
         V = Q @ eigvecs
         Vh = V.T
-        
+
         k_actual = min(k, max(1, int((S > tol * S[0]).sum())))
-        
+
         inv_S = torch.zeros_like(S)
         mask = S[:k_actual] > tol * S[0]
         inv_S[:k_actual][mask] = 1.0 / S[:k_actual][mask]
-        
-        U = (A_64 @ V) * inv_S.unsqueeze(0)
-    
+
+        U = (A @ V) * inv_S.unsqueeze(0)
+
     return (
-        U[:, :k_actual].to(dtype),
-        S[:k_actual].to(dtype),
-        Vh[:k_actual, :].to(dtype),
+        U[:, :k_actual],
+        S[:k_actual],
+        Vh[:k_actual, :],
     )
 
 

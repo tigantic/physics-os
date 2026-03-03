@@ -180,7 +180,8 @@ class NavierStokes2DCompiler(BaseCompiler):
             laplace_solve(1, 11,                   # r1 = ψ (Poisson solve)
                           tol=self._poisson_tol,
                           max_iter=self._poisson_max_iters,
-                          precond=self._poisson_precond),
+                          precond=self._poisson_precond,
+                          operator_variant=lv),
 
             # Velocity from stream function
             grad(2, 1, dim=1, operator_variant=gv), # r2 = u = ∂ψ/∂y

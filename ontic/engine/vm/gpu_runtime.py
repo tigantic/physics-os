@@ -476,13 +476,15 @@ class GPURuntime:
             regs[instr.dst] = self._apply_bc_gpu(a, kind, bc_p)
 
         elif op == OpCode.LAPLACE_SOLVE:
-            # V-01 RESOLVED: GPU-native (P)CG Poisson solver.
+            # V-01 RESOLVED: GPU-native CG / defect-correction Poisson solver.
             # No CPU fallback. No PCIe round-trip. Adaptive rank.
             # With MG preconditioner: κ collapses from O(N²) to O(1).
             rhs = self._get_reg(regs, instr.src[0])
             dim = instr.params.get("dim", None)
+            variant = str(instr.params.get("operator_variant", "lap_v1"))
             lap_mpo = self.op_cache.get_laplacian(
-                rhs.bits_per_dim, rhs.domain, dim=dim
+                rhs.bits_per_dim, rhs.domain, dim=dim,
+                variant=variant,
             )
             effective_rank = self.governor.get_effective_rank(rhs.n_cores)
 
@@ -501,9 +503,11 @@ class GPURuntime:
             cg_rank = self.governor.max_rank
 
             # ── Build / cache MG preconditioner ─────────────────────
+            # Cache key includes variant so different Laplacian stencils
+            # get their own MG hierarchy (correctness requirement).
             precond_fn = None
-            if precond_kind == "mg":
-                mg_key = f"{rhs.bits_per_dim}_{rhs.domain}"
+            if precond_kind in ("mg", "auto"):
+                mg_key = f"{rhs.bits_per_dim}_{rhs.domain}_{variant}"
                 if mg_key not in self._mg_precond_cache:
                     self._mg_precond_cache[mg_key] = (
                         QTTMultigridPreconditioner(
@@ -511,21 +515,74 @@ class GPURuntime:
                             domain=rhs.domain,
                             max_rank=cg_rank,
                             cutoff=cg_cutoff,
+                            variant=variant,
                         )
                     )
-                precond_fn = self._mg_precond_cache[mg_key]
+                mg_precond = self._mg_precond_cache[mg_key]
 
-            solve_info: dict[str, Any] = {}
-            regs[instr.dst] = gpu_poisson_solve(
-                lap_mpo,
-                rhs,
-                max_rank=cg_rank,
-                cutoff=cg_cutoff,
-                tol=poisson_tol,
-                max_iter=poisson_max_iter,
-                info=solve_info,
-                precond=precond_fn,
-            )
+            # ── Auto-switch governance ──────────────────────────────
+            # "auto": start with CG; if CG fails to converge within a
+            # pilot budget, restart with MG defect correction.
+            if precond_kind == "auto":
+                pilot_budget = min(10, poisson_max_iter)
+                pilot_info: dict[str, Any] = {}
+                pilot_result = gpu_poisson_solve(
+                    lap_mpo,
+                    rhs,
+                    max_rank=cg_rank,
+                    cutoff=cg_cutoff,
+                    tol=poisson_tol,
+                    max_iter=pilot_budget,
+                    info=pilot_info,
+                )
+                if pilot_info.get("converged", False):
+                    # CG converged in the pilot — use it.
+                    precond_fn = None
+                    solve_info = pilot_info
+                    regs[instr.dst] = pilot_result
+                else:
+                    # CG did not converge — escalate to MG-DC,
+                    # warm-starting from the CG pilot solution.
+                    precond_fn = mg_precond
+                    solve_info = {}
+                    regs[instr.dst] = gpu_poisson_solve(
+                        lap_mpo,
+                        rhs,
+                        max_rank=cg_rank,
+                        cutoff=cg_cutoff,
+                        tol=poisson_tol,
+                        max_iter=poisson_max_iter,
+                        info=solve_info,
+                        precond=precond_fn,
+                        x0=pilot_result,
+                    )
+                    solve_info["auto_escalated"] = True
+                    solve_info["pilot_iters"] = pilot_info.get("n_iters", 0)
+            elif precond_kind == "mg":
+                precond_fn = mg_precond
+                solve_info = {}
+                regs[instr.dst] = gpu_poisson_solve(
+                    lap_mpo,
+                    rhs,
+                    max_rank=cg_rank,
+                    cutoff=cg_cutoff,
+                    tol=poisson_tol,
+                    max_iter=poisson_max_iter,
+                    info=solve_info,
+                    precond=precond_fn,
+                )
+            else:
+                # "none" — plain CG
+                solve_info = {}
+                regs[instr.dst] = gpu_poisson_solve(
+                    lap_mpo,
+                    rhs,
+                    max_rank=cg_rank,
+                    cutoff=cg_cutoff,
+                    tol=poisson_tol,
+                    max_iter=poisson_max_iter,
+                    info=solve_info,
+                )
 
             # Accumulate per-step Poisson diagnostics for QoI extraction
             self._poisson_info_latest = solve_info

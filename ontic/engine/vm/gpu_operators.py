@@ -127,7 +127,7 @@ def gpu_mpo_apply(
 
 
 # ─────────────────────────────────────────────────────────────────────
-# GPU-native Preconditioned Conjugate Gradient Poisson solver
+# GPU-native CG / Defect-Correction Poisson solver
 # ─────────────────────────────────────────────────────────────────────
 
 
@@ -142,18 +142,22 @@ def gpu_poisson_solve(
     x0: GPUQTTTensor | None = None,
     precond: "Callable[[GPUQTTTensor], GPUQTTTensor] | None" = None,
 ) -> GPUQTTTensor:
-    r"""Solve ∇²ϕ = rhs via (P)CG entirely on GPU in QTT format.
+    r"""Solve ∇²ϕ = rhs entirely on GPU in QTT format.
 
-    When ``precond`` is ``None``, runs standard CG.
-    When ``precond`` is provided, runs **Preconditioned CG**:
+    When ``precond`` is ``None``, runs standard CG with periodic
+    true-residual replacement to guard against QTT truncation drift.
 
-        z_k = M⁻¹ r_k          (preconditioner apply)
-        ρ_k = <r_k, z_k>       (preconditioned inner product)
-        p_{k+1} = z_k + β p_k  (search direction from z, not r)
+    When ``precond`` is provided, runs **defect correction**
+    (Richardson iteration with nonlinear preconditioner):
 
-    This reduces the effective condition number from O(N²) to O(1)
-    when M is a multigrid V-cycle, collapsing iteration counts from
-    O(√κ) ≈ O(N) to O(1).
+        r_k = b − A·x_k        (true residual)
+        z_k = M(r_k)           (V-cycle — nonlinear due to QTT truncation)
+        x_{k+1} = x_k + z_k   (additive correction, then truncate)
+
+    The V-cycle is a nonlinear operator because QTT rank truncation
+    makes each application input-dependent.  This precludes standard
+    PCG/FCG (which require a fixed, linear preconditioner).  Defect
+    correction is unconditionally stable for contractive M.
 
     Convergence is checked via true residual ``||b − Ax||/||b|| < tol``
     at the end.  No special-case shortcuts override the convergence flag.
@@ -276,24 +280,29 @@ def gpu_poisson_solve(
             final_iters = it + 1
     else:
         # ── CG with periodic true-residual replacement ────────────────
+        # The Laplacian ∇² is negative (semi-)definite.  CG requires a
+        # symmetric positive-definite operator.  We solve the equivalent
+        # SPD system  (-∇²)x = (-b)  by negating the residual and the
+        # matvec.  The solution x and convergence criterion are invariant
+        # under this sign flip (all norms are squared).
+        #
         # QTT truncation makes the recursive residual r -= α·Ap drift
         # from the true residual b - Ax.  The drifted residual can be
         # OPTIMISTICALLY low, causing CG to exit prematurely.
         #
         # Strategy:
         #   - Every ``replace_every`` iterations, recompute the TRUE
-        #     residual r = b - Ax.  This prevents drift from
-        #     accumulating beyond ~5 iterations' worth.
+        #     residual r = Lx − b (negated system).  This prevents drift
+        #     from accumulating beyond ~5 iterations' worth.
         #   - Check convergence at BOTH replacement points (true
         #     residual) and every CG step (recursive residual).
-        #     The recursive residual may be slightly optimistic but
-        #     CG at the recursive exit point is the OPTIMAL solution
-        #     — further iterations overshoot due to truncation.
         #   - Post-loop true-residual validation is the formal gate.
         replace_every = 5
 
+        # Negate residual for SPD system: r' = -(b − Lx) for (−L)x = −b
+        r = r.scale(-1.0)
         p = r.clone()
-        rz_old = rs_old
+        rz_old = rs_old  # ||r'||² = ||r||² = ||b − Lx||² (invariant)
 
         for it in range(max_iter):
             # ── True-residual replacement ─────────────────────────
@@ -301,7 +310,8 @@ def gpu_poisson_solve(
                 Ax_check = gpu_mpo_apply(
                     lap_mpo, x, max_rank=max_rank, cutoff=cutoff
                 )
-                r = rhs.sub(Ax_check).truncate(
+                # Negated residual: r' = Lx − b = −(b − Lx)
+                r = Ax_check.sub(rhs).truncate(
                     max_rank=max_rank, cutoff=cutoff
                 )
                 rs_true_check = r.inner(r)
@@ -316,10 +326,10 @@ def gpu_poisson_solve(
                 p = r.clone()
                 rz_old = rs_true_check
 
-            # ── Standard CG iteration ─────────────────────────────
+            # ── Standard CG iteration (on SPD system −∇²) ────────
             Ap = gpu_mpo_apply(
                 lap_mpo, p, max_rank=max_rank, cutoff=cutoff
-            )
+            ).scale(-1.0)  # (−L)·p  (SPD matvec)
 
             pAp = p.inner(Ap)
             if abs(pAp) < 1e-30:
@@ -368,14 +378,14 @@ def gpu_poisson_solve(
         logger.debug(
             "GPU Poisson %s converged in %d iters "
             "(true ||r||/||b||=%.2e, tol=%.2e)",
-            "PCG" if use_precond else "CG",
+            "MG-DC" if use_precond else "CG",
             final_iters, rel_true, tol,
         )
     else:
         logger.warning(
             "GPU Poisson %s did NOT converge in %d iters "
             "(true ||r||/||b||=%.2e, tol=%.2e)",
-            "PCG" if use_precond else "CG",
+            "MG-DC" if use_precond else "CG",
             final_iters, rel_true, tol,
         )
 

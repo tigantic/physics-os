@@ -1164,8 +1164,9 @@ def run_convergence_cli() -> None:
     )
     parser.add_argument(
         "--poisson_precond", type=str, default="none",
-        choices=["none", "mg"],
-        help="Poisson preconditioner: none (plain CG) or mg (multigrid V-cycle)",
+        choices=["none", "mg", "auto"],
+        help="Poisson preconditioner: none (plain CG), mg (multigrid V-cycle),"
+             " auto (CG with MG fallback when CG stalls)",
     )
     parser.add_argument(
         "--truncate_rel", type=float, default=1e-10,

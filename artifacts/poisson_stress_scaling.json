@@ -1,0 +1,34 @@
+[
+  {
+    "n_bits": 9,
+    "N": 512,
+    "mode": "single",
+    "n_iters": 1,
+    "converged": true,
+    "relative_residual": 1.0550334088801851e-11
+  },
+  {
+    "n_bits": 9,
+    "N": 512,
+    "mode": "multi",
+    "n_iters": 20,
+    "converged": false,
+    "relative_residual": 2.453477953019174
+  },
+  {
+    "n_bits": 10,
+    "N": 1024,
+    "mode": "single",
+    "n_iters": 1,
+    "converged": true,
+    "relative_residual": 3.8244101370115836e-11
+  },
+  {
+    "n_bits": 10,
+    "N": 1024,
+    "mode": "multi",
+    "n_iters": 20,
+    "converged": false,
+    "relative_residual": 1.3574402802926706
+  }
+]

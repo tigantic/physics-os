@@ -332,6 +332,7 @@ def laplace_solve(
     tol: float | None = None,
     max_iter: int | None = None,
     precond: str | None = None,
+    operator_variant: str | None = None,
 ) -> Instruction:
     """dst = ∇⁻²(rhs), Poisson solve.
 
@@ -342,8 +343,14 @@ def laplace_solve(
     max_iter : int, optional
         Maximum CG iterations.  If None, the runtime uses its default.
     precond : str, optional
-        Preconditioner kind: ``"none"`` (default CG) or ``"mg"``
-        (QTT multigrid V-cycle).  If None, the runtime default is used.
+        Preconditioner kind: ``"none"`` (default CG), ``"mg"``
+        (QTT multigrid V-cycle), or ``"auto"`` (CG with MG fallback).
+        If None, the runtime default is used.
+    operator_variant : str, optional
+        Laplacian variant to use for both the CG matvec and the MG
+        preconditioner (e.g. ``"lap_v1"``, ``"lap_v2_high_order"``).
+        Must match the variant used by diffusion operators to avoid
+        spectrum mismatch.  If None, defaults to ``"lap_v1"``.
     """
     params: dict[str, Any] = {"dim": dim}
     if tol is not None:
@@ -352,6 +359,8 @@ def laplace_solve(
         params["poisson_max_iter"] = max_iter
     if precond is not None:
         params["poisson_precond"] = precond
+    if operator_variant is not None:
+        params["operator_variant"] = operator_variant
     return Instruction(OpCode.LAPLACE_SOLVE, dst=dst, src=(rhs,),
                        params=params)
 
