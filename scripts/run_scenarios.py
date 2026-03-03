@@ -525,12 +525,12 @@ def run_scenario(
             index, name, exec_time,
         )
 
-        # Extract per-step telemetry for diagnostics
+        # Log per-step telemetry count (data stays in-memory only,
+        # not serialized to JSON — too large for the results file).
         telemetry_steps = _extract_telemetry_steps(result)
         if telemetry_steps:
-            package["telemetry_steps"] = telemetry_steps
             logger.info(
-                "[%d] %-45s  captured %d telemetry steps",
+                "[%d] %-45s  captured %d telemetry steps (not serialized)",
                 index, name, len(telemetry_steps),
             )
 
@@ -551,6 +551,7 @@ def run_scenario(
         }
         sanitized = sanitize_result(
             result, compiled.domain,
+            include_fields=False,
             execution_context=execution_context,
         )
         if sanitized is None:
@@ -821,6 +822,20 @@ def main() -> None:
         "scenarios": packages,
     }
 
+    # ── Strip dense field values before serialization ────────────
+    # Dense arrays (e.g. 512×512 omega/psi) inflate the JSON to tens
+    # of MB.  Keep field metadata (name, shape, unit) but drop values.
+    # Visualization code reads fields from the in-memory packages
+    # before this point, so nothing is lost.
+    import copy
+    serializable = copy.deepcopy(combined)
+    for sc in serializable.get("scenarios", []):
+        result = sc.get("result") or {}
+        fields = result.get("fields")
+        if fields and isinstance(fields, dict):
+            for fdata in fields.values():
+                fdata.pop("values", None)
+
     # ── Write data output ──────────────────────────────────────
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
     data_dir = OUTPUT_DIR / "data"
@@ -828,12 +843,7 @@ def main() -> None:
 
     out_path = data_dir / "scenario_results.json"
     with open(out_path, "w") as f:
-        json.dump(combined, f, indent=2, default=str)
-
-    # Also keep the legacy location
-    legacy_path = PROJECT_ROOT / "scenario_results.json"
-    with open(legacy_path, "w") as f:
-        json.dump(combined, f, indent=2, default=str)
+        json.dump(serializable, f, indent=2, default=str)
 
     print(f"\n{'═' * 60}")
     print(f"  SUMMARY")
