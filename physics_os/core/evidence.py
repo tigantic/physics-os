@@ -162,14 +162,11 @@ def generate_claims(
                 f"{error_value:.2e} {metric_label} error"
             ),
             "witness": {
-                "initial": conservation["initial_value"],
-                "final": conservation["final_value"],
-                "error_value": error_value,
-                "error_metric": error_metric,
-                "relative_error": conservation.get("relative_error", error_value),
-                "absolute_error": conservation.get("absolute_error", 0),
+                "quantity": conservation["quantity"],
+                "error": error_value,
+                "metric": error_metric,
                 "threshold": tier_threshold,
-                "resolution_tier": tier_name,
+                "tier": tier_name,
             },
             "satisfied": satisfied,
         })

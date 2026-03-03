@@ -82,6 +82,7 @@ def main() -> None:
         raw_result,
         domain_key,
         include_fields=False,
+        include_coordinates=False,
         execution_context=execution_context,
     )
 
@@ -92,20 +93,35 @@ def main() -> None:
     val_report = generate_validation_report(san, domain_key)
     claims = generate_claims(san, domain_key)
 
-    # ── Build output ────────────────────────────────────────────
+    # ── Build slim output (no coordinate arrays, no redundancy) ─
+    grid_raw = san.get("grid", {})
+    cons_raw = san.get("conservation", {})
+    perf_raw = san.get("performance", {})
+
     output = {
-        "scenario": "stokes_512_1000_qoi",
+        "scenario": "Stokes Creeping Flow (Glycerol, Re=0.09)",
         "domain": domain_key,
-        "grid": san.get("grid", {}),
-        "execution_params": {
+        "grid": {
+            "dimensions": grid_raw.get("dimensions"),
+            "resolution": grid_raw.get("resolution"),
+            "domain_bounds": grid_raw.get("domain_bounds"),
+        },
+        "execution": {
             "n_bits": n_bits,
             "n_steps": n_steps,
             "Re": Re,
             "max_rank": config.max_rank,
             "truncation_tol": config.truncation_tol,
+            "wall_time_s": perf_raw.get("wall_time_s"),
+            "throughput_gp_per_s": perf_raw.get("throughput_gp_per_s"),
         },
-        "performance": san.get("performance", {}),
-        "conservation": san.get("conservation", {}),
+        "conservation": {
+            "quantity": cons_raw.get("quantity"),
+            "absolute_error": cons_raw.get("absolute_error"),
+            "status": cons_raw.get("status"),
+            "tier": cons_raw.get("resolution_tier"),
+            "threshold": cons_raw.get("tier_threshold"),
+        },
         "physics_qoi": physics_qoi,
         "validation": val_report,
         "claims": claims,
