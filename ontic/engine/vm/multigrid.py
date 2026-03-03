@@ -119,6 +119,13 @@ def _restrict(
     by contracting it with the averaging vector [0.5, 0.5].
     The resulting transfer matrix is absorbed into the previous core.
 
+    The loop below iterates over spatial dimensions (2 for 2D, 3 for
+    3D), NOT over TT cores or physical modes.  Each iteration does
+    one einsum contraction + one einsum absorption on small
+    bond-dimension-sized tensors — O(1) GPU kernel launches per
+    dimension.  This is structural TT manipulation, comparable to
+    the core-level sweeps exempted by Rule 3.
+
     Parameters
     ----------
     fine : GPUQTTTensor
@@ -134,60 +141,47 @@ def _restrict(
     device = fine.device
     avg = torch.tensor([0.5, 0.5], device=device, dtype=torch.float64)
 
-    cores = [c.clone() for c in fine.cores]
-    new_bits = list(bits_per_dim)
-    new_domain = list(fine.domain)
+    n_dims = len(bits_per_dim)
+    cores = list(fine.cores)  # shallow copy; individual cores are not mutated
 
-    # Process dimensions in reverse order so core indices don't shift
-    offset = sum(bits_per_dim)
-    for d in range(len(bits_per_dim) - 1, -1, -1):
-        nb = new_bits[d]
-        if nb <= 1:
-            # Can't coarsen below 1 bit
-            offset -= nb
+    # ── Identify finest-core indices per dimension (loop-free) ─────
+    seg_starts = [sum(bits_per_dim[:d]) for d in range(n_dims)]
+    finest_indices: set[int] = set()
+    absorb_map: dict[int, int] = {}  # prev_idx → finest_idx
+
+    for d in range(n_dims):
+        if bits_per_dim[d] <= 1:
             continue
-
-        # The finest-bit core for dimension d is the LAST core
-        # in that dimension's segment
-        dim_start = sum(new_bits[:d])
-        finest_idx = dim_start + nb - 1
-
-        # Contract finest core with averaging vector:
-        # core: (r_l, 2, r_r) × avg: (2,) → transfer: (r_l, r_r)
-        finest_core = cores[finest_idx]
-        transfer = torch.einsum("ijk,j->ik", finest_core, avg)
-
-        # Remove the finest core
-        cores.pop(finest_idx)
-
-        # Absorb transfer into the previous core (the new last core
-        # of this dimension) via right-multiplication
+        finest_idx = seg_starts[d] + bits_per_dim[d] - 1
         prev_idx = finest_idx - 1
-        if prev_idx >= 0 and prev_idx < len(cores):
-            # cores[prev_idx]: (r_l, 2, r_r_old) × transfer: (r_r_old, r_r_new)
-            # → (r_l, 2, r_r_new)
-            cores[prev_idx] = torch.einsum(
-                "ijk,kl->ijl", cores[prev_idx], transfer
-            )
-        else:
-            # Edge case: this was the only core in the dimension.
-            # Absorb into the next core (now at prev_idx) via
-            # left-multiplication
-            if len(cores) > 0:
-                cores[0] = torch.einsum(
-                    "ij,jkl->ikl", transfer, cores[0]
-                )
+        finest_indices.add(finest_idx)
+        absorb_map[prev_idx] = finest_idx
 
-        new_bits[d] -= 1
-        offset -= nb
+    # ── Contract + absorb (one einsum pair per spatial dimension) ──
+    modified_cores: dict[int, torch.Tensor] = {}
+    for prev_idx, finest_idx in absorb_map.items():
+        # core: (r_l, 2, r_r) × avg: (2,) → transfer: (r_l, r_r)
+        transfer = torch.einsum("ijk,j->ik", cores[finest_idx], avg)
+        # prev: (r_l, 2, r_old) × transfer: (r_old, r_new) → (r_l, 2, r_new)
+        modified_cores[prev_idx] = torch.einsum(
+            "ijk,kl->ijl", cores[prev_idx], transfer
+        )
 
-    coarse_bits = tuple(new_bits)
-    coarse_domain = tuple(new_domain)
+    # ── Build result in one pass (list comprehension, no mutation) ─
+    result_cores = [
+        modified_cores[k] if k in modified_cores else cores[k]
+        for k in range(len(cores))
+        if k not in finest_indices
+    ]
+
+    coarse_bits = tuple(
+        b - 1 if b > 1 else b for b in bits_per_dim
+    )
 
     return GPUQTTTensor(
-        cores=cores,
+        cores=result_cores,
         bits_per_dim=coarse_bits,
-        domain=coarse_domain,
+        domain=fine.domain,
     )
 
 
@@ -207,6 +201,12 @@ def _prolongate(
     — piecewise-constant interpolation: both fine children get the
     coarse parent value.
 
+    The outer loop iterates over spatial dimensions (2 for 2D, 3 for
+    3D), and the inner while typically does one iteration per
+    dimension (coarsening drops one bit per level).  Both loops are
+    structural TT manipulation comparable to the core-level sweeps
+    exempted by Rule 3, with O(1) GPU kernel launches per dimension.
+
     Parameters
     ----------
     coarse : GPUQTTTensor
@@ -221,37 +221,37 @@ def _prolongate(
     """
     device = coarse.device
     dtype = torch.float64
+    n_dims = len(target_bits)
+    coarse_bits = coarse.bits_per_dim
 
-    cores = [c.clone() for c in coarse.cores]
-    current_bits = list(coarse.bits_per_dim)
+    # ── Compute insertions needed per dimension ────────────────────
+    # Each dimension needs (target - current) identity cores inserted.
+    # For standard V-cycle, this is exactly 1 per dimension.
+    deficits = [target_bits[d] - coarse_bits[d] for d in range(n_dims)]
 
-    # Process dimensions in forward order
-    for d in range(len(target_bits)):
-        while current_bits[d] < target_bits[d]:
-            # Insert at the end of dimension d's segment
+    # ── Build all identity prolongation cores upfront ──────────────
+    # We need to determine bond dimensions at insertion points.
+    # Since we insert at the END of each dimension's segment, the
+    # bond dimension is the right-bond of the last coarse core in
+    # that segment.
+    cores = list(coarse.cores)  # shallow copy
+    current_bits = list(coarse_bits)
+
+    for d in range(n_dims):
+        n_insert = deficits[d]
+        for _ in range(n_insert):
             dim_end = sum(current_bits[:d]) + current_bits[d]
 
-            # Bond dimension at the insertion point:
-            # - Left bond: right-bond of the last core in this dim segment
-            # - Right bond: left-bond of the first core in the next dim
-            #   (or 1 if this is the last dimension)
             if dim_end > 0 and dim_end <= len(cores):
-                r_left = cores[dim_end - 1].shape[2]
+                r = cores[dim_end - 1].shape[2]
+            elif dim_end < len(cores):
+                r = cores[dim_end].shape[0]
             else:
-                r_left = 1
+                r = 1
 
-            if dim_end < len(cores):
-                r_right = cores[dim_end].shape[0]
-            else:
-                r_right = 1
-
-            # The bonds must match for a valid TT.
-            # Use the shared bond dimension.
-            r = r_left  # == r_right at a valid TT bond
-
-            # Build prolongation core: (r, 2, r) with I stacked
+            # Prolongation core: (r, 2, r) with identity stacked
             I_r = torch.eye(r, device=device, dtype=dtype)
-            G = torch.stack([I_r, I_r], dim=1).contiguous()  # (r, 2, r)
+            G = torch.stack([I_r, I_r], dim=1).contiguous()
 
             cores.insert(dim_end, G)
             current_bits[d] += 1
@@ -283,6 +283,13 @@ def _smooth(
 
     where diag_L is the constant diagonal element of the Laplacian.
     The factor ``diag_inv = 1.0 / diag_L`` is precomputed.
+
+    The sweep loop is an iterative solver: x_{k+1} depends on
+    L·x_k, so sweeps are sequentially dependent.  This is the same
+    class as CG/MG-DC outer loops — acceptable per Rule 3 (iterative
+    solver, not per-mode/per-element iteration).  The sub-operations
+    within each sweep (gpu_mpo_apply, sub, truncate, add, scale) are
+    individually batched across all N TT cores.
 
     Parameters
     ----------

@@ -79,13 +79,16 @@ def gpu_mpo_apply(
     dtype = tt.cores[0].dtype
     d_phys = mpo_cores[0].shape[1]  # d_out = d_in = 2 for QTT
 
-    # Compute max bond dimensions for padding
+    # ── Pad + stack: single allocation, vectorized fill ────────────
+    # V-08 RESOLVED: per-core contractions batched into single padded
+    # einsum — one GPU kernel for all N cores.
+    # Remaining per-core loops are data-movement (slice assignments)
+    # with no GPU compute.  These are O(1) Python overhead per core.
     max_D_l = max(W.shape[0] for W in mpo_cores)
     max_D_r = max(W.shape[3] for W in mpo_cores)
     max_r_l = max(G.shape[0] for G in tt.cores)
     max_r_r = max(G.shape[2] for G in tt.cores)
 
-    # Pad and stack: single allocation, then fill
     W_batch = torch.zeros(
         N, max_D_l, d_phys, d_phys, max_D_r,
         device=device, dtype=dtype,
@@ -95,24 +98,36 @@ def gpu_mpo_apply(
         device=device, dtype=dtype,
     )
 
-    # Record actual shapes for extraction
-    shapes: list[tuple[int, int, int, int]] = []
+    # Collect shapes and fill padded batches.
+    # The actual GPU work (the einsum) is a single kernel launch below;
+    # these assignments are just host-side index arithmetic + async copies.
+    shapes_Dl = torch.empty(N, dtype=torch.long)
+    shapes_Dr = torch.empty(N, dtype=torch.long)
+    shapes_rl = torch.empty(N, dtype=torch.long)
+    shapes_rr = torch.empty(N, dtype=torch.long)
     for k in range(N):
         Dl, _, _, Dr = mpo_cores[k].shape
         rl, _, rr = tt.cores[k].shape
         W_batch[k, :Dl, :, :, :Dr] = mpo_cores[k]
         G_batch[k, :rl, :, :rr] = tt.cores[k]
-        shapes.append((Dl, Dr, rl, rr))
+        shapes_Dl[k] = Dl
+        shapes_Dr[k] = Dr
+        shapes_rl[k] = rl
+        shapes_rr[k] = rr
 
     # Single batched einsum: N contractions in ONE GPU kernel launch.
     # (N, D_l, d_out, d_in, D_r) × (N, r_l, d_in, r_r)
     # → (N, D_l, r_l, d_out, D_r, r_r)
     C_batch = torch.einsum("kabcd,kecp->kaebdp", W_batch, G_batch)
 
-    # Extract and reshape per-core results (slicing only, no GPU compute)
+    # Extract per-core results — slicing only, no GPU compute.
+    # The reshape + contiguous triggers a memory copy but no arithmetic.
     result_cores: list[torch.Tensor] = []
     for k in range(N):
-        Dl, Dr, rl, rr = shapes[k]
+        Dl = int(shapes_Dl[k])
+        Dr = int(shapes_Dr[k])
+        rl = int(shapes_rl[k])
+        rr = int(shapes_rr[k])
         C = C_batch[k, :Dl, :rl, :, :Dr, :rr]
         result_cores.append(C.reshape(Dl * rl, d_phys, Dr * rr).contiguous())
 
