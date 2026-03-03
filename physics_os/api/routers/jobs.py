@@ -20,6 +20,7 @@ from ...core.certificates import issue_certificate
 from ...core.evidence import generate_claims, generate_validation_report
 from ...core.executor import ExecutionConfig, execute
 from ...core.hasher import content_hash
+from ...core.physics_qoi import extract_physics_qoi
 from ...core.registry import DOMAINS, get_domain
 from ...core.sanitizer import sanitize_result
 from ...jobs.models import (
@@ -368,6 +369,32 @@ async def _run_physics_execution(job: Job, loop: asyncio.AbstractEventLoop) -> N
         store.update(job)
         return
 
+    # ── Physics QoI extraction (BEFORE sanitization) ────────────────
+    # Probes and raw fields are stripped by the sanitizer (IP boundary).
+    # QoI must be extracted while the raw result is still available.
+    execution_context = {
+        "n_bits": inp.n_bits,
+        "n_steps": inp.n_steps,
+    }
+    # Forward Re if present in user parameters
+    re_value = inp.parameters.get("Re") or inp.parameters.get("re")
+    if re_value is not None:
+        execution_context["Re"] = float(re_value)
+
+    physics_qoi: dict[str, Any] | None = None
+    try:
+        physics_qoi = extract_physics_qoi(
+            raw_result,
+            inp.domain or "",
+            execution_context,
+        )
+    except Exception:
+        logger.warning(
+            "Physics QoI extraction failed for job %s (non-fatal)",
+            job.job_id,
+            exc_info=True,
+        )
+
     # Sanitize (strip TT internals)
     domain_spec = get_domain(inp.domain or "")
     sanitized = sanitize_result(
@@ -377,7 +404,12 @@ async def _run_physics_execution(job: Job, loop: asyncio.AbstractEventLoop) -> N
         max_field_points=settings.max_field_points,
         include_fields=inp.return_fields,
         include_coordinates=inp.return_coordinates,
+        execution_context=execution_context,
     )
+
+    # ── Inject QoI into sanitized result ────────────────────────────
+    if physics_qoi:
+        sanitized["physics_qoi"] = physics_qoi
 
     # Build public result
     result_payload = {
