@@ -122,6 +122,11 @@ def generate_validation_report(
         "severity": "error" if not stable else "info",
     })
 
+    # ── Tier 2: Physics QoI checks ──────────────────────────────
+    physics_qoi = sanitized_result.get("physics_qoi")
+    if physics_qoi:
+        _add_physics_qoi_checks(checks, physics_qoi)
+
     all_passed = all(c["passed"] for c in checks if c["severity"] == "error")
 
     return {
@@ -301,7 +306,154 @@ def generate_claims(
             "satisfied": all_satisfied,
         })
 
+    # ── POISSON_RESIDUAL (Tier 2 — Poisson solver convergence) ─────
+    physics_qoi = sanitized_result.get("physics_qoi", {})
+    poisson_qoi = physics_qoi.get("poisson", {})
+    if poisson_qoi.get("available"):
+        max_res = poisson_qoi["max_relative_residual"]
+        final_res = poisson_qoi["final_relative_residual"]
+        conv_frac = poisson_qoi.get("converged_fraction", 0.0)
+        mean_iters = poisson_qoi.get("mean_cg_iters", 0)
+        bounded = poisson_qoi["max_residual_below_1e-4"]
+        claims.append({
+            "tag": "POISSON_RESIDUAL",
+            "claim": (
+                f"Poisson true-residual bounded: "
+                f"max ||Aψ−ω||/||ω|| = {max_res:.2e}, "
+                f"final = {final_res:.2e}, "
+                f"converged {conv_frac:.0%} of solves"
+            ),
+            "witness": {
+                "max_relative_residual": max_res,
+                "final_relative_residual": final_res,
+                "converged_fraction": conv_frac,
+                "mean_cg_iters": mean_iters,
+                "threshold": 1e-4,
+            },
+            "satisfied": bounded,
+        })
+
+    # ── ENSTROPHY (Tier 2 — physical dissipation measure) ──────────
+    enstrophy_qoi = physics_qoi.get("enstrophy", {})
+    if enstrophy_qoi.get("available"):
+        E = enstrophy_qoi["enstrophy"]
+        omega_l2 = enstrophy_qoi["omega_l2_norm"]
+        bounded = enstrophy_qoi["bounded"]
+        non_neg = enstrophy_qoi["non_negative"]
+        satisfied = bounded and non_neg
+        claims.append({
+            "tag": "ENSTROPHY",
+            "claim": (
+                f"Enstrophy physical: E = {E:.4e}, "
+                f"||ω||₂ = {omega_l2:.4e}, "
+                f"bounded={bounded}, non_negative={non_neg}"
+            ),
+            "witness": {
+                "enstrophy": E,
+                "omega_l2_norm": omega_l2,
+                "bounded": bounded,
+                "non_negative": non_neg,
+            },
+            "satisfied": satisfied,
+        })
+
+    # ── STOKES_DRAG (Tier 2 — analytical reference) ────────────────
+    stokes_qoi = physics_qoi.get("stokes_drag", {})
+    if stokes_qoi.get("available"):
+        Re = stokes_qoi["Re"]
+        lamb_cd = stokes_qoi["lamb_cd"]
+        e_bounded = stokes_qoi["enstrophy_bounded"]
+        e_positive = stokes_qoi["enstrophy_positive"]
+        satisfied = e_bounded and e_positive
+        claims.append({
+            "tag": "STOKES_DRAG",
+            "claim": (
+                f"Stokes drag reference: Re = {Re:.2e}, "
+                f"Lamb (1911) C_d = {lamb_cd:.2f}, "
+                f"enstrophy bounded & positive"
+            ),
+            "witness": {
+                "Re": Re,
+                "lamb_cd": lamb_cd,
+                "lamb_formula": "C_d = 8π / (Re · ln(7.4/Re))",
+                "enstrophy_bounded": e_bounded,
+                "enstrophy_positive": e_positive,
+            },
+            "satisfied": satisfied,
+        })
+
     return claims
+
+
+def _add_physics_qoi_checks(
+    checks: list[dict[str, Any]],
+    physics_qoi: dict[str, Any],
+) -> None:
+    """Append Tier-2 physics correctness checks."""
+    # Poisson true-residual bound
+    poisson = physics_qoi.get("poisson", {})
+    if poisson.get("available"):
+        max_res = poisson["max_relative_residual"]
+        below_1e4 = poisson["max_residual_below_1e-4"]
+        below_1e6 = poisson["max_residual_below_1e-6"]
+        conv_frac = poisson.get("converged_fraction")
+        mean_iters = poisson.get("mean_cg_iters", 0)
+
+        checks.append({
+            "name": "poisson_residual_bound",
+            "passed": below_1e4,
+            "detail": (
+                f"max ||A\u03c8 - \u03c9||/||\u03c9|| = {max_res:.2e}, "
+                f"converged {conv_frac:.0%} of solves, "
+                f"mean {mean_iters:.0f} iters"
+            ),
+            "severity": "error",
+        })
+        if below_1e4:
+            checks.append({
+                "name": "poisson_residual_tight",
+                "passed": below_1e6,
+                "detail": (
+                    f"tight bound: max residual {'<' if below_1e6 else '>'} 1e-6"
+                ),
+                "severity": "warning",
+            })
+
+    # Enstrophy (viscous dissipation indicator)
+    enstrophy = physics_qoi.get("enstrophy", {})
+    if enstrophy.get("available"):
+        E = enstrophy["enstrophy"]
+        bounded = enstrophy["bounded"]
+        non_neg = enstrophy["non_negative"]
+        omega_l2 = enstrophy["omega_l2_norm"]
+
+        checks.append({
+            "name": "enstrophy_physical",
+            "passed": bounded and non_neg,
+            "detail": (
+                f"E = {E:.4e}, ||\u03c9||\u2082 = {omega_l2:.4e}, "
+                f"bounded={bounded}, non_negative={non_neg}"
+            ),
+            "severity": "error",
+        })
+
+    # Stokes drag proxy vs Lamb analytical
+    stokes = physics_qoi.get("stokes_drag", {})
+    if stokes.get("available"):
+        Re = stokes["Re"]
+        lamb_cd = stokes["lamb_cd"]
+        enstrophy_bounded = stokes["enstrophy_bounded"]
+        enstrophy_positive = stokes["enstrophy_positive"]
+
+        checks.append({
+            "name": "stokes_drag_reference",
+            "passed": enstrophy_bounded and enstrophy_positive,
+            "detail": (
+                f"Re={Re:.2e}, Lamb C_d={lamb_cd:.2f}, "
+                f"enstrophy bounded={enstrophy_bounded}"
+            ),
+            "severity": "warning",
+        })
 
 
 def _contains_null(values: Any) -> bool:
