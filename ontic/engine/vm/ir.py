@@ -333,6 +333,7 @@ def laplace_solve(
     max_iter: int | None = None,
     precond: str | None = None,
     operator_variant: str | None = None,
+    nullspace: str | None = None,
 ) -> Instruction:
     """dst = ∇⁻²(rhs), Poisson solve.
 
@@ -351,6 +352,11 @@ def laplace_solve(
         preconditioner (e.g. ``"lap_v1"``, ``"lap_v2_high_order"``).
         Must match the variant used by diffusion operators to avoid
         spectrum mismatch.  If None, defaults to ``"lap_v1"``.
+    nullspace : str, optional
+        Null-space kind for the operator.  ``"constant"`` means the
+        operator has a constant null space (periodic / pure-Neumann
+        Laplacian); the solver projects the RHS to zero mean.
+        ``None`` means no null-space treatment (Dirichlet / mixed BCs).
     """
     params: dict[str, Any] = {"dim": dim}
     if tol is not None:
@@ -361,6 +367,8 @@ def laplace_solve(
         params["poisson_precond"] = precond
     if operator_variant is not None:
         params["operator_variant"] = operator_variant
+    if nullspace is not None:
+        params["poisson_nullspace"] = nullspace
     return Instruction(OpCode.LAPLACE_SOLVE, dst=dst, src=(rhs,),
                        params=params)
 

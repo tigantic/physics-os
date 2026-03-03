@@ -75,6 +75,9 @@ from .vv import (  # V&V Framework; Verification utilities; Validation utilities
     generate_vv_report,
     run_vv_plan,
 )
+from .ns2d_evidence import (  # NS2D QTT MG-DC evidence package V&V integration
+    build_ns2d_evidence_plan,
+)
 
 __all__ = [
     # Physical validation
@@ -134,4 +137,6 @@ __all__ = [
     "ValidationUncertainty",
     "run_vv_plan",
     "generate_vv_report",
+    # NS2D Evidence
+    "build_ns2d_evidence_plan",
 ]

@@ -281,17 +281,26 @@ class GPURuntime:
                     # Record Poisson solver diagnostics into probe data
                     if self._poisson_info_latest:
                         pi = self._poisson_info_latest
-                        self._probe_data["poisson_cg_iters"].append(
-                            float(pi.get("n_iters", 0))
-                        )
+                        _n_it = float(pi.get("n_iters", 0))
+                        _rel_r = float(pi.get("relative_residual", 0.0))
+                        _conv = pi.get("converged", False)
+                        self._probe_data["poisson_cg_iters"].append(_n_it)
                         self._probe_data["poisson_residual_sq"].append(
                             float(pi.get("residual_norm_sq", 0.0))
                         )
                         self._probe_data["poisson_relative_residual"].append(
-                            float(pi.get("relative_residual", 0.0))
+                            _rel_r
                         )
                         self._probe_data["poisson_converged"].append(
-                            1.0 if pi.get("converged", False) else 0.0
+                            1.0 if _conv else 0.0
+                        )
+                        # Per-step progress — visible in real time
+                        _total = program.n_steps
+                        _cvg = "✓" if _conv else "✗"
+                        logger.info(
+                            "Step %d/%d  Poisson: %d iters, "
+                            "||r||/||b||=%.2e, converged=%s",
+                            step + 1, _total, int(_n_it), _rel_r, _cvg,
                         )
                         self._poisson_info_latest = {}
 
@@ -492,6 +501,7 @@ class GPURuntime:
             poisson_tol = float(instr.params.get("poisson_tol", 1e-8))
             poisson_max_iter = int(instr.params.get("poisson_max_iter", 800))
             precond_kind = instr.params.get("poisson_precond", "none")
+            nullspace_kind = instr.params.get("poisson_nullspace", None)
 
             # CG truncation tuning:
             # - cutoff 1e-12: tight enough for 1e-8 Poisson tolerance,
@@ -516,15 +526,34 @@ class GPURuntime:
                             max_rank=cg_rank,
                             cutoff=cg_cutoff,
                             variant=variant,
+                            # ── MG Configuration ──────────────────────
+                            # Tested configs at 512² (cold step):
+                            #   rank 32, 1+1 smooth, 7 lvl → ρ≈0.84-0.91, >120s (noisy)
+                            #   rank 64, 1+1 smooth, 7 lvl → ρ≈0.86, 82s avg but 137s
+                            #       on 10-step (rSVD variance → 60-91 iters)
+                            #   rank 64, 2+2 smooth, 7 lvl → ρ≈0.82, 87s
+                            #   rank 64, 3+3 smooth, 7 lvl → ρ≈0.78, 86s, STABLE 28 iters
+                            #   rank 32, 2+2, 3 lvl (shallow) → ρ≈0.996, diverges
+                            # 3+3 smooth is the robust optimum: strong ρ
+                            # absorbs rSVD non-determinism, consistent 28
+                            # iters with no stalling risk.  Lighter
+                            # smoothing is cheaper per V-cycle but needs
+                            # 2-3× more iters with high variance.
+                            # Coarse sweeps reduced from 20→5: saves
+                            # ~0.9s per V-cycle, no convergence penalty.
+                            n_smooth_pre=3,
+                            n_smooth_post=3,
+                            min_coarse_bits=3,
+                            coarse_sweeps=5,
                         )
                     )
                 mg_precond = self._mg_precond_cache[mg_key]
 
             # ── Auto-switch governance ──────────────────────────────
             # "auto": start with CG; if CG fails to converge within a
-            # pilot budget, restart with MG defect correction.
+            # pilot budget, restart with MG-preconditioned FCG.
             if precond_kind == "auto":
-                pilot_budget = min(10, poisson_max_iter)
+                pilot_budget = min(5, poisson_max_iter)
                 pilot_info: dict[str, Any] = {}
                 pilot_result = gpu_poisson_solve(
                     lap_mpo,
@@ -534,6 +563,8 @@ class GPURuntime:
                     tol=poisson_tol,
                     max_iter=pilot_budget,
                     info=pilot_info,
+                    nullspace_kind=nullspace_kind,
+                    op_cache=self.op_cache,
                 )
                 if pilot_info.get("converged", False):
                     # CG converged in the pilot — use it.
@@ -555,12 +586,19 @@ class GPURuntime:
                         info=solve_info,
                         precond=precond_fn,
                         x0=pilot_result,
+                        nullspace_kind=nullspace_kind,
+                        op_cache=self.op_cache,
                     )
                     solve_info["auto_escalated"] = True
                     solve_info["pilot_iters"] = pilot_info.get("n_iters", 0)
             elif precond_kind == "mg":
                 precond_fn = mg_precond
                 solve_info = {}
+                # Warm-start: use the current value of the destination
+                # register (previous timestep's ψ if available) as x0.
+                # In NS timestepping, ψ changes slowly between steps,
+                # so warm-starting slashes iterations from ~23 to ~5-10.
+                x0_warm = regs[instr.dst] if regs[instr.dst] is not None else None
                 regs[instr.dst] = gpu_poisson_solve(
                     lap_mpo,
                     rhs,
@@ -570,6 +608,9 @@ class GPURuntime:
                     max_iter=poisson_max_iter,
                     info=solve_info,
                     precond=precond_fn,
+                    x0=x0_warm,
+                    nullspace_kind=nullspace_kind,
+                    op_cache=self.op_cache,
                 )
             else:
                 # "none" — plain CG
@@ -582,6 +623,8 @@ class GPURuntime:
                     tol=poisson_tol,
                     max_iter=poisson_max_iter,
                     info=solve_info,
+                    nullspace_kind=nullspace_kind,
+                    op_cache=self.op_cache,
                 )
 
             # Accumulate per-step Poisson diagnostics for QoI extraction

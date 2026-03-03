@@ -189,6 +189,24 @@ def _restrict(
 # Prolongation: coarse → fine
 # ─────────────────────────────────────────────────────────────────────
 
+# Module-level cache for identity prolongation cores.
+# Keyed by (r, device, dtype) — one allocation per bond dimension.
+_PROLONG_ID_CACHE: dict[tuple[int, torch.device, torch.dtype], torch.Tensor] = {}
+
+
+def _identity_prolong_core(
+    r: int, device: torch.device, dtype: torch.dtype,
+) -> torch.Tensor:
+    """Get (or create+cache) the (r, 2, r) identity prolongation core."""
+    key = (r, device, dtype)
+    t = _PROLONG_ID_CACHE.get(key)
+    if t is None:
+        I_r = torch.eye(r, device=device, dtype=dtype)
+        t = torch.stack([I_r, I_r], dim=1).contiguous()
+        _PROLONG_ID_CACHE[key] = t
+    return t
+
+
 def _prolongate(
     coarse: GPUQTTTensor,
     target_bits: tuple[int, ...],
@@ -249,9 +267,8 @@ def _prolongate(
             else:
                 r = 1
 
-            # Prolongation core: (r, 2, r) with identity stacked
-            I_r = torch.eye(r, device=device, dtype=dtype)
-            G = torch.stack([I_r, I_r], dim=1).contiguous()
+            # Prolongation core: (r, 2, r) with identity stacked (cached)
+            G = _identity_prolong_core(r, device, dtype)
 
             cores.insert(dim_end, G)
             current_bits[d] += 1
@@ -313,7 +330,10 @@ def _smooth(
     scale = omega * diag_inv
     for _ in range(n_sweeps):
         Lx = gpu_mpo_apply(lap_mpo, x, max_rank=max_rank, cutoff=cutoff)
-        residual = b.sub(Lx).truncate(max_rank=max_rank, cutoff=cutoff)
+        # Skip truncation on the residual — it's intermediate and
+        # truncating it is pure overhead (one full rSVD round for no
+        # accuracy benefit).  Only the updated x gets truncated.
+        residual = b.sub(Lx)
         x = x.add(residual.scale(scale)).truncate(
             max_rank=max_rank, cutoff=cutoff
         )
@@ -358,8 +378,10 @@ class QTTMultigridPreconditioner:
         Max rank for all QTT operations inside the V-cycle.
     cutoff : float
         rSVD truncation tolerance.
-    n_smooth : int
-        Number of pre/post smoothing sweeps (default: 4).
+    n_smooth_pre : int
+        Pre-smoothing Richardson sweeps per level (default: 1).
+    n_smooth_post : int
+        Post-smoothing Richardson sweeps per level (default: 1).
     omega : float
         Damping parameter for Richardson smoother (default: 2/3).
     n_levels : int
@@ -373,6 +395,23 @@ class QTTMultigridPreconditioner:
         gives the best stable convergence.
     variant : str
         Laplacian variant tag (``"lap_v1"`` or ``"lap_v2_high_order"``).
+    min_coarse_bits : int
+        Minimum bits per dimension at coarsest level.  Default 8
+        (256-point grid per dim), giving only 1–2 levels for 512²
+        problems.
+
+        **Design rationale**: In QTT, coarsening barely reduces cost.
+        Dense MG wins because DOF count drops geometrically, but QTT
+        cost is dominated by ``gpu_mpo_apply + qtt_round_native``
+        which scale with ``#cores ≈ 2·n_bits`` and ranks, not N².
+        Going 512² → 8² only cuts cores from 18 → 6 (~3× cheaper
+        per apply), while doing *far* more applies across 7 levels.
+        Keeping the hierarchy shallow (2–3 levels) avoids this trap.
+    coarse_sweeps : int
+        Richardson sweeps at coarsest level (default: 0).
+        Zero returns a zero initial guess, relying on the outer DC
+        solver for convergence.  Small values (3–5) can help if the
+        coarsest level is still large.
     """
 
     def __init__(
@@ -381,31 +420,35 @@ class QTTMultigridPreconditioner:
         domain: tuple[tuple[float, float], ...],
         max_rank: int = 64,
         cutoff: float = 1e-12,
-        n_smooth: int = 4,
+        n_smooth_pre: int = 1,
+        n_smooth_post: int = 1,
         omega: float = 2.0 / 3.0,
         n_levels: int | None = None,
         correction_damp: float = 0.8,
         variant: str = "lap_v1",
+        min_coarse_bits: int = 8,
+        coarse_sweeps: int = 0,
     ) -> None:
         self.bits_per_dim = bits_per_dim
         self.domain = domain
         self.max_rank = max_rank
         self.cutoff = cutoff
-        self.n_smooth = n_smooth
+        self.n_smooth_pre = n_smooth_pre
+        self.n_smooth_post = n_smooth_post
         self.omega = omega
         self.correction_damp = correction_damp
         self.variant = variant
+        self.coarse_sweeps = coarse_sweeps
 
-        # Compute number of levels: coarsen until smallest dim has 3 bits
-        # (8-point grid).  Going below 8 points introduces large
-        # discretization error (23% eigenvalue drift at 4 points) that
-        # the correction damping cannot fully compensate.
+        # Coarsest grid floor: min_coarse_bits per dimension.
+        # For 512² (9 bits), min_coarse_bits=8 → 1 level: (9,9)→(8,8).
+        # min_coarse_bits=7 → 2 levels: (9,9)→(8,8)→(7,7).  Shallow
+        # hierarchies are crucial in QTT — see docstring.
         min_bits = min(bits_per_dim)
-        min_coarse_bits = 3  # 8×8 coarsest grid
         if n_levels is None:
             self.n_levels = max(1, min_bits - min_coarse_bits)
         else:
-            self.n_levels = min(n_levels, min_bits - min_coarse_bits)
+            self.n_levels = min(n_levels, max(1, min_bits - min_coarse_bits))
 
         # Pre-build Laplacian MPOs and diagonal scalars for each level
         self._lap_mpos: list[list[torch.Tensor]] = []
@@ -439,11 +482,14 @@ class QTTMultigridPreconditioner:
 
         logger.info(
             "QTT multigrid: %d levels, bits %s → %s, "
-            "n_smooth=%d, omega=%.3f, correction_damp=%.2f",
+            "smooth=%d/%d, coarse_sweeps=%d, omega=%.3f, "
+            "correction_damp=%.2f",
             self.n_levels + 1,
             self._level_bits[0],
             self._level_bits[-1],
-            self.n_smooth,
+            self.n_smooth_pre,
+            self.n_smooth_post,
+            self.coarse_sweeps,
             self.omega,
             self.correction_damp,
         )
@@ -461,24 +507,28 @@ class QTTMultigridPreconditioner:
     ) -> GPUQTTTensor:
         """Solve Lx = b at the coarsest level using Richardson iteration.
 
-        At the coarsest level (8×8), κ is small enough (~16) that
-        damped Richardson converges to ~1e-4 in 60 sweeps.  We use
-        Richardson instead of CG because the periodic Laplacian has
-        a null space (constant mode), and CG can stall chasing this
-        component if the restricted residual has non-zero mean (due
-        to QTT truncation artifacts).  Richardson naturally ignores
-        the null space — the constant component doesn't converge but
-        also doesn't diverge (growth is linear in sweep count, bounded
-        for moderate sweep counts).
+        When ``coarse_sweeps=0``, returns the zero vector — the outer
+        DC solver provides all convergence and the coarse grid only
+        needs to supply a bias-correcting direction, not an accurate
+        solve.  This is correct because the V-cycle is a
+        *preconditioner*, not a standalone solver.
+
+        For ``coarse_sweeps > 0``, runs Richardson sweeps (3–5 is
+        typically sufficient).  Richardson is preferred over CG
+        because the periodic Laplacian null space can stall CG when
+        the restricted residual has non-zero mean.
         """
+        bits = self._level_bits[self.n_levels]
+        if self.coarse_sweeps == 0:
+            return GPUQTTTensor.zeros(bits, self.domain)
+
         lap = self._lap_mpos[self.n_levels]
         diag_inv = self._diag_invs[self.n_levels]
-        bits = self._level_bits[self.n_levels]
 
         x = GPUQTTTensor.zeros(bits, self.domain)
         x = _smooth(
             x, b, lap, diag_inv, self.omega,
-            n_sweeps=60,
+            n_sweeps=self.coarse_sweeps,
             max_rank=self.max_rank,
             cutoff=self.cutoff,
         )
@@ -499,14 +549,13 @@ class QTTMultigridPreconditioner:
         bits = self._level_bits[level]
 
         if level == self.n_levels:
-            # Coarsest level: CG solve (exact up to tol=1e-6).
             return self._coarsest_solve(b)
 
         # ── Pre-smooth ──────────────────────────────────────────────
         x = GPUQTTTensor.zeros(bits, self.domain)
         x = _smooth(
             x, b, lap, diag_inv, self.omega,
-            n_sweeps=self.n_smooth,
+            n_sweeps=self.n_smooth_pre,
             max_rank=self.max_rank,
             cutoff=self.cutoff,
         )
@@ -540,7 +589,7 @@ class QTTMultigridPreconditioner:
         # ── Post-smooth ─────────────────────────────────────────────
         x = _smooth(
             x, b, lap, diag_inv, self.omega,
-            n_sweeps=self.n_smooth,
+            n_sweeps=self.n_smooth_post,
             max_rank=self.max_rank,
             cutoff=self.cutoff,
         )

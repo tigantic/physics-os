@@ -159,11 +159,22 @@ DOMAINS: dict[str, DomainSpec] = {
         parameters=[
             {"name": "viscosity", "type": "float", "default": 0.01,
              "min": 1e-6, "max": 1.0, "description": "Kinematic viscosity ν."},
+            {"name": "ic_type", "type": "str", "default": "taylor_green",
+             "description": "Initial condition: taylor_green | multi_mode."},
+            {"name": "ic_n_modes", "type": "int", "default": 4,
+             "min": 1, "max": 16, "description": "Fourier modes per dim (multi_mode only)."},
+            {"name": "poisson_precond", "type": "str", "default": None,
+             "description": "Poisson preconditioner: none | mg."},
+            {"name": "poisson_tol", "type": "float", "default": None,
+             "min": 1e-15, "max": 1.0, "description": "CG convergence tolerance."},
+            {"name": "poisson_max_iters", "type": "int", "default": None,
+             "min": 1, "max": 10000, "description": "Max CG iterations."},
         ],
         _module="ontic.engine.vm.compilers.navier_stokes_2d",
         _class="NavierStokes2DCompiler",
         _resolution_keys=["n_bits", "n_steps", "dt"],
-        _param_keys=["viscosity"],
+        _param_keys=["viscosity", "ic_type", "ic_n_modes", "poisson_precond",
+                      "poisson_tol", "poisson_max_iters"],
     ),
 }
 

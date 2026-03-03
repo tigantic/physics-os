@@ -5,6 +5,6 @@
   "n_iters": 21,
   "converged": true,
   "relative_residual": 0.0004897921976993741,
-  "wall_time_s": 113.32370896499924,
-  "time_per_iter_s": 5.396367093571392
+  "wall_time_s": 111.05582396799946,
+  "time_per_iter_s": 5.288372569904736
 }

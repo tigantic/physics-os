@@ -46,6 +46,51 @@ from ..ir import (
 from .base import BaseCompiler
 
 
+def _build_omega_separable(
+    ic_type: str,
+    ic_n_modes: int,
+) -> Any:
+    """Build separable factor specification for init_omega.
+
+    Returns either a single ``(factors, scale)`` tuple (original
+    Taylor-Green, rank 1) or a list of ``(factors, scale)`` tuples
+    (multi-mode, rank = number of terms).
+
+    Multi-mode spectrum:
+        ω₀(x, y) = Σ_{k,m=1}^{K} [2 / (k² + m²)] sin(2πkx) sin(2πmy)
+
+    This Kolmogorov-like 1/(k²+m²) decay keeps the vorticity bounded
+    while injecting broadband content across wavenumbers 1..K per dim.
+    Each term is rank-1 in QTT (product of 1-D functions).  The sum
+    of K² terms produces a rank-K² tensor that the runtime truncates
+    to the governor's adaptive rank.
+    """
+    if ic_type == "multi_mode":
+        terms: list[tuple[list[Any], float]] = []
+        for k in range(1, ic_n_modes + 1):
+            for m in range(1, ic_n_modes + 1):
+                amp = 2.0 / (k * k + m * m)
+                # Create closures with bound k, m values
+                kk, mm = k, m  # bind loop vars
+                terms.append((
+                    [
+                        lambda x, _k=kk: np.sin(2.0 * np.pi * _k * x),
+                        lambda y, _m=mm: np.sin(2.0 * np.pi * _m * y),
+                    ],
+                    amp,
+                ))
+        return terms
+
+    # Default: single Taylor-Green mode (1,1), rank 1
+    return (
+        [
+            lambda x: np.sin(2.0 * np.pi * x),
+            lambda y: np.sin(2.0 * np.pi * y),
+        ],
+        2.0,
+    )
+
+
 class NavierStokes2DCompiler(BaseCompiler):
     """Compile 2-D vorticity-stream NS into QTT VM bytecode.
 
@@ -86,6 +131,17 @@ class NavierStokes2DCompiler(BaseCompiler):
         Preconditioner for the Poisson solver: ``"none"`` (plain CG)
         or ``"mg"`` (QTT multigrid V-cycle preconditioner).
         If None, the runtime default (``"none"``) is used.
+    ic_type : str
+        Initial condition type:
+        - ``"taylor_green"`` (default): single-mode Taylor–Green vortex
+          ω₀ = 2 sin(2πx) sin(2πy).
+        - ``"multi_mode"``: superposition of Fourier modes with
+          Kolmogorov-like 1/(k²+m²) energy spectrum.  Injects
+          broadband content to stress the Poisson solver.
+    ic_n_modes : int
+        Number of wavenumbers per dimension when ``ic_type="multi_mode"``.
+        Total initial modes = ic_n_modes².  Default 4 (→ 16 modes,
+        rank ≤ 16 before truncation).
     """
 
     def __init__(
@@ -103,6 +159,8 @@ class NavierStokes2DCompiler(BaseCompiler):
         poisson_tol: float | None = None,
         poisson_max_iters: int | None = None,
         poisson_precond: str | None = None,
+        ic_type: str = "taylor_green",
+        ic_n_modes: int = 4,
     ) -> None:
         self._n_bits = n_bits
         self._n_steps = n_steps
@@ -116,6 +174,8 @@ class NavierStokes2DCompiler(BaseCompiler):
         self._poisson_tol = poisson_tol
         self._poisson_max_iters = poisson_max_iters
         self._poisson_precond = poisson_precond
+        self._ic_type = ic_type
+        self._ic_n_modes = ic_n_modes
         N = 2 ** n_bits
         h = 1.0 / N
         if dt is None:
@@ -139,9 +199,22 @@ class NavierStokes2DCompiler(BaseCompiler):
         dom = ((0.0, 1.0), (0.0, 1.0))
         gv = self._grad_variant
         lv = self._lap_variant
+        ic_type = self._ic_type
+        ic_n_modes = self._ic_n_modes
 
         def init_omega(x: NDArray, y: NDArray) -> NDArray:
-            """Taylor–Green-like initial vortex."""
+            """Initial vorticity (callable fallback for small grids)."""
+            if ic_type == "multi_mode":
+                result = np.zeros_like(x)
+                K = ic_n_modes
+                for k in range(1, K + 1):
+                    for m in range(1, K + 1):
+                        amp = 2.0 / (k * k + m * m)
+                        result += amp * np.sin(
+                            2.0 * np.pi * k * x
+                        ) * np.sin(2.0 * np.pi * m * y)
+                return result
+            # Default: Taylor–Green single mode (1,1)
             return (
                 2.0 * np.sin(2.0 * np.pi * x) * np.sin(2.0 * np.pi * y)
             )
@@ -181,7 +254,8 @@ class NavierStokes2DCompiler(BaseCompiler):
                           tol=self._poisson_tol,
                           max_iter=self._poisson_max_iters,
                           precond=self._poisson_precond,
-                          operator_variant=lv),
+                          operator_variant=lv,
+                          nullspace="constant"),
 
             # Velocity from stream function
             grad(2, 1, dim=1, operator_variant=gv), # r2 = u = ∂ψ/∂y
@@ -268,14 +342,7 @@ class NavierStokes2DCompiler(BaseCompiler):
         metadata: dict[str, Any] = {
             "init_omega": init_omega,
             "init_psi": init_psi,
-            # Separable: 2 sin(2πx) sin(2πy) = f(x) × g(y)
-            "init_omega_separable": (
-                [
-                    lambda x: np.sin(2.0 * np.pi * x),
-                    lambda y: np.sin(2.0 * np.pi * y),
-                ],
-                2.0,  # scale factor
-            ),
+            "init_omega_separable": _build_omega_separable(ic_type, ic_n_modes),
             "invariant_fn": invariant_fn,
             "invariant": "total_circulation",
             "equations": "∂ω/∂t + (u·∇)ω = ν∇²ω, ∇²ψ = −ω",
@@ -290,6 +357,10 @@ class NavierStokes2DCompiler(BaseCompiler):
             metadata["poisson_max_iters"] = self._poisson_max_iters
         if self._poisson_precond is not None:
             metadata["poisson_precond"] = self._poisson_precond
+
+        metadata["ic_type"] = self._ic_type
+        if self._ic_type == "multi_mode":
+            metadata["ic_n_modes"] = self._ic_n_modes
 
         if self._wall_model:
             metadata["wall_model"] = True

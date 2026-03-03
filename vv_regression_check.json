@@ -1,0 +1,133 @@
+{
+  "schema_version": "3.0",
+  "harness": "ontic.platform.vv.harness",
+  "case": "taylor_green",
+  "domain": "navier_stokes_2d",
+  "config": {
+    "n_bits_levels": [
+      9,
+      10,
+      11
+    ],
+    "dt": 0.001,
+    "n_steps": 10,
+    "viscosity": 0.001,
+    "op_variant": "ns2d_vorticity_v1",
+    "grad_variant": "grad_v2_high_order",
+    "lap_variant": "lap_v2_high_order",
+    "poisson_solver": "cg",
+    "poisson_tol": 1e-08,
+    "poisson_max_iters": 800,
+    "poisson_precond": "none",
+    "poisson_convergence_criterion": "relative: ||r||/||b|| < tol",
+    "truncate_rel": 1e-10,
+    "max_rank_policy": 64
+  },
+  "qoi_definitions": {
+    "omega_error_L2": "||\u03c9_h - \u03c9_exact||_L\u00b2([0,1]\u00b2) with h\u00b2 midpoint quadrature",
+    "omega_error_L2_rel": "||\u03c9_h - \u03c9_exact||_L\u00b2 / ||\u03c9_exact||_L\u00b2 (dimensionless)",
+    "psi_error_L2": "||\u03c8_h - \u03c8_exact||_L\u00b2([0,1]\u00b2) with h\u00b2 midpoint quadrature",
+    "psi_error_L2_rel": "||\u03c8_h - \u03c8_exact||_L\u00b2 / ||\u03c8_exact||_L\u00b2 (dimensionless)",
+    "enstrophy": "(1/2)\u222b\u03c9\u00b2 dA \u2014 grid-independent physical quantity",
+    "enstrophy_error_rel": "|Z_h - Z_exact|/Z_exact",
+    "kinetic_energy_error_rel": "|KE_h - KE_exact|/KE_exact, KE=(1/2)\u222b\u03c9\u00b7\u03c8 dA",
+    "poisson_residual_abs_max": "max over steps of sqrt(||r||\u00b2) \u2014 absolute",
+    "poisson_residual_rel_max": "max over steps of ||r||/||b|| \u2014 relative (convergence metric)",
+    "cg_iters": "max CG iterations over all timesteps",
+    "total_circulation_abs_error": "|\u222b\u03c9 dA| (analytic = 0)",
+    "nan_inf_steps": "count of fields with NaN/Inf in QTT cores"
+  },
+  "qoi_names": [
+    "omega_error_L2",
+    "omega_error_L2_rel",
+    "psi_error_L2",
+    "psi_error_L2_rel",
+    "enstrophy",
+    "enstrophy_error_rel",
+    "kinetic_energy_error_rel",
+    "poisson_residual_abs_max",
+    "poisson_residual_rel_max",
+    "cg_iters",
+    "total_circulation_abs_error",
+    "nan_inf_steps"
+  ],
+  "levels": [
+    {
+      "n_bits": 9,
+      "N": 512,
+      "wall_s": 2.1778596749991266,
+      "status": "succeeded",
+      "chi_max": 2,
+      "compression": 131072.0,
+      "invariant_error": 0.0,
+      "qois": {
+        "omega_error_L2": 0.008670602416119786,
+        "omega_error_L2_rel": 0.008677451152798148,
+        "psi_error_L2": 0.00010982558941146923,
+        "psi_error_L2_rel": 0.008678330395487923,
+        "enstrophy": 0.49921102361475644,
+        "enstrophy_error_rel": 6.234500232871001e-08,
+        "kinetic_energy_error_rel": 9.145165758793878e-05,
+        "total_circulation_abs_error": 0.0,
+        "poisson_residual_abs_max": 7.757777588960051e-09,
+        "poisson_residual_rel_max": 1.515908941836913e-11,
+        "cg_iters": 1.0,
+        "nan_inf_steps": 0.0
+      },
+      "poisson_converged": true,
+      "poisson_fail_reason": ""
+    },
+    {
+      "n_bits": 10,
+      "N": 1024,
+      "wall_s": 2.63731107500098,
+      "status": "succeeded",
+      "chi_max": 2,
+      "compression": 524288.0,
+      "invariant_error": 7.992781910237465e-32,
+      "qois": {
+        "omega_error_L2": 0.0043353216109903395,
+        "omega_error_L2_rel": 0.00433874599544539,
+        "psi_error_L2": 5.491956514360557e-05,
+        "psi_error_L2_rel": 0.004339700192339313,
+        "enstrophy": 0.499211023614647,
+        "enstrophy_error_rel": 6.234522161069342e-08,
+        "kinetic_energy_error_rel": 8.203844827804324e-05,
+        "total_circulation_abs_error": 0.0,
+        "poisson_residual_abs_max": 6.577939361386694e-06,
+        "poisson_residual_rel_max": 6.4257981099893715e-09,
+        "cg_iters": 2.0,
+        "nan_inf_steps": 0.0
+      },
+      "poisson_converged": true,
+      "poisson_fail_reason": ""
+    },
+    {
+      "n_bits": 11,
+      "N": 2048,
+      "wall_s": 182.314181361,
+      "status": "poisson_unconverged",
+      "chi_max": 16,
+      "compression": 262144.0,
+      "invariant_error": 2.3853262706926157e-13,
+      "qois": {
+        "omega_error_L2": 0.013273479991600973,
+        "omega_error_L2_rel": 0.013283964449877936,
+        "psi_error_L2": 2.747339994129377e-05,
+        "psi_error_L2_rel": 0.0021709261298353383,
+        "enstrophy": 0.49929676686795876,
+        "enstrophy_error_rel": 0.0001716951759670492,
+        "kinetic_energy_error_rel": 7.968501908593041e-05,
+        "total_circulation_abs_error": 2.3854076215522194e-13,
+        "poisson_residual_abs_max": 0.00022811390521746875,
+        "poisson_residual_rel_max": 1.1146290365058806e-07,
+        "cg_iters": 360.0,
+        "nan_inf_steps": 0.0
+      },
+      "poisson_converged": false,
+      "poisson_fail_reason": "4/10 steps unconverged, max_cg_iters=360, max_relative_residual=1.11e-07"
+    }
+  ],
+  "total_wall_s": 188.4576705999989,
+  "generated_utc": "2026-03-02T22:46:25.710349+00:00"
+}

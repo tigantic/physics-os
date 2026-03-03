@@ -1,3 +1,38 @@
+## ABSOLUTE MINIMUM GRID SIZE — 512×512.  NO EXCEPTIONS.  EVER.
+
+**NEVER run, test, benchmark, profile, or diagnose ANYTHING below
+512×512 (n_bits=9).  This is non-negotiable.**
+
+Why:
+1. **Small matrices produce garbage results.**  GPU kernel launch
+   overhead dominates at small sizes, producing irregular timings
+   that do not predict production behavior.  Any "optimization"
+   derived from small-matrix profiling will BREAK the solver at
+   production scale.
+2. **Small grids are SLOWER than production grids** on GPU due to
+   launch overhead amortization.  There is zero speedup from
+   "quick testing" at small sizes.
+3. **The optimization loop from hell:**  Run small → see weird
+   numbers → "fix" for small sizes → break production → run at
+   production size → see it's broken → go back to small.  This
+   loop has wasted HOURS of human time.  It ends here.
+
+Rules:
+- `--n-bits` must be ≥ 9 (512²) for ALL runs, tests, benchmarks,
+  diagnostics, and profiling.
+- If you need to test QR/SVD/kernel performance, test it INSIDE
+  the actual 512² solver run with timing instrumentation.
+- If a unit test needs a grid, it uses n_bits=9 minimum.
+- There is NO valid use case for smaller grids.  None.
+- If you catch yourself typing `n_bits=5` or `n_bits=7` or
+  creating a `torch.randn(64, 64)` benchmark — STOP.  Delete it.
+  Use the production grid.
+
+Violation of this rule is an automatic rejection, no exceptions,
+no exception template, no written rationale.  Just don't do it.
+
+---
+
 ## Codebase Reference — Read Before You Claim
 
 This is a **1.84M LOC, 10,364-file** physics operating system.

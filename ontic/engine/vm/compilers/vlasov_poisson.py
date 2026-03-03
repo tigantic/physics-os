@@ -131,7 +131,8 @@ class VlasovPoissonCompiler(BaseCompiler):
 
             # Step 2: Poisson solve ∇²φ = -ρ
             negate(2, 1),                           # r2 = -ρ
-            laplace_solve(3, 2, dim=0),             # r3 = φ(x)
+            laplace_solve(3, 2, dim=0,              # r3 = φ(x)
+                          nullspace="constant"),
 
             # Step 3: E = -∂φ/∂x
             grad(4, 3, dim=0),                      # r4 = ∂φ/∂x

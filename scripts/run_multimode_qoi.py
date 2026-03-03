@@ -1,16 +1,22 @@
 #!/usr/bin/env python3
-"""Run Stokes 512² scenario with Tier 2 physics QoI extraction.
+"""Run multi-mode NS 2D at 1024² to stress the Poisson MG solver.
 
 Usage:
-    python3 scripts/run_stokes_qoi.py [--steps N]
+    python3 scripts/run_multimode_qoi.py [--steps N] [--n-bits B] [--modes K] [--precond mg|none]
 
 Pipeline:
-  1. Execute NS 2D (glycerol, cylinder, Re ≈ 0.09) on GPU
+  1. Execute NS 2D with multi-mode IC (broadband ω₀) on GPU
   2. Extract physics QoI from RAW result (before sanitization)
   3. Sanitize result (IP boundary)
   4. Inject QoI into sanitized dict
   5. Generate validation report + claims
   6. Write slim JSON
+
+The multi-mode IC injects Fourier content at wavenumbers 1..K per
+dimension with Kolmogorov-like 1/(k²+m²) amplitude decay.  This
+stresses the Poisson solver by requiring resolution of modes with
+widely separated eigenvalues — unlike the single Taylor-Green mode
+which converges in 1 CG iteration.
 """
 from __future__ import annotations
 
@@ -25,7 +31,7 @@ logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s %(name)s %(levelname)s %(message)s",
 )
-logger = logging.getLogger("stokes_qoi")
+logger = logging.getLogger("multimode_qoi")
 
 # ── Project root ────────────────────────────────────────────────
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -38,38 +44,65 @@ from physics_os.core.physics_qoi import extract_physics_qoi
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Stokes QoI run")
-    parser.add_argument("--steps", type=int, default=1000, help="Time steps")
+    parser = argparse.ArgumentParser(description="Multi-mode Poisson stress run")
+    parser.add_argument("--steps", type=int, default=256, help="Time steps")
+    parser.add_argument("--n-bits", type=int, default=10, help="Bits per dim (grid = 2^n)")
+    parser.add_argument("--modes", type=int, default=4, help="Fourier modes per dim")
+    parser.add_argument("--precond", type=str, default="mg",
+                        choices=["mg", "none"], help="Poisson preconditioner")
+    parser.add_argument("--max-rank", type=int, default=64, help="Max QTT rank")
+    parser.add_argument("--poisson-tol", type=float, default=1e-6,
+                        help="CG convergence tolerance")
+    parser.add_argument("--poisson-max-iters", type=int, default=80,
+                        help="Max CG iterations per step")
     args = parser.parse_args()
 
-    n_bits = 9  # 512 = 2^9
+    n_bits = args.n_bits
     n_steps = args.steps
+    ic_n_modes = args.modes
+    precond = args.precond
     domain_key = "navier_stokes_2d"
+    grid_size = 2 ** n_bits
 
-    # Glycerol past a 10 mm cylinder at 0.01 m/s  →  Re ≈ 0.09
-    Re = 0.09
-    params = {
-        "Re": Re,
-        "inlet_velocity": 0.01,
-        "cylinder_radius": 0.005,
-    }
+    # Moderate Reynolds — not creeping flow, not turbulent.
+    # Re ~ 1 gives nonlinear advection (multi-mode interaction) while
+    # remaining stable with explicit Euler at the CFL-limited dt.
+    viscosity = 0.01
+    Re_est = 1.0 / viscosity  # U ~ 1 from IC, L = 1
 
     execution_context = {
         "n_bits": n_bits,
         "n_steps": n_steps,
-        "Re": Re,
+        "Re": Re_est,
+        "ic_type": "multi_mode",
+        "ic_n_modes": ic_n_modes,
+        "precond": precond,
+    }
+
+    params = {
+        "viscosity": viscosity,
+        "ic_type": "multi_mode",
+        "ic_n_modes": ic_n_modes,
+        "poisson_precond": precond,
+        "poisson_tol": args.poisson_tol,
+        "poisson_max_iters": args.poisson_max_iters,
     }
 
     config = ExecutionConfig(
         domain=domain_key,
         n_bits=n_bits,
         n_steps=n_steps,
-        max_rank=64,
+        max_rank=args.max_rank,
         truncation_tol=1e-10,
         parameters=params,
     )
 
-    logger.info("Starting: %d² grid, %d steps, Re=%.2f", 2**n_bits, n_steps, Re)
+    logger.info(
+        "Starting: %d² grid, %d steps, ν=%.4f (Re≈%.0f), "
+        "%d modes/dim, precond=%s, max_rank=%d",
+        grid_size, n_steps, viscosity, Re_est,
+        ic_n_modes, precond, args.max_rank,
+    )
     t0 = time.perf_counter()
     raw_result = execute(config)
     wall = time.perf_counter() - t0
@@ -101,13 +134,13 @@ def main() -> None:
     val_report = generate_validation_report(san, domain_key)
     claims = generate_claims(san, domain_key)
 
-    # ── Build slim output (no coordinate arrays, no redundancy) ─
+    # ── Build slim output ───────────────────────────────────────
     grid_raw = san.get("grid", {})
     cons_raw = san.get("conservation", {})
     perf_raw = san.get("performance", {})
 
     output = {
-        "scenario": "Stokes Creeping Flow (Glycerol, Re=0.09)",
+        "scenario": f"Multi-mode NS 2D ({grid_size}², {ic_n_modes}² modes, precond={precond})",
         "domain": domain_key,
         "grid": {
             "dimensions": grid_raw.get("dimensions"),
@@ -117,8 +150,12 @@ def main() -> None:
         "execution": {
             "n_bits": n_bits,
             "n_steps": n_steps,
-            "Re": Re,
-            "max_rank": config.max_rank,
+            "viscosity": viscosity,
+            "Re_estimate": Re_est,
+            "ic_type": "multi_mode",
+            "ic_n_modes": ic_n_modes,
+            "precond": precond,
+            "max_rank": args.max_rank,
             "truncation_tol": config.truncation_tol,
             "wall_time_s": perf_raw.get("wall_time_s"),
             "throughput_gp_per_s": perf_raw.get("throughput_gp_per_s"),
@@ -138,20 +175,25 @@ def main() -> None:
     # ── Write JSON ──────────────────────────────────────────────
     out_dir = os.path.join(ROOT, "scenario_output", "data")
     os.makedirs(out_dir, exist_ok=True)
-    out_path = os.path.join(out_dir, f"stokes_512_{n_steps}_qoi.json")
+    tag = f"multimode_{grid_size}_{n_steps}_{precond}"
+    out_path = os.path.join(out_dir, f"{tag}_qoi.json")
     with open(out_path, "w") as f:
         json.dump(output, f, indent=2, default=str)
     logger.info("Output written: %s (%.1f KB)", out_path, os.path.getsize(out_path) / 1024)
 
     # ── Summary ─────────────────────────────────────────────────
-    print("\n" + "=" * 60)
-    print(f"STOKES 512² × {n_steps} steps — Tier 2 QoI Report")
-    print("=" * 60)
-    print(f"Wall time:     {san.get('performance', {}).get('wall_time_s', 0):.2f} s")
+    print("\n" + "=" * 64)
+    print(f"MULTI-MODE NS 2D — {grid_size}² × {n_steps} steps")
+    print(f"  IC: {ic_n_modes}² Fourier modes, Kolmogorov spectrum")
+    print(f"  Poisson preconditioner: {precond}")
+    print("=" * 64)
+    wt = san.get("performance", {}).get("wall_time_s", 0)
+    print(f"Wall time:     {wt:.2f} s")
     print(f"Validation:    valid={val_report.get('valid')}")
     for check in val_report.get("checks", []):
         status = "PASS" if check["passed"] else "FAIL"
-        print(f"  [{status}] {check['name']}: {check['detail']}")
+        sev = check.get("failure_severity", "?")
+        print(f"  [{status}] ({sev}) {check['name']}: {check['detail']}")
     print(f"\nClaims ({len(claims)}):")
     for c in claims:
         sat = "✓" if c["satisfied"] else "✗"
@@ -179,9 +221,8 @@ def main() -> None:
         print(f"\nStokes drag reference:")
         print(f"  Re = {s['Re']:.2e}")
         print(f"  Lamb (1911) C_d = {s['lamb_cd']:.2f}")
-        print(f"  enstrophy bounded = {s['enstrophy_bounded']}")
-
-    print("=" * 60)
+    elif Re_est >= 10.0:
+        print(f"\n(Stokes drag: skipped, Re≈{Re_est:.0f} > 10)")
 
 
 if __name__ == "__main__":

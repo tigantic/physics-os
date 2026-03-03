@@ -22,6 +22,22 @@ from typing import Any
 logger = logging.getLogger(__name__)
 
 
+def _percentile(data: list[float], pct: float) -> float:
+    """Compute the *pct*-th percentile of *data* (linear interpolation).
+
+    Pure-Python — avoids importing numpy just for one call.
+    """
+    if not data:
+        return 0.0
+    s = sorted(data)
+    n = len(s)
+    k = (pct / 100.0) * (n - 1)
+    lo = int(k)
+    hi = min(lo + 1, n - 1)
+    frac = k - lo
+    return s[lo] + frac * (s[hi] - s[lo])
+
+
 def extract_physics_qoi(
     execution_result: Any,
     domain_key: str,
@@ -92,6 +108,8 @@ def _extract_poisson_qoi(probes: dict[str, list[float]]) -> dict[str, Any]:
     mean_rel_res = sum(rel_res) / len(rel_res)
     n_converged = sum(1 for c in converged if c > 0.5)
     mean_iters = sum(cg_iters) / len(cg_iters) if cg_iters else 0.0
+    max_iters = max(cg_iters) if cg_iters else 0
+    p95_iters = _percentile(cg_iters, 95) if cg_iters else 0.0
 
     return {
         "available": True,
@@ -101,8 +119,11 @@ def _extract_poisson_qoi(probes: dict[str, list[float]]) -> dict[str, Any]:
         "mean_relative_residual": float(f"{mean_rel_res:.4e}"),
         "converged_fraction": round(n_converged / len(converged), 4) if converged else None,
         "mean_cg_iters": round(mean_iters, 1),
-        "max_residual_below_1e-6": max_rel_res < 1e-6,
+        "cg_iters_p95": round(p95_iters, 1),
+        "cg_iters_max": int(max_iters),
+        "max_residual_below_1e-3": max_rel_res < 1e-3,
         "max_residual_below_1e-4": max_rel_res < 1e-4,
+        "max_residual_below_1e-6": max_rel_res < 1e-6,
     }
 
 

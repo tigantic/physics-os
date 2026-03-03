@@ -42,6 +42,7 @@ def gpu_mpo_apply(
     tt: GPUQTTTensor,
     max_rank: int = 64,
     cutoff: float = 1e-12,
+    op_cache: "GPUOperatorCache | None" = None,
 ) -> GPUQTTTensor:
     """Apply an MPO to a GPUQTTTensor entirely on GPU.
 
@@ -51,6 +52,11 @@ def gpu_mpo_apply(
     V-08 RESOLVED: Per-core contractions are batched into a single
     padded ``torch.einsum`` — one GPU kernel launch for all N cores
     instead of N sequential dispatches.
+
+    When ``op_cache`` is provided, the pre-padded ``W_batch`` tensor
+    is fetched from the cache instead of being rebuilt every call.
+    For Poisson iterations where the MPO never changes, this
+    eliminates repeated allocation + fill of the static MPO padding.
 
     Parameters
     ----------
@@ -62,6 +68,9 @@ def gpu_mpo_apply(
         Maximum bond dimension for rounding.
     cutoff : float
         rSVD truncation tolerance.
+    op_cache : GPUOperatorCache, optional
+        If provided, pre-padded W_batch is fetched from (or stored in)
+        the cache.  Pass the runtime's ``op_cache`` for hot-path calls.
 
     Returns
     -------
@@ -79,39 +88,43 @@ def gpu_mpo_apply(
     dtype = tt.cores[0].dtype
     d_phys = mpo_cores[0].shape[1]  # d_out = d_in = 2 for QTT
 
-    # ── Pad + stack: single allocation, vectorized fill ────────────
+    # ── MPO padding: use cache if available, else build fresh ──────
     # V-08 RESOLVED: per-core contractions batched into single padded
     # einsum — one GPU kernel for all N cores.
-    # Remaining per-core loops are data-movement (slice assignments)
-    # with no GPU compute.  These are O(1) Python overhead per core.
-    max_D_l = max(W.shape[0] for W in mpo_cores)
-    max_D_r = max(W.shape[3] for W in mpo_cores)
+    # When op_cache is provided, W_batch is built once and reused.
+    if op_cache is not None:
+        W_batch, shapes_Dl, shapes_Dr, max_D_l, max_D_r = (
+            op_cache.get_mpo_batch(mpo_cores)
+        )
+    else:
+        max_D_l = max(W.shape[0] for W in mpo_cores)
+        max_D_r = max(W.shape[3] for W in mpo_cores)
+        W_batch = torch.zeros(
+            N, max_D_l, d_phys, d_phys, max_D_r,
+            device=device, dtype=dtype,
+        )
+        shapes_Dl = torch.empty(N, dtype=torch.long)
+        shapes_Dr = torch.empty(N, dtype=torch.long)
+        for k in range(N):
+            Dl, _, _, Dr = mpo_cores[k].shape
+            W_batch[k, :Dl, :, :, :Dr] = mpo_cores[k]
+            shapes_Dl[k] = Dl
+            shapes_Dr[k] = Dr
+
+    # ── QTT state padding (changes every call) ─────────────────────
     max_r_l = max(G.shape[0] for G in tt.cores)
     max_r_r = max(G.shape[2] for G in tt.cores)
 
-    W_batch = torch.zeros(
-        N, max_D_l, d_phys, d_phys, max_D_r,
-        device=device, dtype=dtype,
-    )
     G_batch = torch.zeros(
         N, max_r_l, d_phys, max_r_r,
         device=device, dtype=dtype,
     )
 
-    # Collect shapes and fill padded batches.
-    # The actual GPU work (the einsum) is a single kernel launch below;
-    # these assignments are just host-side index arithmetic + async copies.
-    shapes_Dl = torch.empty(N, dtype=torch.long)
-    shapes_Dr = torch.empty(N, dtype=torch.long)
     shapes_rl = torch.empty(N, dtype=torch.long)
     shapes_rr = torch.empty(N, dtype=torch.long)
     for k in range(N):
-        Dl, _, _, Dr = mpo_cores[k].shape
         rl, _, rr = tt.cores[k].shape
-        W_batch[k, :Dl, :, :, :Dr] = mpo_cores[k]
         G_batch[k, :rl, :, :rr] = tt.cores[k]
-        shapes_Dl[k] = Dl
-        shapes_Dr[k] = Dr
         shapes_rl[k] = rl
         shapes_rr[k] = rr
 
@@ -142,7 +155,62 @@ def gpu_mpo_apply(
 
 
 # ─────────────────────────────────────────────────────────────────────
-# GPU-native CG / Defect-Correction Poisson solver
+# Null-space (mean) projection for periodic / Neumann Poisson
+# ─────────────────────────────────────────────────────────────────────
+
+# Module-level cache for the rank-1 ones tensor used in mean projection.
+# Keyed by (bits_per_dim, domain) so one allocation per grid config.
+_ones_cache: dict[tuple[tuple[int, ...], tuple[tuple[float, float], ...]], GPUQTTTensor] = {}
+
+
+def _get_ones_tt(
+    bits_per_dim: tuple[int, ...],
+    domain: tuple[tuple[float, float], ...],
+) -> GPUQTTTensor:
+    """Get (or create+cache) the rank-1 all-ones QTT tensor."""
+    key = (bits_per_dim, domain)
+    if key not in _ones_cache:
+        _ones_cache[key] = GPUQTTTensor.ones(bits_per_dim, domain)
+    return _ones_cache[key]
+
+
+def _project_zero_mean(
+    f: GPUQTTTensor,
+    max_rank: int,
+    cutoff: float,
+) -> GPUQTTTensor:
+    """Project a QTT field to zero mean (remove constant mode).
+
+    The periodic / pure-Neumann Laplacian has a constant null space.
+    For ``Lψ = ω`` to be consistent, ``ω`` must have zero mean.
+    QTT truncation can introduce a nonzero mean, making the system
+    inconsistent and causing CG/DC to diverge.
+
+    Removes the mean:  ``f → f - <f, 1>/<1, 1> · 𝟏``
+
+    The denominator ``<1, 1>`` is the definition-safe L²-norm of the
+    constant function — correct regardless of whether ``inner()``
+    carries quadrature weighting.  Previous code used ``N_total``
+    which is only correct when ``inner()`` is a plain sum.
+
+    Cost: two TT inner products (rank-1) + one rank-1 subtraction
+    + one rSVD round.  Negligible compared to one ``gpu_mpo_apply``.
+    """
+    ones_tt = _get_ones_tt(f.bits_per_dim, f.domain)
+    numerator = float(f.inner(ones_tt))
+    denominator = float(ones_tt.inner(ones_tt))
+    if denominator < 1e-30:
+        return f
+    mean_val = numerator / denominator
+    if abs(mean_val) < 1e-30:
+        return f
+    return f.sub(ones_tt.scale(mean_val)).truncate(
+        max_rank=max_rank, cutoff=cutoff,
+    )
+
+
+# ─────────────────────────────────────────────────────────────────────
+# GPU-native CG / MG-DC Poisson solver
 # ─────────────────────────────────────────────────────────────────────
 
 
@@ -156,6 +224,9 @@ def gpu_poisson_solve(
     info: dict[str, Any] | None = None,
     x0: GPUQTTTensor | None = None,
     precond: "Callable[[GPUQTTTensor], GPUQTTTensor] | None" = None,
+    nullspace_kind: str | None = None,
+    dc_damp: float = 1.0,
+    op_cache: "GPUOperatorCache | None" = None,
 ) -> GPUQTTTensor:
     r"""Solve ∇²ϕ = rhs entirely on GPU in QTT format.
 
@@ -163,19 +234,19 @@ def gpu_poisson_solve(
     true-residual replacement to guard against QTT truncation drift.
 
     When ``precond`` is provided, runs **defect correction**
-    (Richardson iteration with nonlinear preconditioner):
+    (DC / Richardson iteration) with the V-cycle as preconditioner:
 
-        r_k = b − A·x_k        (true residual)
-        z_k = M(r_k)           (V-cycle — nonlinear due to QTT truncation)
-        x_{k+1} = x_k + z_k   (additive correction, then truncate)
+    .. math:: x_{k+1} = x_k + \text{damp} \cdot M^{-1}(b - Lx_k)
 
-    The V-cycle is a nonlinear operator because QTT rank truncation
-    makes each application input-dependent.  This precludes standard
-    PCG/FCG (which require a fixed, linear preconditioner).  Defect
-    correction is unconditionally stable for contractive M.
+    DC is preferred over Krylov methods (FGMRES) because the
+    V-cycle is *nonlinear* (QTT rSVD truncation varies per call)
+    and TT truncation in Gram-Schmidt destroys Arnoldi
+    orthogonality, making Krylov acceleration ineffective.
 
-    Convergence is checked via true residual ``||b − Ax||/||b|| < tol``
-    at the end.  No special-case shortcuts override the convergence flag.
+    When ``nullspace_kind`` is ``"constant"``, the RHS is projected
+    to zero mean before solving to ensure consistency with the
+    operator's constant null space (periodic / pure-Neumann BCs).
+    For Dirichlet or mixed BCs, no projection is applied.
 
     Parameters
     ----------
@@ -198,6 +269,18 @@ def gpu_poisson_solve(
     precond : callable, optional
         Preconditioner: ``z = precond(r)`` ≈ L⁻¹·r.
         If ``None``, standard (unpreconditioned) CG.
+    nullspace_kind : str or None
+        Null space of the operator.  ``"constant"`` means the operator
+        has a constant null space (periodic / pure-Neumann Laplacian);
+        the RHS is projected to zero mean.  ``None`` means no null
+        space treatment (Dirichlet / mixed BCs).
+    dc_damp : float
+        Outer damping factor for defect-correction iterations.
+        ``1.0`` applies the full V-cycle correction; values ``< 1``
+        under-relax for stability.
+    op_cache : GPUOperatorCache, optional
+        If provided, passes pre-padded MPO batch tensors to
+        ``gpu_mpo_apply`` to avoid re-allocation every call.
 
     Returns
     -------
@@ -209,13 +292,22 @@ def gpu_poisson_solve(
     logger = logging.getLogger(__name__)
     use_precond = precond is not None
 
+    # ── Null-space projection (conditional on BC type) ────────────────
+    # Only operators with a constant null space (periodic / pure-Neumann
+    # Laplacian) need mean subtraction.  For Dirichlet or mixed BCs the
+    # operator is invertible and subtracting the mean changes the
+    # solution — so we gate on the compiler-emitted nullspace_kind.
+    if nullspace_kind == "constant":
+        rhs = _project_zero_mean(rhs, max_rank, cutoff)
+
     # ── Initial guess ────────────────────────────────────────────────
     r_cold = rhs.clone()
     rs_cold = r_cold.inner(r_cold)
 
     use_warm = False
     if x0 is not None:
-        Ax0 = gpu_mpo_apply(lap_mpo, x0, max_rank=max_rank, cutoff=cutoff)
+        Ax0 = gpu_mpo_apply(lap_mpo, x0, max_rank=max_rank, cutoff=cutoff,
+                            op_cache=op_cache)
         r_warm = rhs.sub(Ax0).truncate(max_rank=max_rank, cutoff=cutoff)
         rs_warm = r_warm.inner(r_warm)
         if rs_warm < rs_cold:
@@ -258,41 +350,70 @@ def gpu_poisson_solve(
             info["relative_residual"] = (float(rs_old) / rhs_norm_sq) ** 0.5
         return x
 
-    # ── Preconditioned defect correction ─────────────────────────────
-    # The multigrid V-cycle is a nonlinear operator (QTT truncation
-    # makes each application input-dependent).  Standard PCG fails
-    # because it requires a fixed linear preconditioner.
+    # ── MG-preconditioned Defect Correction (DC) or plain CG ────────
     #
-    # Instead, use simple defect correction (Richardson iteration):
-    #     x_{k+1} = x_k + M(b − A·x_k)
+    # The Laplacian L is symmetric negative semi-definite.
+    # CG (unpreconditioned) solves the SPD system A·x = b' where
+    # A = -L, b' = -b.
+    #
+    # When a V-cycle preconditioner is provided, we use **defect
+    # correction** (DC / Richardson iteration):
+    #
+    #     x_{k+1} = x_k + damp · M⁻¹ · (b − L·x_k)
+    #
+    # DC is the right outer solver for QTT because:
+    #   1. The V-cycle is *nonlinear* — QTT rSVD truncation varies
+    #      per call, breaking the fixed-preconditioner assumption
+    #      that CG/FCG require.
+    #   2. DC has zero per-iteration overhead beyond one V-cycle
+    #      and one operator apply.  No Gram-Schmidt, no least-
+    #      squares, no basis storage.
+    #   3. Krylov methods (FGMRES) are theoretically faster per
+    #      iteration, but TT truncation in Gram-Schmidt destroys
+    #      Arnoldi orthogonality, making the Hessenberg residual
+    #      estimate unreliable (100-200× too optimistic) and
+    #      Krylov acceleration ineffective in practice.
+    #
+    # Cost per DC iteration:
+    #   - 1 V-cycle (preconditioner application): z = M⁻¹·r
+    #   - 1 operator application: L·x (true residual recompute)
+    #   - 2 truncations (correction add + residual subtract)
 
     converged = False
     final_rs = float(rs_old)
     final_iters = 0
 
     if use_precond:
+        # ── Defect correction with V-cycle preconditioner ──────────
         for it in range(max_iter):
-            if it > 0 or use_warm:
-                Ax = gpu_mpo_apply(
-                    lap_mpo, x, max_rank=max_rank, cutoff=cutoff
-                )
-                r = rhs.sub(Ax).truncate(
-                    max_rank=max_rank, cutoff=cutoff
-                )
+            z = precond(r)
 
-            rs = r.inner(r)
-            final_rs = float(rs)
-            final_iters = it
+            correction = z if dc_damp == 1.0 else z.scale(dc_damp)
+            x = x.add(correction).truncate(
+                max_rank=max_rank, cutoff=cutoff,
+            )
+
+            Lx = gpu_mpo_apply(
+                lap_mpo, x, max_rank=max_rank, cutoff=cutoff,
+                op_cache=op_cache,
+            )
+            r = rhs.sub(Lx).truncate(
+                max_rank=max_rank, cutoff=cutoff,
+            )
+            rs = float(r.inner(r))
+
+            rel_rs = (rs / rhs_norm_sq) ** 0.5
+            logger.debug(
+                "DC iter %d: ||r||/||b|| = %.2e", it + 1, rel_rs,
+            )
+
+            final_rs = rs
+            final_iters = it + 1
 
             if rs <= tol_sq:
                 converged = True
                 break
 
-            z = precond(r)
-            x = x.add(z).truncate(
-                max_rank=max_rank, cutoff=cutoff
-            )
-            final_iters = it + 1
     else:
         # ── CG with periodic true-residual replacement ────────────────
         # The Laplacian ∇² is negative (semi-)definite.  CG requires a
@@ -323,7 +444,8 @@ def gpu_poisson_solve(
             # ── True-residual replacement ─────────────────────────
             if it > 0 and it % replace_every == 0:
                 Ax_check = gpu_mpo_apply(
-                    lap_mpo, x, max_rank=max_rank, cutoff=cutoff
+                    lap_mpo, x, max_rank=max_rank, cutoff=cutoff,
+                    op_cache=op_cache,
                 )
                 # Negated residual: r' = Lx − b = −(b − Lx)
                 r = Ax_check.sub(rhs).truncate(
@@ -343,7 +465,8 @@ def gpu_poisson_solve(
 
             # ── Standard CG iteration (on SPD system −∇²) ────────
             Ap = gpu_mpo_apply(
-                lap_mpo, p, max_rank=max_rank, cutoff=cutoff
+                lap_mpo, p, max_rank=max_rank, cutoff=cutoff,
+                op_cache=op_cache,
             ).scale(-1.0)  # (−L)·p  (SPD matvec)
 
             pAp = p.inner(Ap)
@@ -378,7 +501,8 @@ def gpu_poisson_solve(
     # The recursively updated residual drifts due to QTT truncation.
     # Validate with one true residual: r_true = b − A·x.
     Ax_true = gpu_mpo_apply(
-        lap_mpo, x, max_rank=max_rank, cutoff=cutoff
+        lap_mpo, x, max_rank=max_rank, cutoff=cutoff,
+        op_cache=op_cache,
     )
     r_true = rhs.sub(Ax_true).truncate(
         max_rank=max_rank, cutoff=cutoff
@@ -387,7 +511,9 @@ def gpu_poisson_solve(
     rel_true = (rs_true / rhs_norm_sq) ** 0.5
 
     # Convergence is defined by the TRUE residual, no overrides.
-    converged = (rs_true <= tol_sq) and (final_iters < max_iter)
+    # If the true residual is below tolerance, the solve succeeded —
+    # even if it used all max_iter iterations to get there.
+    converged = rs_true <= tol_sq
 
     if converged:
         logger.debug(
@@ -482,17 +608,73 @@ def laplacian_mpo_gpu(
 
 
 class GPUOperatorCache:
-    """Caches GPU-resident MPOs to avoid recomputation.
+    """Caches GPU-resident MPOs and pre-padded batch tensors.
 
     MPOs are built once (CPU), transferred to GPU once, then
     reused across all time steps. The CUDA memory cost is minimal:
     each MPO is O(L × D² × d²) which is small for D ≤ 5, d = 2.
+
+    Additionally caches the pre-padded ``W_batch`` tensor for each
+    MPO so that ``gpu_mpo_apply`` only needs to pack the (changing)
+    ``G_batch`` per call — eliminating repeated allocation + fill of
+    the static MPO padding that was death-by-a-thousand-cuts in
+    Poisson iterations.
 
     Variant-aware: keyed by ``(operator, variant, dim, grid_config)``.
     """
 
     def __init__(self) -> None:
         self._cache: dict[str, list[torch.Tensor]] = {}
+        # Pre-padded MPO batch cache:
+        # key → (W_batch, shapes_Dl, shapes_Dr, max_D_l, max_D_r)
+        self._mpo_batch_cache: dict[
+            int, tuple[torch.Tensor, torch.Tensor, torch.Tensor, int, int]
+        ] = {}
+
+    def get_mpo_batch(
+        self, mpo_cores: list[torch.Tensor],
+    ) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor, int, int]:
+        """Get or create the pre-padded W_batch for an MPO.
+
+        The cache is keyed by ``id(mpo_cores)`` which is safe because
+        MPO core lists are themselves cached and never mutated.
+
+        Returns
+        -------
+        W_batch : torch.Tensor
+            Shape ``(N, max_D_l, d, d, max_D_r)`` — zero-padded MPO cores.
+        shapes_Dl, shapes_Dr : torch.Tensor
+            Per-core actual bond dimensions (long tensors, length N).
+        max_D_l, max_D_r : int
+            Maximum MPO bond dimensions across all cores.
+        """
+        key = id(mpo_cores)
+        if key in self._mpo_batch_cache:
+            return self._mpo_batch_cache[key]
+
+        N = len(mpo_cores)
+        device = mpo_cores[0].device
+        dtype = mpo_cores[0].dtype
+        d_phys = mpo_cores[0].shape[1]
+
+        max_D_l = max(W.shape[0] for W in mpo_cores)
+        max_D_r = max(W.shape[3] for W in mpo_cores)
+
+        W_batch = torch.zeros(
+            N, max_D_l, d_phys, d_phys, max_D_r,
+            device=device, dtype=dtype,
+        )
+        shapes_Dl = torch.empty(N, dtype=torch.long)
+        shapes_Dr = torch.empty(N, dtype=torch.long)
+        for k in range(N):
+            Dl, _, _, Dr = mpo_cores[k].shape
+            W_batch[k, :Dl, :, :, :Dr] = mpo_cores[k]
+            shapes_Dl[k] = Dl
+            shapes_Dr[k] = Dr
+
+        result = (W_batch, shapes_Dl, shapes_Dr, max_D_l, max_D_r)
+        self._mpo_batch_cache[key] = result
+        return result
 
     def get_gradient(
         self,
@@ -523,5 +705,6 @@ class GPUOperatorCache:
         return self._cache[key]
 
     def clear(self) -> None:
-        """Clear the cache, freeing GPU memory."""
+        """Clear all caches, freeing GPU memory."""
         self._cache.clear()
+        self._mpo_batch_cache.clear()
