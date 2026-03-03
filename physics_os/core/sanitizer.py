@@ -319,7 +319,7 @@ def sanitize_result(
             "final_value": _safe_float(final, precision),
             "error_value": float(f"{error_value:.2e}"),
             "error_metric": error_metric,
-            "relative_error": float(f"{error_value:.2e}") if error_metric == "relative" else float(f"{abs_err / (abs_initial + 1e-30):.2e}"),
+            "relative_error": float(f"{error_value:.2e}") if error_metric == "relative" else None,
             "absolute_error": float(f"{abs_err:.2e}"),
             "status": status,
             "resolution_tier": tier.name,
