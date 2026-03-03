@@ -496,6 +496,166 @@ def cmd_serve(args: argparse.Namespace) -> None:
     )
 
 
+def cmd_flowbox(args: argparse.Namespace) -> None:
+    """Run a FlowBox (Navier-Stokes 2D periodic box) simulation."""
+    from physics_os.flowbox.contract import (
+        FlowBoxOutputs,
+        FlowBoxRequest,
+        FlowBoxTier,
+        PoissonProfile,
+        PresetKey,
+        resolve,
+    )
+    from physics_os.flowbox.executor import run_flowbox
+    from physics_os.flowbox.render import generate_render
+    from physics_os.flowbox.sanitizer import sanitize_flowbox
+    from physics_os.core.evidence import generate_validation_report, generate_claims
+    from physics_os.core.certificates import issue_certificate
+    from physics_os.core.hasher import content_hash
+
+    # ── Parse preset ────────────────────────────────────────────
+    try:
+        preset = PresetKey(args.preset)
+    except ValueError:
+        _stderr(
+            f"Error: unknown preset '{args.preset}'.  "
+            f"Available: {', '.join(p.value for p in PresetKey)}"
+        )
+        sys.exit(1)
+
+    # ── Build request ───────────────────────────────────────────
+    try:
+        poisson = PoissonProfile(args.poisson_profile)
+    except ValueError:
+        _stderr(f"Error: unknown poisson_profile '{args.poisson_profile}'.  Use fast/balanced/accurate.")
+        sys.exit(1)
+
+    outputs = FlowBoxOutputs(
+        cadence=args.cadence,
+        fields=args.fields.split(",") if args.fields else ["omega"],
+        render=not args.no_render,
+        render_colormap=args.colormap,
+        render_fps=args.fps,
+    )
+
+    fb_request = FlowBoxRequest(
+        preset=preset,
+        grid=args.grid,
+        viscosity=args.viscosity,
+        dt=args.dt,
+        steps=args.steps,
+        seed=args.seed,
+        poisson_profile=poisson,
+        outputs=outputs,
+    )
+
+    # ── Resolve config ──────────────────────────────────────────
+    try:
+        tier = FlowBoxTier(args.tier)
+    except ValueError:
+        tier = FlowBoxTier.EXPLORER
+
+    try:
+        config = resolve(fb_request, tier=tier)
+    except ValueError as exc:
+        _stderr(f"Error: {exc}")
+        sys.exit(1)
+
+    _stderr(
+        f"FlowBox: preset={config.preset}  grid={config.grid}  "
+        f"steps={config.steps}  ν={config.viscosity:.0e}  "
+        f"dt={config.dt:.2e}  seed={config.seed}"
+    )
+
+    # ── Execute ─────────────────────────────────────────────────
+    fb_result = run_flowbox(config)
+
+    if not fb_result.raw_result.success:
+        _stderr(f"Execution failed: {getattr(fb_result.raw_result, 'error', 'unknown')}")
+        _json_out({"success": False, "error": "simulation failed"})
+        sys.exit(2)
+
+    _stderr(f"QTT completed in {fb_result.qtt_wall_time_s:.1f}s")
+
+    # ── Render ──────────────────────────────────────────────────
+    render_meta = None
+    if config.render and fb_result.render_frames:
+        _stderr(f"Rendering {len(fb_result.render_frames)} frames...")
+        render_result = generate_render(
+            fb_result.render_frames,
+            fb_result.render_frame_times,
+            fps=config.render_fps,
+            colormap=config.render_colormap,
+            watermark=config.render_watermark,
+            preset_label=config.preset_spec.label,
+            grid=config.grid,
+            viscosity=config.viscosity,
+        )
+        render_meta = render_result.metadata
+        if render_result.available:
+            render_path = args.render_output or f"flowbox_{config.preset}_{config.grid}.{render_result.format}"
+            Path(render_path).write_bytes(render_result.data)
+            _stderr(f"Render written to {render_path} ({render_result.size_bytes} bytes)")
+
+    # ── Sanitize ────────────────────────────────────────────────
+    sanitized = sanitize_flowbox(
+        raw_result=fb_result.raw_result,
+        config=config,
+        physics_qoi=fb_result.physics_qoi,
+        render_metadata=render_meta,
+    )
+
+    output: dict[str, Any] = {
+        "product": "flowbox",
+        "product_version": "1.0.0",
+        "preset": config.preset,
+        "preset_label": config.preset_spec.label,
+        "domain": "navier_stokes_2d",
+        "parameters": {
+            "viscosity": config.viscosity,
+            "dt": config.dt,
+            "steps": config.steps,
+            "seed": config.seed,
+        },
+        "result": sanitized,
+    }
+
+    # ── Validate ────────────────────────────────────────────────
+    if not args.no_validate:
+        report = generate_validation_report(sanitized, "navier_stokes_2d")
+        output["validation"] = report
+        status_str = "PASS" if report["valid"] else "FAIL"
+        _stderr(f"Validation: {status_str}")
+
+    # ── Attest ──────────────────────────────────────────────────
+    if args.attest:
+        claims = generate_claims(sanitized, "navier_stokes_2d")
+        result_hash = content_hash(sanitized)
+        config_hash = content_hash({
+            "preset": config.preset, "grid": config.grid,
+            "viscosity": config.viscosity, "steps": config.steps,
+            "seed": config.seed,
+        })
+        cert = issue_certificate(
+            job_id=f"cli-flowbox-{content_hash({'t': __import__('time').time()})[:12]}",
+            claims=claims,
+            input_manifest_hash=config_hash,
+            result_hash=result_hash,
+            config_hash=config_hash,
+            runtime_version=physics_os.RUNTIME_VERSION,
+        )
+        output["certificate"] = cert
+        satisfied = sum(1 for c in claims if c["satisfied"])
+        _stderr(f"Certificate: {satisfied}/{len(claims)} claims satisfied")
+
+    # ── Output ──────────────────────────────────────────────────
+    if args.output:
+        Path(args.output).write_text(json.dumps(output, indent=2, default=str))
+        _stderr(f"Written to {args.output}")
+    else:
+        _json_out(output)
+
+
 # ── Parser ──────────────────────────────────────────────────────────
 
 
@@ -573,6 +733,26 @@ def build_parser() -> argparse.ArgumentParser:
     p_serve.add_argument("--log-level", default="info", help="Log level")
     p_serve.add_argument("--reload", action="store_true", help="Enable auto-reload")
 
+    # ── flowbox ─────────────────────────────────────────────────
+    p_fb = subs.add_parser("flowbox", help="Run a FlowBox (NS2D periodic box) simulation")
+    p_fb.add_argument("--preset", required=True, help="IC preset: taylor_green, vortex_merge, vortex_dipole, decay_noise")
+    p_fb.add_argument("--grid", type=int, default=512, help="Grid resolution (512 or 1024)")
+    p_fb.add_argument("--steps", type=int, default=500, help="Time steps (default: 500)")
+    p_fb.add_argument("--viscosity", type=float, default=None, help="Kinematic viscosity (preset default if omitted)")
+    p_fb.add_argument("--dt", type=float, default=None, help="Time step size (auto-CFL if omitted)")
+    p_fb.add_argument("--seed", type=int, default=0, help="RNG seed (default: 0)")
+    p_fb.add_argument("--poisson-profile", default="balanced", help="Poisson solver: fast, balanced, accurate")
+    p_fb.add_argument("--cadence", type=int, default=10, help="Render frame cadence (every N steps)")
+    p_fb.add_argument("--fields", default="omega", help="Comma-separated fields: omega, psi")
+    p_fb.add_argument("--no-render", action="store_true", help="Skip MP4 generation")
+    p_fb.add_argument("--colormap", default="RdBu_r", help="Matplotlib colormap for vorticity")
+    p_fb.add_argument("--fps", type=int, default=30, help="Render FPS (default: 30)")
+    p_fb.add_argument("--tier", default="explorer", help="Tier: explorer, builder, professional")
+    p_fb.add_argument("--no-validate", action="store_true", help="Skip validation")
+    p_fb.add_argument("--attest", action="store_true", help="Issue trust certificate")
+    p_fb.add_argument("-o", "--output", help="Write JSON result to file")
+    p_fb.add_argument("--render-output", help="Write render to specific file path")
+
     return parser
 
 
@@ -585,6 +765,7 @@ _DISPATCH: dict[str, Any] = {
     "templates": cmd_templates,
     "problem": cmd_problem,
     "serve": cmd_serve,
+    "flowbox": cmd_flowbox,
 }
 
 

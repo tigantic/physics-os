@@ -354,6 +354,155 @@ class OnticClient:
 
     # ── Batch / convenience ─────────────────────────────────────────
 
+    def flowbox(
+        self,
+        preset: str = "taylor_green",
+        *,
+        grid: int = 512,
+        steps: int = 500,
+        viscosity: float | None = None,
+        dt: float | None = None,
+        seed: int = 0,
+        poisson_profile: str = "balanced",
+        render: bool = True,
+        render_colormap: str = "RdBu_r",
+        render_fps: int = 30,
+        cadence: int = 10,
+        fields: list[str] | None = None,
+        idempotency_key: str | None = None,
+        wait: bool = True,
+    ) -> JobResult:
+        """Submit a FlowBox (Navier-Stokes 2D periodic box) simulation.
+
+        This is the simplest API for running a verified CFD simulation.
+        Submit a preset, get back fields + metrics + MP4 + certificate.
+
+        Parameters
+        ----------
+        preset : str
+            IC preset: ``"taylor_green"``, ``"vortex_merge"``,
+            ``"vortex_dipole"``, ``"decay_noise"``.
+        grid : int
+            Grid resolution (512 or 1024).
+        steps : int
+            Time steps (capped per tier).
+        viscosity : float, optional
+            Kinematic viscosity.  Uses preset default if omitted.
+        dt : float, optional
+            Time step.  Auto-CFL if omitted.
+        seed : int
+            RNG seed for deterministic execution.
+        poisson_profile : str
+            Solver profile: ``"fast"``, ``"balanced"``, ``"accurate"``.
+        render : bool
+            Generate MP4 animation.
+        render_colormap : str
+            Matplotlib colormap for vorticity.
+        render_fps : int
+            MP4 frames per second.
+        cadence : int
+            Capture a frame every N steps.
+        fields : list[str], optional
+            Which fields to return (default: ``["omega"]``).
+        idempotency_key : str, optional
+            Prevents duplicate submissions.
+        wait : bool
+            If True (default), polls until job completes.
+
+        Returns
+        -------
+        JobResult
+            Completed job with result, validation, and certificate.
+
+        Examples
+        --------
+        >>> client = OnticClient(api_key="sk-...")
+        >>> job = client.flowbox("taylor_green", grid=512, steps=500)
+        >>> print(job.result["metrics"]["enstrophy"])
+        >>> mp4 = client.flowbox_render(job.job_id)
+        >>> open("simulation.mp4", "wb").write(mp4)
+        """
+        body: dict[str, Any] = {
+            "preset": preset,
+            "grid": grid,
+            "steps": steps,
+            "seed": seed,
+            "poisson_profile": poisson_profile,
+            "outputs": {
+                "cadence": cadence,
+                "fields": fields or ["omega"],
+                "render": render,
+                "render_colormap": render_colormap,
+                "render_fps": render_fps,
+            },
+        }
+        if viscosity is not None:
+            body["viscosity"] = viscosity
+        if dt is not None:
+            body["dt"] = dt
+
+        headers: dict[str, str] = {}
+        if idempotency_key:
+            headers["X-Idempotency-Key"] = idempotency_key
+
+        resp = self._post("/v1/flowbox/run", body, extra_headers=headers)
+        job_id = resp["job_id"]
+        logger.info(
+            "FlowBox submitted: %s (preset=%s, grid=%d)",
+            job_id, preset, grid,
+        )
+
+        if not wait:
+            return JobResult(
+                job_id=job_id,
+                status=resp.get("state", "queued"),
+                domain="navier_stokes_2d",
+            )
+
+        return self.wait_for(job_id, domain="navier_stokes_2d")
+
+    def flowbox_render(self, job_id: str) -> bytes:
+        """Download the MP4/GIF render for a FlowBox job.
+
+        Returns
+        -------
+        bytes
+            Raw video bytes (MP4 or GIF).
+
+        Raises
+        ------
+        APIError
+            If the render is not available or job not found.
+        """
+        url = f"{self._base}/v1/flowbox/jobs/{job_id}/render"
+        req = __import__("urllib.request", fromlist=["Request"]).Request(
+            url, headers=self._headers(), method="GET",
+        )
+        try:
+            with __import__("urllib.request", fromlist=["urlopen"]).urlopen(
+                req, timeout=self._timeout
+            ) as resp:
+                return resp.read()
+        except __import__("urllib.error", fromlist=["HTTPError"]).HTTPError as exc:
+            body = ""
+            try:
+                body = exc.read().decode("utf-8")
+            except Exception:
+                pass
+            raise APIError(
+                status_code=exc.code,
+                message=body or str(exc),
+                url=url,
+            ) from exc
+
+    def flowbox_presets(self) -> list[dict[str, Any]]:
+        """List available FlowBox presets and tier caps.
+
+        No authentication required.
+        """
+        resp = self._get("/v1/flowbox/presets", auth=False)
+        return resp.get("presets", [])
+
     def run_batch(
         self,
         jobs: list[dict[str, Any]],

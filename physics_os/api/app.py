@@ -157,6 +157,7 @@ def create_app() -> FastAPI:
     from .routers.billing import router as billing_router
     from .routers.capabilities import router as capabilities_router
     from .routers.contracts import router as contracts_router
+    from .routers.flowbox import router as flowbox_router
     from .routers.health import router as health_router
     from .routers.jobs import router as jobs_router
     from .routers.problems import router as problems_router
@@ -169,6 +170,7 @@ def create_app() -> FastAPI:
     app.include_router(problems_router)
     app.include_router(validate_router)
     app.include_router(billing_router)
+    app.include_router(flowbox_router)
 
     # ── Root (convenience) ──────────────────────────────────────────
     @app.get("/", include_in_schema=False)

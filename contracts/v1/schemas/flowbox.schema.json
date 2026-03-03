@@ -1,0 +1,247 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://api.ontic.io/v1/contracts/v1/schemas/flowbox.schema.json",
+  "title": "FlowBox v1 — Navier-Stokes 2D Periodic Box",
+  "description": "Capability contract for FlowBox product. Defines request/response schemas, preset library, tier caps, and Poisson profiles.",
+  "version": "1.0.0",
+
+  "definitions": {
+    "PresetKey": {
+      "type": "string",
+      "enum": ["taylor_green", "vortex_merge", "vortex_dipole", "decay_noise"],
+      "description": "Initial condition preset."
+    },
+    "PoissonProfile": {
+      "type": "string",
+      "enum": ["fast", "balanced", "accurate"],
+      "description": "Poisson solver aggressiveness. 'balanced' is the V&V-validated default."
+    },
+    "Grid": {
+      "type": "integer",
+      "enum": [512, 1024],
+      "description": "Grid resolution N (N×N). Minimum 512×512 for production quality."
+    },
+    "FlowBoxOutputs": {
+      "type": "object",
+      "properties": {
+        "cadence": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1000,
+          "default": 10,
+          "description": "Capture a render frame every N steps."
+        },
+        "fields": {
+          "type": "array",
+          "items": { "type": "string", "enum": ["omega", "psi"] },
+          "default": ["omega"],
+          "description": "Which fields to include in the result."
+        },
+        "render": {
+          "type": "boolean",
+          "default": true,
+          "description": "Generate MP4 animation."
+        },
+        "render_colormap": {
+          "type": "string",
+          "default": "RdBu_r",
+          "description": "Matplotlib colormap for vorticity render."
+        },
+        "render_fps": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 120,
+          "default": 30,
+          "description": "Frames per second in the render."
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+
+  "request": {
+    "type": "object",
+    "required": ["preset"],
+    "properties": {
+      "preset": { "$ref": "#/definitions/PresetKey" },
+      "grid": { "$ref": "#/definitions/Grid" },
+      "viscosity": {
+        "type": "number",
+        "minimum": 1e-6,
+        "maximum": 1.0,
+        "description": "Kinematic viscosity ν. Uses preset default if omitted."
+      },
+      "dt": {
+        "type": "number",
+        "exclusiveMinimum": 0,
+        "description": "Time step size. Auto-CFL if omitted."
+      },
+      "steps": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 10000,
+        "default": 500,
+        "description": "Number of time steps. Capped per tier."
+      },
+      "seed": {
+        "type": "integer",
+        "minimum": 0,
+        "default": 0,
+        "description": "RNG seed for deterministic execution."
+      },
+      "poisson_profile": { "$ref": "#/definitions/PoissonProfile" },
+      "outputs": { "$ref": "#/definitions/FlowBoxOutputs" }
+    },
+    "additionalProperties": false
+  },
+
+  "response": {
+    "type": "object",
+    "description": "FlowBox job result (inside the standard job envelope).",
+    "properties": {
+      "product": { "const": "flowbox" },
+      "product_version": { "type": "string" },
+      "preset": { "$ref": "#/definitions/PresetKey" },
+      "preset_label": { "type": "string" },
+      "domain": { "const": "navier_stokes_2d" },
+      "domain_label": { "type": "string" },
+      "equation": { "type": "string" },
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "viscosity": { "type": "number" },
+          "dt": { "type": "number" },
+          "steps": { "type": "integer" },
+          "seed": { "type": "integer" },
+          "poisson_profile": { "type": "string" }
+        }
+      },
+      "grid": {
+        "type": "object",
+        "properties": {
+          "dimensions": { "type": "integer" },
+          "resolution": { "type": "array", "items": { "type": "integer" } },
+          "domain_bounds": { "type": "array" },
+          "coordinates": { "type": "object" }
+        }
+      },
+      "fields": {
+        "type": "object",
+        "description": "Dense field values (tier-filtered). Keys are field names.",
+        "additionalProperties": {
+          "type": "object",
+          "properties": {
+            "name": { "type": "string" },
+            "shape": { "type": "array", "items": { "type": "integer" } },
+            "values": { "type": "array" },
+            "unit": { "type": "string" }
+          }
+        }
+      },
+      "metrics": {
+        "type": "object",
+        "properties": {
+          "enstrophy": { "type": ["number", "null"] },
+          "omega_l2": { "type": ["number", "null"] },
+          "conservation_status": { "type": "string", "enum": ["conserved", "drift", "unknown"] },
+          "conservation_error": { "type": ["number", "null"] },
+          "poisson_converged": { "type": "boolean" },
+          "wall_time_s": { "type": "number" },
+          "throughput_gp_per_s": { "type": "number" },
+          "time_steps": { "type": "integer" },
+          "grid_points": { "type": "integer" }
+        }
+      },
+      "render": {
+        "type": "object",
+        "properties": {
+          "available": { "type": "boolean" },
+          "format": { "type": "string", "enum": ["mp4", "gif", "unavailable"] },
+          "frames": { "type": "integer" },
+          "fps": { "type": "integer" },
+          "duration_s": { "type": "number" },
+          "size_bytes": { "type": "integer" }
+        }
+      },
+      "conservation": { "type": "object" },
+      "performance": { "type": "object" },
+      "physics_qoi": { "type": "object" }
+    },
+    "required": ["product", "product_version", "preset", "domain", "grid", "metrics"]
+  },
+
+  "tiers": {
+    "explorer": {
+      "max_grid": 512,
+      "max_steps": 500,
+      "min_cadence": 10,
+      "allowed_fields": ["omega"],
+      "render_watermark": true,
+      "included_cu": 100,
+      "base_price_usd": 0
+    },
+    "builder": {
+      "max_grid": 512,
+      "max_steps": 5000,
+      "min_cadence": 5,
+      "allowed_fields": ["omega", "psi"],
+      "render_watermark": false,
+      "included_cu": 1000,
+      "base_price_usd": 49
+    },
+    "professional": {
+      "max_grid": 1024,
+      "max_steps": 10000,
+      "min_cadence": 1,
+      "allowed_fields": ["omega", "psi"],
+      "render_watermark": false,
+      "included_cu": 10000,
+      "base_price_usd": 299
+    }
+  },
+
+  "presets": {
+    "taylor_green": {
+      "label": "Taylor-Green Vortex",
+      "ic_formula": "ω₀ = 2·sin(2πx)·sin(2πy)",
+      "analytical_solution": true,
+      "default_viscosity": 0.01,
+      "verified_accuracy": "3.5×10⁻⁸ rel L2 vs dense FFT"
+    },
+    "vortex_merge": {
+      "label": "Co-Rotating Vortex Merger",
+      "ic_formula": "Two Gaussian vortices, same sign, σ=0.08",
+      "analytical_solution": false,
+      "default_viscosity": 0.001
+    },
+    "vortex_dipole": {
+      "label": "Vortex Dipole",
+      "ic_formula": "Two Gaussian vortices, opposite sign, σ=0.08",
+      "analytical_solution": false,
+      "default_viscosity": 0.001
+    },
+    "decay_noise": {
+      "label": "Turbulent Decay",
+      "ic_formula": "Σ [2/(k²+m²)] sin(2πkx)·sin(2πmy), k,m ∈ 1..4",
+      "analytical_solution": false,
+      "default_viscosity": 0.01
+    }
+  },
+
+  "poisson_profiles": {
+    "fast": { "tol": 5e-3, "max_iters": 40, "preconditioner": "multigrid" },
+    "balanced": { "tol": 1e-3, "max_iters": 80, "preconditioner": "multigrid" },
+    "accurate": { "tol": 1e-5, "max_iters": 200, "preconditioner": "multigrid" }
+  },
+
+  "release_gates": {
+    "description": "Every release must pass both V&V scenarios. See scripts/vv_regression_gate.py.",
+    "scenarios": [
+      "TG_LH_512_QTT_PROD (512², 1049 steps, seeds 0+42)",
+      "TG_XCHECK_256_QTT_vs_DENSEFDFFT (256², QTT vs dense FFT)"
+    ],
+    "gate_script": "scripts/vv_regression_gate.py",
+    "exit_0": "ship",
+    "exit_1": "block"
+  }
+}
