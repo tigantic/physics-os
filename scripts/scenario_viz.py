@@ -465,7 +465,7 @@ def generate_all_visuals(
         idx = sc["scenario_index"]
         name = sc["name"]
         result = sc.get("result", {})
-        fields = result.get("fields", {})
+        fields = result.get("fields") or {}
         grid_info = result.get("grid", {})
 
         if sc["status"] != "success":

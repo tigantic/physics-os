@@ -403,7 +403,7 @@ def _capture_field_snapshots(
                 continue
 
             sanitized = sanitize_result(sub_result, domain)
-            fields = sanitized.get("fields", {})
+            fields = sanitized.get("fields") or {}
 
             for fname, fdata in fields.items():
                 values = fdata.get("values", [])
@@ -432,6 +432,7 @@ def run_scenario(
     index: int,
     *,
     skip_snapshots: bool = False,
+    max_steps: int | None = None,
 ) -> dict[str, Any]:
     """Run a single scenario through the full pipeline.
 
@@ -489,6 +490,8 @@ def run_scenario(
     try:
         exec_n_bits = compiled.n_bits
         exec_n_steps = compiled.n_steps
+        if max_steps is not None:
+            exec_n_steps = min(exec_n_steps, max_steps)
         exec_dt = compiled.dt
         package["execution_params"] = {
             "n_bits": exec_n_bits,
@@ -550,11 +553,13 @@ def run_scenario(
             result, compiled.domain,
             execution_context=execution_context,
         )
+        if sanitized is None:
+            sanitized = {}
         package["result"] = sanitized
         logger.info(
             "[%d] %-45s  sanitized → %d field(s)",
             index, name,
-            len(sanitized.get("fields", {})),
+            len(sanitized.get("fields") or {}),
         )
     except Exception as exc:
         package["status"] = "sanitize_error"
@@ -579,7 +584,7 @@ def run_scenario(
                     config, compiled.domain, snapshot_steps,
                 )
                 # Add the final field state as the last snapshot
-                for fname, fdata in sanitized.get("fields", {}).items():
+                for fname, fdata in (sanitized.get("fields") or {}).items():
                     if fdata.get("values"):
                         if fname not in field_snapshots:
                             field_snapshots[fname] = []
@@ -679,7 +684,7 @@ def build_summary(packages: list[dict[str, Any]]) -> dict[str, Any]:
     for p in succeeded:
         perf = p.get("result", {}).get("performance", {})
         total_grid_pts += perf.get("grid_points", 0)
-        total_fields += len(p.get("result", {}).get("fields", {}))
+        total_fields += len(p.get("result", {}).get("fields") or {})
         if not p.get("validation", {}).get("valid", False):
             all_valid = False
         for c in p.get("claims", []):
@@ -741,6 +746,13 @@ def main() -> None:
         "--no-snapshots", action="store_true",
         help="Skip field snapshot capture (faster runs).",
     )
+    parser.add_argument(
+        "--max-steps", type=int, default=None,
+        help=(
+            "Cap the number of time-steps per scenario. "
+            "Default: use compiler-recommended value."
+        ),
+    )
     args = parser.parse_args()
 
     # Build the scenario subset
@@ -773,7 +785,7 @@ def main() -> None:
         print(f"  Scenario {idx}/{len(SCENARIOS)}: {scenario['name']}")
         print(f"  {scenario['description']}")
         print(f"{'─' * 60}")
-        pkg = run_scenario(scenario, idx, skip_snapshots=args.no_snapshots)
+        pkg = run_scenario(scenario, idx, skip_snapshots=args.no_snapshots, max_steps=args.max_steps)
         packages.append(pkg)
 
         # Print quick status

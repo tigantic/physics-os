@@ -261,11 +261,11 @@ _HTML_TEMPLATE = r"""<!DOCTYPE html>
     </div>
     <div class="param-item">
       <div class="param-label">Executed n_bits</div>
-      <div class="param-value">{{ sc.execution_overrides.n_bits }} ({{ 2**sc.execution_overrides.n_bits }}×{{ 2**sc.execution_overrides.n_bits }})</div>
+      <div class="param-value">{{ sc.execution_params.n_bits }} ({{ 2**sc.execution_params.n_bits }}×{{ 2**sc.execution_params.n_bits }})</div>
     </div>
     <div class="param-item">
       <div class="param-label">Steps</div>
-      <div class="param-value">{{ sc.execution_overrides.n_steps }} (of {{ sc.compilation.n_steps }})</div>
+      <div class="param-value">{{ sc.execution_params.n_steps }} (of {{ sc.compilation.n_steps }})</div>
     </div>
     <div class="param-item">
       <div class="param-label">Quality Tier</div>
