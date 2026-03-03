@@ -38,7 +38,7 @@ def generate_validation_report(
             "name": "fields_present",
             "passed": len(fields) > 0,
             "detail": f"{len(fields)} field(s) returned",
-            "severity": "error",
+            "failure_severity": "error",
         })
 
         # Check 2: No NaN/null values in fields
@@ -49,14 +49,14 @@ def generate_validation_report(
                 "name": f"field_{fname}_finite",
                 "passed": not has_null,
                 "detail": f"Field '{fname}' contains {'null values' if has_null else 'only finite values'}",
-                "severity": "error" if has_null else "info",
+                "failure_severity": "error",
             })
     else:
         checks.append({
             "name": "fields_present",
             "passed": True,
             "detail": "Fields omitted (return_fields=false or oversized)",
-            "severity": "info",
+            "failure_severity": "info",
         })
 
     # Check 3: Conservation
@@ -68,14 +68,9 @@ def generate_validation_report(
         error_value = conservation.get("error_value", conservation.get("relative_error", 0))
         tier_threshold = conservation.get("tier_threshold", 1e-4)
 
-        # Preview-tier runs get "warning" severity — they are
-        # qualitative smoke tests, not production solves.
-        if not conserved and tier == "preview":
-            severity = "warning"
-        elif not conserved:
-            severity = "error"
-        else:
-            severity = "info"
+        # Preview-tier runs are qualitative smoke tests — failure
+        # is a warning, not a hard error.
+        fail_sev = "warning" if tier == "preview" else "error"
         tier_label = f" [{tier}]" if tier != "production" else ""
         metric_label = "abs" if error_metric == "absolute" else "rel"
         checks.append({
@@ -88,7 +83,7 @@ def generate_validation_report(
                 f"threshold={tier_threshold:.0e})"
                 f"{tier_label}"
             ),
-            "severity": severity,
+            "failure_severity": fail_sev,
         })
 
     # Check 4: Performance sanity
@@ -98,7 +93,7 @@ def generate_validation_report(
         "name": "execution_completed",
         "passed": wall_time > 0,
         "detail": f"wall_time={wall_time:.4f}s",
-        "severity": "error" if wall_time <= 0 else "info",
+        "failure_severity": "error",
     })
 
     # Check 5: Stability (no divergence — fields should have bounded norms)
@@ -113,13 +108,13 @@ def generate_validation_report(
                     "name": f"field_{fname}_stable",
                     "passed": False,
                     "detail": f"Field '{fname}' has max |value| = {max_val:.2e} (diverged)",
-                    "severity": "error",
+                    "failure_severity": "error",
                 })
     checks.append({
         "name": "numerical_stability",
         "passed": stable,
         "detail": "All fields within stable bounds" if stable else "Numerical divergence detected",
-        "severity": "error" if not stable else "info",
+        "failure_severity": "error",
     })
 
     # ── Tier 2: Physics QoI checks ──────────────────────────────
@@ -127,7 +122,12 @@ def generate_validation_report(
     if physics_qoi:
         _add_physics_qoi_checks(checks, physics_qoi)
 
-    all_passed = all(c["passed"] for c in checks if c["severity"] == "error")
+    # valid = no error-severity check failed
+    all_passed = all(
+        c["passed"]
+        for c in checks
+        if c["failure_severity"] == "error"
+    )
 
     return {
         "valid": all_passed,
@@ -404,7 +404,7 @@ def _add_physics_qoi_checks(
                 f"converged {conv_frac:.0%} of solves, "
                 f"mean {mean_iters:.0f} iters"
             ),
-            "severity": "error",
+            "failure_severity": "error",
         })
         if below_1e4:
             checks.append({
@@ -413,7 +413,7 @@ def _add_physics_qoi_checks(
                 "detail": (
                     f"tight bound: max residual {'<' if below_1e6 else '>'} 1e-6"
                 ),
-                "severity": "warning",
+                "failure_severity": "warning",
             })
 
     # Enstrophy (viscous dissipation indicator)
@@ -431,7 +431,7 @@ def _add_physics_qoi_checks(
                 f"E = {E:.4e}, ||\u03c9||\u2082 = {omega_l2:.4e}, "
                 f"bounded={bounded}, non_negative={non_neg}"
             ),
-            "severity": "error",
+            "failure_severity": "error",
         })
 
     # Stokes drag proxy vs Lamb analytical
@@ -449,7 +449,7 @@ def _add_physics_qoi_checks(
                 f"Re={Re:.2e}, Lamb C_d={lamb_cd:.2f}, "
                 f"enstrophy bounded={enstrophy_bounded}"
             ),
-            "severity": "warning",
+            "failure_severity": "warning",
         })
 
 

@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
-"""Run Stokes 512² at 1000 steps with Tier 2 physics QoI extraction.
+"""Run Stokes 512² scenario with Tier 2 physics QoI extraction.
+
+Usage:
+    python3 scripts/run_stokes_qoi.py [--steps N]
 
 Pipeline:
   1. Execute NS 2D (glycerol, cylinder, Re ≈ 0.09) on GPU
@@ -11,6 +14,7 @@ Pipeline:
 """
 from __future__ import annotations
 
+import argparse
 import json
 import logging
 import os
@@ -34,8 +38,12 @@ from physics_os.core.physics_qoi import extract_physics_qoi
 
 
 def main() -> None:
+    parser = argparse.ArgumentParser(description="Stokes QoI run")
+    parser.add_argument("--steps", type=int, default=1000, help="Time steps")
+    args = parser.parse_args()
+
     n_bits = 9  # 512 = 2^9
-    n_steps = 1000
+    n_steps = args.steps
     domain_key = "navier_stokes_2d"
 
     # Glycerol past a 10 mm cylinder at 0.01 m/s  →  Re ≈ 0.09
@@ -130,14 +138,14 @@ def main() -> None:
     # ── Write JSON ──────────────────────────────────────────────
     out_dir = os.path.join(ROOT, "scenario_output", "data")
     os.makedirs(out_dir, exist_ok=True)
-    out_path = os.path.join(out_dir, "stokes_512_1000_qoi.json")
+    out_path = os.path.join(out_dir, f"stokes_512_{n_steps}_qoi.json")
     with open(out_path, "w") as f:
         json.dump(output, f, indent=2, default=str)
     logger.info("Output written: %s (%.1f KB)", out_path, os.path.getsize(out_path) / 1024)
 
     # ── Summary ─────────────────────────────────────────────────
     print("\n" + "=" * 60)
-    print("STOKES 512² × 1000 steps — Tier 2 QoI Report")
+    print(f"STOKES 512² × {n_steps} steps — Tier 2 QoI Report")
     print("=" * 60)
     print(f"Wall time:     {san.get('performance', {}).get('wall_time_s', 0):.2f} s")
     print(f"Validation:    valid={val_report.get('valid')}")

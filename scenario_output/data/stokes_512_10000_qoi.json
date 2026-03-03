@@ -1,0 +1,179 @@
+{
+  "scenario": "Stokes Creeping Flow (Glycerol, Re=0.09)",
+  "domain": "navier_stokes_2d",
+  "grid": {
+    "dimensions": 2,
+    "resolution": [
+      512,
+      512
+    ],
+    "domain_bounds": [
+      [
+        0.0,
+        1.0
+      ],
+      [
+        0.0,
+        1.0
+      ]
+    ]
+  },
+  "execution": {
+    "n_bits": 9,
+    "n_steps": 10000,
+    "Re": 0.09,
+    "max_rank": 64,
+    "truncation_tol": 1e-10,
+    "wall_time_s": 1842.3307,
+    "throughput_gp_per_s": 1422893.3
+  },
+  "conservation": {
+    "quantity": "total_circulation",
+    "absolute_error": 2.34e-27,
+    "status": "conserved",
+    "tier": "standard",
+    "threshold": 1e-06
+  },
+  "physics_qoi": {
+    "poisson": {
+      "available": true,
+      "n_solves": 10000,
+      "max_relative_residual": 6.2704e-11,
+      "final_relative_residual": 2.6886e-11,
+      "mean_relative_residual": 3.5239e-11,
+      "converged_fraction": 1.0,
+      "mean_cg_iters": 1.0,
+      "max_residual_below_1e-6": true,
+      "max_residual_below_1e-4": true
+    },
+    "enstrophy": {
+      "available": true,
+      "enstrophy": 0.2354768,
+      "omega_l2_norm": 0.6862606,
+      "bounded": true,
+      "non_negative": true
+    },
+    "stokes_drag": {
+      "available": true,
+      "Re": 0.09,
+      "enstrophy": 0.2354768,
+      "lamb_cd": 63.3309,
+      "lamb_factor_S": 4.4094,
+      "enstrophy_bounded": true,
+      "enstrophy_positive": true
+    }
+  },
+  "validation": {
+    "valid": true,
+    "checks": [
+      {
+        "name": "fields_present",
+        "passed": true,
+        "detail": "Fields omitted (return_fields=false or oversized)",
+        "failure_severity": "info"
+      },
+      {
+        "name": "conservation_law",
+        "passed": true,
+        "detail": "total_circulation: abs_error=2.34e-27 (conserved, threshold=1e-06) [standard]",
+        "failure_severity": "error"
+      },
+      {
+        "name": "execution_completed",
+        "passed": true,
+        "detail": "wall_time=1842.3307s",
+        "failure_severity": "error"
+      },
+      {
+        "name": "numerical_stability",
+        "passed": true,
+        "detail": "All fields within stable bounds",
+        "failure_severity": "error"
+      },
+      {
+        "name": "poisson_residual_bound",
+        "passed": true,
+        "detail": "max ||A\u03c8 - \u03c9||/||\u03c9|| = 6.27e-11, converged 100% of solves, mean 1 iters",
+        "failure_severity": "error"
+      },
+      {
+        "name": "poisson_residual_tight",
+        "passed": true,
+        "detail": "tight bound: max residual < 1e-6",
+        "failure_severity": "warning"
+      },
+      {
+        "name": "enstrophy_physical",
+        "passed": true,
+        "detail": "E = 2.3548e-01, ||\u03c9||\u2082 = 6.8626e-01, bounded=True, non_negative=True",
+        "failure_severity": "error"
+      },
+      {
+        "name": "stokes_drag_reference",
+        "passed": true,
+        "detail": "Re=9.00e-02, Lamb C_d=63.33, enstrophy bounded=True",
+        "failure_severity": "warning"
+      }
+    ],
+    "validated_at": "2026-03-03T05:56:07.923178+00:00"
+  },
+  "claims": [
+    {
+      "tag": "CONSERVATION",
+      "claim": "total_circulation preserved to 2.34e-27 absolute error",
+      "witness": {
+        "quantity": "total_circulation",
+        "error": 2.34e-27,
+        "metric": "absolute",
+        "threshold": 1e-06,
+        "tier": "standard"
+      },
+      "satisfied": true
+    },
+    {
+      "tag": "STABILITY",
+      "claim": "Simulation completed without numerical divergence",
+      "witness": {
+        "wall_time_s": 1842.3307,
+        "time_steps": 10000,
+        "completed": true
+      },
+      "satisfied": true
+    },
+    {
+      "tag": "POISSON_RESIDUAL",
+      "claim": "Poisson true-residual bounded: max ||A\u03c8\u2212\u03c9||/||\u03c9|| = 6.27e-11, final = 2.69e-11, converged 100% of solves",
+      "witness": {
+        "max_relative_residual": 6.2704e-11,
+        "final_relative_residual": 2.6886e-11,
+        "converged_fraction": 1.0,
+        "mean_cg_iters": 1.0,
+        "threshold": 0.0001
+      },
+      "satisfied": true
+    },
+    {
+      "tag": "ENSTROPHY",
+      "claim": "Enstrophy physical: E = 2.3548e-01, ||\u03c9||\u2082 = 6.8626e-01, bounded=True, non_negative=True",
+      "witness": {
+        "enstrophy": 0.2354768,
+        "omega_l2_norm": 0.6862606,
+        "bounded": true,
+        "non_negative": true
+      },
+      "satisfied": true
+    },
+    {
+      "tag": "STOKES_DRAG",
+      "claim": "Stokes drag reference: Re = 9.00e-02, Lamb (1911) C_d = 63.33, enstrophy bounded & positive",
+      "witness": {
+        "Re": 0.09,
+        "lamb_cd": 63.3309,
+        "lamb_formula": "C_d = 8\u03c0 / (Re \u00b7 ln(7.4/Re))",
+        "enstrophy_bounded": true,
+        "enstrophy_positive": true
+      },
+      "satisfied": true
+    }
+  ]
+}
