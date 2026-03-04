@@ -54,25 +54,52 @@ from .base import BaseCompiler
 def _build_omega_separable_imex(
     ic_type: str,
     ic_n_modes: int,
+    ic_seed: int = 42,
 ) -> Any:
     """Build separable factor specification for init_omega.
 
-    Reuses the same IC spec as the explicit compiler.
+    Supported IC types:
+      - ``"taylor_green"`` — single mode, rank-1 QTT (gentle).
+      - ``"multi_mode"`` — deterministic multi-mode, rank-K² QTT.
+      - ``"stress_decaying_turbulence_seeded"`` — band-limited random
+        vorticity with seeded RNG.  K² modes with random amplitudes
+        scaled by E(k) ∝ k⁻² (2-D enstrophy cascade spectrum).
+        This IC immediately fills the rank budget and stresses
+        adaptive truncation throughout the run.
     """
-    if ic_type == "multi_mode":
+    if ic_type == "stress_decaying_turbulence_seeded":
+        rng = np.random.default_rng(ic_seed)
+        K = ic_n_modes
         terms: list[tuple[list[Any], float]] = []
-        for k in range(1, ic_n_modes + 1):
-            for m in range(1, ic_n_modes + 1):
-                amp = 2.0 / (k * k + m * m)
+        for k in range(1, K + 1):
+            for m in range(1, K + 1):
+                # E(k) ∝ k⁻² → amplitude ∝ k⁻¹ per mode
+                wn = np.sqrt(float(k * k + m * m))
+                amp = rng.standard_normal() / wn
                 kk, mm = k, m
                 terms.append((
                     [
                         lambda x, _k=kk: np.sin(2.0 * np.pi * _k * x),
                         lambda y, _m=mm: np.sin(2.0 * np.pi * _m * y),
                     ],
-                    amp,
+                    float(amp),
                 ))
         return terms
+
+    if ic_type == "multi_mode":
+        terms_mm: list[tuple[list[Any], float]] = []
+        for k in range(1, ic_n_modes + 1):
+            for m in range(1, ic_n_modes + 1):
+                amp = 2.0 / (k * k + m * m)
+                kk, mm = k, m
+                terms_mm.append((
+                    [
+                        lambda x, _k=kk: np.sin(2.0 * np.pi * _k * x),
+                        lambda y, _m=mm: np.sin(2.0 * np.pi * _m * y),
+                    ],
+                    amp,
+                ))
+        return terms_mm
 
     return (
         [
@@ -81,6 +108,34 @@ def _build_omega_separable_imex(
         ],
         2.0,
     )
+
+
+def _estimate_u_max_stress(ic_n_modes: int, ic_seed: int = 42) -> float:
+    """Estimate peak velocity for the stress turbulence IC.
+
+    For ω₀ = Σ a_{k,m} sin(2πkx) sin(2πmy), the stream function is
+    ψ₀ = −Σ a_{k,m} / (4π²(k²+m²)) · sin(2πkx) sin(2πmy).
+
+    Velocity components:
+      u = ∂ψ/∂y = −Σ a_{k,m} · 2πm / (4π²(k²+m²)) · sin(2πkx) cos(2πmy)
+      v = −∂ψ/∂x = Σ a_{k,m} · 2πk / (4π²(k²+m²)) · cos(2πkx) sin(2πmy)
+
+    Conservative bound (triangle inequality):
+      |u|_max ≤ Σ |a_{k,m}| · m / (2π(k²+m²))
+      |v|_max ≤ Σ |a_{k,m}| · k / (2π(k²+m²))
+    """
+    rng = np.random.default_rng(ic_seed)
+    K = ic_n_modes
+    u_bound = 0.0
+    v_bound = 0.0
+    for k in range(1, K + 1):
+        for m in range(1, K + 1):
+            wn = np.sqrt(float(k * k + m * m))
+            a = rng.standard_normal() / wn
+            k2m2 = float(k * k + m * m)
+            u_bound += abs(a) * m / (2.0 * np.pi * k2m2)
+            v_bound += abs(a) * k / (2.0 * np.pi * k2m2)
+    return max(u_bound, v_bound)
 
 
 class NavierStokes2DImexCompiler(BaseCompiler):
@@ -113,9 +168,18 @@ class NavierStokes2DImexCompiler(BaseCompiler):
     helmholtz_max_iters : int | None
         Maximum CG iterations for the Helmholtz solve.
     ic_type : str
-        Initial condition type: ``"taylor_green"`` or ``"multi_mode"``.
+        Initial condition type:
+        - ``"taylor_green"`` — single-mode vortex (rank 1, gentle)
+        - ``"multi_mode"`` — deterministic multi-mode (rank K²)
+        - ``"stress_decaying_turbulence_seeded"`` — band-limited random
+          vorticity with E(k) ∝ k⁻² spectrum.  Immediately fills the
+          rank budget and stresses adaptive truncation.
     ic_n_modes : int
-        Number of wavenumbers per dimension for multi_mode IC.
+        Number of wavenumbers per dimension (K).  Total modes = K².
+        For stress preset, K=8 gives 64 separable terms → rank 64
+        at initialization (saturates the default cap).
+    ic_seed : int
+        RNG seed for the stress IC.  Default: 42.
     """
 
     def __init__(
@@ -135,6 +199,7 @@ class NavierStokes2DImexCompiler(BaseCompiler):
         helmholtz_max_iters: int | None = None,
         ic_type: str = "taylor_green",
         ic_n_modes: int = 4,
+        ic_seed: int = 42,
     ) -> None:
         self._n_bits = n_bits
         self._n_steps = n_steps
@@ -150,24 +215,24 @@ class NavierStokes2DImexCompiler(BaseCompiler):
         self._helmholtz_max_iters = helmholtz_max_iters if helmholtz_max_iters is not None else 50
         self._ic_type = ic_type
         self._ic_n_modes = ic_n_modes
+        self._ic_seed = ic_seed
         self._cfl = cfl
 
         N = 2 ** n_bits
         h = 1.0 / N
 
         # ── Automatic dt: advective CFL ──────────────────────────────
-        # For Taylor-Green vortex on [0,1]² with ω₀ = 2sin(2πx)sin(2πy):
-        #   ψ₀ = sin(2πx)sin(2πy)/(4π²)
-        #   u = ∂ψ/∂y = sin(2πx)cos(2πy)/(2π)
-        #   |u|_max = 1/(2π) ≈ 0.159
+        # u_max depends on the IC type.
+        #
+        # Taylor-Green:  |u|_max = 1/(2π) ≈ 0.159
+        # Stress turb:   |u|_max from triangle inequality over random modes
         #
         # CFL: dt = CFL · h / |u|_max
-        # At 4096²:  dt ≈ 0.25 · (1/4096) / 0.159 ≈ 3.84e-4
-        #
-        # Compared to explicit diffusion limit:
-        #   dt_diffusion = 0.25 · h² / (2ν) ≈ 7.45e-7  (×516 smaller!)
         if dt is None:
-            u_max_estimate = 1.0 / (2.0 * np.pi)
+            if ic_type == "stress_decaying_turbulence_seeded":
+                u_max_estimate = _estimate_u_max_stress(ic_n_modes, ic_seed)
+            else:
+                u_max_estimate = 1.0 / (2.0 * np.pi)
             self._dt = cfl * h / (u_max_estimate + 1e-30)
         else:
             self._dt = dt
@@ -237,10 +302,23 @@ class NavierStokes2DImexCompiler(BaseCompiler):
         lv = self._lap_variant
         ic_type = self._ic_type
         ic_n_modes = self._ic_n_modes
+        ic_seed = self._ic_seed
         alpha = self._helmholtz_alpha  # dt·ν/2
 
         def init_omega(x: NDArray, y: NDArray) -> NDArray:
             """Initial vorticity (callable fallback)."""
+            if ic_type == "stress_decaying_turbulence_seeded":
+                rng = np.random.default_rng(ic_seed)
+                result = np.zeros_like(x)
+                K = ic_n_modes
+                for k in range(1, K + 1):
+                    for m in range(1, K + 1):
+                        wn = np.sqrt(float(k * k + m * m))
+                        amp = rng.standard_normal() / wn
+                        result += amp * np.sin(
+                            2.0 * np.pi * k * x
+                        ) * np.sin(2.0 * np.pi * m * y)
+                return result
             if ic_type == "multi_mode":
                 result = np.zeros_like(x)
                 K = ic_n_modes
@@ -436,7 +514,7 @@ class NavierStokes2DImexCompiler(BaseCompiler):
             "init_omega": init_omega,
             "init_psi": init_psi,
             "init_omega_separable": _build_omega_separable_imex(
-                ic_type, ic_n_modes,
+                ic_type, ic_n_modes, ic_seed,
             ),
             "invariant_fn": invariant_fn,
             "invariant": "total_circulation",
@@ -464,6 +542,9 @@ class NavierStokes2DImexCompiler(BaseCompiler):
             metadata["helmholtz_max_iters"] = self._helmholtz_max_iters
         if self._ic_type == "multi_mode":
             metadata["ic_n_modes"] = self._ic_n_modes
+        if self._ic_type == "stress_decaying_turbulence_seeded":
+            metadata["ic_n_modes"] = self._ic_n_modes
+            metadata["ic_seed"] = self._ic_seed
 
         return Program(
             domain=self.domain,
