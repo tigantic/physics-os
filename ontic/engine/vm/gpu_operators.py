@@ -552,6 +552,214 @@ def gpu_poisson_solve(
 
 
 # ─────────────────────────────────────────────────────────────────────
+# GPU-native CG Helmholtz solver: (I − α∇²) x = b
+# ─────────────────────────────────────────────────────────────────────
+
+
+def gpu_helmholtz_solve(
+    helmholtz_mpo: list[torch.Tensor],
+    rhs: GPUQTTTensor,
+    max_rank: int = 64,
+    cutoff: float = 1e-12,
+    max_iter: int = 200,
+    tol: float = 1e-8,
+    info: dict[str, Any] | None = None,
+    x0: GPUQTTTensor | None = None,
+    op_cache: "GPUOperatorCache | None" = None,
+) -> GPUQTTTensor:
+    r"""Solve (I − α∇²) x = rhs entirely on GPU in QTT format.
+
+    The Helmholtz operator ``H = I − α∇²`` is symmetric positive
+    definite (eigenvalues ≥ 1) since ``−∇²`` is positive semi-definite.
+    CG works directly — no sign flip needed, no null-space projection.
+
+    Condition number: κ(H) = 1 + α·λ_max(−∇²).  For IMEX NS2D with
+    CFL-limited dt, κ is moderate (typically 10–50), giving CG
+    convergence in O(√κ) ≈ 3–7 iterations.
+
+    Parameters
+    ----------
+    helmholtz_mpo : list[torch.Tensor]
+        Helmholtz MPO cores ``(I − α∇²)`` on GPU.
+    rhs : GPUQTTTensor
+        Right-hand side on GPU.
+    max_rank : int
+        Maximum bond dimension during CG.
+    cutoff : float
+        rSVD truncation tolerance.
+    max_iter : int
+        Maximum CG iterations.
+    tol : float
+        Relative residual convergence tolerance: ``||r||/||b|| < tol``.
+    info : dict, optional
+        Populated with solver diagnostics.
+    x0 : GPUQTTTensor, optional
+        Warm-start initial guess (previous timestep's solution).
+    op_cache : GPUOperatorCache, optional
+        Passed to ``gpu_mpo_apply`` for MPO batch caching.
+
+    Returns
+    -------
+    GPUQTTTensor
+        Approximate solution x on GPU.
+    """
+    import logging
+
+    logger = logging.getLogger(__name__)
+
+    # ── Initial guess ────────────────────────────────────────────────
+    r_cold = rhs.clone()
+    rs_cold = r_cold.inner(r_cold)
+
+    use_warm = False
+    if x0 is not None:
+        Hx0 = gpu_mpo_apply(helmholtz_mpo, x0, max_rank=max_rank,
+                            cutoff=cutoff, op_cache=op_cache)
+        r_warm = rhs.sub(Hx0).truncate(max_rank=max_rank, cutoff=cutoff)
+        rs_warm = r_warm.inner(r_warm)
+        if rs_warm < rs_cold:
+            use_warm = True
+            logger.debug(
+                "Helmholtz CG: warm-start wins "
+                "(||r_warm||²=%.2e < ||r_cold||²=%.2e)",
+                float(rs_warm), float(rs_cold),
+            )
+
+    if use_warm:
+        x = x0.clone()
+        r = r_warm
+    else:
+        x = GPUQTTTensor.zeros(rhs.bits_per_dim, rhs.domain)
+        r = r_cold
+        if x0 is not None:
+            logger.debug(
+                "Helmholtz CG: cold-start wins "
+                "(||r_cold||²=%.2e ≤ ||r_warm||²=%.2e)",
+                float(rs_cold), float(rs_warm),
+            )
+
+    # ── Convergence criterion: RELATIVE residual ──────────────────
+    rhs_norm_sq = max(float(rs_cold), 1e-30)
+    tol_sq = tol * tol * rhs_norm_sq
+
+    rs_old = r.inner(r)
+    if rs_old <= tol_sq:
+        logger.debug(
+            "Helmholtz CG: initial residual below tol "
+            "(||r₀||²=%.2e, tol²·||b||²=%.2e)",
+            float(rs_old), tol_sq,
+        )
+        if info is not None:
+            info["n_iters"] = 0
+            info["converged"] = True
+            info["residual_norm_sq"] = float(rs_old)
+            info["relative_residual"] = (float(rs_old) / rhs_norm_sq) ** 0.5
+        return x
+
+    # ── CG with periodic true-residual replacement ────────────────
+    # H = (I − α∇²) is already SPD — CG applies directly, no sign
+    # flip needed (unlike Poisson where we solve −∇²x = −b).
+    replace_every = 5
+
+    p = r.clone()
+    rz_old = rs_old
+
+    converged = False
+    final_rs = float(rs_old)
+    final_iters = 0
+
+    for it in range(max_iter):
+        # ── True-residual replacement ─────────────────────────
+        if it > 0 and it % replace_every == 0:
+            Hx_check = gpu_mpo_apply(
+                helmholtz_mpo, x, max_rank=max_rank, cutoff=cutoff,
+                op_cache=op_cache,
+            )
+            r = rhs.sub(Hx_check).truncate(
+                max_rank=max_rank, cutoff=cutoff,
+            )
+            rs_true_check = r.inner(r)
+
+            if rs_true_check <= tol_sq:
+                final_rs = float(rs_true_check)
+                final_iters = it
+                converged = True
+                break
+
+            p = r.clone()
+            rz_old = rs_true_check
+
+        # ── Standard CG iteration (H is SPD) ─────────────────
+        Hp = gpu_mpo_apply(
+            helmholtz_mpo, p, max_rank=max_rank, cutoff=cutoff,
+            op_cache=op_cache,
+        )
+
+        pHp = p.inner(Hp)
+        if abs(pHp) < 1e-30:
+            final_iters = it + 1
+            break
+
+        alpha_cg = rz_old / pHp
+
+        x = x.add(p.scale(alpha_cg)).truncate(
+            max_rank=max_rank, cutoff=cutoff,
+        )
+        r = r.sub(Hp.scale(alpha_cg)).truncate(
+            max_rank=max_rank, cutoff=cutoff,
+        )
+
+        rs_new = r.inner(r)
+        final_rs = float(rs_new)
+        final_iters = it + 1
+
+        if rs_new <= tol_sq:
+            converged = True
+            break
+
+        beta = rs_new / rz_old
+        p = r.add(p.scale(beta)).truncate(
+            max_rank=max_rank, cutoff=cutoff,
+        )
+        rz_old = rs_new
+
+    # ── Post-loop true-residual validation ───────────────────────────
+    Hx_true = gpu_mpo_apply(
+        helmholtz_mpo, x, max_rank=max_rank, cutoff=cutoff,
+        op_cache=op_cache,
+    )
+    r_true = rhs.sub(Hx_true).truncate(
+        max_rank=max_rank, cutoff=cutoff,
+    )
+    rs_true = float(r_true.inner(r_true))
+    rel_true = (rs_true / rhs_norm_sq) ** 0.5
+
+    converged = rs_true <= tol_sq
+
+    if converged:
+        logger.debug(
+            "Helmholtz CG converged in %d iters "
+            "(true ||r||/||b||=%.2e, tol=%.2e)",
+            final_iters, rel_true, tol,
+        )
+    else:
+        logger.warning(
+            "Helmholtz CG did NOT converge in %d iters "
+            "(true ||r||/||b||=%.2e, tol=%.2e)",
+            final_iters, rel_true, tol,
+        )
+
+    if info is not None:
+        info["n_iters"] = final_iters
+        info["converged"] = converged
+        info["residual_norm_sq"] = rs_true
+        info["relative_residual"] = rel_true
+        info["rhs_norm_sq"] = rhs_norm_sq
+
+    return x
+
+
+# ─────────────────────────────────────────────────────────────────────
 # MPO construction: CPU → GPU (one-time cost)
 # ─────────────────────────────────────────────────────────────────────
 
@@ -573,6 +781,51 @@ def identity_mpo_gpu(n_bits: int) -> list[torch.Tensor]:
     from ontic.engine.vm.operators import identity_mpo
 
     return _numpy_to_gpu(identity_mpo(n_bits))
+
+
+def helmholtz_mpo_gpu(
+    alpha: float,
+    bits_per_dim: tuple[int, ...],
+    domain: tuple[tuple[float, float], ...],
+    variant: str = "lap_v1",
+) -> list[torch.Tensor]:
+    r"""Helmholtz MPO (I − α∇²) on GPU.
+
+    Builds the SPD operator ``H = I − α·∇²`` where α > 0.
+    Since ``−∇²`` is positive semi-definite, H has eigenvalues ≥ 1
+    and is well-conditioned for CG.
+
+    Parameters
+    ----------
+    alpha : float
+        Coefficient for the Laplacian.  For Crank–Nicolson diffusion
+        with viscosity ν and timestep dt: ``α = dt·ν/2``.
+    bits_per_dim : tuple[int, ...]
+        Bits per spatial dimension.
+    domain : tuple[tuple[float, float], ...]
+        Physical domain bounds per dimension.
+    variant : str
+        Laplacian variant (``"lap_v1"`` or ``"lap_v2_high_order"``).
+
+    Returns
+    -------
+    list[torch.Tensor]
+        MPO cores on GPU.  Bond dim = 1 + bond_dim(∇²) (typically ≤ 6
+        for 2nd-order stencil).
+    """
+    from ontic.engine.vm.operators import (
+        identity_mpo,
+        laplacian_mpo,
+        mpo_add,
+        mpo_scale,
+    )
+
+    n_sites = sum(bits_per_dim)
+    I_mpo = identity_mpo(n_sites)
+    L_mpo = laplacian_mpo(bits_per_dim, domain, variant=variant)
+    # H = I − α·∇²  ⟹  H = identity + (−α) · laplacian
+    H_mpo = mpo_add(I_mpo, mpo_scale(L_mpo, -alpha))
+    return _numpy_to_gpu(H_mpo)
 
 
 def gradient_mpo_gpu(
@@ -715,6 +968,24 @@ class GPUOperatorCache:
         key = f"lap_{variant}_{dim}_{bits_per_dim}_{domain}"
         if key not in self._cache:
             self._cache[key] = laplacian_mpo_gpu(bits_per_dim, domain, dim,
+                                                 variant=variant)
+        return self._cache[key]
+
+    def get_helmholtz(
+        self,
+        alpha: float,
+        bits_per_dim: tuple[int, ...],
+        domain: tuple[tuple[float, float], ...],
+        variant: str = "lap_v1",
+    ) -> list[torch.Tensor]:
+        """Get or create cached Helmholtz MPO (I − α∇²) on GPU.
+
+        Keyed by ``(alpha, variant, grid_config)`` so different α values
+        (e.g. from changing dt) produce separate cached MPOs.
+        """
+        key = f"helmholtz_{alpha}_{variant}_{bits_per_dim}_{domain}"
+        if key not in self._cache:
+            self._cache[key] = helmholtz_mpo_gpu(alpha, bits_per_dim, domain,
                                                  variant=variant)
         return self._cache[key]
 

@@ -36,7 +36,7 @@ import torch
 import numpy as np
 
 from .gpu_tensor import GPUQTTTensor
-from .gpu_operators import GPUOperatorCache, gpu_mpo_apply, gpu_poisson_solve
+from .gpu_operators import GPUOperatorCache, gpu_mpo_apply, gpu_poisson_solve, gpu_helmholtz_solve
 from .multigrid import QTTMultigridPreconditioner
 from .ir import BCKind, FieldSpec, Instruction, OpCode, Program
 from .qtt_tensor import QTTTensor
@@ -213,6 +213,7 @@ class GPURuntime:
         self.governor = governor or GPURankGovernor()
         self.op_cache = GPUOperatorCache()
         self._poisson_info_latest: dict[str, Any] = {}
+        self._helmholtz_info_latest: dict[str, Any] = {}
         self._mg_precond_cache: dict[str, QTTMultigridPreconditioner] = {}
 
     def execute(self, program: Program) -> GPUExecutionResult:
@@ -265,10 +266,15 @@ class GPURuntime:
 
         # ── 4. Find loop body ───────────────────────────────────────
         loop_body = self._extract_loop_body(program.instructions)
+        setup_body = self._extract_setup(program.instructions)
 
         # ── 5. Execute time-step loop ON GPU ────────────────────────
         try:
             with vm_dispatch_context():
+                # Execute pre-loop setup (IMEX bootstrap, etc.)
+                for instr in setup_body:
+                    self._dispatch(instr, registers, fields, program, step=-1)
+
                 for step in range(program.n_steps):
                     collector.begin_step(step)
                     trunc_before = self.governor.n_truncations
@@ -303,6 +309,28 @@ class GPURuntime:
                             step + 1, _total, int(_n_it), _rel_r, _cvg,
                         )
                         self._poisson_info_latest = {}
+
+                    # Record Helmholtz solver diagnostics into probe data
+                    if self._helmholtz_info_latest:
+                        hi = self._helmholtz_info_latest
+                        _h_it = float(hi.get("n_iters", 0))
+                        _h_rel = float(hi.get("relative_residual", 0.0))
+                        _h_conv = hi.get("converged", False)
+                        self._probe_data["helmholtz_cg_iters"].append(_h_it)
+                        self._probe_data["helmholtz_relative_residual"].append(
+                            _h_rel
+                        )
+                        self._probe_data["helmholtz_converged"].append(
+                            1.0 if _h_conv else 0.0
+                        )
+                        _total = program.n_steps
+                        _hcvg = "✓" if _h_conv else "✗"
+                        logger.info(
+                            "Step %d/%d  Helmholtz: %d iters, "
+                            "||r||/||b||=%.2e, converged=%s",
+                            step + 1, _total, int(_h_it), _h_rel, _hcvg,
+                        )
+                        self._helmholtz_info_latest = {}
 
                     # Record telemetry — read from GPU tensor shapes (no data xfer)
                     for name, gpu_tensor in fields.items():
@@ -623,8 +651,11 @@ class GPURuntime:
                     op_cache=self.op_cache,
                 )
             else:
-                # "none" — plain CG
+                # "none" — plain CG, warm-started from previous ψ.
+                # Warm-starting is critical for IMEX schemes where dt
+                # is large: even a stale ψ guess is better than zero.
                 solve_info = {}
+                x0_warm = regs[instr.dst] if regs[instr.dst] is not None else None
                 regs[instr.dst] = gpu_poisson_solve(
                     lap_mpo,
                     rhs,
@@ -633,12 +664,54 @@ class GPURuntime:
                     tol=poisson_tol,
                     max_iter=poisson_max_iter,
                     info=solve_info,
+                    x0=x0_warm,
                     nullspace_kind=nullspace_kind,
                     op_cache=self.op_cache,
                 )
 
             # Accumulate per-step Poisson diagnostics for QoI extraction
             self._poisson_info_latest = solve_info
+
+        elif op == OpCode.HELMHOLTZ_SOLVE:
+            # Solve (I − α∇²) x = rhs via CG.
+            # SPD operator — no sign flip, no null-space projection.
+            # Used by IMEX time integration for implicit diffusion.
+            rhs = self._get_reg(regs, instr.src[0])
+            alpha = float(instr.params["helmholtz_alpha"])
+            variant = str(instr.params.get("operator_variant", "lap_v1"))
+            helmholtz_mpo = self.op_cache.get_helmholtz(
+                alpha, rhs.bits_per_dim, rhs.domain, variant=variant,
+            )
+            effective_rank = self.governor.get_effective_rank(rhs.n_cores)
+
+            helmholtz_tol = float(instr.params.get("helmholtz_tol", 1e-6))
+            helmholtz_max_iter = int(
+                instr.params.get("helmholtz_max_iter", 200)
+            )
+
+            cg_cutoff = min(self.governor.rel_tol, 1e-12)
+            cg_rank = self.governor.max_rank
+
+            # Warm-start from current destination register
+            x0_warm = (
+                regs[instr.dst] if regs[instr.dst] is not None else None
+            )
+
+            solve_info: dict[str, Any] = {}
+            regs[instr.dst] = gpu_helmholtz_solve(
+                helmholtz_mpo,
+                rhs,
+                max_rank=cg_rank,
+                cutoff=cg_cutoff,
+                tol=helmholtz_tol,
+                max_iter=helmholtz_max_iter,
+                info=solve_info,
+                x0=x0_warm,
+                op_cache=self.op_cache,
+            )
+
+            # Log Helmholtz solver diagnostics
+            self._helmholtz_info_latest = solve_info
 
         elif op == OpCode.INTEGRATE:
             a = self._get_reg(regs, instr.src[0])
@@ -774,6 +847,23 @@ class GPURuntime:
                 end = i
                 break
         return instructions[start:end]
+
+    @staticmethod
+    def _extract_setup(
+        instructions: list[Instruction],
+    ) -> list[Instruction]:
+        """Extract pre-loop setup instructions (before LOOP_START).
+
+        Used by IMEX compilers to bootstrap multi-step methods
+        (e.g., computing the initial advection term for Adams–Bashforth).
+        Returns an empty list for programs with no setup phase.
+        """
+        setup: list[Instruction] = []
+        for instr in instructions:
+            if instr.opcode == OpCode.LOOP_START:
+                break
+            setup.append(instr)
+        return setup
 
     def _initialize_field_gpu(
         self, spec: FieldSpec, program: Program

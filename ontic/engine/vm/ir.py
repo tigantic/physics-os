@@ -15,7 +15,7 @@ Differential  : GRAD, LAPLACE, DIV, CURL
 Nonlinear     : HADAMARD, ADVECT
 QTT control   : TRUNCATE, CANONICALIZE
 Boundaries    : BC_APPLY
-Solvers       : LAPLACE_SOLVE
+Solvers       : LAPLACE_SOLVE, HELMHOLTZ_SOLVE
 Integration   : INTEGRATE
 Telemetry     : MEASURE
 Control flow  : LOOP_START, LOOP_END
@@ -62,6 +62,7 @@ class OpCode(enum.Enum):
 
     # ── Solver primitives ────────────────────────────────────────────
     LAPLACE_SOLVE = "laplace_solve"
+    HELMHOLTZ_SOLVE = "helmholtz_solve"
 
     # ── Reduction ────────────────────────────────────────────────────
     INTEGRATE = "integrate"
@@ -370,6 +371,48 @@ def laplace_solve(
     if nullspace is not None:
         params["poisson_nullspace"] = nullspace
     return Instruction(OpCode.LAPLACE_SOLVE, dst=dst, src=(rhs,),
+                       params=params)
+
+
+def helmholtz_solve(
+    dst: int,
+    rhs: int,
+    alpha: float,
+    tol: float | None = None,
+    max_iter: int | None = None,
+    operator_variant: str | None = None,
+) -> Instruction:
+    """dst = (I − α∇²)⁻¹ rhs, Helmholtz solve.
+
+    Solves the SPD system ``(I − α∇²) x = rhs`` where α > 0.
+    The operator ``(I − α∇²)`` is symmetric positive definite
+    (eigenvalues ≥ 1) since ``−∇²`` is positive semi-definite.
+    No null-space treatment needed.
+
+    Used for implicit diffusion in IMEX time integration:
+    Crank–Nicolson gives ``α = dt·ν/2``.
+
+    Parameters
+    ----------
+    alpha : float
+        Coefficient for the Laplacian: ``α = dt·ν/2`` for CN diffusion.
+        Must be positive.
+    tol : float, optional
+        CG convergence tolerance.  If None, the runtime default is used.
+    max_iter : int, optional
+        Maximum CG iterations.  If None, the runtime default is used.
+    operator_variant : str, optional
+        Laplacian variant for the Helmholtz MPO construction.
+        Must match the variant used by other diffusion operators.
+    """
+    params: dict[str, Any] = {"helmholtz_alpha": alpha}
+    if tol is not None:
+        params["helmholtz_tol"] = tol
+    if max_iter is not None:
+        params["helmholtz_max_iter"] = max_iter
+    if operator_variant is not None:
+        params["operator_variant"] = operator_variant
+    return Instruction(OpCode.HELMHOLTZ_SOLVE, dst=dst, src=(rhs,),
                        params=params)
 
 
