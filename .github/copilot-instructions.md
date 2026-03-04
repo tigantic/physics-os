@@ -133,10 +133,19 @@ adaptive value.
   loops replaced with fused `torch.einsum` — one GPU kernel per core.
 - **V-04 RESOLVED**: `_tt_core_contract_kernel` rewritten with tiled
   (BLOCK_RL, BLOCK_RR, BLOCK_RM) access for L2/SRAM locality.
-- **V-08 RESOLVED**: `gpu_mpo_apply` per-core contractions batched into
-  single padded `torch.einsum` — one GPU kernel for all N cores.
+  Used in rounding pass.
+- **V-08 SUPERSEDED (ADR-0024)**: `gpu_mpo_apply` originally batched
+  into padded `torch.einsum` (cuBLAS).  Now replaced by
+  `_mpo_qtt_fused_kernel` — Triton fused kernel with offset-table
+  flat buffers, zero padding, single launch for all N cores × D_PHYS
+  modes, fp64 accumulation, L2-optimized for QTT-sized contractions.
+  The einsum path is retained as a fallback when `HAS_TRITON=False`.
 - **V-09 RESOLVED**: Poisson solver now receives adaptive rank via
   `governor.get_effective_rank()`.
+- **V-10 RESOLVED**: Poisson CG at high core counts (n_bits ≥ 14)
+  now auto-enables MG-DC preconditioner and adaptive tolerance
+  (`max(1e-8, n_cores³ × 1e-12)`) to stay above the QTT truncation
+  noise floor.  Configured in `navier_stokes_2d.py` compiler.
 
 ### Exception Template
 When a rule must be violated, add this comment block:

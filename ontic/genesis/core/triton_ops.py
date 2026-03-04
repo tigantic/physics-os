@@ -52,6 +52,7 @@ __all__ = [
     'qtt_add_native',
     'qtt_hadamard_native',
     'qtt_round_native',
+    'mpo_qtt_apply_fused',
     'triton_matmul',
     'triton_gram',
     'HAS_TRITON',
@@ -209,6 +210,130 @@ if HAS_TRITON:
 
 
     @triton.jit
+    def _mpo_qtt_fused_kernel(
+        # Flat data buffers (contiguous on GPU)
+        W_flat_ptr, G_flat_ptr, C_flat_ptr,
+        # Offset tables: byte offset into flat buffers for core k
+        W_off_ptr, G_off_ptr, C_off_ptr,
+        # Per-core shape tables (int32 arrays of length N)
+        Dl_ptr, Dr_ptr, rl_ptr, rr_ptr,
+        # Constants
+        D_PHYS: tl.constexpr,
+        BLOCK_LEFT: tl.constexpr, BLOCK_RIGHT: tl.constexpr,
+    ):
+        """Fused MPO × QTT contraction — zero-copy, offset-table indexed.
+
+        Reads MPO cores and QTT cores from flat contiguous buffers via
+        per-core offset tables.  Writes output directly into flat output
+        buffer.  No padding, no extraction, no Python loops.
+
+        Contraction per core k:
+          C_k[dl*rl + i, dout, dr*rr + j] = Σ_din W_k[dl,dout,din,dr] * G_k[rl_i,din,rr_j]
+
+        where i ∈ [0, rl), j ∈ [0, rr), dl ∈ [0, Dl), dr ∈ [0, Dr).
+
+        Grid: (N_cores * D_PHYS, max_tiles)
+          axis-0: (core_idx, dout) — one program per (core, output mode)
+          axis-1: tile over output (Dl*rl) × (Dr*rr) space
+
+        Memory layout (row-major):
+          W_k: (Dl, D_PHYS, D_PHYS, Dr) — contiguous, stride = Dr, D_PHYS*Dr, ...
+          G_k: (rl, D_PHYS, rr) — contiguous
+          C_k: (Dl*rl, D_PHYS, Dr*rr) — contiguous output
+
+        L2 strategy:
+          - W data is tiny (Dl*D²*Dr ≤ 64 floats) → fits in registers
+          - G data (rl*D*rr ≤ 64*2*64 = 8KB) → L2-resident across din
+          - Output tile written once, coalesced
+          - No padding waste — every byte loaded is useful data
+        """
+        pid_core_dout = tl.program_id(0)
+        pid_tile = tl.program_id(1)
+
+        core_idx = pid_core_dout // D_PHYS
+        dout = pid_core_dout % D_PHYS
+
+        # Load per-core dimensions
+        Dl = tl.load(Dl_ptr + core_idx).to(tl.int32)
+        Dr = tl.load(Dr_ptr + core_idx).to(tl.int32)
+        rl = tl.load(rl_ptr + core_idx).to(tl.int32)
+        rr = tl.load(rr_ptr + core_idx).to(tl.int32)
+
+        # Output dimensions
+        out_left = Dl * rl
+        out_right = Dr * rr
+
+        # Decode tile position in output space
+        tiles_right = tl.cdiv(out_right, BLOCK_RIGHT)
+        pid_left = pid_tile // tiles_right
+        pid_right = pid_tile % tiles_right
+
+        offs_left = pid_left * BLOCK_LEFT + tl.arange(0, BLOCK_LEFT)
+        offs_right = pid_right * BLOCK_RIGHT + tl.arange(0, BLOCK_RIGHT)
+
+        # Early exit for out-of-bounds tiles (grid is sized for max core)
+        # This lets smaller cores skip work without branching inside the loop
+        if pid_left * BLOCK_LEFT >= out_left:
+            return
+        if pid_right * BLOCK_RIGHT >= out_right:
+            return
+
+        # Decompose flat output indices into (dl, rl_idx) and (dr, rr_idx)
+        dl_idx = offs_left // rl
+        rl_idx = offs_left % rl
+        dr_idx = offs_right // rr
+        rr_idx = offs_right % rr
+
+        # Base pointers from offset tables (element offsets, not bytes)
+        W_base = W_flat_ptr + tl.load(W_off_ptr + core_idx).to(tl.int64)
+        G_base = G_flat_ptr + tl.load(G_off_ptr + core_idx).to(tl.int64)
+
+        # W_k layout: (Dl, D_PHYS, D_PHYS, Dr) row-major
+        # W_k[dl, dout, din, dr] = W_base + dl*(D_PHYS*D_PHYS*Dr)
+        #                                  + dout*(D_PHYS*Dr)
+        #                                  + din*Dr + dr
+        w_stride_dl = D_PHYS * D_PHYS * Dr
+        w_stride_dout = D_PHYS * Dr
+        w_stride_din = Dr
+
+        # G_k layout: (rl, D_PHYS, rr) row-major
+        # G_k[r, din, c] = G_base + r*(D_PHYS*rr) + din*rr + c
+        g_stride_rl = D_PHYS * rr
+        g_stride_din = rr
+
+        # Accumulator — fp64 to match data precision (physics solver)
+        acc = tl.zeros((BLOCK_LEFT, BLOCK_RIGHT), dtype=tl.float64)
+
+        # Inner loop over d_in (=2, fully unrolled by compiler)
+        for din in range(D_PHYS):
+            # Gather W[dl, dout, din, dr] for this tile
+            w_offsets = (dl_idx[:, None] * w_stride_dl
+                         + dout * w_stride_dout
+                         + din * w_stride_din
+                         + dr_idx[None, :])
+            w_mask = (dl_idx[:, None] < Dl) & (dr_idx[None, :] < Dr)
+            w_vals = tl.load(W_base + w_offsets, mask=w_mask, other=0.0)
+
+            # Gather G[rl, din, rr] for this tile
+            g_offsets = (rl_idx[:, None] * g_stride_rl
+                         + din * g_stride_din
+                         + rr_idx[None, :])
+            g_mask = (rl_idx[:, None] < rl) & (rr_idx[None, :] < rr)
+            g_vals = tl.load(G_base + g_offsets, mask=g_mask, other=0.0)
+
+            acc += w_vals * g_vals
+
+        # C_k layout: (out_left, D_PHYS, out_right) row-major
+        C_base = C_flat_ptr + tl.load(C_off_ptr + core_idx).to(tl.int64)
+        c_stride_left = D_PHYS * out_right
+        c_offsets = (offs_left[:, None] * c_stride_left
+                     + dout * out_right
+                     + offs_right[None, :])
+        c_mask = (offs_left[:, None] < out_left) & (offs_right[None, :] < out_right)
+        tl.store(C_base + c_offsets, acc, mask=c_mask)
+
+
+    @triton.jit
     def _dot_contraction_kernel(
         A_ptr, B_ptr, out_ptr,
         R_left, D, R_right,
@@ -292,6 +417,155 @@ def triton_gram(A: torch.Tensor) -> torch.Tensor:
         BLOCK_M=BLOCK_M, BLOCK_N=BLOCK_N, BLOCK_K=BLOCK_K,
     )
     return G
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# MPO × QTT FUSED APPLICATION — ZERO PYTHON LOOPS
+# ═══════════════════════════════════════════════════════════════════════════════
+
+
+def mpo_qtt_apply_fused(
+    mpo_cores: list[torch.Tensor],
+    qtt_cores: list[torch.Tensor],
+    _w_cache: dict | None = None,
+) -> list[torch.Tensor]:
+    """Apply MPO to QTT via fused Triton kernel — no Python loops on GPU.
+
+    Replaces the batched-einsum path in ``gpu_mpo_apply`` with a single
+    Triton kernel launch that reads from flat contiguous buffers via
+    per-core offset tables.
+
+    Data flow:
+      1. Pack MPO cores into flat buffer (cached — MPO never changes)
+      2. Pack QTT cores into flat buffer (one ``torch.cat``)
+      3. Single Triton kernel — no padding, no extraction
+      4. Split output buffer into per-core tensors (``torch.split``)
+
+    Parameters
+    ----------
+    mpo_cores : list[torch.Tensor]
+        MPO cores ``(D_l, d_out, d_in, D_r)`` on CUDA.
+    qtt_cores : list[torch.Tensor]
+        QTT state cores ``(r_l, d_in, r_r)`` on CUDA.
+    _w_cache : dict, optional
+        If provided, used to cache the packed MPO flat buffer + offsets.
+        Pass an empty dict on first call; subsequent calls reuse.
+
+    Returns
+    -------
+    list[torch.Tensor]
+        Contracted cores of shape ``(D_l*r_l, d_out, D_r*r_r)`` per core.
+        These feed directly into ``qtt_round_native``.
+    """
+    if not HAS_TRITON:
+        raise RuntimeError("Triton not available — cannot use fused kernel")
+
+    N = len(mpo_cores)
+    device = mpo_cores[0].device
+    dtype = mpo_cores[0].dtype
+    D_PHYS = mpo_cores[0].shape[1]  # always 2 for QTT
+
+    # ── Pack MPO (cacheable — MPO is static in CG iterations) ──────
+    if _w_cache is not None and "W_flat" in _w_cache:
+        W_flat = _w_cache["W_flat"]
+        W_offsets = _w_cache["W_offsets"]
+        Dl_arr = _w_cache["Dl_arr"]
+        Dr_arr = _w_cache["Dr_arr"]
+        dl_list = _w_cache["dl_list"]
+        dr_list = _w_cache["dr_list"]
+    else:
+        # Flatten all MPO cores contiguously
+        w_parts: list[torch.Tensor] = []
+        w_off_list: list[int] = []
+        dl_list: list[int] = []
+        dr_list: list[int] = []
+        offset = 0
+        for k in range(N):
+            w = mpo_cores[k]  # (Dl, D_PHYS, D_PHYS, Dr)
+            dl_list.append(w.shape[0])
+            dr_list.append(w.shape[3])
+            w_parts.append(w.reshape(-1))
+            w_off_list.append(offset)
+            offset += w.numel()
+        W_flat = torch.cat(w_parts)
+        W_offsets = torch.tensor(w_off_list, dtype=torch.int64, device=device)
+        Dl_arr = torch.tensor(dl_list, dtype=torch.int32, device=device)
+        Dr_arr = torch.tensor(dr_list, dtype=torch.int32, device=device)
+        if _w_cache is not None:
+            _w_cache["W_flat"] = W_flat
+            _w_cache["W_offsets"] = W_offsets
+            _w_cache["Dl_arr"] = Dl_arr
+            _w_cache["Dr_arr"] = Dr_arr
+            _w_cache["dl_list"] = dl_list
+            _w_cache["dr_list"] = dr_list
+
+    # ── Pack QTT state (changes every call — one torch.cat) ────────
+    g_parts: list[torch.Tensor] = []
+    g_off_list: list[int] = []
+    rl_list: list[int] = []
+    rr_list: list[int] = []
+    offset = 0
+    for k in range(N):
+        g = qtt_cores[k]  # (rl, D_PHYS, rr)
+        rl_list.append(g.shape[0])
+        rr_list.append(g.shape[2])
+        g_parts.append(g.reshape(-1))
+        g_off_list.append(offset)
+        offset += g.numel()
+
+    G_flat = torch.cat(g_parts)
+    G_offsets = torch.tensor(g_off_list, dtype=torch.int64, device=device)
+    rl_arr = torch.tensor(rl_list, dtype=torch.int32, device=device)
+    rr_arr = torch.tensor(rr_list, dtype=torch.int32, device=device)
+
+    # ── Allocate output buffer ─────────────────────────────────────
+    c_off_list: list[int] = []
+    c_sizes: list[int] = []
+    offset = 0
+    for k in range(N):
+        out_left = dl_list[k] * rl_list[k]   # Dl * rl
+        out_right = dr_list[k] * rr_list[k]  # Dr * rr
+        size = out_left * D_PHYS * out_right
+        c_off_list.append(offset)
+        c_sizes.append(size)
+        offset += size
+
+    C_flat = torch.empty(offset, device=device, dtype=dtype)
+    C_offsets = torch.tensor(c_off_list, dtype=torch.int64, device=device)
+
+    # ── Compute grid dimensions ────────────────────────────────────
+    # Tile sizes — tuned for QTT rank regime (ranks 1-64, D=2)
+    BLOCK_LEFT = 32
+    BLOCK_RIGHT = 32
+
+    # Grid axis-0: one program per (core, dout)
+    grid_0 = N * D_PHYS
+
+    # Grid axis-1: enough tiles for the largest core
+    max_out_left = max(dl_list[k] * rl_list[k] for k in range(N))
+    max_out_right = max(dr_list[k] * rr_list[k] for k in range(N))
+    tiles_left = (max_out_left + BLOCK_LEFT - 1) // BLOCK_LEFT
+    tiles_right = (max_out_right + BLOCK_RIGHT - 1) // BLOCK_RIGHT
+    grid_1 = tiles_left * tiles_right
+
+    # ── Launch single Triton kernel ────────────────────────────────
+    _mpo_qtt_fused_kernel[(grid_0, grid_1)](
+        W_flat, G_flat, C_flat,
+        W_offsets, G_offsets, C_offsets,
+        Dl_arr, Dr_arr, rl_arr, rr_arr,
+        D_PHYS=D_PHYS,
+        BLOCK_LEFT=BLOCK_LEFT, BLOCK_RIGHT=BLOCK_RIGHT,
+    )
+
+    # ── Split output into per-core tensors — single torch.split ───
+    raw_parts = torch.split(C_flat, c_sizes)
+    result_cores: list[torch.Tensor] = []
+    for k in range(N):
+        out_left = dl_list[k] * rl_list[k]
+        out_right = dr_list[k] * rr_list[k]
+        result_cores.append(raw_parts[k].view(out_left, D_PHYS, out_right))
+
+    return result_cores
 
 
 # ═══════════════════════════════════════════════════════════════════════════════

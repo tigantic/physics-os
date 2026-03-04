@@ -25,8 +25,10 @@ from numpy.typing import NDArray
 from ontic.genesis.core.triton_ops import (
     qtt_round_native,
     rsvd_native,
+    mpo_qtt_apply_fused,
     DEVICE,
     HAS_CUDA,
+    HAS_TRITON,
 )
 
 from .gpu_tensor import GPUQTTTensor
@@ -49,14 +51,16 @@ def gpu_mpo_apply(
     MPO × QTT contraction followed by rSVD rounding.
     All operations stay on CUDA — no .cpu() calls.
 
-    V-08 RESOLVED: Per-core contractions are batched into a single
-    padded ``torch.einsum`` — one GPU kernel launch for all N cores
-    instead of N sequential dispatches.
+    Primary path: Triton fused kernel (``mpo_qtt_apply_fused``).
+    Reads MPO and QTT cores from flat contiguous buffers via per-core
+    offset tables.  Single kernel launch for all N cores.  No padding,
+    no extraction, no Python loops on the GPU data path.
 
-    When ``op_cache`` is provided, the pre-padded ``W_batch`` tensor
-    is fetched from the cache instead of being rebuilt every call.
-    For Poisson iterations where the MPO never changes, this
-    eliminates repeated allocation + fill of the static MPO padding.
+    Fallback path: batched ``torch.einsum`` (when Triton unavailable).
+
+    When ``op_cache`` is provided, the packed MPO flat buffer + offsets
+    are cached across calls.  For Poisson iterations where the MPO
+    never changes, this eliminates all MPO packing overhead.
 
     Parameters
     ----------
@@ -69,7 +73,7 @@ def gpu_mpo_apply(
     cutoff : float
         rSVD truncation tolerance.
     op_cache : GPUOperatorCache, optional
-        If provided, pre-padded W_batch is fetched from (or stored in)
+        If provided, packed MPO data is fetched from (or stored in)
         the cache.  Pass the runtime's ``op_cache`` for hot-path calls.
 
     Returns
@@ -83,15 +87,32 @@ def gpu_mpo_apply(
             f"must have same length"
         )
 
+    # ── Primary path: Triton fused kernel ──────────────────────────
+    if HAS_TRITON:
+        # Get or create the MPO flat-pack cache dict for this MPO
+        w_cache: dict | None = None
+        if op_cache is not None:
+            w_cache = op_cache.get_mpo_fused_cache(mpo_cores)
+
+        result_cores = mpo_qtt_apply_fused(
+            mpo_cores, tt.cores, _w_cache=w_cache,
+        )
+
+        rounded = qtt_round_native(
+            result_cores, max_rank=max_rank, tol=cutoff,
+        )
+        return GPUQTTTensor(
+            cores=rounded,
+            bits_per_dim=tt.bits_per_dim,
+            domain=tt.domain,
+        )
+
+    # ── Fallback: batched einsum (no Triton) ──────────────────────
     N = len(mpo_cores)
     device = tt.cores[0].device
     dtype = tt.cores[0].dtype
-    d_phys = mpo_cores[0].shape[1]  # d_out = d_in = 2 for QTT
+    d_phys = mpo_cores[0].shape[1]
 
-    # ── MPO padding: use cache if available, else build fresh ──────
-    # V-08 RESOLVED: per-core contractions batched into single padded
-    # einsum — one GPU kernel for all N cores.
-    # When op_cache is provided, W_batch is built once and reused.
     if op_cache is not None:
         W_batch, shapes_Dl, shapes_Dr, max_D_l, max_D_r = (
             op_cache.get_mpo_batch(mpo_cores)
@@ -111,15 +132,12 @@ def gpu_mpo_apply(
             shapes_Dl[k] = Dl
             shapes_Dr[k] = Dr
 
-    # ── QTT state padding (changes every call) ─────────────────────
     max_r_l = max(G.shape[0] for G in tt.cores)
     max_r_r = max(G.shape[2] for G in tt.cores)
-
     G_batch = torch.zeros(
         N, max_r_l, d_phys, max_r_r,
         device=device, dtype=dtype,
     )
-
     shapes_rl = torch.empty(N, dtype=torch.long)
     shapes_rr = torch.empty(N, dtype=torch.long)
     for k in range(N):
@@ -128,14 +146,9 @@ def gpu_mpo_apply(
         shapes_rl[k] = rl
         shapes_rr[k] = rr
 
-    # Single batched einsum: N contractions in ONE GPU kernel launch.
-    # (N, D_l, d_out, d_in, D_r) × (N, r_l, d_in, r_r)
-    # → (N, D_l, r_l, d_out, D_r, r_r)
     C_batch = torch.einsum("kabcd,kecp->kaebdp", W_batch, G_batch)
 
-    # Extract per-core results — slicing only, no GPU compute.
-    # The reshape + contiguous triggers a memory copy but no arithmetic.
-    result_cores: list[torch.Tensor] = []
+    result_cores = []
     for k in range(N):
         Dl = int(shapes_Dl[k])
         Dr = int(shapes_Dr[k])
@@ -144,9 +157,7 @@ def gpu_mpo_apply(
         C = C_batch[k, :Dl, :rl, :, :Dr, :rr]
         result_cores.append(C.reshape(Dl * rl, d_phys, Dr * rr).contiguous())
 
-    # rSVD rounding on GPU — NEVER full SVD
     rounded = qtt_round_native(result_cores, max_rank=max_rank, tol=cutoff)
-
     return GPUQTTTensor(
         cores=rounded,
         bits_per_dim=tt.bits_per_dim,
@@ -625,11 +636,14 @@ class GPUOperatorCache:
 
     def __init__(self) -> None:
         self._cache: dict[str, list[torch.Tensor]] = {}
-        # Pre-padded MPO batch cache:
+        # Pre-padded MPO batch cache (einsum fallback):
         # key → (W_batch, shapes_Dl, shapes_Dr, max_D_l, max_D_r)
         self._mpo_batch_cache: dict[
             int, tuple[torch.Tensor, torch.Tensor, torch.Tensor, int, int]
         ] = {}
+        # Fused Triton MPO cache (primary path):
+        # key → dict with W_flat, W_offsets, Dl_arr, Dr_arr
+        self._mpo_fused_cache: dict[int, dict] = {}
 
     def get_mpo_batch(
         self, mpo_cores: list[torch.Tensor],
@@ -704,7 +718,23 @@ class GPUOperatorCache:
                                                  variant=variant)
         return self._cache[key]
 
+    def get_mpo_fused_cache(self, mpo_cores: list[torch.Tensor]) -> dict:
+        """Get or create the fused-kernel cache dict for an MPO.
+
+        Returns a mutable dict that ``mpo_qtt_apply_fused`` populates
+        on first call with ``W_flat``, ``W_offsets``, ``Dl_arr``,
+        ``Dr_arr``.  Subsequent calls reuse the cached data.
+
+        Keyed by ``id(mpo_cores)`` — safe because MPO core lists are
+        themselves cached and never mutated.
+        """
+        key = id(mpo_cores)
+        if key not in self._mpo_fused_cache:
+            self._mpo_fused_cache[key] = {}
+        return self._mpo_fused_cache[key]
+
     def clear(self) -> None:
         """Clear all caches, freeing GPU memory."""
         self._cache.clear()
         self._mpo_batch_cache.clear()
+        self._mpo_fused_cache.clear()

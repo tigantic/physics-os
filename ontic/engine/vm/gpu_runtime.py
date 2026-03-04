@@ -519,6 +519,23 @@ class GPURuntime:
             if precond_kind in ("mg", "auto"):
                 mg_key = f"{rhs.bits_per_dim}_{rhs.domain}_{variant}"
                 if mg_key not in self._mg_precond_cache:
+                    # ── Hierarchy depth ───────────────────────────────
+                    # In QTT, coarsening barely reduces cost: it scales
+                    # with n_cores ≈ 2·n_bits, not N².  Deep hierarchies
+                    # multiply work (6 smoothing sweeps per level) without
+                    # proportional cost reduction.  Cap at 3 coarsening
+                    # levels — enough for the V-cycle to resolve medium-
+                    # frequency error modes while CG handles the rest.
+                    #
+                    # n_bits=16 → 3 levels (16→15→14→13), 4 MPOs
+                    # n_bits=14 → 3 levels (14→13→12→11), 4 MPOs
+                    #
+                    # Previous config (min_coarse_bits=3) created 14
+                    # levels for n_bits=16, spending >5 min just building
+                    # the hierarchy with 14 Laplacian MPOs.
+                    _min_bits = min(rhs.bits_per_dim)
+                    _min_coarse = max(3, _min_bits - 3)
+
                     self._mg_precond_cache[mg_key] = (
                         QTTMultigridPreconditioner(
                             bits_per_dim=rhs.bits_per_dim,
@@ -528,22 +545,15 @@ class GPURuntime:
                             variant=variant,
                             # ── MG Configuration ──────────────────────
                             # Tested configs at 512² (cold step):
-                            #   rank 32, 1+1 smooth, 7 lvl → ρ≈0.84-0.91, >120s (noisy)
-                            #   rank 64, 1+1 smooth, 7 lvl → ρ≈0.86, 82s avg but 137s
-                            #       on 10-step (rSVD variance → 60-91 iters)
-                            #   rank 64, 2+2 smooth, 7 lvl → ρ≈0.82, 87s
-                            #   rank 64, 3+3 smooth, 7 lvl → ρ≈0.78, 86s, STABLE 28 iters
-                            #   rank 32, 2+2, 3 lvl (shallow) → ρ≈0.996, diverges
+                            #   rank 64, 3+3 smooth, 7 lvl → ρ≈0.78,
+                            #     86s, STABLE 28 iters
                             # 3+3 smooth is the robust optimum: strong ρ
-                            # absorbs rSVD non-determinism, consistent 28
-                            # iters with no stalling risk.  Lighter
-                            # smoothing is cheaper per V-cycle but needs
-                            # 2-3× more iters with high variance.
-                            # Coarse sweeps reduced from 20→5: saves
-                            # ~0.9s per V-cycle, no convergence penalty.
+                            # absorbs rSVD non-determinism.  Lighter
+                            # smoothing needs 2-3× more iters with high
+                            # variance.
                             n_smooth_pre=3,
                             n_smooth_post=3,
-                            min_coarse_bits=3,
+                            min_coarse_bits=_min_coarse,
                             coarse_sweeps=5,
                         )
                     )

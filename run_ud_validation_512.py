@@ -467,11 +467,27 @@ def build_scorecard(
     wall_time: float,
     backend: str,
 ) -> dict:
-    """Assemble the public scorecard (Phase D)."""
-    # ── Per-step history ────────────────────────────────────────────
-    step_history = []
-    for s in telemetry.steps:
-        step_history.append({
+    """Assemble the public scorecard (Phase D).
+
+    Per-step data is summarised (min/max/mean) rather than dumped
+    verbatim.  Checkpoints at every 10% of steps are included for
+    trend visibility without 1000-entry bloat.
+    """
+    n_steps = len(telemetry.steps)
+
+    # ── Checkpoint indices (first, last, + every 10%) ───────────────
+    checkpoint_indices = sorted(set(
+        [0, n_steps - 1]
+        + [int(n_steps * p) for p in [0.1, 0.2, 0.3, 0.4, 0.5,
+                                       0.6, 0.7, 0.8, 0.9]]
+    ))
+
+    step_checkpoints = []
+    for i in checkpoint_indices:
+        if i >= n_steps:
+            continue
+        s = telemetry.steps[i]
+        step_checkpoints.append({
             "step": s.step,
             "wall_time_s": round(s.wall_time_s, 6),
             "chi_max": s.chi_max,
@@ -483,9 +499,24 @@ def build_scorecard(
             "invariant_values": {k: float(v) for k, v in s.invariant_values.items()},
         })
 
-    # ── Rank & compression histories ────────────────────────────────
-    rank_history = [s.chi_max for s in telemetry.steps]
-    compression_history = [round(s.compression_ratio, 1) for s in telemetry.steps]
+    # ── Rank & compression summaries ────────────────────────────────
+    rank_vals = [s.chi_max for s in telemetry.steps]
+    comp_vals = [s.compression_ratio for s in telemetry.steps]
+    wall_vals = [s.wall_time_s for s in telemetry.steps]
+
+    rank_summary = {
+        "min": min(rank_vals), "max": max(rank_vals),
+        "mean": round(sum(rank_vals) / len(rank_vals), 2),
+    }
+    compression_summary = {
+        "min": round(min(comp_vals), 1), "max": round(max(comp_vals), 1),
+        "mean": round(sum(comp_vals) / len(comp_vals), 1),
+    }
+    step_time_summary = {
+        "min_ms": round(min(wall_vals) * 1000, 1),
+        "max_ms": round(max(wall_vals) * 1000, 1),
+        "mean_ms": round(sum(wall_vals) / len(wall_vals) * 1000, 1),
+    }
 
     # ── Field summary ───────────────────────────────────────────────
     field_summary = {}
@@ -494,7 +525,7 @@ def build_scorecard(
             field_summary[fname] = {"registered": True}
 
     return {
-        "schema_version": "1.1",
+        "schema_version": "1.2",
         "run_id": f"ud_validation_{datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%SZ')}",
         "domain_key": program.domain,
         "backend": backend,
@@ -531,10 +562,11 @@ def build_scorecard(
             "ir_opcodes_used": telemetry.ir_opcodes_used,
         },
 
-        "rank_history": rank_history,
-        "compression_history": compression_history,
+        "rank_history": rank_summary,
+        "compression_history": compression_summary,
+        "step_time": step_time_summary,
 
-        "step_telemetry": step_history,
+        "step_checkpoints": step_checkpoints,
 
         "evidence": {
             "claims": [
@@ -604,6 +636,20 @@ def main() -> int:
             print("  ⚠ PyTorch not available, falling back to CPU")
             use_gpu = False
             backend = "CPU"
+
+    # Enable per-step progress logging from the GPU runtime.
+    # The runtime writes Poisson solver diagnostics via logger.info;
+    # surface them so long runs show progress instead of silence.
+    import logging
+    _rt_logger = logging.getLogger("ontic.engine.vm.gpu_runtime")
+    _mg_logger = logging.getLogger("ontic.engine.vm.multigrid")
+    if not _rt_logger.handlers:
+        _handler = logging.StreamHandler(sys.stdout)
+        _handler.setFormatter(logging.Formatter("  %(message)s"))
+        _rt_logger.addHandler(_handler)
+        _rt_logger.setLevel(logging.INFO)
+        _mg_logger.addHandler(_handler)
+        _mg_logger.setLevel(logging.INFO)
 
     print(f"[Phase B] Executing on {backend} (rank ceiling={max_rank}, adaptive)...")
     t0 = time.perf_counter()
@@ -712,9 +758,15 @@ def main() -> int:
     print()
 
     # ── Phase C: Geometry ───────────────────────────────────────────
-    print("[Phase C] Validating geometry compiler...")
+    # Geometry compiler validation uses n_bits=9 (512²) regardless of
+    # the physics grid size.  At large grids (n_bits≥14) the geometry
+    # SVD/rounding triggers a GPU driver (dxg) burst through the WSL2
+    # Hyper-V bridge that destabilises the connection.  The compiler
+    # itself is grid-size-agnostic — validating at 512² is sufficient.
+    geom_bits = min(n_bits, 9)
+    print(f"[Phase C] Validating geometry compiler (at {2**geom_bits}²)...")
     try:
-        geometry = validate_geometry_compiler(n_bits)
+        geometry = validate_geometry_compiler(geom_bits)
         print(f"  ✓ Mask rank={geometry['mask_rank']}, "
               f"Penalty rank={geometry['penalty_rank']}, "
               f"Distance rank={geometry['distance_rank']}")
@@ -823,7 +875,8 @@ def main() -> int:
     print("=" * 72)
 
     if args.json:
-        out_path = Path("ud_validation_scorecard.json")
+        grid_label = f"{2**args.n_bits}"
+        out_path = Path(f"ud_validation_scorecard_{grid_label}.json")
         out_path.write_text(json.dumps(scorecard, indent=2, default=str))
         print(f"\nScorecard written to {out_path}")
         print(f"  Size: {out_path.stat().st_size:,} bytes")

@@ -189,3 +189,6 @@ proofs/zk_targets/
 # Generated simulation output
 scenario_results.json
 scenario_output/
+output_*_sweep.log
+output_full_sweep.log
+output_*.log

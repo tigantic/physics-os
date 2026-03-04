@@ -1,0 +1,329 @@
+{
+  "schema_version": "1.2",
+  "run_id": "ud_validation_20260304T084724Z",
+  "domain_key": "navier_stokes_2d",
+  "backend": "GPU",
+  "grid": "32768\u00b2 (15 bits/dim)",
+  "n_steps": 1000,
+  "dt": 1.1641532182693481e-08,
+  "viscosity": 0.01,
+  "status": "succeeded",
+  "determinism": {
+    "tier": "reproducible",
+    "device_class": "gpu_consumer",
+    "config_hash": "7916f0046a4e891b10f7e242d4589d385c28723d92f83715e62c3f065d00d3d2"
+  },
+  "telemetry_summary": {
+    "chi_max": 2,
+    "chi_mean": 2.0,
+    "chi_final": 2,
+    "compression_ratio": 5064819.924528302,
+    "total_truncations": 3000,
+    "saturation_rate": 0.0,
+    "scaling_class": "A",
+    "wall_time_s": 414.183,
+    "invariant_name": "total_circulation",
+    "invariant_initial": 6.044579211825458e-31,
+    "invariant_final": -5.095430409967596e-30,
+    "invariant_error": 5.699888331150142e-30,
+    "max_rank_policy": 64,
+    "n_fields": 2,
+    "n_instructions": 25,
+    "ir_opcodes_used": [
+      "add",
+      "bc_apply",
+      "grad",
+      "hadamard",
+      "laplace",
+      "laplace_solve",
+      "load_field",
+      "loop_end",
+      "loop_start",
+      "measure",
+      "negate",
+      "scale",
+      "store_field",
+      "truncate"
+    ]
+  },
+  "rank_history": {
+    "min": 2,
+    "max": 2,
+    "mean": 2.0
+  },
+  "compression_history": {
+    "min": 5064819.9,
+    "max": 5064819.9,
+    "mean": 5064819.9
+  },
+  "step_time": {
+    "min_ms": 298.6,
+    "max_ms": 1296.4,
+    "mean_ms": 413.1
+  },
+  "step_checkpoints": [
+    {
+      "step": 0,
+      "wall_time_s": 0.883885,
+      "chi_max": 2,
+      "chi_mean": 2.0,
+      "compression_ratio": 5064819.9,
+      "n_truncations": 3,
+      "peak_rank_this_step": 2,
+      "field_norms": {
+        "omega": 32767.999698802996,
+        "psi": 415.01156198004014
+      },
+      "invariant_values": {
+        "total_circulation": 6.044579211825458e-31
+      }
+    },
+    {
+      "step": 100,
+      "wall_time_s": 0.33333,
+      "chi_max": 2,
+      "chi_mean": 2.0,
+      "compression_ratio": 5064819.9,
+      "n_truncations": 3,
+      "peak_rank_this_step": 2,
+      "field_norms": {
+        "omega": 32767.969579107834,
+        "psi": 415.01119715094
+      },
+      "invariant_values": {
+        "total_circulation": 4.396057608600234e-31
+      }
+    },
+    {
+      "step": 200,
+      "wall_time_s": 0.30477,
+      "chi_max": 2,
+      "chi_mean": 2.0,
+      "compression_ratio": 5064819.9,
+      "n_truncations": 3,
+      "peak_rank_this_step": 2,
+      "field_norms": {
+        "omega": 32767.939459452227,
+        "psi": 415.0108177349911
+      },
+      "invariant_values": {
+        "total_circulation": 5.495072010750256e-31
+      }
+    },
+    {
+      "step": 300,
+      "wall_time_s": 0.308835,
+      "chi_max": 2,
+      "chi_mean": 2.0,
+      "compression_ratio": 5064819.9,
+      "n_truncations": 3,
+      "peak_rank_this_step": 2,
+      "field_norms": {
+        "omega": 32767.90933983236,
+        "psi": 415.01041464773965
+      },
+      "invariant_values": {
+        "total_circulation": 7.343414414366247e-31
+      }
+    },
+    {
+      "step": 400,
+      "wall_time_s": 0.324874,
+      "chi_max": 2,
+      "chi_mean": 2.0,
+      "compression_ratio": 5064819.9,
+      "n_truncations": 3,
+      "peak_rank_this_step": 2,
+      "field_norms": {
+        "omega": 32767.879220235474,
+        "psi": 415.0100498846869
+      },
+      "invariant_values": {
+        "total_circulation": 4.4959680087955255e-31
+      }
+    },
+    {
+      "step": 500,
+      "wall_time_s": 0.340833,
+      "chi_max": 2,
+      "chi_mean": 2.0,
+      "compression_ratio": 5064819.9,
+      "n_truncations": 3,
+      "peak_rank_this_step": 2,
+      "field_norms": {
+        "omega": 32767.849100650696,
+        "psi": 415.00965151642527
+      },
+      "invariant_values": {
+        "total_circulation": 1.039068162032704e-30
+      }
+    },
+    {
+      "step": 600,
+      "wall_time_s": 0.371849,
+      "chi_max": 2,
+      "chi_mean": 2.0,
+      "compression_ratio": 5064819.9,
+      "n_truncations": 3,
+      "peak_rank_this_step": 2,
+      "field_norms": {
+        "omega": 32767.818981108085,
+        "psi": 415.00927965017297
+      },
+      "invariant_values": {
+        "total_circulation": 5.994624011726978e-31
+      }
+    },
+    {
+      "step": 700,
+      "wall_time_s": 0.562096,
+      "chi_max": 2,
+      "chi_mean": 2.0,
+      "compression_ratio": 5064819.9,
+      "n_truncations": 3,
+      "peak_rank_this_step": 2,
+      "field_norms": {
+        "omega": 32767.788861593996,
+        "psi": 415.0089021441305
+      },
+      "invariant_values": {
+        "total_circulation": -5.994624011726919e-31
+      }
+    },
+    {
+      "step": 800,
+      "wall_time_s": 0.614191,
+      "chi_max": 2,
+      "chi_mean": 2.0,
+      "compression_ratio": 5064819.9,
+      "n_truncations": 3,
+      "peak_rank_this_step": 2,
+      "field_norms": {
+        "omega": 32767.758742105027,
+        "psi": 415.00852320520715
+      },
+      "invariant_values": {
+        "total_circulation": -3.9864249677983735e-30
+      }
+    },
+    {
+      "step": 900,
+      "wall_time_s": 0.351648,
+      "chi_max": 2,
+      "chi_mean": 2.0,
+      "compression_ratio": 5064819.9,
+      "n_truncations": 3,
+      "peak_rank_this_step": 2,
+      "field_norms": {
+        "omega": 32767.728622644747,
+        "psi": 415.0081327161017
+      },
+      "invariant_values": {
+        "total_circulation": -5.1403900900556985e-30
+      }
+    },
+    {
+      "step": 999,
+      "wall_time_s": 0.351186,
+      "chi_max": 2,
+      "chi_mean": 2.0,
+      "compression_ratio": 5064819.9,
+      "n_truncations": 3,
+      "peak_rank_this_step": 2,
+      "field_norms": {
+        "omega": 32767.698804405183,
+        "psi": 415.00776420174486
+      },
+      "invariant_values": {
+        "total_circulation": -5.095430409967596e-30
+      }
+    }
+  ],
+  "evidence": {
+    "claims": [
+      {
+        "tag": "CONSERVATION",
+        "passed": true,
+        "detail": "|\u0394\u0393/\u0393\u2080| = 5.70e-30 (initial/final: 5.70e+00, runtime: 5.70e-30, tol=1e-04)"
+      },
+      {
+        "tag": "STABILITY",
+        "passed": true,
+        "detail": "NaN/Inf steps: 0/1000"
+      },
+      {
+        "tag": "BOUND",
+        "passed": true,
+        "detail": "Saturation rate: 0.0%"
+      },
+      {
+        "tag": "REPRODUCIBILITY",
+        "passed": true,
+        "detail": "Tier: reproducible"
+      },
+      {
+        "tag": "CFL_SATISFIED",
+        "passed": true,
+        "detail": "All 1000 steps completed"
+      }
+    ],
+    "all_passed": true
+  },
+  "sanitizer": {
+    "clean": true,
+    "fields_checked": 15,
+    "violations": []
+  },
+  "phase_validations": {
+    "C_geometry": {
+      "mask_rank": 64,
+      "penalty_rank": 64,
+      "distance_rank": 64,
+      "rank_stats": {
+        "solid_mask_max_rank": 64,
+        "penalization_max_rank": 64,
+        "distance_proxy_max_rank": 64
+      },
+      "passed": true
+    },
+    "E_wall_model": {
+      "eta_permeability": 0.0001,
+      "viscosity": 0.001,
+      "model_type": "WallModel",
+      "passed": true
+    },
+    "F_physics_breadth": {
+      "compressible_euler": {
+        "domain": "compressible_euler_1d",
+        "n_registers": 13,
+        "n_instructions": 54,
+        "passed": true
+      },
+      "cht_coupling": {
+        "domain": "cht_1d",
+        "n_registers": 10,
+        "n_instructions": 25,
+        "passed": true
+      },
+      "phase_field": {
+        "domain": "phase_field_2d",
+        "n_registers": 8,
+        "n_instructions": 22,
+        "passed": true
+      }
+    },
+    "G_hybrid_field": {
+      "sensor_kind": "GRADIENT_MAGNITUDE",
+      "features_detected": 18,
+      "max_tiles": 16,
+      "passed": true
+    },
+    "G_qoi_adaptivity": {
+      "trend_state": "CONVERGED",
+      "adjustments": {},
+      "n_samples": 1000,
+      "passed": true
+    }
+  },
+  "field_summary": {}
+}
